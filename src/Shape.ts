@@ -98,7 +98,7 @@ const EmptyArray: Iterable<number> = [];
 
 const idsUsed = new Set<string>();
 
-class Shape<
+export class Shape<
   Attrs extends Record<string, unknown> & AttrsDefault,
   Events extends Record<string, unknown>
 > {
