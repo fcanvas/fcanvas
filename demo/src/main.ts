@@ -18,3 +18,7 @@ layer.add(circle)
 stage.add(layer)
 
 layer.draw()
+
+
+window.layer = layer;
+window.circle = circle
