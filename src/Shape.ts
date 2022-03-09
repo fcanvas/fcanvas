@@ -68,6 +68,7 @@ type AttrsDefault = Offset & {
   // strokeScaleEnabled?: boolean
   lineJoin?: "bevel" | "round" | "miter";
   lineCap?: "butt" | "round" | "square";
+  sceneFunc?: (context: CanvasRenderingContext2D) => void
 } & Partial<FillModeMixture> /* & FillModeMonopole*/ & {
     shadowEnabled?: boolean;
     shadow?: {
@@ -168,7 +169,7 @@ export class Shape<
   }
 
   private getSceneFunc() {
-    return this._sceneFunc || this.#attrs.sceneFunc;
+    return this.#attrs.sceneFunc ||  this._sceneFunc;
   }
   private getFillPriority(): FillModeMixture["fillPriority"] {
     if (this.#attrs.fillPriority) {
