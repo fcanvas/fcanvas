@@ -1,7 +1,7 @@
 /* eslint-disable functional/prefer-readonly-type */
+import { Container } from "./Container";
 import { transparent } from "./constants/Colors";
 import { createProxy } from "./helpers/createProxy";
-import { degressToRadius } from "./utils/degressToRadius";
 
 type Color = string;
 type FillStyle = CanvasGradient | CanvasPattern | Color;
@@ -54,11 +54,6 @@ type FillModeMixture = {
   Partial<FillModePattern> &
   Partial<FillModeLinearGradient> &
   Partial<FillModeRadialGradient>;
-type FillModeMonopole =
-  | FillModeColor
-  | FillModePattern
-  | FillModeLinearGradient
-  | FillModeRadialGradient;
 
 type AttrsDefault = Offset & {
   fillAfterStrokeEnabled?: boolean;
@@ -101,7 +96,8 @@ const idsUsed = new Set<string>();
 export class Shape<
   Attrs extends Record<string, unknown> & AttrsDefault,
   Events extends Record<string, unknown>
-> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+> extends Container<Shape<any, any>> {
   readonly type = "Shape";
 
   public get name() {
@@ -115,16 +111,19 @@ export class Shape<
   // readonly #propWatch = <st;ring[]>[]
   public needReload = true;
   public parentNeedReloading = true;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   public _sceneFunc(context: CanvasRenderingContext2D) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public children = new Set<Shape<any, any>>();
-  public listeners = new Map<keyof Events, Array<(event: any) => void>>();
+  public readonly listeners = new Map<
+    keyof Events,
+    Array<(event: any) => void>
+  >();
 
   #context?: CanvasRenderingContext2D;
 
   constructor(attrs: Attrs) {
+    super();
     if (attrs.id !== void 0) {
       if (idsUsed.has(attrs.id)) {
         // eslint-disable-next-line functional/no-throw-statement
@@ -166,42 +165,6 @@ export class Shape<
   public getHeight(): number {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return ((this.#attrs.radius as number) ?? this.#attrs.height)!;
-  }
-
-  // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  public add(...nodes: Shape<any, any>[]): void {
-    nodes.forEach(this.children.add);
-  }
-  public matches(selector: string): boolean {
-    return selector.split(",").some((sel) => {
-      const [other, id] = sel.trim().split("#");
-
-      const [tag, ...classes] = other.split(".");
-
-      const validTag =
-        tag === "" || tag?.toLowerCase() === this.type?.toLowerCase();
-      const validClass =
-        classes.length === 0
-          ? true
-          : classes.every((clazz) =>
-              new RegExp(`(^| )${clazz}( |$)`).test(this.name)
-            );
-      const validId = id ? id === this.id : true;
-
-      return validTag && validClass && validId;
-    });
-  }
-  public findAll(selector: string) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nodes = new Set<Shape<any, any>>();
-
-    this.children.forEach((node) => {
-      if (node.matches(selector)) {
-        nodes.add(node);
-      }
-    });
-
-    return Array.from(nodes.values());
   }
 
   private getSceneFunc() {
