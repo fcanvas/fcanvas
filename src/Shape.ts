@@ -114,9 +114,9 @@ export class Shape<
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   public _sceneFunc(context: CanvasRenderingContext2D) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public readonly listeners = new Map<
     keyof Events,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Array<(event: any) => void>
   >();
 
