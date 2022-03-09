@@ -55,9 +55,9 @@ type FillModeMixture = {
   Partial<FillModeLinearGradient> &
   Partial<FillModeRadialGradient>;
 
-type AttrsDefault = Offset & {
-  width?: string;
-  height?: string;
+export type AttrsDefault = Offset & {
+  width?: number;
+  height?: number;
   fillAfterStrokeEnabled?: boolean;
   fillEnabled?: bool;
   stroke?: FillStyle;
@@ -98,24 +98,26 @@ const idsUsed = new Set<string>();
 
 export class Shape<
   Attrs extends Record<string, unknown> & AttrsDefault,
-  Events extends Record<string, unknown>
+  Events extends Record<string, unknown> = {}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 > extends Container<Shape<any, any>> {
-  readonly type = "Shape";
+  // @overwrite
+  readonly type: string = "Shape";
 
   public get name() {
-    return this.#attrs.name || "";
+    return this.attrs.name || "";
   }
   public get id() {
-    return this.#attrs.id;
+    return this.attrs.id;
   }
 
-  readonly #attrs: Attrs;
+  readonly attrs: Attrs;
   // readonly #propWatch = <st;ring[]>[]
   public needReload = true;
   public parentNeedReloading = true;
+  // @overwrite
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-  public _sceneFunc(context: CanvasRenderingContext2D) {}
+  protected _sceneFunc(context: CanvasRenderingContext2D) {}
 
   public readonly listeners = new Map<
     keyof Events,
@@ -124,6 +126,8 @@ export class Shape<
   >();
 
   #context?: CanvasRenderingContext2D;
+  // @overwrite
+  protected readonly attrsReactSize: readonly string[] = ["width", "height"]
 
   constructor(attrs: Attrs) {
     super();
@@ -135,7 +139,7 @@ export class Shape<
 
       idsUsed.add(attrs.id);
     }
-    this.#attrs = createProxy(attrs, (prop, val) => {
+    this.attrs = createProxy(attrs, (prop, val) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.needReload = true;
         this.parentNeedReloading = true
@@ -143,49 +147,57 @@ export class Shape<
         this.parentNeedReloading = true;
       }
 
-      this.reactive(prop)
+      if (this.attrsReactSize.includes(prop as string)) {
+        this.onresize()
+      }
     });
-    this.reactive("*")
+    this.onresize()
 
-    if (this.#attrs.perfectDrawEnabled ?? true) {
+    if (this.attrs.perfectDrawEnabled ?? true) {
       this.#context =
         document.createElement("canvas").getContext("2d") ?? void 0;
     }
   }
 
-  public getWidth(): number {
-    return this.#attrs.width ?? 0;
+
+  // @overwrite
+  public getInnerWidth(): number {
+    return this.attrs.width ?? 0;
   }
-  public getHeight(): number {
-    return this.#attrs.height ?? 0;
+  // @overwrite
+  public getInnerHeight(): number {
+    return this.attrs.height ?? 0;
   }
   
-  private reactive<P extends keyof Attrs>(prop: P | "*") {
+  public getWidth() {
+    return this.getInnerWidth() + (this.attrs.shadow?.offset?.x ?? 0)
+  }
+  public getHeight() {
+    return this.getInnerHeight() + (this.attrs.shadow?.offset?.y ?? 0)
+  }
+  private onresize() {
     // reactive
-    if (prop === "*" || prop === "width" || prop === "height") {
-      this.#context.canvas.width = this.#attrs.width!
-      this.#context.canvas.height = this.#attrs.height!
-      
-      this.needReload = true
-      this.parentNeedReloading = true
+    if (this.#context) {
+      this.#context.canvas.width = this.getWidth()
+      this.#context.canvas.height = this.getHeight()
     }
   }
 
   private getSceneFunc() {
-    return this.#attrs.sceneFunc ||  this._sceneFunc;
+    return this.attrs.sceneFunc ||  this._sceneFunc;
   }
   private getFillPriority(): FillModeMixture["fillPriority"] {
-    if (this.#attrs.fillPriority) {
-      return this.#attrs.fillPriority as FillModeMixture["fillPriority"];
+    if (this.attrs.fillPriority) {
+      return this.attrs.fillPriority as FillModeMixture["fillPriority"];
     }
 
-    if (this.#attrs.fillPatternImage !== void 0) {
+    if (this.attrs.fillPatternImage !== void 0) {
       return "pattern";
     }
-    if (this.#attrs.fillLinearGradient !== void 0) {
+    if (this.attrs.fillLinearGradient !== void 0) {
       return "linear-gradient";
     }
-    if (this.#attrs.fillRadialGradient !== void 0) {
+    if (this.attrs.fillRadialGradient !== void 0) {
       return "radial-gradient";
     }
 
@@ -197,42 +209,42 @@ export class Shape<
     // "color" | "linear-gradient" | "radial-graident" | "pattern"
     // fill pattern is preferred
     // các tổ hợp của nó được ưu tiên
-    switch ((this.#attrs.fillEnabled ?? true) && this.getFillPriority()) {
+    switch ((this.attrs.fillEnabled ?? true) && this.getFillPriority()) {
       case "color":
-        style = this.#attrs.fill;
+        style = this.attrs.fill;
         break;
       case "pattern":
-        if (this.#attrs.fillPatternImage !== void 0) {
+        if (this.attrs.fillPatternImage !== void 0) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           style = context.createPattern(
-            this.#attrs.fillPatternImage,
-            this.#attrs.fillPattern?.repeat ?? "repeat"
+            this.attrs.fillPatternImage,
+            this.attrs.fillPattern?.repeat ?? "repeat"
           )!;
           style.setTransform(
             new DOMMatrix()
-              .skewX(this.#attrs.fillPattern?.x ?? 1)
-              .skewY(this.#attrs.fillPattern?.y ?? 1)
+              .skewX(this.attrs.fillPattern?.x ?? 1)
+              .skewY(this.attrs.fillPattern?.y ?? 1)
               .translate(
-                this.#attrs.fillPattern?.offset?.x ?? 0,
-                this.#attrs.fillPattern?.offset?.y ?? 0
+                this.attrs.fillPattern?.offset?.x ?? 0,
+                this.attrs.fillPattern?.offset?.y ?? 0
               )
               .scale(
-                this.#attrs.fillPattern?.scale?.x ?? 1,
-                this.#attrs.fillPattern?.scale?.y ?? 1
+                this.attrs.fillPattern?.scale?.x ?? 1,
+                this.attrs.fillPattern?.scale?.y ?? 1
               )
-              .rotate(this.#attrs.fillPattern?.rotation ?? 0)
+              .rotate(this.attrs.fillPattern?.rotation ?? 0)
           );
         }
         break;
       case "linear-gradient":
-        if (this.#attrs.fillLinearGradient !== void 0) {
+        if (this.attrs.fillLinearGradient !== void 0) {
           style = context.createLinearGradient(
-            this.#attrs.fillLinearGradient.start.x,
-            this.#attrs.fillLinearGradient.start.y,
-            this.#attrs.fillLinearGradient.end.x,
-            this.#attrs.fillLinearGradient.end.y
+            this.attrs.fillLinearGradient.start.x,
+            this.attrs.fillLinearGradient.start.y,
+            this.attrs.fillLinearGradient.end.x,
+            this.attrs.fillLinearGradient.end.y
           );
-          this.#attrs.fillLinearGradient.colorStops.forEach(
+          this.attrs.fillLinearGradient.colorStops.forEach(
             ([color, point]) => {
               (style as CanvasGradient).addColorStop(color, point);
             }
@@ -240,16 +252,16 @@ export class Shape<
         }
         break;
       case "radial-gradient":
-        if (this.#attrs.fillRadialGradient !== void 0) {
+        if (this.attrs.fillRadialGradient !== void 0) {
           style = context.createRadialGradient(
-            this.#attrs.fillRadialGradient.start.x,
-            this.#attrs.fillRadialGradient.start.y,
-            this.#attrs.fillRadialGradient.startRadius,
-            this.#attrs.fillRadialGradient.end.x,
-            this.#attrs.fillRadialGradient.end.y,
-            this.#attrs.fillRadialGradient.endRadius
+            this.attrs.fillRadialGradient.start.x,
+            this.attrs.fillRadialGradient.start.y,
+            this.attrs.fillRadialGradient.startRadius,
+            this.attrs.fillRadialGradient.end.x,
+            this.attrs.fillRadialGradient.end.y,
+            this.attrs.fillRadialGradient.endRadius
           );
-          this.#attrs.fillRadialGradient.colorStops.forEach(
+          this.attrs.fillRadialGradient.colorStops.forEach(
             ([color, point]) => {
               (style as CanvasGradient).addColorStop(color, point);
             }
@@ -265,32 +277,32 @@ export class Shape<
     }
   }
   private strokeScene(context: CanvasRenderingContext2D) {
-    const style = this.#attrs.strokeEnabled ?? true
-        ? this.#attrs.stroke : void 0
+    const style = this.attrs.strokeEnabled ?? true
+        ? this.attrs.stroke : void 0
         
     // eslint-disable-next-line functional/immutable-data
-    context.strokeStyle = style
+    context.strokeStyle = style ?? transparent;
     if (style) {
       context.stroke();
     }
   }
   private lineSet(context: CanvasRenderingContext2D) {
-    if (!(this.#attrs.strokeEnabled ?? true)) {
+    if (!(this.attrs.strokeEnabled ?? true)) {
       return;
     }
 
-    if (this.#attrs.strokeWidth !== void 0) {
+    if (this.attrs.strokeWidth !== void 0) {
       // eslint-disable-next-line functional/immutable-data
-      context.lineWidth = this.#attrs.strokeWidth;
+      context.lineWidth = this.attrs.strokeWidth;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    context.lineJoin = this.#attrs.lineJoin ?? "miter";
+    context.lineJoin = this.attrs.lineJoin ?? "miter";
     // eslint-disable-next-line functional/immutable-data
-    context.lineCap = this.#attrs.lineCap ?? "butt";
+    context.lineCap = this.attrs.lineCap ?? "butt";
 
-    if (this.#attrs.dashEnabled ?? true) {
-      context.setLineDash(this.#attrs.dash ?? EmptyArray);
+    if (this.attrs.dashEnabled ?? true) {
+      context.setLineDash(this.attrs.dash ?? EmptyArray);
     } else {
       if (context.getLineDash().length) {
         context.setLineDash(EmptyArray);
@@ -298,8 +310,8 @@ export class Shape<
     }
   }
   private fillStrokeScene(context: CanvasRenderingContext2D) {
-    const shadowForStrokeEnabled = this.#attrs.shadowForStrokeEnabled ?? true;
-    if (this.#attrs.fillAfterStrokeEnabled) {
+    const shadowForStrokeEnabled = this.attrs.shadowForStrokeEnabled ?? true;
+    if (this.attrs.fillAfterStrokeEnabled) {
       if (shadowForStrokeEnabled) {
         this.shadowScene(context);
         this.strokeScene(context);
@@ -321,15 +333,15 @@ export class Shape<
     }
   }
   private shadowScene(context: CanvasRenderingContext2D) {
-    if ((this.#attrs.shadowEnabled ?? true) && this.#attrs.shadow !== void 0) {
+    if ((this.attrs.shadowEnabled ?? true) && this.attrs.shadow !== void 0) {
       // eslint-disable-next-line functional/immutable-data
-      context.shadowColor = this.#attrs.shadow.color;
+      context.shadowColor = this.attrs.shadow.color;
       // eslint-disable-next-line functional/immutable-data
-      context.shadowOffsetX = this.#attrs.shadow.offset?.x ?? 0;
+      context.shadowOffsetX = this.attrs.shadow.offset?.x ?? 0;
       // eslint-disable-next-line functional/immutable-data
-      context.shadowOffsetY = this.#attrs.shadow.offset?.y ?? 0;
+      context.shadowOffsetY = this.attrs.shadow.offset?.y ?? 0;
       // eslint-disable-next-line functional/immutable-data
-      context.shadowBlur = this.#attrs.shadow.blur ?? 0;
+      context.shadowBlur = this.attrs.shadow.blur ?? 0;
     } else {
       if (context.shadowColor !== transparent) {
         // eslint-disable-next-line functional/immutable-data
@@ -345,29 +357,29 @@ export class Shape<
     }
 
     const needUseTransform =
-      this.#attrs.scale !== void 0 ||
-      this.#attrs.rotation !== void 0 ||
-      this.#attrs.offset !== void 0 ||
+      this.attrs.scale !== void 0 ||
+      this.attrs.rotation !== void 0 ||
+      this.attrs.offset !== void 0 ||
       !this.#context;
-    const needSetAlpha = this.#attrs.opacity !== void 0;
+    const needSetAlpha = this.attrs.opacity !== void 0;
     // eslint-disable-next-line functional/no-let
     let backupTransform, backupAlpha: number;
 
     if (needSetAlpha) {
       backupAlpha = context.globalAlpha;
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
-      context.globalAlpha = this.#attrs.opacity!;
+      context.globalAlpha = this.attrs.opacity!;
     }
     if (needUseTransform) {
       backupTransform = context.getTransform();
 
       context.setTransform(
         new DOMMatrix()
-          .scale(this.#attrs.scale?.x || 1, this.#attrs.scale?.y || 1)
-          .rotate(this.#attrs.rotation || 0)
+          .scale(this.attrs.scale?.x || 1, this.attrs.scale?.y || 1)
+          .rotate(this.attrs.rotation || 0)
           .translate(
-            (this.#attrs.offset?.x || 0) + this.#attrs.x,
-            (this.#attrs.offset?.y || 0) + this.#attrs.y
+            (this.attrs.offset?.x || 0) + this.attrs.x,
+            (this.attrs.offset?.y || 0) + this.attrs.y
           )
       );
     }
@@ -391,16 +403,17 @@ export class Shape<
 
   protected getHitStroke() {
     return (
-      (this.#attrs.strokeHitEnabled ?? true
-        ? this.#attrs.hitStrokeWidth ?? this.#attrs.strokeWidth
-        : this.#attrs.strokeWidth) ?? 1
+      (this.attrs.strokeHitEnabled ?? true
+        ? this.attrs.hitStrokeWidth ?? this.attrs.strokeWidth
+        : this.attrs.strokeWidth) ?? 1
     );
   }
+  // @overwrite
   protected isPressedPoint(x: number, y: number): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const hitStroke = this.getHitStroke();
 
-    return x === this.#attrs.x && y === this.#attrs.y;
+    return x === this.attrs.x && y === this.attrs.y;
   }
   public on<Name extends keyof Events>(
     name: Name,
@@ -444,7 +457,7 @@ export class Shape<
   }
 
   draw(context: CanvasRenderingContext2D) {
-    if (!(this.#attrs.visible ?? true)) {
+    if (!(this.attrs.visible ?? true)) {
       return;
     }
     // ...
@@ -462,7 +475,7 @@ export class Shape<
 
       // finished drawing in the cache
       // draw to main context
-      context.drawImage(this.#context.canvas, this.#attrs.x, this.#attrs.y);
+      context.drawImage(this.#context.canvas, this.attrs.x, this.attrs.y);
     } else {
       // キャッシュさせないでください
       this.drawInSandBox(context);
