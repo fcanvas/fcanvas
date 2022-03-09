@@ -2,7 +2,7 @@
 import { Container } from "./Container";
 import { transparent } from "./constants/Colors";
 import { createProxy } from "./helpers/createProxy";
-
+ // add ctx.filter
 type Color = string;
 type FillStyle = CanvasGradient | CanvasPattern | Color;
 type Offset = {
