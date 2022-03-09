@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+  </head>
+
+  <body>
+    <!--<div id="container"></div>
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<script>
+  const $$ = document.createElement
+  
+  
+  var stage = new Konva.Stage({
+  container: 'container',   // id of container <div>
+  width: 500,
+height: 500
+});
+
+// then create layer
+var layer = new Konva.Layer();
+
+// create our shape
+var circle = new Konva.Shape({
+  sceneFunc(ctx) {
+   // ctx.arc(0,0, 50,0, 1000)
+    //ctx.fillStrokeShape(this);
+   
+  },
+  x: stage.width() / 2,
+  y: stage.height() / 2,
+  radius: 70,
+  fill: 'red',
+  stroke: 'black',
+  strokeWidth: 4
+});
+// create our shape
+var circle2= new Konva.Circle({
+  
+  x: 0,
+  y: 0,
+  radius: 70,
+  fill: 'red',
+  stroke: 'black',
+  strokeWidth: 4
+});
+
+// add the shape to the layer
+layer.add(circle, circle2);
+
+// add the layer to the stage
+stage.add(layer);
+
+let x = y = 0
+setInterval(() => circle2.move({x:x++,y:y++}), 1000)
+
+// draw the image
+
+</script>-->
+    <canvas id="app"></canvas>
+    <img id="img" src="https://google.com/favicon.ico" />
+    <script>
+      const ctx = app.getContext("2d");
+    </script>
+  </body>
+</html>
