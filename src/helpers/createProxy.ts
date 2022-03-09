@@ -32,9 +32,9 @@ export function createProxy<R extends Record<string, unknown>>(
       return target[prop as string];
     },
     set(target, prop, val) {
-      onsetter(`${props}.${prop as string}`, val);
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
       (target as any)[prop as string] = val;
+      onsetter(`${props}.${prop as string}`, val);
 
       return true;
     },

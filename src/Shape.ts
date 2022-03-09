@@ -56,6 +56,8 @@ type FillModeMixture = {
   Partial<FillModeRadialGradient>;
 
 type AttrsDefault = Offset & {
+  width?: string;
+  height?: string;
   fillAfterStrokeEnabled?: boolean;
   fillEnabled?: bool;
   stroke?: FillStyle;
@@ -134,24 +136,16 @@ export class Shape<
       idsUsed.add(attrs.id);
     }
     this.#attrs = createProxy(attrs, (prop, val) => {
-      if (prop !== "x" && prop !== "y") {
+      if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.needReload = true;
+        this.parentNeedReloading = true
       } else {
         this.parentNeedReloading = true;
       }
 
-      if (prop === "width" || prop === "height" || prop === "radius") {
-        // resize
-        if (this.#context) {
-          if (prop === "radius") {
-            this.#context.canvas.width = val as number;
-            this.#context.canvas.height = val as number;
-          } else {
-            this.#context.canvas[prop as "width" | "height"] = val as number;
-          }
-        }
-      }
+      this.reactive(prop)
     });
+    this.reactive("*")
 
     if (this.#attrs.perfectDrawEnabled ?? true) {
       this.#context =
@@ -160,12 +154,21 @@ export class Shape<
   }
 
   public getWidth(): number {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return ((this.#attrs.radius as number) ?? this.#attrs.width)!;
+    return this.#attrs.width ?? 0;
   }
   public getHeight(): number {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return ((this.#attrs.radius as number) ?? this.#attrs.height)!;
+    return this.#attrs.height ?? 0;
+  }
+  
+  private reactive<P extends keyof Attrs>(prop: P | "*") {
+    // reactive
+    if (prop === "*" || prop === "width" || prop === "height") {
+      this.#context.canvas.width = this.#attrs.width!
+      this.#context.canvas.height = this.#attrs.height!
+      
+      this.needReload = true
+      this.parentNeedReloading = true
+    }
   }
 
   private getSceneFunc() {
