@@ -257,15 +257,19 @@ export class Shape<
 
     // eslint-disable-next-line functional/immutable-data
     context.fillStyle = style ?? transparent;
-    context.fill();
+    if (style) {
+      context.fill();
+    }
   }
   private strokeScene(context: CanvasRenderingContext2D) {
+    const style = this.#attrs.strokeEnabled ?? true
+        ? this.#attrs.stroke : void 0
+        
     // eslint-disable-next-line functional/immutable-data
-    context.strokeStyle =
-      this.#attrs.strokeEnabled ?? true
-        ? this.#attrs.stroke ?? transparent
-        : transparent;
-    context.stroke();
+    context.strokeStyle = style
+    if (style) {
+      context.stroke();
+    }
   }
   private lineSet(context: CanvasRenderingContext2D) {
     if (!(this.#attrs.strokeEnabled ?? true)) {
