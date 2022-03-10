@@ -147,7 +147,7 @@ export class Shape<
         this.parentNeedReloading = true;
       }
 
-      if (this.attrsReactSize.includes(prop as string)) {
+      if (this.attrsReactSize.some((test) => test === prop as string || test.startsWith(`${prop as string}.`))) {
         this.onresize()
       }
     });
