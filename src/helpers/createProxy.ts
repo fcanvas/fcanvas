@@ -13,7 +13,8 @@ export function createProxy<R extends Record<string, unknown>>(
 
   const proxy = new Proxy(target, {
     get(target, prop) {
-      const mykey = props === "" ? prop as string : `${props}.${prop as string}`;
+      const mykey =
+        props === "" ? (prop as string) : `${props}.${prop as string}`;
       ongetter?.(mykey);
 
       if (
@@ -34,7 +35,10 @@ export function createProxy<R extends Record<string, unknown>>(
     set(target, prop, val) {
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
       (target as any)[prop as string] = val;
-      onsetter(props === "" ? prop as string : `${props}.${prop as string}`, val);
+      onsetter(
+        props === "" ? (prop as string) : `${props}.${prop as string}`,
+        val
+      );
 
       return true;
     },

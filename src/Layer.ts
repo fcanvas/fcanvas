@@ -2,8 +2,9 @@ import { Container } from "./Container";
 import { Shape } from "./Shape";
 
 type Attrs = {
-  clearBeforeDraw?: boolean
-}
+  // eslint-disable-next-line functional/prefer-readonly-type
+  clearBeforeDraw?: boolean;
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Layer extends Container<Shape<any, any>> {
   readonly type = "Layer";
@@ -16,7 +17,7 @@ export class Layer extends Container<Shape<any, any>> {
 
   readonly #attrs: Attrs;
   constructor(attrs: Attrs) {
-    super()
+    super();
 
     this.#attrs = attrs;
   }
@@ -27,7 +28,7 @@ export class Layer extends Container<Shape<any, any>> {
 
   private _draw() {
     if (this.#attrs.clearBeforeDraw ?? true) {
-      this.#context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.#context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
     this.children.forEach((node) => {
       node.draw(this.#context);
@@ -35,6 +36,6 @@ export class Layer extends Container<Shape<any, any>> {
   }
 
   draw() {
-    this._draw()
+    this._draw();
   }
 }

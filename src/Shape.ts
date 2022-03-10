@@ -1,54 +1,74 @@
-/* eslint-disable functional/prefer-readonly-type */
-import { Container } from "./Container";
 import { transparent } from "./constants/Colors";
 import { createProxy } from "./helpers/createProxy";
- // add ctx.filter
+// add ctx.filter
 type Color = string;
 type FillStyle = CanvasGradient | CanvasPattern | Color;
 type Offset = {
+  // eslint-disable-next-line functional/prefer-readonly-type
   x: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   y: number;
 };
 type bool = boolean;
 
 type FillModeColor = {
+  // eslint-disable-next-line functional/prefer-readonly-type
   fill: FillStyle;
 };
 type FillModePattern = {
   /* fill pattern */
+  // eslint-disable-next-line functional/prefer-readonly-type
   fillPatternImage: CanvasImageSource;
+  // eslint-disable-next-line functional/prefer-readonly-type
   fillPattern?: {
+    // eslint-disable-next-line functional/prefer-readonly-type
     x?: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
     y?: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
     offset?: Partial<Offset>;
+    // eslint-disable-next-line functional/prefer-readonly-type
     scale?: Partial<Offset>;
+    // eslint-disable-next-line functional/prefer-readonly-type
     rotation?: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
     repeat?: "repeat" | "repeat-x" | "repeat-y" | "no-repeat";
   };
   /* /pattern */
 };
 type FillModeLinearGradient = {
   /* fill linear gradient */
+  // eslint-disable-next-line functional/prefer-readonly-type
   fillLinearGradient: {
+    // eslint-disable-next-line functional/prefer-readonly-type
     start: Offset;
+    // eslint-disable-next-line functional/prefer-readonly-type
     end: Offset;
+    // eslint-disable-next-line functional/prefer-readonly-type
     colorStops: [number, string][];
   };
   /* /linear-gradient */
 };
 type FillModeRadialGradient = {
   /* fill radial gradient */
+  // eslint-disable-next-line functional/prefer-readonly-type
   fillRadialGradient: {
+    // eslint-disable-next-line functional/prefer-readonly-type
     start: Offset;
+    // eslint-disable-next-line functional/prefer-readonly-type
     startRadius: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
     end: Offset;
+    // eslint-disable-next-line functional/prefer-readonly-type
     endRadius: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
     colorStops: [number, string][];
   };
   /* /radial-gradient */
 };
 
 type FillModeMixture = {
+  // eslint-disable-next-line functional/prefer-readonly-type
   fillPriority: "color" | "linear-gradient" | "radial-gradient" | "pattern";
 } & Partial<FillModeColor> &
   Partial<FillModePattern> &
@@ -56,40 +76,67 @@ type FillModeMixture = {
   Partial<FillModeRadialGradient>;
 
 export type AttrsDefault = Offset & {
+  // eslint-disable-next-line functional/prefer-readonly-type
   width?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   height?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   fillAfterStrokeEnabled?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
   fillEnabled?: bool;
-  flatMode?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
   stroke?: FillStyle;
+  // eslint-disable-next-line functional/prefer-readonly-type
   strokeWidth?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   strokeEnabled?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
   hitStrokeWidth?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   strokeHitEnabled?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
   perfectDrawEnabled?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
   shadowForStrokeEnabled?: boolean;
   // strokeScaleEnabled?: boolean
+  // eslint-disable-next-line functional/prefer-readonly-type
   lineJoin?: "bevel" | "round" | "miter";
+  // eslint-disable-next-line functional/prefer-readonly-type
   lineCap?: "butt" | "round" | "square";
-  sceneFunc?: (context: CanvasRenderingContext2D) => void
+  // eslint-disable-next-line functional/prefer-readonly-type
+  sceneFunc?: (context: CanvasRenderingContext2D) => void;
 } & Partial<FillModeMixture> /* & FillModeMonopole*/ & {
+    // eslint-disable-next-line functional/prefer-readonly-type
     shadowEnabled?: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
     shadow?: {
+      // eslint-disable-next-line functional/prefer-readonly-type
       color: Color;
+      // eslint-disable-next-line functional/prefer-readonly-type
       blur: number;
+      // eslint-disable-next-line functional/prefer-readonly-type
       offset?: Partial<Offset>;
       // opacity?: number
     };
   } & {
+    // eslint-disable-next-line functional/prefer-readonly-type
     dash?: number[];
+    // eslint-disable-next-line functional/prefer-readonly-type
     dashEnabled?: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
     visible?: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
     id?: string;
+    // eslint-disable-next-line functional/prefer-readonly-type
     name?: string;
   } & {
+    // eslint-disable-next-line functional/prefer-readonly-type
     opacity?: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
     scale?: Partial<Offset>;
+    // eslint-disable-next-line functional/prefer-readonly-type
     rotation?: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
     offset?: Partial<Offset>;
   };
 
@@ -99,9 +146,9 @@ const idsUsed = new Set<string>();
 
 export class Shape<
   Attrs extends Record<string, unknown> & AttrsDefault,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   Events extends Record<string, unknown> = {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-> extends Container<Shape<any, any>> {
+> {
   // @overwrite
   readonly type: string = "Shape";
 
@@ -114,7 +161,9 @@ export class Shape<
 
   readonly attrs: Attrs;
   // readonly #propWatch = <st;ring[]>[]
+  // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload = true;
+  // eslint-disable-next-line functional/prefer-readonly-type
   public parentNeedReloading = true;
   // @overwrite
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
@@ -122,16 +171,36 @@ export class Shape<
 
   public readonly listeners = new Map<
     keyof Events,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
     Array<(event: any) => void>
   >();
 
+  // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
   // @overwrite
-  protected readonly attrsReactSize: readonly string[] = ["width", "height"]
+  protected readonly attrsReactSize: readonly string[] = ["width", "height"];
+
+  public matches(selector: string): boolean {
+    return selector.split(",").some((sel) => {
+      const [other, id] = sel.trim().split("#");
+
+      const [tag, ...classes] = other.split(".");
+
+      const validTag =
+        tag === "" || tag?.toLowerCase() === this.type?.toLowerCase();
+      const validClass =
+        classes.length === 0
+          ? true
+          : classes.every((clazz) =>
+              new RegExp(`(^| )${clazz}( |$)`).test(this.name)
+            );
+      const validId = id ? id === this.id : true;
+
+      return validTag && validClass && validId;
+    });
+  }
 
   constructor(attrs: Attrs) {
-    super();
     if (attrs.id !== void 0) {
       if (idsUsed.has(attrs.id)) {
         // eslint-disable-next-line functional/no-throw-statement
@@ -140,26 +209,30 @@ export class Shape<
 
       idsUsed.add(attrs.id);
     }
-    this.attrs = createProxy(attrs, (prop, val) => {
+    this.attrs = createProxy(attrs, (prop) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;
-        this.parentNeedReloading = true
+        this.parentNeedReloading = true;
       } else {
         this.parentNeedReloading = true;
       }
 
-      if (this.attrsReactSize.some((test) => test === prop as string || test.startsWith(`${prop as string}.`))) {
-        this.onresize()
+      if (
+        this.attrsReactSize.some(
+          (test) =>
+            test === (prop as string) || test.startsWith(`${prop as string}.`)
+        )
+      ) {
+        this.onresize();
       }
     });
-    this.onresize()
+    this.onresize();
 
     if (this.attrs.perfectDrawEnabled ?? true) {
       this.#context =
         document.createElement("canvas").getContext("2d") ?? void 0;
     }
   }
-
 
   // @overwrite
   public getInnerWidth(): number {
@@ -169,41 +242,25 @@ export class Shape<
   public getInnerHeight(): number {
     return this.attrs.height ?? 0;
   }
-  
-  public get needReload(): boolean {
-    if (this.attrs.flatMode) {
-      return this.currentNeedReload
-    }
-
-    if (this.currentNeedReload) {
-      return true;
-    }
-
-    for (const node of this.children) {
-      if (node.needReload || node.parentNeedReloading) {
-        return true
-      }
-    }
-
-    return false
-  }
 
   public getWidth() {
-    return this.getInnerWidth() + (this.attrs.shadow?.offset?.x ?? 0)
+    return this.getInnerWidth() + (this.attrs.shadow?.offset?.x ?? 0);
   }
   public getHeight() {
-    return this.getInnerHeight() + (this.attrs.shadow?.offset?.y ?? 0)
+    return this.getInnerHeight() + (this.attrs.shadow?.offset?.y ?? 0);
   }
   private onresize() {
     // reactive
     if (this.#context) {
-      this.#context.canvas.width = this.getWidth()
-      this.#context.canvas.height = this.getHeight()
+      // eslint-disable-next-line functional/immutable-data
+      this.#context.canvas.width = this.getWidth();
+      // eslint-disable-next-line functional/immutable-data
+      this.#context.canvas.height = this.getHeight();
     }
   }
 
   private getSceneFunc() {
-    return this.attrs.sceneFunc ||  this._sceneFunc;
+    return this.attrs.sceneFunc || this._sceneFunc;
   }
   private getFillPriority(): FillModeMixture["fillPriority"] {
     if (this.attrs.fillPriority) {
@@ -263,11 +320,9 @@ export class Shape<
             this.attrs.fillLinearGradient.end.x,
             this.attrs.fillLinearGradient.end.y
           );
-          this.attrs.fillLinearGradient.colorStops.forEach(
-            ([color, point]) => {
-              (style as CanvasGradient).addColorStop(color, point);
-            }
-          );
+          this.attrs.fillLinearGradient.colorStops.forEach(([color, point]) => {
+            (style as CanvasGradient).addColorStop(color, point);
+          });
         }
         break;
       case "radial-gradient":
@@ -280,11 +335,9 @@ export class Shape<
             this.attrs.fillRadialGradient.end.y,
             this.attrs.fillRadialGradient.endRadius
           );
-          this.attrs.fillRadialGradient.colorStops.forEach(
-            ([color, point]) => {
-              (style as CanvasGradient).addColorStop(color, point);
-            }
-          );
+          this.attrs.fillRadialGradient.colorStops.forEach(([color, point]) => {
+            (style as CanvasGradient).addColorStop(color, point);
+          });
         }
         break;
     }
@@ -296,9 +349,8 @@ export class Shape<
     }
   }
   private strokeScene(context: CanvasRenderingContext2D) {
-    const style = this.attrs.strokeEnabled ?? true
-        ? this.attrs.stroke : void 0
-        
+    const style = this.attrs.strokeEnabled ?? true ? this.attrs.stroke : void 0;
+
     // eslint-disable-next-line functional/immutable-data
     context.strokeStyle = style ?? transparent;
     if (style) {
@@ -482,7 +534,7 @@ export class Shape<
     // ...
     if (this.#context) {
       // caching mode
-      if (this.needReload) {
+      if (this.currentNeedReload) {
         this.#context.clearRect(
           0,
           0,
@@ -490,37 +542,14 @@ export class Shape<
           this.#context.canvas.height
         );
         this.drawInSandBox(this.#context);
-        if (!this.attrs.flatMode) {
-          this.children.forEach(node => {
-            node.draw(this.#context!)
-          })
-        }
       }
-
 
       // finished drawing in the cache
       // draw to main context
       context.drawImage(this.#context.canvas, this.attrs.x, this.attrs.y);
-
-        if (this.attrs.flatMode) {
-          this.children.forEach(node => {
-            if (node.needReload) {
-              node.draw(context)
-            }
-          })
-        }
-      
     } else {
       // キャッシュさせないでください
       this.drawInSandBox(context);
-      
-      if (this.attrs.flatMode) {
-          this.children.forEach(node => {
-            if (node.needReload) {
-              node.draw(context)
-            }
-          })
-        }
     }
 
     this.currentNeedReload = false;

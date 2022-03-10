@@ -17,7 +17,7 @@ export class Container<
 
   // eslint-disable-next-line functional/functional-parameters
   public add(...nodes: readonly T[]): void {
-    nodes.forEach(node => this.children.add(node));
+    nodes.forEach((node) => this.children.add(node));
   }
 
   public matches(selector: string): boolean {
