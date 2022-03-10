@@ -244,10 +244,10 @@ export class Shape<
   }
 
   public getWidth() {
-    return this.getInnerWidth() + (this.attrs.shadow?.offset?.x ?? 0);
+    return this.getInnerWidth() + (this.attrs.strokeWidth??1) + (this.attrs.shadow?.offset?.x ?? 0);
   }
   public getHeight() {
-    return this.getInnerHeight() + (this.attrs.shadow?.offset?.y ?? 0);
+    return this.getInnerHeight() + (this.attrs.strokeWidth??1)+ (this.attrs.shadow?.offset?.y ?? 0);
   }
   private onresize() {
     // reactive
@@ -458,7 +458,7 @@ export class Shape<
     context.beginPath();
 
     this.lineSet(context);
-    scene?.(context);
+    scene?.call(this, context);
     this.fillStrokeScene(context);
 
     context.closePath();
@@ -480,7 +480,7 @@ export class Shape<
     );
   }
   // @overwrite
-  protected isPressedPoint(x: number, y: number): boolean {
+  public isPressedPoint(x: number, y: number): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const hitStroke = this.getHitStroke();
 

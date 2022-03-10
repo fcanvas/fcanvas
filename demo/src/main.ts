@@ -1,4 +1,4 @@
-import { Stage, Layer, Shape } from "../../src/index";
+import { Stage, Layer, Shape, Circle } from "../../src/index";
 
 const stage = new Stage({
   container: "app",
@@ -6,16 +6,19 @@ const stage = new Stage({
 
 const layer = new Layer();
 
-const circle = new Shape({
-  sceneFunc(context) {
-    console.log(context);
-    context.arc(50, 50, 50, 0, Math.PI * 2);
-  },
+const circle = new Circle({
   x: 0,
   y: 0,
+  radius: 50,
   // fill: "red"
   stroke: "black",
 });
+circle.on("mousedown", event => {
+    console.table({
+        name: "mousedown",
+        event
+    })
+})
 
 layer.add(circle);
 stage.add(layer);
