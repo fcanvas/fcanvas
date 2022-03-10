@@ -11,7 +11,7 @@ export class Circle extends Shape<Attrs> {
 	protected readonly attrsReactSize = ["radius"]
 	
 	protected _sceneFunc(context: CanvasRenderingContext2D) {
-		context.arc(this.attrs.radius / 2, this.attrs.radius / 2, this.attrs.radius, 0, TWO_PI)
+		context.arc(this.attrs.radius, this.attrs.radius, this.attrs.radius, 0, TWO_PI)
 	}
 	constructor(attrs : Attrs) {
 		super(attrs)
@@ -25,6 +25,6 @@ export class Circle extends Shape<Attrs> {
 	}
 
 	protected isPressedPoint(x: number, y: number) {
-		return pointInCircle(x, y, this.attrs.x, this.attrs.y, this.attrs.radius)
+		return pointInCircle(x + this.attrs.radius, y + this.attrs.radius, this.attrs.x, this.attrs.y, this.attrs.radius)
 	}
 }
