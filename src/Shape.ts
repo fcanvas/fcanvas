@@ -60,6 +60,7 @@ export type AttrsDefault = Offset & {
   height?: number;
   fillAfterStrokeEnabled?: boolean;
   fillEnabled?: bool;
+  flatMode?: boolean;
   stroke?: FillStyle;
   strokeWidth?: number;
   strokeEnabled?: boolean;
@@ -113,7 +114,7 @@ export class Shape<
 
   readonly attrs: Attrs;
   // readonly #propWatch = <st;ring[]>[]
-  public needReload = true;
+  public currentNeedReload = true;
   public parentNeedReloading = true;
   // @overwrite
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
@@ -141,7 +142,7 @@ export class Shape<
     }
     this.attrs = createProxy(attrs, (prop, val) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
-        this.needReload = true;
+        this.currentNeedReload = true;
         this.parentNeedReloading = true
       } else {
         this.parentNeedReloading = true;
@@ -169,6 +170,24 @@ export class Shape<
     return this.attrs.height ?? 0;
   }
   
+  public get needReload(): boolean {
+    if (this.attrs.flatMode) {
+      return this.currentNeedReload
+    }
+
+    if (this.currentNeedReload) {
+      return true;
+    }
+
+    for (const node of this.children) {
+      if (node.needReload || node.parentNeedReloading) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   public getWidth() {
     return this.getInnerWidth() + (this.attrs.shadow?.offset?.x ?? 0)
   }
@@ -471,16 +490,39 @@ export class Shape<
           this.#context.canvas.height
         );
         this.drawInSandBox(this.#context);
+        if (!this.attrs.flatMode) {
+          this.children.forEach(node => {
+            node.draw(this.#context!)
+          })
+        }
       }
+
 
       // finished drawing in the cache
       // draw to main context
       context.drawImage(this.#context.canvas, this.attrs.x, this.attrs.y);
+
+        if (this.attrs.flatMode) {
+          this.children.forEach(node => {
+            if (node.needReload) {
+              node.draw(context)
+            }
+          })
+        }
+      
     } else {
       // キャッシュさせないでください
       this.drawInSandBox(context);
+      
+      if (this.attrs.flatMode) {
+          this.children.forEach(node => {
+            if (node.needReload) {
+              node.draw(context)
+            }
+          })
+        }
     }
 
-    this.needReload = false;
+    this.currentNeedReload = false;
   }
 }
