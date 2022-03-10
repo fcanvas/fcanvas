@@ -1,5 +1,7 @@
+
 import { Container } from "./Container";
 import { Shape } from "./Shape";
+import { realMousePosition } from "./helpers/realMousePosition"
 
 type Attrs = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -16,10 +18,22 @@ export class Layer extends Container<Shape<any, any>> {
   }
 
   readonly #attrs: Attrs;
-  constructor(attrs: Attrs) {
+  constructor(attrs: Attrs = {}) {
     super();
 
     this.#attrs = attrs;
+    this.canvas.addEventListener("mousedown", event => {
+        const { x: clientX, y: clientY } =  realMousePosition(this.canvas, event.clientX, event.clientY)
+
+        this.children.forEach(node => {
+            if (node.listeners.has("mousedown")) {
+                console.log("active event")
+                if (node.isPressedPoint(clientX, clientY)) {
+                    node.emit("mousedown", event)
+                }
+            }
+        })
+    })
   }
 
   public matches() {
