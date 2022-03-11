@@ -77,10 +77,6 @@ type FillModeMixture = {
 
 export type AttrsDefault = Offset & {
   // eslint-disable-next-line functional/prefer-readonly-type
-  width?: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  height?: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
   fillAfterStrokeEnabled?: boolean;
   // eslint-disable-next-line functional/prefer-readonly-type
   fillEnabled?: bool;
@@ -140,12 +136,19 @@ export type AttrsDefault = Offset & {
     offset?: Partial<Offset>;
   };
 
+export type EventsDefault = {
+  
+}
+
 const EmptyArray: Iterable<number> = [];
 
 const idsUsed = new Set<string>();
 
 export class Shape<
-  Attrs extends Record<string, unknown> & AttrsDefault,
+  Attrs extends Record<string, unknown> & AttrsDefault = AttrsDefault & {
+    width: number;
+    height: number;
+  },
   // eslint-disable-next-line @typescript-eslint/ban-types
   Events extends Record<string, unknown> = {}
 > {
@@ -236,11 +239,11 @@ export class Shape<
 
   // @overwrite
   public getInnerWidth(): number {
-    return this.attrs.width ?? 0;
+    return this.attrs.width as number? ?? 0;
   }
   // @overwrite
   public getInnerHeight(): number {
-    return this.attrs.height ?? 0;
+    return this.attrs.height as number? ?? 0;
   }
 
   public getWidth() {
