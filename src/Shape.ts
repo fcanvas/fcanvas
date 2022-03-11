@@ -136,8 +136,43 @@ export type AttrsDefault = Offset & {
     offset?: Partial<Offset>;
   };
 
-export type EventsDefault = {
-  
+
+  export type EventsDefault = {
+      /* @mouse event */
+    // eslint-disable-next-line functional/prefer-readonly-type
+    mouseover: MouseEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     mouseout: MouseEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+      mouseenter: MouseEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     mouseleave: MouseEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     mousemove: MouseEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     mousedown: MouseEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     mouseup: MouseEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     wheel:WheelEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     click: MouseEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     dblclick: MouseEvent
+
+
+     /* touch event */
+    // eslint-disable-next-line functional/prefer-readonly-type
+     touchstart:TouchEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     touchmove:TouchEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     touchend:TouchEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     tap:TouchEvent
+    // eslint-disable-next-line functional/prefer-readonly-type
+     dbltap:TouchEvent
+     
 }
 
 const EmptyArray: Iterable<number> = [];
@@ -146,11 +181,12 @@ const idsUsed = new Set<string>();
 
 export class Shape<
   Attrs extends Record<string, unknown> & AttrsDefault = AttrsDefault & {
+    // eslint-disable-next-line functional/prefer-readonly-type
     width: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
     height: number;
   },
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  Events extends Record<string, unknown> = {}
+  Events extends Record<string, unknown> & EventsDefault = EventsDefault
 > {
   // @overwrite
   readonly type: string = "Shape";
@@ -239,11 +275,11 @@ export class Shape<
 
   // @overwrite
   public getInnerWidth(): number {
-    return this.attrs.width as number? ?? 0;
+    return this.attrs.width as number| undefined ?? 0;
   }
   // @overwrite
   public getInnerHeight(): number {
-    return this.attrs.height as number? ?? 0;
+    return this.attrs.height as number | undefined ?? 0;
   }
 
   public getWidth() {
