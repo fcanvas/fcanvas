@@ -1,16 +1,30 @@
-
-import { keys } from "ts-transformer-keys"
-
 import { Container } from "./Container";
 import { EventsDefault, Shape } from "./Shape";
-import { realMousePosition } from "./helpers/realMousePosition"
+import { realMousePosition } from "./helpers/realMousePosition";
 
 type Attrs = {
   // eslint-disable-next-line functional/prefer-readonly-type
   clearBeforeDraw?: boolean;
 };
 
-const EventsDefault = keys<EventsDefault>()
+const EventsDefault = [
+  "mouseover",
+  "mouseout",
+  "mouseenter",
+  "mouseleave",
+  "mousemove",
+  "mousedown",
+  "wheel",
+  "click",
+  "dblclick",
+
+  "touchstart",
+  "touchmove",
+  "touchend",
+  "tap",
+  "dbltap",
+];
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Layer extends Container<Shape<any, any>> {
   readonly type = "Layer";
@@ -26,26 +40,38 @@ export class Layer extends Container<Shape<any, any>> {
     super();
 
     this.#attrs = attrs;
-    EventsDefault.forEach(type => {
-        this.canvas.addEventListener(type as any, this.activatorEventChildren.bind(this))
-    })
+    EventsDefault.forEach((type) => {
+      this.canvas.addEventListener(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        type as any,
+        this.activatorEventChildren.bind(this)
+      );
+    });
   }
-  private activatorEventChildren(event : EventsDefault[keyof EventsDefault]) : void {
-      // eslint-disable-next-line functional/no-let
-      let clients: readonly ReturnType< typeof realMousePosition>[]
+  private activatorEventChildren(
+    event: EventsDefault[keyof EventsDefault]
+  ): void {
+    // eslint-disable-next-line functional/no-let
+    let clients: readonly ReturnType<typeof realMousePosition>[];
 
-      this.children.forEach(node => {
-          if (node.listeners.has(event.type)) {
-              console.log(`active event ${event.type}`)
-              if (!clients) {
-                  clients = (event.type.startsWith("touch") ? Array.from((event as TouchEvent).changedTouches) : [event as MouseEvent | WheelEvent ]).map(touch => realMousePosition(this.canvas, touch.clientX, touch.clientY))
-              }
-              
-              if (clients.some(item => node.isPressedPoint(item.x, item.y))) {
-                  node.emit(event.type, event)
-              }
-          }
-      })
+    this.children.forEach((node) => {
+      if (node.listeners.has(event.type)) {
+        console.log(`active event ${event.type}`);
+        if (!clients) {
+          clients = (
+            event.type.startsWith("touch")
+              ? Array.from((event as TouchEvent).changedTouches)
+              : [event as MouseEvent | WheelEvent]
+          ).map((touch) =>
+            realMousePosition(this.canvas, touch.clientX, touch.clientY)
+          );
+        }
+
+        if (clients.some((item) => node.isPressedPoint(item.x, item.y))) {
+          node.emit(event.type, event);
+        }
+      }
+    });
   }
 
   public matches() {
