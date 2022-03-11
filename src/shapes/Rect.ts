@@ -18,7 +18,7 @@ export class Rect extends Shape<Attrs> {
     super(attrs);
   }
 
-  protected isPressedPoint(x: number, y: number) {
+  public isPressedPoint(x: number, y: number) {
     return pointInBox(
       x,
       y,
