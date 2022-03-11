@@ -86,7 +86,7 @@ export class Arc extends Shape<Attrs> {
     return this.getInnerWidth();
   }
 
-  protected isPressedPoint(x: number, y: number) {
+  public isPressedPoint(x: number, y: number) {
     const w_2 = this.getInnerWidth() / 2;
     const h_2 = this.getInnerHeight() / 2;
     const angle = Math.atan2(x + w_2 - this.attrs.x, y + h_2 - this.attrs.y);
