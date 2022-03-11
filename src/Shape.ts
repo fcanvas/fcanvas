@@ -136,44 +136,41 @@ export type AttrsDefault = Offset & {
     offset?: Partial<Offset>;
   };
 
+export type EventsDefault = {
+  /* @mouse event */
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseover: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseout: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseenter: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseleave: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mousemove: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mousedown: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseup: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  wheel: WheelEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  click: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  dblclick: MouseEvent;
 
-  export type EventsDefault = {
-      /* @mouse event */
-    // eslint-disable-next-line functional/prefer-readonly-type
-    mouseover: MouseEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     mouseout: MouseEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-      mouseenter: MouseEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     mouseleave: MouseEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     mousemove: MouseEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     mousedown: MouseEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     mouseup: MouseEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     wheel:WheelEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     click: MouseEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     dblclick: MouseEvent
-
-
-     /* touch event */
-    // eslint-disable-next-line functional/prefer-readonly-type
-     touchstart:TouchEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     touchmove:TouchEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     touchend:TouchEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     tap:TouchEvent
-    // eslint-disable-next-line functional/prefer-readonly-type
-     dbltap:TouchEvent
-     
-}
+  /* touch event */
+  // eslint-disable-next-line functional/prefer-readonly-type
+  touchstart: TouchEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  touchmove: TouchEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  touchend: TouchEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  tap: TouchEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  dbltap: TouchEvent;
+};
 
 const EmptyArray: Iterable<number> = [];
 
@@ -275,18 +272,26 @@ export class Shape<
 
   // @overwrite
   public getInnerWidth(): number {
-    return this.attrs.width as number| undefined ?? 0;
+    return (this.attrs.width as number | undefined) ?? 0;
   }
   // @overwrite
   public getInnerHeight(): number {
-    return this.attrs.height as number | undefined ?? 0;
+    return (this.attrs.height as number | undefined) ?? 0;
   }
 
   public getWidth() {
-    return this.getInnerWidth() + (this.attrs.strokeWidth??1) + (this.attrs.shadow?.offset?.x ?? 0);
+    return (
+      this.getInnerWidth() +
+      (this.attrs.strokeWidth ?? 1) +
+      (this.attrs.shadow?.offset?.x ?? 0)
+    );
   }
   public getHeight() {
-    return this.getInnerHeight() + (this.attrs.strokeWidth??1)+ (this.attrs.shadow?.offset?.y ?? 0);
+    return (
+      this.getInnerHeight() +
+      (this.attrs.strokeWidth ?? 1) +
+      (this.attrs.shadow?.offset?.y ?? 0)
+    );
   }
   private onresize() {
     // reactive

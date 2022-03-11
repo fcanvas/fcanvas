@@ -13,12 +13,12 @@ const circle = new Circle({
   // fill: "red"
   stroke: "black",
 });
-circle.on("mousedown", event => {
-    console.table({
-        name: "mousedown",
-        event
-    })
-})
+circle.on("mousedown", (event) => {
+  console.table({
+    name: "mousedown",
+    event,
+  });
+});
 
 layer.add(circle);
 stage.add(layer);
