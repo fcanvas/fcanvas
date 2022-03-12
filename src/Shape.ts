@@ -134,6 +134,23 @@ export type AttrsDefault = Offset & {
     rotation?: number;
     // eslint-disable-next-line functional/prefer-readonly-type
     offset?: Partial<Offset>;
+  } & {
+    filter?: "none" | {
+      url?: string; // string
+      blur?: number; // px
+      brightness?: number; // int%
+      contrast?: number; // 0 -> 100%
+      dropShadow?: Partial<Offset> & {
+        blur?: number // intpx > 0
+        color: string
+      }
+      greyscale?: number // int%
+      hueRotate?: number // 0 -> 360 deg
+      invert?: number // int%
+      opacity?: number // 0 -> 100%
+      saturate?: number // int%
+      sepia?: number // int%
+    }
   };
 
 export type EventsDefault = {
@@ -477,8 +494,9 @@ export class Shape<
       this.attrs.offset !== void 0 ||
       !this.#context;
     const needSetAlpha = this.attrs.opacity !== void 0;
+    const useFilter = this.attrs.filter !== void 0
     // eslint-disable-next-line functional/no-let
-    let backupTransform, backupAlpha: number;
+    let backupTransform, backupAlpha: number, backupFilter: string;;
 
     if (needSetAlpha) {
       backupAlpha = context.globalAlpha;
@@ -498,6 +516,54 @@ export class Shape<
           )
       );
     }
+    if (useFilter) {
+      backupFilter = context.filter
+      // eslint-disable-next-line functional/no-let
+      let filter : string;
+      if (this.attrs.filter === "none") {
+        filter = "none"
+      } else {
+        filter = ""
+        if (this.attrs.filter!.url !== void 0) {
+          filter += `url(${JSON.stringify(this.attrs.filter!.url)})`
+        }
+        if (this.attrs.filter!.blur !== void 0) {
+          filter += `blur(${this.attrs.filter!.blur}px)`
+        }
+        if (this.attrs.filter!.brightness !== void 0) {
+          filter += `brightness(${this.attrs.filter!.brightness}%)`
+        }
+        if (this.attrs.filter!.contrast !== void 0) {
+          filter += `contrast(${this.attrs.filter!.contrast})`
+        }
+        if (this.attrs.filter!.dropShadow !== void 0) {
+          filter += `drop-shadow(${this.attrs.filter!.dropShadow.x ?? 0}px ${this.attrs.filter!.dropShadow.y ?? 0}px ${this.attrs.filter!.dropShadow.blur ?? 0}px ${this.attrs.filter!.dropShadow.color})`
+        }
+        if (this.attrs.filter!.greyscale !== void 0) {
+          filter += `greyscale(${this.attrs.filter!.greyscale}%)`
+        }
+        if (this.attrs.filter!.hueRotate !== void 0) {
+          filter += `hue-rotate(${this.attrs.filter!.hueRotate}deg)`
+        }
+        if (this.attrs.filter!.invert !== void 0) {
+          filter += `invert(${this.attrs.filter!.invert}%)`
+        }
+        if (this.attrs.filter!.opacity !== void 0) {
+          filter += `opacity(${this.attrs.filter!.opacity}%)`
+        }
+        if (this.attrs.filter!.saturate !== void 0) {
+          filter += `saturate(${this.attrs.filter!.saturate}%)`
+        }
+        if (this.attrs.filter!.sepia !== void 0) {
+          filter += `sepia(${this.attrs.filter!.sepia}%)`
+        }
+        if (filter === "") {
+          filter = "none"
+        }
+      }
+
+      context.filter = filter 
+    }
 
     context.beginPath();
 
@@ -507,6 +573,9 @@ export class Shape<
 
     context.closePath();
 
+    if (useFilter) {
+      context.filter = backupFilter!
+    }
     if (needUseTransform) {
       context.setTransform(backupTransform);
     }
