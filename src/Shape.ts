@@ -135,20 +135,34 @@ export type AttrsDefault = Offset & {
     // eslint-disable-next-line functional/prefer-readonly-type
     offset?: Partial<Offset>;
   } & {
+    // eslint-disable-next-line functional/prefer-readonly-type
     filter?: "none" | {
+    // eslint-disable-next-line functional/prefer-readonly-type
       url?: string; // string
+    // eslint-disable-next-line functional/prefer-readonly-type
       blur?: number; // px
+    // eslint-disable-next-line functional/prefer-readonly-type
       brightness?: number; // int%
+    // eslint-disable-next-line functional/prefer-readonly-type
       contrast?: number; // 0 -> 100%
+    // eslint-disable-next-line functional/prefer-readonly-type
       dropShadow?: Partial<Offset> & {
+    // eslint-disable-next-line functional/prefer-readonly-type
         blur?: number // intpx > 0
+    // eslint-disable-next-line functional/prefer-readonly-type
         color: string
       }
+    // eslint-disable-next-line functional/prefer-readonly-type
       greyscale?: number // int%
+    // eslint-disable-next-line functional/prefer-readonly-type
       hueRotate?: number // 0 -> 360 deg
+    // eslint-disable-next-line functional/prefer-readonly-type
       invert?: number // int%
+    // eslint-disable-next-line functional/prefer-readonly-type
       opacity?: number // 0 -> 100%
+    // eslint-disable-next-line functional/prefer-readonly-type
       saturate?: number // int%
+    // eslint-disable-next-line functional/prefer-readonly-type
       sepia?: number // int%
     }
   };
@@ -524,37 +538,59 @@ export class Shape<
         filter = "none"
       } else {
         filter = ""
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.url !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `url(${JSON.stringify(this.attrs.filter!.url)})`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.blur !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `blur(${this.attrs.filter!.blur}px)`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.brightness !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `brightness(${this.attrs.filter!.brightness}%)`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.contrast !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `contrast(${this.attrs.filter!.contrast})`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.dropShadow !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `drop-shadow(${this.attrs.filter!.dropShadow.x ?? 0}px ${this.attrs.filter!.dropShadow.y ?? 0}px ${this.attrs.filter!.dropShadow.blur ?? 0}px ${this.attrs.filter!.dropShadow.color})`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.greyscale !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `greyscale(${this.attrs.filter!.greyscale}%)`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.hueRotate !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `hue-rotate(${this.attrs.filter!.hueRotate}deg)`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.invert !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `invert(${this.attrs.filter!.invert}%)`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.opacity !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `opacity(${this.attrs.filter!.opacity}%)`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.saturate !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `saturate(${this.attrs.filter!.saturate}%)`
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (this.attrs.filter!.sepia !== void 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           filter += `sepia(${this.attrs.filter!.sepia}%)`
         }
         if (filter === "") {
@@ -562,6 +598,7 @@ export class Shape<
         }
       }
 
+      // eslint-disable-next-line functional/immutable-data
       context.filter = filter 
     }
 
@@ -574,6 +611,7 @@ export class Shape<
     context.closePath();
 
     if (useFilter) {
+      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
       context.filter = backupFilter!
     }
     if (needUseTransform) {
