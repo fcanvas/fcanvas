@@ -1,14 +1,12 @@
 import { transparent } from "./constants/Colors";
 import { createProxy } from "./helpers/createProxy";
+import { Offset } from "./types/Offset"
+import { OptionTransform, createTransform } from "./helpers/createTransform"
+import { OptionFilter, createFilter } from "./helpers/createFilter"
 // add ctx.filter
 type Color = string;
 type FillStyle = CanvasGradient | CanvasPattern | Color;
-type Offset = {
-  // eslint-disable-next-line functional/prefer-readonly-type
-  x: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  y: number;
-};
+
 type bool = boolean;
 
 type FillModeColor = {
@@ -125,46 +123,9 @@ export type AttrsDefault = Offset & {
     id?: string;
     // eslint-disable-next-line functional/prefer-readonly-type
     name?: string;
-  } & {
+  } & OptionTransform & {
     // eslint-disable-next-line functional/prefer-readonly-type
-    opacity?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    scale?: Partial<Offset>;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    rotation?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    offset?: Partial<Offset>;
-  } & {
-    // eslint-disable-next-line functional/prefer-readonly-type
-    filter?: "none" | {
-    // eslint-disable-next-line functional/prefer-readonly-type
-      url?: string; // string
-    // eslint-disable-next-line functional/prefer-readonly-type
-      blur?: number; // px
-    // eslint-disable-next-line functional/prefer-readonly-type
-      brightness?: number; // int%
-    // eslint-disable-next-line functional/prefer-readonly-type
-      contrast?: number; // 0 -> 100%
-    // eslint-disable-next-line functional/prefer-readonly-type
-      dropShadow?: Partial<Offset> & {
-    // eslint-disable-next-line functional/prefer-readonly-type
-        blur?: number // intpx > 0
-    // eslint-disable-next-line functional/prefer-readonly-type
-        color: string
-      }
-    // eslint-disable-next-line functional/prefer-readonly-type
-      greyscale?: number // int%
-    // eslint-disable-next-line functional/prefer-readonly-type
-      hueRotate?: number // 0 -> 360 deg
-    // eslint-disable-next-line functional/prefer-readonly-type
-      invert?: number // int%
-    // eslint-disable-next-line functional/prefer-readonly-type
-      opacity?: number // 0 -> 100%
-    // eslint-disable-next-line functional/prefer-readonly-type
-      saturate?: number // int%
-    // eslint-disable-next-line functional/prefer-readonly-type
-      sepia?: number // int%
-    }
+    filter?: OptionFilter
   };
 
 export type EventsDefault = {
@@ -276,13 +237,16 @@ export class Shape<
 
       idsUsed.add(attrs.id);
     }
+    this.onresize();
     this.attrs = createProxy(attrs, (prop) => {
+      // write code no reactive it. exm: id, name...
+
+
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;
-        this.parentNeedReloading = true;
-      } else {
-        this.parentNeedReloading = true;
       }
+      this.parentNeedReloading = true;
+      
 
       if (
         this.attrsReactSize.some(
@@ -293,7 +257,6 @@ export class Shape<
         this.onresize();
       }
     });
-    this.onresize();
 
     if (this.attrs.perfectDrawEnabled ?? true) {
       this.#context =
@@ -506,7 +469,9 @@ export class Shape<
       this.attrs.scale !== void 0 ||
       this.attrs.rotation !== void 0 ||
       this.attrs.offset !== void 0 ||
-      !this.#context;
+      this.attrs.skewX !== void 0 ||
+      this.attrs.skewY !== void 0 ||
+      !this.#context
     const needSetAlpha = this.attrs.opacity !== void 0;
     const useFilter = this.attrs.filter !== void 0
     // eslint-disable-next-line functional/no-let
@@ -520,86 +485,12 @@ export class Shape<
     if (needUseTransform) {
       backupTransform = context.getTransform();
 
-      context.setTransform(
-        new DOMMatrix()
-          .scale(this.attrs.scale?.x || 1, this.attrs.scale?.y || 1)
-          .rotate(this.attrs.rotation || 0)
-          .translate(
-            (this.attrs.offset?.x || 0) + this.attrs.x,
-            (this.attrs.offset?.y || 0) + this.attrs.y
-          )
-      );
+      context.setTransform(createTransform(this.attrs, !this.#context));
     }
     if (useFilter) {
       backupFilter = context.filter
-      // eslint-disable-next-line functional/no-let
-      let filter : string;
-      if (this.attrs.filter === "none") {
-        filter = "none"
-      } else {
-        filter = ""
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.url !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `url(${JSON.stringify(this.attrs.filter!.url)})`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.blur !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `blur(${this.attrs.filter!.blur}px)`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.brightness !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `brightness(${this.attrs.filter!.brightness}%)`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.contrast !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `contrast(${this.attrs.filter!.contrast})`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.dropShadow !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `drop-shadow(${this.attrs.filter!.dropShadow.x ?? 0}px ${this.attrs.filter!.dropShadow.y ?? 0}px ${this.attrs.filter!.dropShadow.blur ?? 0}px ${this.attrs.filter!.dropShadow.color})`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.greyscale !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `greyscale(${this.attrs.filter!.greyscale}%)`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.hueRotate !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `hue-rotate(${this.attrs.filter!.hueRotate}deg)`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.invert !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `invert(${this.attrs.filter!.invert}%)`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.opacity !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `opacity(${this.attrs.filter!.opacity}%)`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.saturate !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `saturate(${this.attrs.filter!.saturate}%)`
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (this.attrs.filter!.sepia !== void 0) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          filter += `sepia(${this.attrs.filter!.sepia}%)`
-        }
-        if (filter === "") {
-          filter = "none"
-        }
-      }
 
-      // eslint-disable-next-line functional/immutable-data
-      context.filter = filter 
+      context.filter = createFilter(this.attrs.filter!) 
     }
 
     context.beginPath();
