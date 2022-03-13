@@ -61,9 +61,9 @@ export function createFilter(options: OptionFilter): string {
   if (options!.dropShadow !== void 0) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     filter += `drop-shadow(${options!.dropShadow.x ?? 0}px ${
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       options!.dropShadow.y ?? 0
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     }px ${options!.dropShadow.blur ?? 0}px ${options!.dropShadow.color})`;
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

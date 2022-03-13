@@ -1,9 +1,10 @@
+import { ContainerNode } from "./Container";
 import type { Layer } from "./Layer";
 import { transparent } from "./constants/Colors";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
-import { createProxy } from "./helpers/createProxy";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { Offset } from "./types/Offset";
+import { RecordString } from "./types/RecordString";
 // add ctx.filter
 type Color = string;
 type FillStyle = CanvasGradient | CanvasPattern | Color;
@@ -167,29 +168,17 @@ export type EventsDefault = {
 
 const EmptyArray: Iterable<number> = [];
 
-const idsUsed = new Set<string>();
-
 export class Shape<
-  Attrs extends Record<string, unknown> & AttrsDefault = AttrsDefault & {
+  Attrs extends RecordString<string, unknown> & AttrsDefault = AttrsDefault & {
     // eslint-disable-next-line functional/prefer-readonly-type
     width: number;
     // eslint-disable-next-line functional/prefer-readonly-type
     height: number;
   },
-  Events extends Record<string, unknown> & EventsDefault = EventsDefault
-> {
+  Events extends RecordString<string, unknown> & EventsDefault = EventsDefault
+> extends ContainerNode<Attrs, Events> {
   // @overwrite
-  readonly type: string = "Shape";
-
-  public get name() {
-    return this.attrs.name || "";
-  }
-  public get id() {
-    return this.attrs.id;
-  }
-
-  readonly attrs: Attrs;
-  // readonly #propWatch = <st;ring[]>[]
+  public readonly type: string = "Shape";
   // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload = true;
   readonly #layers = new Set<Layer>();
@@ -197,58 +186,17 @@ export class Shape<
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   protected _sceneFunc(context: CanvasRenderingContext2D) {}
 
-  public readonly listeners = new Map<
-    keyof Events,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
-    Array<(event: any) => void>
-  >();
-  public readonly watchers = new Map<
-    keyof Attrs,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
-    Set<(newValue: any, oldValue: any) => void>
-  >();
-
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
   // @overwrite
   protected readonly attrsReactSize: readonly string[] = ["width", "height"];
 
-  public matches(selector: string): boolean {
-    return selector.split(",").some((sel) => {
-      const [other, id] = sel.trim().split("#");
-
-      const [tag, ...classes] = other.split(".");
-
-      const validTag =
-        tag === "" || tag?.toLowerCase() === this.type?.toLowerCase();
-      const validClass =
-        classes.length === 0
-          ? true
-          : classes.every((clazz) =>
-              new RegExp(`(^| )${clazz}( |$)`).test(this.name)
-            );
-      const validId = id ? id === this.id : true;
-
-      return validTag && validClass && validId;
-    });
-  }
-
   constructor(attrs: Attrs) {
-    if (attrs.id !== void 0) {
-      if (idsUsed.has(attrs.id)) {
-        // eslint-disable-next-line functional/no-throw-statement
-        throw new Error(`ID "${attrs.id}" was used!`);
-      }
-
-      idsUsed.add(attrs.id);
-    }
-    this.onresize();
-    this.attrs = createProxy(attrs, (prop, newVal, oldVal) => {
-      // write code no reactive it. exm: id, name...
-
+    super(attrs, (prop) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;
       }
+
       this.#layers.forEach((layer) => {
         if (layer.currentNeedReload === true) return;
         layer.currentNeedReload = true;
@@ -262,10 +210,9 @@ export class Shape<
       ) {
         this.onresize();
       }
-      
-      this.watchers.get(prop)?.forEach(cb => cb(newVal, oldVal))
-      this.watchers.get("*")?.forEach(cb => cb(newVal, oldVal))
     });
+
+    this.onresize();
 
     if (this.attrs.perfectDrawEnabled ?? true) {
       this.#context =
@@ -537,57 +484,6 @@ export class Shape<
     const hitStroke = this.getHitStroke();
 
     return x === this.attrs.x && y === this.attrs.y;
-  }
-  public on<Name extends keyof Events>(
-    name: Name,
-    callback: (this: this, event: Events[Name]) => void
-  ): this {
-    const listeners = this.listeners.get(name);
-    if (listeners) {
-      // eslint-disable-next-line functional/immutable-data
-      listeners.push(callback);
-    } else {
-      this.listeners.set(name, [callback]);
-    }
-
-    return this;
-  }
-  public off<Name extends keyof Events>(
-    name: Name,
-    callback?: (this: this, event: Events[Name]) => void
-  ): this {
-    const listeners = this.listeners.get(name);
-
-    if (callback) {
-      // eslint-disable-next-line functional/immutable-data
-      listeners?.splice(listeners.indexOf(callback) >>> 0, 1);
-    } else {
-      // eslint-disable-next-line functional/immutable-data
-      listeners?.splice(0);
-    }
-
-    return this;
-  }
-  public emit<Name extends keyof Events>(
-    name: Name,
-    event: Events[Name]
-  ): this {
-    this.listeners.get(name)?.forEach((cb) => {
-      cb.call(this, event);
-    });
-
-    return this;
-  }
-  public watch<K extends keyof Attrs>(prop: K, cb: (newValue: Attrs[K], oldValue: Attrs[K]) => void | Promise<void>): (() => void) {
-    if (this.watchers.has(prop) === false) {
-      this.watchers.set(prop, new Set())
-    }
-    
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.watchers.get(prop)!.add(cb)
-    
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return () => this.watchers.get(prop)!.delete(cb)
   }
 
   public _onAddToLayer(layer: Layer): void {

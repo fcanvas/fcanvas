@@ -8,58 +8,55 @@
 
   <body>
     <div id="container"></div>
-<script src="https://unpkg.com/konva@8/konva.min.js"></script>
-<script>
-  const $$ = document.createElement
-  
-  
-  var stage = new Konva.Stage({
-  container: 'container',   // id of container <div>
-  width: 500,
-height: 500
-});
+    <script src="https://unpkg.com/konva@8/konva.min.js"></script>
+    <script>
+      const $$ = document.createElement;
 
-// then create layer
-var layer = new Konva.Layer();
+      var stage = new Konva.Stage({
+        container: "container", // id of container <div>
+        width: 500,
+        height: 500,
+      });
 
-// create our shape
-var circle = new Konva.Shape({
-  sceneFunc(ctx) {
-   // ctx.arc(0,0, 50,0, 1000)
-    //ctx.fillStrokeShape(this);
-   console.log(ctx)
-  },
-  x: stage.width() / 2,
-  y: stage.height() / 2,
-  radius: 70,
-  fill: 'red',
-  stroke: 'black',
-  strokeWidth: 4
-});
-// create our shape
-var circle2= new Konva.Circle({
-  
-  x: 0,
-  y: 0,
-  radius: 70,
-  fill: 'red',
-  stroke: 'black',
-  strokeWidth: 4
-});
+      // then create layer
+      var layer = new Konva.Layer();
 
-// add the shape to the layer
-layer.add(circle, circle2);
+      // create our shape
+      var circle = new Konva.Shape({
+        sceneFunc(ctx) {
+          // ctx.arc(0,0, 50,0, 1000)
+          //ctx.fillStrokeShape(this);
+          console.log(ctx);
+        },
+        x: stage.width() / 2,
+        y: stage.height() / 2,
+        radius: 70,
+        fill: "red",
+        stroke: "black",
+        strokeWidth: 4,
+      });
+      // create our shape
+      var circle2 = new Konva.Circle({
+        x: 0,
+        y: 0,
+        radius: 70,
+        fill: "red",
+        stroke: "black",
+        strokeWidth: 4,
+      });
 
-// add the layer to the stage
-stage.add(layer);
+      // add the shape to the layer
+      layer.add(circle, circle2);
 
-let x = y = 0
-setInterval(() => circle2.move({x:x++,y:y++}), 222)
-layer.draw()
+      // add the layer to the stage
+      stage.add(layer);
 
-// draw the image
+      let x = (y = 0);
+      setInterval(() => circle2.move({ x: x++, y: y++ }), 222);
+      layer.draw();
 
-</script>
+      // draw the image
+    </script>
     <canvas id="app"></canvas>
     <img id="img" src="https://google.com/favicon.ico" />
     <script>

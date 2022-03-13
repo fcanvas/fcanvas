@@ -1,7 +1,6 @@
 import { Container } from "./Container";
 import type { EventsDefault, Shape } from "./Shape";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
-import { createProxy } from "./helpers/createProxy";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { realMousePosition } from "./helpers/realMousePosition";
 import { Offset } from "./types/Offset";
@@ -55,9 +54,14 @@ const EventsDefault = [
   "dbltap",
 ];
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Events = {};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class Layer extends Container<Shape<any, any>> {
-  readonly type = "Layer";
+export class Layer extends Container<Attrs, Events, Shape<any, any>> {
+  static readonly _attrNoReactDraw = ["x", "y", "visible"];
+
+  public readonly type = "Layer";
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   readonly #context = document.createElement("canvas").getContext("2d")!;
 
@@ -65,98 +69,91 @@ export class Layer extends Container<Shape<any, any>> {
     return this.#context.canvas;
   }
   // eslint-disable-next-line functional/prefer-readonly-type
-  public loopCasting = false
-  
-  // eslint-disable-next-line functional/prefer-readonly-type
-  public currentNeedReload = true
-  // eslint-disable-next-line functional/prefer-readonly-type
-  private waitDrawing = false
+  public loopCasting = false;
 
-  readonly attrs: Attrs;
-  private reactOffset(): void {
-    // eslint-disable-next-line functional/immutable-data
-    this.canvas.style.left = (this.attrs.x ?? 0) + "px";
-    // eslint-disable-next-line functional/immutable-data
-    this.canvas.style.top = (this.attrs.y ?? 0) + "px";
-  }
-  private reactSize(): void {
-    // eslint-disable-next-line functional/immutable-data
-    this.canvas.style.width = this.attrs.width
-      ? `${this.attrs.width}px`
-      : "100%";
-    // eslint-disable-next-line functional/immutable-data
-    this.canvas.style.height = this.attrs.height
-      ? `${this.attrs.height}px`
-      : "100%";
-    [this.canvas.width, this.canvas.height] = [
-      this.canvas.scrollWidth,
-      this.canvas.scrollHeight,
-    ];
-  }
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public currentNeedReload = true;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private waitDrawing = false;
+
   // eslint-disable-next-line functional/prefer-readonly-type
   private displayBp = "";
-  private reactVisible(): void {
-    this.displayBp = this.canvas.style.display;
-    const display = getComputedStyle(this.canvas).getPropertyValue("display");
-
-    if (this.attrs.visible ?? true) {
-      if (display === "none") {
-        // eslint-disable-next-line functional/immutable-data
-        this.canvas.style.display = "block";
-      } else {
-        // eslint-disable-next-line functional/immutable-data
-        this.canvas.style.display =
-          this.displayBp === "none" ? "" : this.displayBp;
-      }
-
-      return;
-    }
-
-    if (display === "none") {
-      return;
-    }
-    // eslint-disable-next-line functional/immutable-data
-    this.canvas.style.display = "none";
-  }
-  private reactId(): void {
-    this.canvas.setAttribute("id", this.attrs.id ?? "");
-  }
-  private reactName(): void {
-    this.canvas.setAttribute("class", this.attrs.name ?? "");
-  }
 
   constructor(attrs: Attrs = {}) {
-    super();
+    super(
+      attrs,
+      () => {
+        this.currentNeedReload = true;
+      },
+      Layer._attrNoReactDraw
+    );
 
-    this.reactOffset();
-    this.reactSize();
-    this.reactVisible();
-    this.reactId();
-    this.reactName();
-    this.attrs = createProxy(attrs, (prop) => {
-      if (prop === "x" || prop === "y") {
-        this.reactOffset();
-        return;
-      }
-      if (prop === "width" || prop === "height") {
-        this.reactSize();
-        return;
-      }
-      if (prop === "visible") {
-        this.reactVisible();
-        return;
-      }
-      if (prop === "id") {
-        this.reactId();
-        return;
-      }
-      if (prop === "name") {
-        this.reactName();
-        return;
-      }
+    this.watch(
+      ["x", "y"],
+      () => {
+        this.canvas.style.left = (this.attrs.x ?? 0) + "px";
+        this.canvas.style.top = (this.attrs.y ?? 0) + "px";
+      },
+      { immediate: true }
+    );
+    this.watch(
+      ["width", "height"],
+      () => {
+        this.canvas.style.width = this.attrs.width
+          ? `${this.attrs.width}px`
+          : "100%";
+        this.canvas.style.height = this.attrs.height
+          ? `${this.attrs.height}px`
+          : "100%";
+        [this.canvas.width, this.canvas.height] = [
+          this.canvas.scrollWidth,
+          this.canvas.scrollHeight,
+        ];
+      },
+      { immediate: true }
+    );
+    this.watch(
+      "visible",
+      () => {
+        this.displayBp = this.canvas.style.display;
+        const display = getComputedStyle(this.canvas).getPropertyValue(
+          "display"
+        );
 
-      this.currentNeedReload = true;
-    });
+        if (this.attrs.visible ?? true) {
+          if (display === "none") {
+            this.canvas.style.display = "block";
+          } else {
+            this.canvas.style.display =
+              this.displayBp === "none" ? "" : this.displayBp;
+          }
+
+          return;
+        }
+
+        if (display === "none") {
+          return;
+        }
+
+        this.canvas.style.display = "none";
+      },
+      { immediate: true }
+    );
+    this.watch(
+      "id",
+      () => {
+        this.canvas.setAttribute("id", this.attrs.id ?? "");
+      },
+      { immediate: true }
+    );
+    this.watch(
+      "name",
+      () => {
+        this.canvas.setAttribute("class", this.attrs.name ?? "");
+      },
+      { immediate: true }
+    );
+
     EventsDefault.forEach((type) => {
       this.canvas.addEventListener(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -195,11 +192,7 @@ export class Layer extends Container<Shape<any, any>> {
       }
     });
   }
-
-  public matches() {
-    return false;
-  }
-
+  
   public draw() {
     const needReload = this.currentNeedReload;
     if (needReload === false) {
@@ -297,26 +290,26 @@ export class Layer extends Container<Shape<any, any>> {
   }
 
   // eslint-disable-next-line functional/prefer-readonly-type
-  private idRequestFrame?: ReturnType<typeof requestAnimationFrame>
+  private idRequestFrame?: ReturnType<typeof requestAnimationFrame>;
   public batchDraw() {
-    this.loopCasting = true
+    this.loopCasting = true;
     if (!this.waitDrawing) {
       this.waitDrawing = true;
       this.idRequestFrame = requestAnimationFrame(() => {
         this.draw();
         this.waitDrawing = false;
-        this.batchDraw()
+        this.batchDraw();
       });
     }
   }
   public stopDraw() {
     if (!this.idRequestFrame) {
-        return
+      return;
     }
-    
-    this.waitDrawing = true
-    cancelAnimationFrame(this.idRequestFrame)
-    this.waitDrawing = false
-    this.loopCasting = false
+
+    this.waitDrawing = true;
+    cancelAnimationFrame(this.idRequestFrame);
+    this.waitDrawing = false;
+    this.loopCasting = false;
   }
 }
