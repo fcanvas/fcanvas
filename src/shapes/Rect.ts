@@ -9,7 +9,7 @@ type Attrs = AttrsDefault & {
 };
 
 export class Rect extends Shape<Attrs> {
-  readonly type = "Rect";
+  static readonly type = "Rect";
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     context.rect(0, 0, this.attrs.width, this.attrs.height);

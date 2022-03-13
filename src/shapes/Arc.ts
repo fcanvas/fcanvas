@@ -21,8 +21,8 @@ type Attrs = AttrsDefault & {
 };
 
 export class Arc extends Shape<Attrs> {
-  readonly type = "Arc";
-  protected readonly attrsReactSize = [
+  static readonly type = "Arc";
+  static readonly attrsReactSize = [
     "angle",
     "innerRadius",
     "outerRadius",

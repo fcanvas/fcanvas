@@ -8,8 +8,8 @@ type Attrs = AttrsDefault & {
 };
 
 export class Circle extends Shape<Attrs> {
-  readonly type = "Circle";
-  protected readonly attrsReactSize = ["radius"];
+  static readonly type = "Circle";
+  static readonly attrsReactSize = ["radius"];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     const center = this.getWidth() / 2;
