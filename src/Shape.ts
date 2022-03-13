@@ -1,4 +1,4 @@
-import { AttrsIdentifitation, ContainerNode } from "./Container";
+import { AttrListening, AttrsIdentifitation, ContainerNode } from "./Container";
 import type { Layer } from "./Layer";
 import { transparent } from "./constants/Colors";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
@@ -75,7 +75,7 @@ type FillModeMixture = {
   Partial<FillModeLinearGradient> &
   Partial<FillModeRadialGradient>;
 
-export type AttrsDefault = Offset & {
+export type AttrsDefault<Events extends Record<string, unknown>> = Offset & {
   // eslint-disable-next-line functional/prefer-readonly-type
   fillAfterStrokeEnabled?: boolean;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -127,7 +127,7 @@ export type AttrsDefault = Offset & {
   OptionTransform & {
     // eslint-disable-next-line functional/prefer-readonly-type
     filter?: OptionFilter;
-  };
+  } & AttrListening<Events>;
 
 export type EventsDefault = {
   /* @mouse event */
@@ -168,7 +168,7 @@ export type EventsDefault = {
 const EmptyArray: Iterable<number> = [];
 
 export class Shape<
-  Attrs extends Record<string, unknown> & AttrsDefault = AttrsDefault & {
+  Attrs extends Record<string, unknown> & AttrsDefault<Events> = AttrsDefault<EventsDefault> & {
     // eslint-disable-next-line functional/prefer-readonly-type
     width: number;
     // eslint-disable-next-line functional/prefer-readonly-type
@@ -241,6 +241,7 @@ export class Shape<
       (this.attrs.shadow?.offset?.y ?? 0)
     );
   }
+
   private onresize() {
     // reactive
     if (this.#context) {
@@ -250,7 +251,6 @@ export class Shape<
       this.#context.canvas.height = this.getHeight();
     }
   }
-
   private getSceneFunc() {
     return this.attrs.sceneFunc || this._sceneFunc;
   }
