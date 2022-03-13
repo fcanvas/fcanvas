@@ -578,13 +578,15 @@ export class Shape<
 
     return this;
   }
-  public watch<K extends Attrs>(prop: K, cb: (newValue: Attrs[K], oldValue: Attrs[K]) => void | Promise<void>): (() => void) {
+  public watch<K extends keyof Attrs>(prop: K, cb: (newValue: Attrs[K], oldValue: Attrs[K]) => void | Promise<void>): (() => void) {
     if (this.watchers.has(prop) === false) {
       this.watchers.set(prop, new Set())
     }
     
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.watchers.get(prop)!.add(cb)
     
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return () => this.watchers.get(prop)!.delete(cb)
   }
 
