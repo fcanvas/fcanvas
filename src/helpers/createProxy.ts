@@ -1,7 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const weakCache = new WeakMap<Record<string, unknown>, any>();
+import { RecordString } from "../types/RecordString";
 
-export function createProxy<R extends Record<string, unknown>>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const weakCache = new WeakMap<RecordString<string, unknown>, any>();
+
+export function createProxy<R extends RecordString<string, unknown>>(
   target: R,
   onsetter: (prop: keyof R, newVal: R[keyof R], oldVal: R[keyof R]) => void,
   ongetter?: (prop: keyof R) => void,
@@ -33,9 +35,11 @@ export function createProxy<R extends Record<string, unknown>>(
       return target[prop as string];
     },
     set(target, prop, val) {
-      const oldVal = (target as any)[prop as string]
-      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
-      (target as any)[prop as string] = val;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/immutable-data
+      const oldVal = ((target as any)[prop as string](
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        target as any
+      )[prop as string] = val);
       onsetter(
         props === "" ? (prop as string) : `${props}.${prop as string}`,
         val,
