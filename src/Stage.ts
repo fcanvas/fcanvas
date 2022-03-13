@@ -32,6 +32,8 @@ export class Stage extends Container<Layer> {
       if (this.container.contains(layer.canvas) === false) {
         this.container.appendChild(layer.canvas);
       }
+      
+      layer.batchDraw()
     });
   }
 }
