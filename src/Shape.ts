@@ -202,6 +202,11 @@ export class Shape<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
     Array<(event: any) => void>
   >();
+  public readonly watchers = new Map<
+    keyof Attrs,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
+    Set<(newValue: any, oldValue: any) => void>
+  >();
 
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
@@ -238,7 +243,7 @@ export class Shape<
       idsUsed.add(attrs.id);
     }
     this.onresize();
-    this.attrs = createProxy(attrs, (prop) => {
+    this.attrs = createProxy(attrs, (prop, newVal, oldVal) => {
       // write code no reactive it. exm: id, name...
 
       if (!this.#context || (prop !== "x" && prop !== "y")) {
@@ -257,6 +262,9 @@ export class Shape<
       ) {
         this.onresize();
       }
+      
+      this.watchers.get(prop)?.forEach(cb => cb(newVal, oldVal))
+      this.watchers.get("*")?.forEach(cb => cb(newVal, oldVal))
     });
 
     if (this.attrs.perfectDrawEnabled ?? true) {
@@ -569,6 +577,15 @@ export class Shape<
     });
 
     return this;
+  }
+  public watch<K extends Attrs>(prop: K, cb: (newValue: Attrs[K], oldValue: Attrs[K]) => void | Promise<void>): (() => void) {
+    if (this.watchers.has(prop) === false) {
+      this.watchers.set(prop, new Set())
+    }
+    
+    this.watchers.get(prop)!.add(cb)
+    
+    return () => this.watchers.get(prop)!.delete(cb)
   }
 
   public _onAddToLayer(layer: Layer): void {

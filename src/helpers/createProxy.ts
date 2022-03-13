@@ -3,7 +3,7 @@ const weakCache = new WeakMap<Record<string, unknown>, any>();
 
 export function createProxy<R extends Record<string, unknown>>(
   target: R,
-  onsetter: (prop: keyof R, val: R[keyof R]) => void,
+  onsetter: (prop: keyof R, newVal: R[keyof R], oldVal: R[keyof R]) => void,
   ongetter?: (prop: keyof R) => void,
   props = ""
 ): R {
@@ -33,11 +33,13 @@ export function createProxy<R extends Record<string, unknown>>(
       return target[prop as string];
     },
     set(target, prop, val) {
+      const oldVal = (target as any)[prop as string]
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
       (target as any)[prop as string] = val;
       onsetter(
         props === "" ? (prop as string) : `${props}.${prop as string}`,
-        val
+        val,
+        oldVal
       );
 
       return true;
