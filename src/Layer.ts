@@ -1,37 +1,34 @@
-import { Container } from "./Container";
+import { AttrsIdentifitation, Container } from "./Container";
 import type { EventsDefault, Shape } from "./Shape";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { realMousePosition } from "./helpers/realMousePosition";
 import { Offset } from "./types/Offset";
 
-type Attrs = Partial<Offset> & {
-  // eslint-disable-next-line functional/prefer-readonly-type
-  clearBeforeDraw?: boolean;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  width?: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  height?: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  visible?: boolean;
-  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
-  listening?: ReadonlyMap<string, ReadonlyArray<(event: any) => void>>;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  id?: string;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  name?: string;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  opacity?: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  clip?:
-    | (Offset & {
-        // eslint-disable-next-line functional/prefer-readonly-type
-        width: number;
-        // eslint-disable-next-line functional/prefer-readonly-type
-        height: number;
-      })
-    | ((this: Layer, context: Path2D) => void);
-} & OptionTransform & {
+type Attrs = Partial<Offset> &
+  AttrsIdentifitation & {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    clearBeforeDraw?: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    width?: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    height?: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    visible?: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
+    listening?: ReadonlyMap<string, ReadonlyArray<(event: any) => void>>;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    opacity?: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    clip?:
+      | (Offset & {
+          // eslint-disable-next-line functional/prefer-readonly-type
+          width: number;
+          // eslint-disable-next-line functional/prefer-readonly-type
+          height: number;
+        })
+      | ((this: Layer, context: Path2D) => void);
+  } & OptionTransform & {
     // eslint-disable-next-line functional/prefer-readonly-type
     filter?: OptionFilter;
   };
@@ -60,8 +57,8 @@ type Events = {};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Layer extends Container<Attrs, Events, Shape<any, any>> {
   static readonly _attrNoReactDraw = ["x", "y", "visible"];
-  static readonly type: string = "Layer"
-  
+  static readonly type: string = "Layer";
+
   public get canvas() {
     return this.#context.canvas;
   }
@@ -85,6 +82,9 @@ export class Layer extends Container<Attrs, Events, Shape<any, any>> {
       },
       Layer._attrNoReactDraw
     );
+
+    this.#context.canvas.style.cssText =
+      "position: absolute; margin: 0; padding: 0";
 
     this.watch(
       ["x", "y"],

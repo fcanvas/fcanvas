@@ -2,8 +2,6 @@ import { Offset } from "../types/Offset";
 
 export type OptionTransform = Partial<Offset> & {
   // eslint-disable-next-line functional/prefer-readonly-type
-  opacity?: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
   scale?: Partial<Offset>;
   // eslint-disable-next-line functional/prefer-readonly-type
   rotation?: number;
@@ -28,7 +26,9 @@ export function createTransform(
   }
   if (options.offset !== void 0 || force) {
     transform.translate(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       options.offset?.x || 0 + options.x!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       options.offset?.y || 0 + options.y!
     );
   }
