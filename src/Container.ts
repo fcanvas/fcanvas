@@ -5,14 +5,15 @@ export type AttrsIdentifitation = {
   id?: string;
   // eslint-disable-next-line functional/prefer-readonly-type
   name?: string;
-}
-export type AttrListening<Events extends Record<string, unknown>> = {
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AttrListening<Events extends Record<string, any>> = {
   // eslint-disable-next-line functional/prefer-readonly-type
   listening?: Map<
-  keyof Events,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
-  Array<(event: any) => void>
->
+    keyof Events,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
+    Array<(event: any) => void>
+  >;
 };
 type CallbackWatcher<T> = (newValue: T, oldValue: T) => void | Promise<void>;
 type CallbackWatcherAll<P, T> = (
@@ -27,8 +28,11 @@ type OptionsWatcher = {
   deep?: boolean;
 };
 export class ContainerNode<
-  Attrs extends Record<string, unknown> & AttrsIdentifitation & AttrListening<Events>,
-  Events extends Record<string, unknown>
+  Attrs extends Record<string, unknown> &
+    AttrsIdentifitation &
+    AttrListening<Events>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Events extends Record<string, any>
 > {
   static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
   static readonly type: string = "ContainerNode";
@@ -93,8 +97,8 @@ export class ContainerNode<
     });
 
     this.attrs.listening?.forEach((cbs, name) => {
-        cbs.forEach(cb => this.on(name, cb))
-    })
+      cbs.forEach((cb) => this.on(name, cb));
+    });
   }
 
   public matches(selector: string): boolean {
@@ -214,7 +218,8 @@ declare class Empty {
 }
 export class Container<
   Attrs extends Record<string, unknown> & AttrsIdentifitation,
-  Events extends Record<string, unknown>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Events extends Record<string, any>,
   T extends Empty
 > extends ContainerNode<Attrs, Events> {
   static readonly type: string = "Container";

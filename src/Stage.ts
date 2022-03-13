@@ -2,7 +2,8 @@ import { AttrListening, AttrsIdentifitation, Container } from "./Container";
 import { Layer } from "./Layer";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 
-type Attrs<Events extends Record<string, unknown>> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Attrs<Events extends Record<string, any>> = {
   // eslint-disable-next-line functional/prefer-readonly-type
   width: number;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -14,16 +15,16 @@ type Attrs<Events extends Record<string, unknown>> = {
   // eslint-disable-next-line functional/prefer-readonly-type
   opacity?: number;
 } & OptionTransform &
-  AttrsIdentifitation & AttrListening<Events>;
+  AttrsIdentifitation &
+  AttrListening<Events>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Events = {};
+type Events = HTMLElementEventMap;
 
 export class Stage extends Container<Attrs<Events>, Events, Layer> {
   static readonly type: string = "Stage";
   readonly #container = document.createElement("div");
 
-  constructor(attrs: Attrs) {
+  constructor(attrs: Attrs<Events>) {
     super(attrs);
 
     const el = document.getElementById(attrs.container);
