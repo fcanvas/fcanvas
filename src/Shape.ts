@@ -4,7 +4,7 @@ import { transparent } from "./constants/Colors";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { Offset } from "./types/Offset";
-import { RecordString } from "./types/RecordString";
+
 // add ctx.filter
 type Color = string;
 type FillStyle = CanvasGradient | CanvasPattern | Color;
@@ -169,13 +169,13 @@ export type EventsDefault = {
 const EmptyArray: Iterable<number> = [];
 
 export class Shape<
-  Attrs extends RecordString<string, unknown> & AttrsDefault = AttrsDefault & {
+  Attrs extends Record<string, unknown> & AttrsDefault = AttrsDefault & {
     // eslint-disable-next-line functional/prefer-readonly-type
     width: number;
     // eslint-disable-next-line functional/prefer-readonly-type
     height: number;
   },
-  Events extends RecordString<string, unknown> & EventsDefault = EventsDefault
+  Events extends Record<string, unknown> & EventsDefault = EventsDefault
 > extends ContainerNode<Attrs, Events> {
   // @overwrite
   public readonly type: string = "Shape";

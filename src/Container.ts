@@ -1,5 +1,4 @@
 import { createProxy } from "./helpers/createProxy";
-import { RecordString } from "./types/RecordString";
 
 type AttrsNode = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -18,8 +17,8 @@ type OptionsWatcher = {
   immediate?: boolean;
 };
 export class ContainerNode<
-  Attrs extends RecordString<string, unknown> & AttrsNode,
-  Events extends RecordString<string, unknown>
+  Attrs extends Record<string, unknown> & AttrsNode,
+  Events extends Record<string, unknown>
 > {
   static readonly _attrNoReactDrawDefault = ["id", "name"];
 
@@ -175,17 +174,19 @@ export class ContainerNode<
   }
 }
 
+declare class Empty {
+  matches(selector: string): boolean;
+}
 export class Container<
-  Attrs extends RecordString<string, unknown> & AttrsNode,
-  Events extends RecordString<string, unknown>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends ContainerNode<any, any>
+  Attrs extends Record<string, unknown> & AttrsNode,
+  Events extends Record<string, unknown>,
+  T extends Empty
 > extends ContainerNode<Attrs, Events> {
   public readonly type: string = "Container";
   public readonly children = new Set<T>();
 
   public find(selector: string) {
-    return Array.from(this.children).filter(item => item.matches(selector))
+    return Array.from(this.children).filter((item) => item.matches(selector));
   }
 
   // eslint-disable-next-line functional/functional-parameters

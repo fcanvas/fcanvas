@@ -1,9 +1,7 @@
-import { RecordString } from "../types/RecordString";
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const weakCache = new WeakMap<RecordString<string, unknown>, any>();
+const weakCache = new WeakMap<Record<string, unknown>, any>();
 
-export function createProxy<R extends RecordString<string, unknown>>(
+export function createProxy<R extends Record<string, unknown>>(
   target: R,
   onsetter: (prop: keyof R, newVal: R[keyof R], oldVal: R[keyof R]) => void,
   ongetter?: (prop: keyof R) => void,

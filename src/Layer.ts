@@ -163,6 +163,7 @@ export class Layer extends Container<Attrs, Events, Shape<any, any>> {
     });
   }
   public destroy(): void {
+    this.stopDraw();
     this.children.forEach((node) => this.delete(node));
     this.canvas.remove();
   }
@@ -192,7 +193,7 @@ export class Layer extends Container<Attrs, Events, Shape<any, any>> {
       }
     });
   }
-  
+
   public draw() {
     const needReload = this.currentNeedReload;
     if (needReload === false) {
