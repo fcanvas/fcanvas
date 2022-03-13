@@ -177,19 +177,19 @@ export class Shape<
   },
   Events extends Record<string, unknown> & EventsDefault = EventsDefault
 > extends ContainerNode<Attrs, Events> {
-  // @overwrite
-  public readonly type: string = "Shape";
+    static readonly attrsReactSize: readonly string[] = ["width", "height"];
+    static readonly type = "Shape"
+    
   // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload = true;
-  readonly #layers = new Set<Layer>();
   // @overwrite
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   protected _sceneFunc(context: CanvasRenderingContext2D) {}
 
+
+  readonly #layers = new Set<Layer>();
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
-  // @overwrite
-  protected readonly attrsReactSize: readonly string[] = ["width", "height"];
 
   constructor(attrs: Attrs) {
     super(attrs, (prop) => {
@@ -203,7 +203,7 @@ export class Shape<
       });
 
       if (
-        this.attrsReactSize.some(
+        (this.constructor as unknown as typeof Shape).attrsReactSize.some(
           (test) =>
             test === (prop as string) || test.startsWith(`${prop as string}.`)
         )

@@ -21,8 +21,11 @@ export class ContainerNode<
   Events extends Record<string, unknown>
 > {
   static readonly _attrNoReactDrawDefault = ["id", "name"];
+  static readonly type: string = "ContainerNode";
 
-  public readonly type: string = "ContainerNode";
+  public get type() : string {
+      return (this.constructor as typeof ContainerNode).type ?? "unknown"
+  }
   public get id(): string | null {
     return this.attrs.id ?? null;
   }
@@ -182,7 +185,7 @@ export class Container<
   Events extends Record<string, unknown>,
   T extends Empty
 > extends ContainerNode<Attrs, Events> {
-  public readonly type: string = "Container";
+  static readonly type: string = "Container";
   public readonly children = new Set<T>();
 
   public find(selector: string) {

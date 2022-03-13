@@ -60,22 +60,20 @@ type Events = {};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Layer extends Container<Attrs, Events, Shape<any, any>> {
   static readonly _attrNoReactDraw = ["x", "y", "visible"];
-
-  public readonly type = "Layer";
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  readonly #context = document.createElement("canvas").getContext("2d")!;
-
+  static readonly type: string = "Layer"
+  
   public get canvas() {
     return this.#context.canvas;
   }
   // eslint-disable-next-line functional/prefer-readonly-type
   public loopCasting = false;
-
   // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload = true;
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  readonly #context = document.createElement("canvas").getContext("2d")!;
   // eslint-disable-next-line functional/prefer-readonly-type
   private waitDrawing = false;
-
   // eslint-disable-next-line functional/prefer-readonly-type
   private displayBp = "";
 
