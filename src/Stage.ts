@@ -1,8 +1,8 @@
-import { AttrsIdentifitation, Container } from "./Container";
+import { AttrListening, AttrsIdentifitation, Container } from "./Container";
 import { Layer } from "./Layer";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 
-type Attrs = {
+type Attrs<Events extends Record<string, unknown>> = {
   // eslint-disable-next-line functional/prefer-readonly-type
   width: number;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -11,17 +11,15 @@ type Attrs = {
   container: string;
   // eslint-disable-next-line functional/prefer-readonly-type
   visible?: boolean;
-  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
-  listening?: ReadonlyMap<string, ReadonlyArray<(event: any) => void>>;
   // eslint-disable-next-line functional/prefer-readonly-type
   opacity?: number;
 } & OptionTransform &
-  AttrsIdentifitation;
+  AttrsIdentifitation & AttrListening<Events>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Events = {};
 
-export class Stage extends Container<Attrs, Events, Layer> {
+export class Stage extends Container<Attrs<Events>, Events, Layer> {
   static readonly type: string = "Stage";
   readonly #container = document.createElement("div");
 
@@ -119,6 +117,7 @@ export class Stage extends Container<Attrs, Events, Layer> {
 
     el.appendChild(this.#container);
   }
+
   // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
   add(...layers: Layer[]) {
     super.add(...layers);
@@ -136,5 +135,41 @@ export class Stage extends Container<Attrs, Events, Layer> {
     layers.forEach((layer) => {
       layer.destroy();
     });
+  }
+
+  public on<Name extends keyof Events>(
+    name: Name,
+    callback: (this: this, event: Events[Name]) => void
+  ): this {
+    super.on(name, callback);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.#container.addEventListener(name, callback as unknown as any);
+
+    return this;
+  }
+  public off<Name extends keyof Events>(
+    name: Name,
+    callback?: (this: this, event: Events[Name]) => void
+  ): this {
+    if (callback) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.#container.removeEventListener(name, callback as unknown as any);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.listeners
+        .get(name)!
+        .forEach((cb) => this.#container.removeEventListener(name, cb));
+    }
+
+    super.off(name, callback);
+
+    return this;
+  }
+
+  public destroy(): void {
+    this.listeners.forEach((_cbs, name) => this.off(name));
+    super.destroy();
+    this.#container.remove();
   }
 }

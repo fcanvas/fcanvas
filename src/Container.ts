@@ -5,6 +5,14 @@ export type AttrsIdentifitation = {
   id?: string;
   // eslint-disable-next-line functional/prefer-readonly-type
   name?: string;
+}
+export type AttrListening<Events extends Record<string, unknown>> = {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  listening?: Map<
+  keyof Events,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
+  Array<(event: any) => void>
+>
 };
 type CallbackWatcher<T> = (newValue: T, oldValue: T) => void | Promise<void>;
 type CallbackWatcherAll<P, T> = (
@@ -19,10 +27,10 @@ type OptionsWatcher = {
   deep?: boolean;
 };
 export class ContainerNode<
-  Attrs extends Record<string, unknown> & AttrsIdentifitation,
+  Attrs extends Record<string, unknown> & AttrsIdentifitation & AttrListening<Events>,
   Events extends Record<string, unknown>
 > {
-  static readonly _attrNoReactDrawDefault = ["id", "name"];
+  static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
   static readonly type: string = "ContainerNode";
 
   public get type(): string {
@@ -83,6 +91,10 @@ export class ContainerNode<
         onNeedUpdate?.(prop);
       }
     });
+
+    this.attrs.listening?.forEach((cbs, name) => {
+        cbs.forEach(cb => this.on(name, cb))
+    })
   }
 
   public matches(selector: string): boolean {
@@ -190,6 +202,11 @@ export class ContainerNode<
       // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-non-null-assertion
       (prop as K[]).forEach((prop) => this.watchers.get(prop)!.delete(cb));
   }
+
+  public destroy(): void {
+    this.listeners.clear();
+    this.watchers.clear();
+  }
 }
 
 declare class Empty {
@@ -214,5 +231,10 @@ export class Container<
   // eslint-disable-next-line functional/functional-parameters
   public delete(...nodes: readonly T[]): void {
     nodes.forEach((node) => this.children.delete(node));
+  }
+
+  public destroy(): void {
+    super.destroy();
+    this.children.clear();
   }
 }

@@ -40,9 +40,9 @@ export function createProxy<R extends Record<string, unknown>>(
       );
 
       if (Object.is(oldVal, val)) {
-          return true
+        return true;
       }
-      
+
       [prop as string] = val;
 
       onsetter(

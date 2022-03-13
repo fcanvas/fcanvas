@@ -1,12 +1,12 @@
-import { AttrsIdentifitation, Container } from "./Container";
+import { AttrListening, AttrsIdentifitation, Container } from "./Container";
 import type { EventsDefault, Shape } from "./Shape";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { realMousePosition } from "./helpers/realMousePosition";
 import { Offset } from "./types/Offset";
 
-type Attrs = Partial<Offset> &
-  AttrsIdentifitation & {
+type Attrs<Events extends Record<string, unknown>> = Partial<Offset> &
+  AttrsIdentifitation & AttrListening<Events> & {
     // eslint-disable-next-line functional/prefer-readonly-type
     clearBeforeDraw?: boolean;
     // eslint-disable-next-line functional/prefer-readonly-type
@@ -15,8 +15,6 @@ type Attrs = Partial<Offset> &
     height?: number;
     // eslint-disable-next-line functional/prefer-readonly-type
     visible?: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
-    listening?: ReadonlyMap<string, ReadonlyArray<(event: any) => void>>;
     // eslint-disable-next-line functional/prefer-readonly-type
     opacity?: number;
     // eslint-disable-next-line functional/prefer-readonly-type
@@ -55,7 +53,7 @@ const EventsDefault = [
 type Events = {};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class Layer extends Container<Attrs, Events, Shape<any, any>> {
+export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {
   static readonly _attrNoReactDraw = ["x", "y", "visible"];
   static readonly type: string = "Layer";
 
@@ -73,8 +71,10 @@ export class Layer extends Container<Attrs, Events, Shape<any, any>> {
   private waitDrawing = false;
   // eslint-disable-next-line functional/prefer-readonly-type
   private displayBp = "";
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private idRequestFrame?: ReturnType<typeof requestAnimationFrame>;
 
-  constructor(attrs: Attrs = {}) {
+  constructor(attrs: Attrs<Events> = {}) {
     super(
       attrs,
       () => {
@@ -159,11 +159,6 @@ export class Layer extends Container<Attrs, Events, Shape<any, any>> {
         this.activatorEventChildren.bind(this)
       );
     });
-  }
-  public destroy(): void {
-    this.stopDraw();
-    this.children.forEach((node) => this.delete(node));
-    this.canvas.remove();
   }
 
   private activatorEventChildren(
@@ -288,8 +283,6 @@ export class Layer extends Container<Attrs, Events, Shape<any, any>> {
     nodes.forEach((node) => node._onRemoveLayer(this));
   }
 
-  // eslint-disable-next-line functional/prefer-readonly-type
-  private idRequestFrame?: ReturnType<typeof requestAnimationFrame>;
   public batchDraw() {
     this.loopCasting = true;
     if (!this.waitDrawing) {
@@ -310,5 +303,13 @@ export class Layer extends Container<Attrs, Events, Shape<any, any>> {
     cancelAnimationFrame(this.idRequestFrame);
     this.waitDrawing = false;
     this.loopCasting = false;
+  }
+
+  public destroy(): void {
+    this.stopDraw();
+    this.children.forEach((node) => this.delete(node));
+    this.listeners.forEach((_cbs, name) => this.off(name));
+    super.destroy();
+    this.canvas.remove();
   }
 }
