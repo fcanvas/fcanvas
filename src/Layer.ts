@@ -154,7 +154,7 @@ export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {
     );
 
     EventsDefault.forEach((type) => {
-      this.canvas.addEventListener(
+      this.on(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type as any,
         this.activatorEventChildren.bind(this)
@@ -304,6 +304,36 @@ export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {
     cancelAnimationFrame(this.idRequestFrame);
     this.waitDrawing = false;
     this.loopCasting = false;
+  }
+
+  public on<Name extends keyof Events>(
+    name: Name,
+    callback: (this: this, event: Events[Name]) => void
+  ): this {
+    super.on(name, callback);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.canvas.addEventListener(name, callback as unknown as any);
+
+    return this;
+  }
+  public off<Name extends keyof Events>(
+    name: Name,
+    callback?: (this: this, event: Events[Name]) => void
+  ): this {
+    if (callback) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.canvas.removeEventListener(name, callback as unknown as any);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.listeners
+        .get(name)!
+        .forEach((cb) => this.canvas.removeEventListener(name, cb));
+    }
+
+    super.off(name, callback);
+
+    return this;
   }
 
   public destroy(): void {
