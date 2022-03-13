@@ -1,4 +1,4 @@
-import { ContainerNode } from "./Container";
+import { AttrsIdentifitation, ContainerNode } from "./Container";
 import type { Layer } from "./Layer";
 import { transparent } from "./constants/Colors";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
@@ -122,10 +122,9 @@ export type AttrsDefault = Offset & {
     // eslint-disable-next-line functional/prefer-readonly-type
     visible?: boolean;
     // eslint-disable-next-line functional/prefer-readonly-type
-    id?: string;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    name?: string;
-  } & OptionTransform & {
+    opacity?: number;
+  } & AttrsIdentifitation &
+  OptionTransform & {
     // eslint-disable-next-line functional/prefer-readonly-type
     filter?: OptionFilter;
   };
@@ -177,15 +176,14 @@ export class Shape<
   },
   Events extends Record<string, unknown> & EventsDefault = EventsDefault
 > extends ContainerNode<Attrs, Events> {
-    static readonly attrsReactSize: readonly string[] = ["width", "height"];
-    static readonly type = "Shape"
-    
+  static readonly attrsReactSize: readonly string[] = ["width", "height"];
+  static readonly type = "Shape";
+
   // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload = true;
   // @overwrite
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   protected _sceneFunc(context: CanvasRenderingContext2D) {}
-
 
   readonly #layers = new Set<Layer>();
   // eslint-disable-next-line functional/prefer-readonly-type

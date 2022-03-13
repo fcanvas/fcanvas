@@ -1,6 +1,6 @@
 import { createProxy } from "./helpers/createProxy";
 
-type AttrsNode = {
+export type AttrsIdentifitation = {
   // eslint-disable-next-line functional/prefer-readonly-type
   id?: string;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -15,16 +15,18 @@ type CallbackWatcherAll<P, T> = (
 type OptionsWatcher = {
   // eslint-disable-next-line functional/prefer-readonly-type
   immediate?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  deep?: boolean;
 };
 export class ContainerNode<
-  Attrs extends Record<string, unknown> & AttrsNode,
+  Attrs extends Record<string, unknown> & AttrsIdentifitation,
   Events extends Record<string, unknown>
 > {
   static readonly _attrNoReactDrawDefault = ["id", "name"];
   static readonly type: string = "ContainerNode";
 
-  public get type() : string {
-      return (this.constructor as typeof ContainerNode).type ?? "unknown"
+  public get type(): string {
+    return (this.constructor as typeof ContainerNode).type ?? "unknown";
   }
   public get id(): string | null {
     return this.attrs.id ?? null;
@@ -41,7 +43,7 @@ export class ContainerNode<
   public readonly watchers = new Map<
     keyof Attrs | "*",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
-    Set<CallbackWatcher<any> | CallbackWatcherAll<keyof Attrs, any>>
+    Map<CallbackWatcher<any> | CallbackWatcherAll<keyof Attrs, any>, boolean>
   >();
 
   constructor(
@@ -51,12 +53,25 @@ export class ContainerNode<
     attrNoReactDraw?: string[]
   ) {
     this.attrs = createProxy(attrs, (prop, newVal, oldVal) => {
-      this.watchers
-        .get(prop)
-        ?.forEach((cb) =>
-          (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal)
-        );
-      this.watchers.get("*")?.forEach((cb) =>
+      this.watchers.forEach((listeners, selfProp) => {
+        if (selfProp === "*") return;
+
+        if (prop === selfProp) {
+          listeners.forEach((_val, cb) => {
+            (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal);
+          });
+          return;
+        }
+
+        if ((prop as string).startsWith(`${selfProp as string}.`)) {
+          listeners.forEach((deep, cb) => {
+            if (deep) {
+              (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal);
+            }
+          });
+        }
+      });
+      this.watchers.get("*")?.forEach((_deep, cb) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (cb as CallbackWatcherAll<keyof Attrs, any>)(prop, newVal, oldVal)
       );
@@ -157,11 +172,11 @@ export class ContainerNode<
 
     prop.forEach((prop) => {
       if (this.watchers.has(prop) === false) {
-        this.watchers.set(prop, new Set());
+        this.watchers.set(prop, new Map());
       }
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.watchers.get(prop)!.add(cb);
+      this.watchers.get(prop)!.set(cb, options?.deep ?? false);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((options as any)?.immediate) {
@@ -181,7 +196,7 @@ declare class Empty {
   matches(selector: string): boolean;
 }
 export class Container<
-  Attrs extends Record<string, unknown> & AttrsNode,
+  Attrs extends Record<string, unknown> & AttrsIdentifitation,
   Events extends Record<string, unknown>,
   T extends Empty
 > extends ContainerNode<Attrs, Events> {
