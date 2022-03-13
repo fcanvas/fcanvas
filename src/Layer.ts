@@ -48,10 +48,13 @@ export class Layer extends Container<Shape<any, any>> {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   readonly #context = document.createElement("canvas").getContext("2d")!;
 
-  get canvas() {
+  public get canvas() {
     return this.#context.canvas;
   }
+  public loopCasting = false
+  
   private currentNeedReload = true
+  private waitDrawing = false
 
   readonly attrs: Attrs;
   private reactOffset() : void {
@@ -162,7 +165,7 @@ export class Layer extends Container<Shape<any, any>> {
     return false;
   }
 
-  private _draw() {
+  public draw() {
     const needReload = this.currentNeedReload || Array.from(this.children).some(node => {
       node.parentNeedReloading = false;
       return node.parentNeedReloading
@@ -240,7 +243,22 @@ export class Layer extends Container<Shape<any, any>> {
     this.currentNeedReload = false
   }
 
-  draw() {
-    this._draw();
+  private idRequestFrame?: ReturnType<typeof requestAnimationFrame>
+  public batchDraw() {
+    this.loopCasting = true
+    if (!this.waitDrawing) {
+      this.waitDrawing = true;
+      this.idRequestFrame = requestAnimationFrame(() => {
+        this.draw();
+        this.waitDrawing = false;
+        this.batchDraw()
+      });
+    }
+  }
+  public stopDraw() {
+    this.waitDrawing = true
+    cancelAnimationFrame(this.idRequestFrame)
+    this.waitDrawing = false
+    this.loopCasting = false
   }
 }
