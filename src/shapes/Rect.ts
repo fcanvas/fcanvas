@@ -1,20 +1,23 @@
-import { AttrsDefault, Shape } from "../Shape";
+import { AttrsDefault, EventsDefault, Shape } from "../Shape";
 import { pointInBox } from "../helpers/pointInBox";
 
-type Attrs = AttrsDefault & {
+type Attrs<Events> = AttrsDefault<Events> & {
   // eslint-disable-next-line functional/prefer-readonly-type
   width: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   height: number;
 };
 
-export class Rect extends Shape<Attrs> {
+export class Rect<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  EventsCustom extends Record<string, any> & EventsDefault
+> extends Shape<Attrs<EventsCustom>, EventsCustom> {
   static readonly type = "Rect";
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     context.rect(0, 0, this.attrs.width, this.attrs.height);
   }
-  constructor(attrs: Attrs) {
+  constructor(attrs: Attrs<EventsCustom>) {
     super(attrs);
   }
 
