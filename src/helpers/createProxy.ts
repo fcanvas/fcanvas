@@ -21,8 +21,8 @@ export function createProxy<R extends Record<string, unknown>>(
         target[prop as string] !== null &&
         typeof target[prop as string] === "object"
       ) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return createProxy(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           target[prop as string] as any,
           onsetter,
           ongetter,

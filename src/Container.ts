@@ -19,6 +19,10 @@ export class Container<
   public add(...nodes: readonly T[]): void {
     nodes.forEach((node) => this.children.add(node));
   }
+  // eslint-disable-next-line functional/functional-parameters
+  public delete(...nodes: readonly T[]): void {
+    nodes.forEach((node) => this.children.delete(node));
+  }
 
   public matches(selector: string): boolean {
     return selector.split(",").some((sel) => {
