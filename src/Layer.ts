@@ -5,8 +5,10 @@ import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { realMousePosition } from "./helpers/realMousePosition";
 import { Offset } from "./types/Offset";
 
-type Attrs<Events extends Record<string, unknown>> = Partial<Offset> &
-  AttrsIdentifitation & AttrListening<Events> & {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Attrs<Events extends Record<string, any>> = Partial<Offset> &
+  AttrsIdentifitation &
+  AttrListening<Events> & {
     // eslint-disable-next-line functional/prefer-readonly-type
     clearBeforeDraw?: boolean;
     // eslint-disable-next-line functional/prefer-readonly-type
@@ -49,8 +51,7 @@ const EventsDefault = [
   "dbltap",
 ];
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Events = {};
+type Events = HTMLElementEventMap;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {

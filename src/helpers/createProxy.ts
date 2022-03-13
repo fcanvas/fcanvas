@@ -1,7 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const weakCache = new WeakMap<Record<string, unknown>, any>();
 
-export function createProxy<R extends Record<string, unknown>>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createProxy<R extends Record<string, any>>(
   target: R,
   onsetter: (prop: keyof R, newVal: R[keyof R], oldVal: R[keyof R]) => void,
   ongetter?: (prop: keyof R) => void,

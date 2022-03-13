@@ -75,7 +75,8 @@ type FillModeMixture = {
   Partial<FillModeLinearGradient> &
   Partial<FillModeRadialGradient>;
 
-export type AttrsDefault<Events extends Record<string, unknown>> = Offset & {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AttrsDefault<Events extends Record<string, any>> = Offset & {
   // eslint-disable-next-line functional/prefer-readonly-type
   fillAfterStrokeEnabled?: boolean;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -168,13 +169,15 @@ export type EventsDefault = {
 const EmptyArray: Iterable<number> = [];
 
 export class Shape<
-  Attrs extends Record<string, unknown> & AttrsDefault<Events> = AttrsDefault<EventsDefault> & {
+  Attrs extends Record<string, unknown> &
+    AttrsDefault<Events> = AttrsDefault<EventsDefault> & {
     // eslint-disable-next-line functional/prefer-readonly-type
     width: number;
     // eslint-disable-next-line functional/prefer-readonly-type
     height: number;
   },
-  Events extends Record<string, unknown> & EventsDefault = EventsDefault
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Events extends Record<string, any> & EventsDefault = EventsDefault
 > extends ContainerNode<Attrs, Events> {
   static readonly attrsReactSize: readonly string[] = ["width", "height"];
   static readonly type = "Shape";
