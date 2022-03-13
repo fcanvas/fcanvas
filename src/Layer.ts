@@ -61,11 +61,16 @@ export class Layer extends Container<Shape<any, any>> {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   readonly #context = document.createElement("canvas").getContext("2d")!;
 
-  get canvas() {
+  public get canvas() {
     return this.#context.canvas;
   }
   // eslint-disable-next-line functional/prefer-readonly-type
-  public currentNeedReload = true;
+  public loopCasting = false
+  
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public currentNeedReload = true
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private waitDrawing = false
 
   readonly attrs: Attrs;
   private reactOffset(): void {
@@ -195,7 +200,7 @@ export class Layer extends Container<Shape<any, any>> {
     return false;
   }
 
-  private _draw() {
+  public draw() {
     const needReload = this.currentNeedReload;
     if (needReload === false) {
       return;
@@ -291,7 +296,27 @@ export class Layer extends Container<Shape<any, any>> {
     nodes.forEach((node) => node._onRemoveLayer(this));
   }
 
-  draw() {
-    this._draw();
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private idRequestFrame?: ReturnType<typeof requestAnimationFrame>
+  public batchDraw() {
+    this.loopCasting = true
+    if (!this.waitDrawing) {
+      this.waitDrawing = true;
+      this.idRequestFrame = requestAnimationFrame(() => {
+        this.draw();
+        this.waitDrawing = false;
+        this.batchDraw()
+      });
+    }
+  }
+  public stopDraw() {
+    if (!this.idRequestFrame) {
+        return
+    }
+    
+    this.waitDrawing = true
+    cancelAnimationFrame(this.idRequestFrame)
+    this.waitDrawing = false
+    this.loopCasting = false
   }
 }
