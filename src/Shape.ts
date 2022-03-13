@@ -1,8 +1,9 @@
+import type { Layer } from "./Layer";
 import { transparent } from "./constants/Colors";
+import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createProxy } from "./helpers/createProxy";
-import { Offset } from "./types/Offset"
-import { OptionTransform, createTransform } from "./helpers/createTransform"
-import { OptionFilter, createFilter } from "./helpers/createFilter"
+import { createTransform, OptionTransform } from "./helpers/createTransform";
+import { Offset } from "./types/Offset";
 // add ctx.filter
 type Color = string;
 type FillStyle = CanvasGradient | CanvasPattern | Color;
@@ -125,7 +126,7 @@ export type AttrsDefault = Offset & {
     name?: string;
   } & OptionTransform & {
     // eslint-disable-next-line functional/prefer-readonly-type
-    filter?: OptionFilter
+    filter?: OptionFilter;
   };
 
 export type EventsDefault = {
@@ -191,8 +192,7 @@ export class Shape<
   // readonly #propWatch = <st;ring[]>[]
   // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload = true;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  public parentNeedReloading = true;
+  readonly #layers = new Set<Layer>();
   // @overwrite
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   protected _sceneFunc(context: CanvasRenderingContext2D) {}
@@ -241,12 +241,13 @@ export class Shape<
     this.attrs = createProxy(attrs, (prop) => {
       // write code no reactive it. exm: id, name...
 
-
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;
       }
-      this.parentNeedReloading = true;
-      
+      this.#layers.forEach((layer) => {
+        if (layer.currentNeedReload === true) return;
+        layer.currentNeedReload = true;
+      });
 
       if (
         this.attrsReactSize.some(
@@ -471,11 +472,11 @@ export class Shape<
       this.attrs.offset !== void 0 ||
       this.attrs.skewX !== void 0 ||
       this.attrs.skewY !== void 0 ||
-      !this.#context
+      !this.#context;
     const needSetAlpha = this.attrs.opacity !== void 0;
-    const useFilter = this.attrs.filter !== void 0
+    const useFilter = this.attrs.filter !== void 0;
     // eslint-disable-next-line functional/no-let
-    let backupTransform, backupAlpha: number, backupFilter: string;;
+    let backupTransform, backupAlpha: number, backupFilter: string;
 
     if (needSetAlpha) {
       backupAlpha = context.globalAlpha;
@@ -488,9 +489,10 @@ export class Shape<
       context.setTransform(createTransform(this.attrs, !this.#context));
     }
     if (useFilter) {
-      backupFilter = context.filter
+      backupFilter = context.filter;
 
-      context.filter = createFilter(this.attrs.filter!) 
+      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
+      context.filter = createFilter(this.attrs.filter!);
     }
 
     context.beginPath();
@@ -503,7 +505,7 @@ export class Shape<
 
     if (useFilter) {
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
-      context.filter = backupFilter!
+      context.filter = backupFilter!;
     }
     if (needUseTransform) {
       context.setTransform(backupTransform);
@@ -567,6 +569,13 @@ export class Shape<
     });
 
     return this;
+  }
+
+  public _onAddToLayer(layer: Layer): void {
+    this.#layers.add(layer);
+  }
+  public _onRemoveLayer(layer: Layer): void {
+    this.#layers.delete(layer);
   }
 
   draw(context: CanvasRenderingContext2D) {

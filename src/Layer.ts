@@ -1,28 +1,41 @@
 import { Container } from "./Container";
-import { EventsDefault, Shape } from "./Shape";
-import { realMousePosition } from "./helpers/realMousePosition";
-import { Offset} from "./types/Offset"
-import { OptionTransform, createTransform } from "./helpers/createTransform"
-import { OptionFilter, createFilter } from "./helpers/createFilter"
+import type { EventsDefault, Shape } from "./Shape";
+import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createProxy } from "./helpers/createProxy";
+import { createTransform, OptionTransform } from "./helpers/createTransform";
+import { realMousePosition } from "./helpers/realMousePosition";
+import { Offset } from "./types/Offset";
 
 type Attrs = Partial<Offset> & {
   // eslint-disable-next-line functional/prefer-readonly-type
   clearBeforeDraw?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
   width?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   height?: number;
-  visible?: boolean
-  listening?: Map<string, Array<(event: any) => void>>
+  // eslint-disable-next-line functional/prefer-readonly-type
+  visible?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
+  listening?: ReadonlyMap<string, ReadonlyArray<(event: any) => void>>;
+  // eslint-disable-next-line functional/prefer-readonly-type
   id?: string;
+  // eslint-disable-next-line functional/prefer-readonly-type
   name?: string;
+  // eslint-disable-next-line functional/prefer-readonly-type
   opacity?: number;
-  clip?: Offset & {
-    width: number
-    height: number
-  } | ((this: Layer, context: Path2D) => void);
+  // eslint-disable-next-line functional/prefer-readonly-type
+  clip?:
+    | (Offset & {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        width: number;
+        // eslint-disable-next-line functional/prefer-readonly-type
+        height: number;
+      })
+    | ((this: Layer, context: Path2D) => void);
 } & OptionTransform & {
-  filter?: OptionTransform
-};
+    // eslint-disable-next-line functional/prefer-readonly-type
+    filter?: OptionFilter;
+  };
 
 const EventsDefault = [
   "mouseover",
@@ -51,77 +64,93 @@ export class Layer extends Container<Shape<any, any>> {
   get canvas() {
     return this.#context.canvas;
   }
-  private currentNeedReload = true
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public currentNeedReload = true;
 
   readonly attrs: Attrs;
-  private reactOffset() : void {
-    this.canvas.style.left = (this.attrs.x ?? 0) + "px"
-    this.canvas.style.top = (this.attrs.y ?? 0) + "px"
+  private reactOffset(): void {
+    // eslint-disable-next-line functional/immutable-data
+    this.canvas.style.left = (this.attrs.x ?? 0) + "px";
+    // eslint-disable-next-line functional/immutable-data
+    this.canvas.style.top = (this.attrs.y ?? 0) + "px";
   }
-  private reactSize() : void {
-    this.canvas.style.width = this.attrs.width ? `${this.attrs.width}px` : "100%"
-    this.canvas.style.height = this.attrs.height ? `${this.attrs.height}px` : "100%"
-
-    ;[this.canvas.width, this.canvas.height] = [this.canvas.scrollWidth, this.canvas.scrollHeight]
+  private reactSize(): void {
+    // eslint-disable-next-line functional/immutable-data
+    this.canvas.style.width = this.attrs.width
+      ? `${this.attrs.width}px`
+      : "100%";
+    // eslint-disable-next-line functional/immutable-data
+    this.canvas.style.height = this.attrs.height
+      ? `${this.attrs.height}px`
+      : "100%";
+    [this.canvas.width, this.canvas.height] = [
+      this.canvas.scrollWidth,
+      this.canvas.scrollHeight,
+    ];
   }
-  private displayBp = ""
-  private reactVisible() : void {
-    this.displayBp = this.canvas.style.display
-    const display = getComputedStyle(this.canvas).getPropertyValue("display")
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private displayBp = "";
+  private reactVisible(): void {
+    this.displayBp = this.canvas.style.display;
+    const display = getComputedStyle(this.canvas).getPropertyValue("display");
 
     if (this.attrs.visible ?? true) {
       if (display === "none") {
-        this.canvas.style.display = "block"
+        // eslint-disable-next-line functional/immutable-data
+        this.canvas.style.display = "block";
       } else {
-        this.canvas.style.display = this.displayBp === "none" ? "" : this.displayBp
+        // eslint-disable-next-line functional/immutable-data
+        this.canvas.style.display =
+          this.displayBp === "none" ? "" : this.displayBp;
       }
 
-      return
+      return;
     }
 
     if (display === "none") {
-      return
+      return;
     }
-    this.canvas.style.display = "none"
+    // eslint-disable-next-line functional/immutable-data
+    this.canvas.style.display = "none";
   }
-  private reactId() : void {
-    this.canvas.setAttribute("id", this.attrs.id ?? "")
+  private reactId(): void {
+    this.canvas.setAttribute("id", this.attrs.id ?? "");
   }
-  private reactName() : void {
-    this.canvas.setAttribute("class", this.attrs.name ?? "")
+  private reactName(): void {
+    this.canvas.setAttribute("class", this.attrs.name ?? "");
   }
 
   constructor(attrs: Attrs = {}) {
     super();
 
-    this.reactOffset()
-    this.reactSize()
-    this.reactVisible()
-    this.reactId()
-    this.reactName()
-    this.attrs = createProxy(attrs, prop => {
+    this.reactOffset();
+    this.reactSize();
+    this.reactVisible();
+    this.reactId();
+    this.reactName();
+    this.attrs = createProxy(attrs, (prop) => {
       if (prop === "x" || prop === "y") {
-        this.reactOffset()
-        return
+        this.reactOffset();
+        return;
       }
       if (prop === "width" || prop === "height") {
-        this.reactSize()
-        return
+        this.reactSize();
+        return;
       }
       if (prop === "visible") {
-        this.reactVisible()
-        return
+        this.reactVisible();
+        return;
       }
       if (prop === "id") {
-        this.reactId()
-        return
+        this.reactId();
+        return;
       }
       if (prop === "name") {
-        this.reactName()
-        return
+        this.reactName();
+        return;
       }
 
-      this.currentNeedReload = true
+      this.currentNeedReload = true;
     });
     EventsDefault.forEach((type) => {
       this.canvas.addEventListener(
@@ -130,6 +159,10 @@ export class Layer extends Container<Shape<any, any>> {
         this.activatorEventChildren.bind(this)
       );
     });
+  }
+  public destroy(): void {
+    this.children.forEach((node) => this.delete(node));
+    this.canvas.remove();
   }
 
   private activatorEventChildren(
@@ -163,31 +196,36 @@ export class Layer extends Container<Shape<any, any>> {
   }
 
   private _draw() {
-    const needReload = this.currentNeedReload || Array.from(this.children).some(node => {
-      node.parentNeedReloading = false;
-      return node.parentNeedReloading
-    })
-
+    const needReload = this.currentNeedReload;
     if (needReload === false) {
-      return
+      return;
     }
-    
-    const context = this.#context
+
+    const context = this.#context;
 
     if (this.attrs.clearBeforeDraw ?? true) {
       context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-    const needBackup = this.attrs.clip !== void 0
+    const needBackup = this.attrs.clip !== void 0;
 
     if (needBackup) {
-      context.save()
+      context.save();
 
       if (typeof this.attrs.clip === "function") {
-        const path = new Path2D()
-        this.attrs.clip.call(this, path)
-        context.clip(path)
+        const path = new Path2D();
+        this.attrs.clip.call(this, path);
+        context.clip(path);
       } else {
-        context.rect(this.attrs.clip!.x, this.attrs.clip!.y, this.attrs.clip!.width, this.attrs.clip!.height)
+        context.rect(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.attrs.clip!.x,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.attrs.clip!.y,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.attrs.clip!.width,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.attrs.clip!.height
+        );
       }
     }
     const needUseTransform =
@@ -196,11 +234,11 @@ export class Layer extends Container<Shape<any, any>> {
       this.attrs.offset !== void 0 ||
       this.attrs.skewX !== void 0 ||
       this.attrs.skewY !== void 0 ||
-      !context
+      !context;
     const needSetAlpha = this.attrs.opacity !== void 0;
-    const useFilter = this.attrs.filter !== void 0
+    const useFilter = this.attrs.filter !== void 0;
     // eslint-disable-next-line functional/no-let
-    let backupTransform, backupAlpha: number, backupFilter: string;;
+    let backupTransform, backupAlpha: number, backupFilter: string;
 
     if (needSetAlpha) {
       backupAlpha = context.globalAlpha;
@@ -213,9 +251,10 @@ export class Layer extends Container<Shape<any, any>> {
       context.setTransform(createTransform(this.attrs, !context));
     }
     if (useFilter) {
-      backupFilter = context.filter
+      backupFilter = context.filter;
 
-      context.filter = createFilter(this.attrs.filter!) 
+      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
+      context.filter = createFilter(this.attrs.filter!);
     }
 
     this.children.forEach((node) => {
@@ -224,7 +263,7 @@ export class Layer extends Container<Shape<any, any>> {
 
     if (useFilter) {
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
-      context.filter = backupFilter!
+      context.filter = backupFilter!;
     }
     if (needUseTransform) {
       context.setTransform(backupTransform);
@@ -234,10 +273,22 @@ export class Layer extends Container<Shape<any, any>> {
       context.globalAlpha = backupAlpha!;
     }
     if (needBackup) {
-      context.restore()
+      context.restore();
     }
 
-    this.currentNeedReload = false
+    this.currentNeedReload = false;
+  }
+
+  // @overwrite
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
+  public add(...nodes: Shape[]): void {
+    super.add(...nodes);
+    nodes.forEach((node) => node._onAddToLayer(this));
+  }
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
+  public delete(...nodes: Shape[]): void {
+    super.delete(...nodes);
+    nodes.forEach((node) => node._onRemoveLayer(this));
   }
 
   draw() {
