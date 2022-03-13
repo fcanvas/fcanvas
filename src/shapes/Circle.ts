@@ -1,13 +1,16 @@
-import { AttrsDefault, Shape } from "../Shape";
+import { AttrsDefault, EventsDefault, Shape } from "../Shape";
 import { TWO_PI } from "../constants/TWO_PI";
 import { pointInCircle } from "../helpers/pointInCircle";
 
-type Attrs = AttrsDefault & {
+type Attrs<Events> = AttrsDefault<Events> & {
   // eslint-disable-next-line functional/prefer-readonly-type
   radius: number;
 };
 
-export class Circle extends Shape<Attrs> {
+export class Circle<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  EventsCustom extends Record<string, any> & EventsDefault
+> extends Shape<Attrs<EventsCustom>, EventsCustom> {
   static readonly type = "Circle";
   static readonly attrsReactSize = ["radius"];
 
@@ -15,7 +18,7 @@ export class Circle extends Shape<Attrs> {
     const center = this.getWidth() / 2;
     context.arc(center, center, this.attrs.radius, 0, TWO_PI);
   }
-  constructor(attrs: Attrs) {
+  constructor(attrs: Attrs<EventsCustom>) {
     super(attrs);
   }
 
