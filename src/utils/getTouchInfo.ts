@@ -1,11 +1,13 @@
-export function getTouchInfo<T extends {
+export function getTouchInfo<
+  T extends {
     // eslint-disable-next-line functional/prefer-readonly-type
-    clientX : number
+    clientX: number;
     // eslint-disable-next-line functional/prefer-readonly-type
-    clientY : number
+    clientY: number;
     // eslint-disable-next-line functional/prefer-readonly-type
-    identifier?: number
-}>(
+    identifier?: number;
+  }
+>(
   element: HTMLCanvasElement,
   touches: readonly T[]
 ): readonly {

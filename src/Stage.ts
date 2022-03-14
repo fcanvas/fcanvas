@@ -127,7 +127,7 @@ export class Stage extends Container<Attrs<Events>, Events, Layer> {
       if (this.#container.contains(layer.canvas) === false) {
         this.#container.appendChild(layer.canvas);
       }
-      
+
       if (globalConfigs.autoDrawEnabled) {
         layer.batchDraw();
       }

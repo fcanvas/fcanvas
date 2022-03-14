@@ -1,8 +1,8 @@
-import { AttrsDefault, EventsDefault, Shape } from "../Shape";
+import { AttrsDefault, Shape } from "../Shape";
 import { convertToRadial } from "../helpers/convertToRadial";
 import { pointInCircle } from "../helpers/pointInCircle";
 
-type Attrs<Events> = AttrsDefault<Events> & {
+type Attrs = AttrsDefault & {
   // eslint-disable-next-line functional/prefer-readonly-type
   angle:
     | number
@@ -20,11 +20,8 @@ type Attrs<Events> = AttrsDefault<Events> & {
   clockwise?: boolean;
 };
 
-const HALF_PI = Math.PI / 2
-export class Arc<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  EventsCustom extends Record<string, any> & EventsDefault
-> extends Shape<Attrs<EventsCustom>, EventsCustom> {
+const HALF_PI = Math.PI / 2;
+export class Arc extends Shape<Attrs> {
   static readonly type = "Arc";
   static readonly attrsReactSize = [
     "angle",
@@ -32,6 +29,7 @@ export class Arc<
     "outerRadius",
     "clockwise",
   ];
+  public readonly _centroid = true;
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     const angleStart = convertToRadial(
@@ -50,18 +48,18 @@ export class Arc<
     const cosEnd = Math.cos(angleEnd + HALF_PI);
 
     context.moveTo(
-      this.getInnerWidth() / 2 + sinStart * (this.attrs.innerRadius ?? 0),
-      this.getInnerHeight() / 2 - cosStart * (this.attrs.innerRadius ?? 0)
+      sinStart * (this.attrs.innerRadius ?? 0),
+      cosStart * (this.attrs.innerRadius ?? 0)
     );
     context.lineTo(
-      this.getInnerWidth() / 2 + sinStart * this.attrs.outerRadius,
-      this.getInnerHeight() / 2 - cosStart * this.attrs.outerRadius
+      sinStart * this.attrs.outerRadius,
+      cosStart * this.attrs.outerRadius
     );
 
     if (this.attrs.innerRadius !== void 0) {
       context.arc(
-        this.getInnerWidth() / 2,
-        this.getInnerHeight() / 2,
+        0,
+        0,
         this.attrs.innerRadius,
         angleStart,
         angleEnd,
@@ -70,30 +68,24 @@ export class Arc<
     }
 
     context.moveTo(
-      this.getInnerWidth() / 2 + sinEnd * (this.attrs.innerRadius ?? 0),
-      this.getInnerHeight() / 2 - cosEnd * this.attrs.outerRadius
+      sinEnd * (this.attrs.innerRadius ?? 0),
+      -cosEnd * this.attrs.outerRadius
     );
     context.lineTo(
-      this.getInnerWidth() / 2 + sinEnd * (this.attrs.innerRadius ?? 0),
-      this.getInnerHeight() / 2 - cosEnd * this.attrs.outerRadius
+      +sinEnd * (this.attrs.innerRadius ?? 0),
+      -cosEnd * this.attrs.outerRadius
     );
   }
 
-  constructor(attrs: Attrs<EventsCustom>) {
-    super(attrs);
-  }
-
-  public getInnerWidth() {
-    return (this.attrs.outerRadius ?? this.attrs.innerRadius) * 2;
-  }
-  public getInnerHeight() {
-    return this.getInnerWidth();
+  public size() {
+    return {
+      width: this.attrs.outerRadius * 2,
+      height: this.attrs.outerRadius * 2,
+    };
   }
 
   public isPressedPoint(x: number, y: number) {
-    const w_2 = this.getInnerWidth() / 2;
-    const h_2 = this.getInnerHeight() / 2;
-    const angle = Math.atan2(x + w_2 - this.attrs.x, y + h_2 - this.attrs.y);
+    const angle = Math.atan2(x - this.attrs.x, y - this.attrs.y);
     const inAngle =
       HALF_PI +
         convertToRadial(
@@ -101,7 +93,7 @@ export class Arc<
         ) <=
         angle &&
       HALF_PI +
-      convertToRadial(
+        convertToRadial(
           typeof this.attrs.angle === "object"
             ? this.attrs.angle.end
             : this.attrs.angle
@@ -112,15 +104,15 @@ export class Arc<
 
     if (this.attrs.outerRadius !== void 0) {
       const inInnerBox = pointInCircle(
-        x + w_2,
-        y + h_2,
+        x,
+        y,
         this.attrs.x,
         this.attrs.y,
         this.attrs.outerRadius
       );
       const inOuterBox = pointInCircle(
-        x + w_2,
-        y + h_2,
+        x,
+        y,
         this.attrs.x,
         this.attrs.y,
         this.attrs.innerRadius ?? 0
@@ -130,8 +122,8 @@ export class Arc<
     }
 
     return pointInCircle(
-      x + w_2,
-      y + h_2,
+      x,
+      y,
       this.attrs.x,
       this.attrs.y,
       this.attrs.innerRadius ?? 0
