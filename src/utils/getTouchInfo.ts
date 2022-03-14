@@ -1,7 +1,13 @@
-export function getTouchInfo(
+export function getTouchInfo<T extends {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    clientX : number
+    // eslint-disable-next-line functional/prefer-readonly-type
+    clientY : number
+    // eslint-disable-next-line functional/prefer-readonly-type
+    identifier?: number
+}>(
   element: HTMLCanvasElement,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  touches: readonly any[]
+  touches: readonly T[]
 ): readonly {
   readonly x: number;
   readonly y: number;
@@ -16,7 +22,7 @@ export function getTouchInfo(
     length = touches.length;
   // eslint-disable-next-line functional/no-let
   let i = 0,
-    touch;
+    touch: T;
   // eslint-disable-next-line functional/no-loop-statement
   while (i < length) {
     touch = touches[i++];
