@@ -27,7 +27,7 @@ type OptionsWatcher = {
   // eslint-disable-next-line functional/prefer-readonly-type
   deep?: boolean;
 };
-export class ContainerNode<
+export abstract class ContainerNode<
   Attrs extends Record<string, unknown> &
     AttrsIdentifitation &
     AttrListening<Events>,
@@ -216,7 +216,7 @@ export class ContainerNode<
 declare class Empty {
   matches(selector: string): boolean;
 }
-export class Container<
+export abstract class Container<
   Attrs extends Record<string, unknown> & AttrsIdentifitation,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Events extends Record<string, any>,
