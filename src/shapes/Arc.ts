@@ -1,6 +1,6 @@
 import { AttrsDefault, EventsDefault, Shape } from "../Shape";
+import { convertToRadial } from "../helpers/convertToRadial";
 import { pointInCircle } from "../helpers/pointInCircle";
-import { degressToRadius } from "../utils/degressToRadius";
 
 type Attrs<Events> = AttrsDefault<Events> & {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -20,6 +20,7 @@ type Attrs<Events> = AttrsDefault<Events> & {
   clockwise?: boolean;
 };
 
+const HALF_PI = Math.PI / 2
 export class Arc<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EventsCustom extends Record<string, any> & EventsDefault
@@ -33,20 +34,20 @@ export class Arc<
   ];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    const angleStart = degressToRadius(
+    const angleStart = convertToRadial(
       typeof this.attrs.angle === "object" ? this.attrs.angle.start : 0
     );
-    const angleEnd = degressToRadius(
+    const angleEnd = convertToRadial(
       typeof this.attrs.angle === "object"
         ? this.attrs.angle.end
         : this.attrs.angle
     );
 
-    const sinStart = Math.sin(angleStart + Math.PI / 2);
-    const cosStart = Math.cos(angleStart + Math.PI / 2);
+    const sinStart = Math.sin(angleStart + HALF_PI);
+    const cosStart = Math.cos(angleStart + HALF_PI);
 
-    const sinEnd = Math.sin(angleEnd + Math.PI / 2);
-    const cosEnd = Math.cos(angleEnd + Math.PI / 2);
+    const sinEnd = Math.sin(angleEnd + HALF_PI);
+    const cosEnd = Math.cos(angleEnd + HALF_PI);
 
     context.moveTo(
       this.getInnerWidth() / 2 + sinStart * (this.attrs.innerRadius ?? 0),
@@ -94,13 +95,13 @@ export class Arc<
     const h_2 = this.getInnerHeight() / 2;
     const angle = Math.atan2(x + w_2 - this.attrs.x, y + h_2 - this.attrs.y);
     const inAngle =
-      Math.PI / 2 +
-        degressToRadius(
+      HALF_PI +
+        convertToRadial(
           typeof this.attrs.angle === "object" ? this.attrs.angle.start : 0
         ) <=
         angle &&
-      Math.PI / 2 +
-        degressToRadius(
+      HALF_PI +
+      convertToRadial(
           typeof this.attrs.angle === "object"
             ? this.attrs.angle.end
             : this.attrs.angle
