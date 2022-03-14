@@ -3,7 +3,9 @@ import type { Layer } from "./Layer";
 import { transparent } from "./constants/Colors";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
+import { transformedRect } from "./helpers/transformerRect";
 import { Offset } from "./types/Offset";
+import { Size } from "./types/Size";
 
 // add ctx.filter
 type Color = string;
@@ -107,13 +109,11 @@ export type AttrsDefault<Events extends Record<string, any> = EventsDefault> =
       // eslint-disable-next-line functional/prefer-readonly-type
       shadowEnabled?: boolean;
       // eslint-disable-next-line functional/prefer-readonly-type
-      shadow?: {
+      shadow?: Partial<Offset> & {
         // eslint-disable-next-line functional/prefer-readonly-type
         color: Color;
         // eslint-disable-next-line functional/prefer-readonly-type
         blur: number;
-        // eslint-disable-next-line functional/prefer-readonly-type
-        offset?: Partial<Offset>;
         // opacity?: number
       };
     } & {
@@ -183,6 +183,8 @@ export class Shape<
   static readonly attrsReactSize: readonly string[] = ["width", "height"];
   static readonly type: string = "Shape";
 
+  public readonly _centroid: boolean = false;
+
   // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload = true;
   // @overwrite
@@ -221,38 +223,96 @@ export class Shape<
         document.createElement("canvas").getContext("2d") ?? void 0;
     }
   }
+  public size(): Size {
+    return {
+      width: this.attrs.width as number,
+      height: this.attrs.height as number,
+    };
+  }
+  public getSelfRect(): Offset & Size {
+    const size = this.size();
 
-  // @overwrite
-  public getInnerWidth(): number {
-    return (this.attrs.width as number | undefined) ?? 0;
+    return {
+      x: this._centroid ? -size.width / 2 : 0,
+      y: this._centroid ? -size.height / 2 : 0,
+      width: size.width,
+      height: size.height,
+    };
   }
-  // @overwrite
-  public getInnerHeight(): number {
-    return (this.attrs.height as number | undefined) ?? 0;
+  public getClientRect(
+    config: {
+      // eslint-disable-next-line functional/prefer-readonly-type
+      skipTransform?: boolean;
+      // eslint-disable-next-line functional/prefer-readonly-type
+      skipStroke?: boolean;
+      // eslint-disable-next-line functional/prefer-readonly-type
+      skipShadow?: boolean;
+    } = {}
+  ) {
+    const fillRect = this.getSelfRect();
+
+    const applyStroke =
+      !config.skipStroke &&
+      (this.attrs.strokeEnabled ?? true) &&
+      this.attrs.stroke !== void 0;
+    const strokeWidth = (applyStroke && (this.attrs.strokeWidth ?? 1)) || 0;
+
+    const fillAndStrokeWidth = fillRect.width + strokeWidth;
+    const fillAndStrokeHeight = fillRect.height + strokeWidth;
+
+    const applyShadow =
+      !config.skipShadow &&
+      (this.attrs.shadowEnabled ?? true) &&
+      this.attrs.shadow !== void 0;
+    const shadowOffsetX = applyShadow ? this.attrs.shadow?.x ?? 0 : 0;
+    const shadowOffsetY = applyShadow ? this.attrs.shadow?.y ?? 0 : 0;
+
+    const preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
+    const preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);
+
+    const blurRadius = (applyShadow && (this.attrs.shadow?.blur ?? 0)) || 0;
+
+    const width = preWidth + blurRadius * 2;
+    const height = preHeight + blurRadius * 2;
+
+    const rect = {
+      width: width,
+      height: height,
+      x:
+        -(strokeWidth / 2 + blurRadius) +
+        Math.min(shadowOffsetX, 0) +
+        fillRect.x,
+      y:
+        -(strokeWidth / 2 + blurRadius) +
+        Math.min(shadowOffsetY, 0) +
+        fillRect.y,
+    };
+
+    const applyTransform = !config.skipTransform && this.transformExists();
+    if (applyTransform) {
+      return transformedRect(rect, createTransform(this.attrs));
+    }
+
+    return rect;
   }
 
-  public getWidth() {
-    return (
-      this.getInnerWidth() +
-      (this.attrs.strokeWidth ?? 1) +
-      (this.attrs.shadow?.offset?.x ?? 0)
-    );
-  }
-  public getHeight() {
-    return (
-      this.getInnerHeight() +
-      (this.attrs.strokeWidth ?? 1) +
-      (this.attrs.shadow?.offset?.y ?? 0)
-    );
+  private getSizeContainer() {
+    const rect = this.getClientRect();
+
+    return {
+      width: rect.x + rect.width,
+      height: rect.y + rect.height,
+    };
   }
 
   private onresize() {
     // reactive
     if (this.#context) {
-      // eslint-disable-next-line functional/immutable-data
-      this.#context.canvas.width = this.getWidth();
-      // eslint-disable-next-line functional/immutable-data
-      this.#context.canvas.height = this.getHeight();
+      const { width, height } = this.getSizeContainer();
+      [this.#context.canvas.width, this.#context.canvas.height] = [
+        width,
+        height,
+      ];
     }
   }
   private getSceneFunc() {
@@ -404,9 +464,9 @@ export class Shape<
       // eslint-disable-next-line functional/immutable-data
       context.shadowColor = this.attrs.shadow.color;
       // eslint-disable-next-line functional/immutable-data
-      context.shadowOffsetX = this.attrs.shadow.offset?.x ?? 0;
+      context.shadowOffsetX = this.attrs.shadow?.x ?? 0;
       // eslint-disable-next-line functional/immutable-data
-      context.shadowOffsetY = this.attrs.shadow.offset?.y ?? 0;
+      context.shadowOffsetY = this.attrs.shadow?.y ?? 0;
       // eslint-disable-next-line functional/immutable-data
       context.shadowBlur = this.attrs.shadow.blur ?? 0;
     } else {
@@ -416,6 +476,15 @@ export class Shape<
       }
     }
   }
+  private transformExists() {
+    return (
+      this.attrs.scale !== void 0 ||
+      this.attrs.rotation !== void 0 ||
+      this.attrs.offset !== void 0 ||
+      this.attrs.skewX !== void 0 ||
+      this.attrs.skewY !== void 0
+    );
+  }
   private drawInSandBox(context: CanvasRenderingContext2D) {
     const scene = this.getSceneFunc();
 
@@ -423,13 +492,7 @@ export class Shape<
       return;
     }
 
-    const needUseTransform =
-      this.attrs.scale !== void 0 ||
-      this.attrs.rotation !== void 0 ||
-      this.attrs.offset !== void 0 ||
-      this.attrs.skewX !== void 0 ||
-      this.attrs.skewY !== void 0 ||
-      !this.#context;
+    const needUseTransform = this.transformExists() && !this.#context;
     const needSetAlpha = this.attrs.opacity !== void 0;
     const useFilter = this.attrs.filter !== void 0;
     // eslint-disable-next-line functional/no-let

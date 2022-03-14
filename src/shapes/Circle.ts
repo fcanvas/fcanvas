@@ -13,30 +13,20 @@ export class Circle<
 > extends Shape<Attrs<EventsCustom>, EventsCustom> {
   static readonly type = "Circle";
   static readonly attrsReactSize = ["radius"];
+  public readonly _centroid = true;
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    const center = this.getWidth() / 2;
-    context.arc(center, center, this.attrs.radius, 0, TWO_PI);
-  }
-  constructor(attrs: Attrs<EventsCustom>) {
-    super(attrs);
+    context.arc(0, 0, this.attrs.radius, 0, TWO_PI);
   }
 
-  public getInnerWidth() {
-    return this.attrs.radius * 2;
-  }
-  public getInnerHeight() {
-    return this.attrs.radius * 2;
+  public size() {
+    return {
+      width: this.attrs.radius * 2,
+      height: this.attrs.radius * 2,
+    };
   }
 
   public isPressedPoint(x: number, y: number) {
-    const center = this.getWidth() / 2;
-    return pointInCircle(
-      x,
-      y,
-      this.attrs.x + center,
-      this.attrs.y + center,
-      this.attrs.radius
-    );
+    return pointInCircle(x, y, this.attrs.x, this.attrs.y, this.attrs.radius);
   }
 }
