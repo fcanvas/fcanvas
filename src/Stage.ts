@@ -126,8 +126,10 @@ export class Stage extends Container<Attrs<Events>, Events, Layer> {
       if (this.#container.contains(layer.canvas) === false) {
         this.#container.appendChild(layer.canvas);
       }
-
-      layer.batchDraw();
+      
+      if (globalConfigs.autoDrawEnabled) {
+        layer.batchDraw();
+      }
     });
   }
   // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
