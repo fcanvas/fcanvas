@@ -36,12 +36,15 @@
         strokeWidth: 4,
       });
       // create our shape
-      var circle2 = new Konva.Circle({
-        x: 0,
-        y: 0,
-        radius: 70,
-        fill: "red",
-        stroke: "black",
+      var circle2 = new Konva.Arrow({
+        x: stage.width() / 2,
+        y: stage.height() / 2,
+        points: [0, 0, 100, 0, 150,150],
+        pointerLength: 50,
+        pointerWidth: 150,
+        pointerAtBeginning: true,
+        fill: 'black',
+        stroke: 'black',
         strokeWidth: 4,
       });
 
@@ -49,10 +52,7 @@
       layer.add(circle, circle2);
 
       // add the layer to the stage
-      stage.add(layer);
-
-      let x = (y = 0);
-      setInterval(() => circle2.move({ x: x++, y: y++ }), 222);
+      stage.add(layer)
       layer.draw();
 
       // draw the image
