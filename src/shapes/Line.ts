@@ -179,20 +179,21 @@ export class Line extends Shape<Attrs> {
         tension
       ),
       middle = expandPoints(p, tension),
-      tp = [firstControlPoints[2], firstControlPoints[3]]
-        .concat(middle)
-        .concat([
-          lastControlPoints[0],
-          lastControlPoints[1],
-          p[len - 2],
-          p[len - 1],
-          lastControlPoints[2],
-          lastControlPoints[3],
-          firstControlPoints[0],
-          firstControlPoints[1],
-          p[0],
-          p[1],
-        ]);
+      tp = [
+        firstControlPoints[2],
+        firstControlPoints[3],
+        ...middle,
+        lastControlPoints[0],
+        lastControlPoints[1],
+        p[len - 2],
+        p[len - 1],
+        lastControlPoints[2],
+        lastControlPoints[3],
+        firstControlPoints[0],
+        firstControlPoints[1],
+        p[0],
+        p[1],
+      ];
 
     return tp;
   }
