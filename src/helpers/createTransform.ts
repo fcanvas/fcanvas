@@ -1,5 +1,7 @@
 import { Offset } from "../types/Offset";
 
+import { convertToDegress } from "./convertToDegress";
+
 export type OptionTransform = Partial<Offset> & {
   // eslint-disable-next-line functional/prefer-readonly-type
   scale?: Partial<Offset>;
@@ -22,7 +24,7 @@ export function createTransform(
     transform.scale(options.scale.x || 1, options.scale.y || 1);
   }
   if (options.rotation !== void 0) {
-    transform.rotate(options.rotation);
+    transform.rotate(convertToDegress(options.rotation));
   }
   if (options.offset !== void 0 || force) {
     transform.translate(

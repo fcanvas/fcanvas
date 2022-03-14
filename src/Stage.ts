@@ -1,5 +1,6 @@
 import { AttrListening, AttrsIdentifitation, Container } from "./Container";
 import { Layer } from "./Layer";
+import { globalConfigs } from "./global-configs";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

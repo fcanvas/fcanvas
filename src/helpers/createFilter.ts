@@ -1,5 +1,7 @@
 import { Offset } from "../types/Offset";
 
+import { convertToDegress } from "./convertToDegress";
+
 export type OptionFilter =
   | "none"
   | {
@@ -74,7 +76,7 @@ export function createFilter(options: OptionFilter): string {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (options!.hueRotate !== void 0) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    filter += `hue-rotate(${options!.hueRotate}deg)`;
+    filter += `hue-rotate(${convertToDegress(options!.hueRotate)}deg)`;
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (options!.invert !== void 0) {
