@@ -1,34 +1,31 @@
-import { AttrListening, AttrsIdentifitation, Container } from "./Container";
-import type { EventsDefault, Shape } from "./Shape";
+import { Container, EventsSelf } from "./Container";
+import type { Shape } from "./Shape";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { realMousePosition } from "./helpers/realMousePosition";
 import { Offset } from "./types/Offset";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Attrs<Events extends Record<string, any>> = Partial<Offset> &
-  AttrsIdentifitation &
-  AttrListening<Events> & {
-    // eslint-disable-next-line functional/prefer-readonly-type
-    clearBeforeDraw?: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    width?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    height?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    visible?: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    opacity?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    clip?:
-      | (Offset & {
-          // eslint-disable-next-line functional/prefer-readonly-type
-          width: number;
-          // eslint-disable-next-line functional/prefer-readonly-type
-          height: number;
-        })
-      | ((this: Layer, context: Path2D) => void);
-  } & OptionTransform & {
+type Attrs = Partial<Offset> & {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  clearBeforeDraw?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  width?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  height?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  visible?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  opacity?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  clip?:
+    | (Offset & {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        width: number;
+        // eslint-disable-next-line functional/prefer-readonly-type
+        height: number;
+      })
+    | ((this: Layer, context: Path2D) => void);
+} & OptionTransform & {
     // eslint-disable-next-line functional/prefer-readonly-type
     filter?: OptionFilter;
   };
@@ -51,10 +48,10 @@ const EventsDefault = [
   "dbltap",
 ];
 
-type Events = HTMLElementEventMap;
+type EventsCustom = HTMLElementEventMap;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {
+export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
   static readonly _attrNoReactDraw = ["x", "y", "visible"];
   static readonly type: string = "Layer";
 
@@ -75,7 +72,7 @@ export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {
   // eslint-disable-next-line functional/prefer-readonly-type
   private idRequestFrame?: ReturnType<typeof requestAnimationFrame>;
 
-  constructor(attrs: Attrs<Events> = {}) {
+  constructor(attrs: Attrs = {}) {
     super(
       attrs,
       () => {
@@ -162,9 +159,7 @@ export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {
     });
   }
 
-  private activatorEventChildren(
-    event: EventsDefault[keyof EventsDefault]
-  ): void {
+  private activatorEventChildren(event: Event): void {
     // eslint-disable-next-line functional/no-let
     let clients: readonly ReturnType<typeof realMousePosition>[];
 
@@ -306,9 +301,15 @@ export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {
     this.loopCasting = false;
   }
 
-  public on<Name extends keyof Events>(
+  public on<Name extends keyof EventsSelf<EventsCustom>>(
     name: Name,
-    callback: (this: this, event: Events[Name]) => void
+    callback: (this: this, event: EventsSelf<EventsCustom>[Name]) => void
+  ): this;
+  public on(name: string, callback: (this: this, event: Event) => void): this;
+  public on(
+    name: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    callback: (event: any) => void
   ): this {
     super.on(name, callback);
 
@@ -317,9 +318,15 @@ export class Layer extends Container<Attrs<Events>, Events, Shape<any, any>> {
 
     return this;
   }
-  public off<Name extends keyof Events>(
+  public off<Name extends keyof EventsSelf<EventsCustom>>(
     name: Name,
-    callback?: (this: this, event: Events[Name]) => void
+    callback?: (this: this, event: EventsSelf<EventsCustom>[Name]) => void
+  ): this;
+  public off(name: string, callback?: (this: this, event: Event) => void): this;
+  public off(
+    name: string | keyof EventsSelf<EventsCustom>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    callback?: (event: any) => void
   ): this {
     if (callback) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

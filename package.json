@@ -9,7 +9,7 @@
       "require": "./dist/fcanvas-next.cjs",
       "types": "./dist/fcanvas-next.d.ts"
     },
-    "./": "./"
+    "./": "./dist/"
   },
   "module": "dist/fcanvas-next.esm.js",
   "unpkg": "dist/fcanvas-next.umd.min.js",

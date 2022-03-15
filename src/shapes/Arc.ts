@@ -1,8 +1,8 @@
-import { AttrsDefault, Shape } from "../Shape";
+import { Shape } from "../Shape";
 import { convertToRadial } from "../helpers/convertToRadial";
 import { pointInCircle } from "../helpers/pointInCircle";
 
-type Attrs = AttrsDefault & {
+type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
   angle:
     | number
@@ -21,7 +21,11 @@ type Attrs = AttrsDefault & {
 };
 
 const HALF_PI = Math.PI / 2;
-export class Arc extends Shape<Attrs> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+export class Arc<EventsCustom extends Record<string, any> = {}> extends Shape<
+  AttrsCustom,
+  EventsCustom
+> {
   static readonly type = "Arc";
   static readonly attrsReactSize = [
     "angle",

@@ -1,20 +1,59 @@
 import { createProxy } from "./helpers/createProxy";
 
-export type AttrsIdentifitation = {
+type AttrsIdentifitation = {
   // eslint-disable-next-line functional/prefer-readonly-type
   id?: string;
   // eslint-disable-next-line functional/prefer-readonly-type
   name?: string;
 };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AttrListening<Events extends Record<string, any>> = {
+
+type EventsDefault = {
+  /* @mouse event */
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseover: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseout: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseenter: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseleave: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mousemove: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mousedown: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  mouseup: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  wheel: WheelEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  click: MouseEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  dblclick: MouseEvent;
+
+  /* touch event */
+  // eslint-disable-next-line functional/prefer-readonly-type
+  touchstart: TouchEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  touchmove: TouchEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  touchend: TouchEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  tap: TouchEvent;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  dbltap: TouchEvent;
+};
+export type EventsSelf<EventsCustom> = EventsDefault & EventsCustom;
+type AttrListening = {
   // eslint-disable-next-line functional/prefer-readonly-type
   listening?: Map<
-    keyof Events,
+    keyof EventsDefault | string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
     Array<(event: any) => void>
   >;
 };
+
+type AttrsDefault = AttrsIdentifitation & AttrListening;
+export type AttrsSelf<AttrsCustom> = AttrsDefault & AttrsCustom;
 type CallbackWatcher<T> = (newValue: T, oldValue: T) => void | Promise<void>;
 type CallbackWatcherAll<P, T> = (
   prop: P,
@@ -28,11 +67,12 @@ type OptionsWatcher = {
   deep?: boolean;
 };
 export abstract class ContainerNode<
-  Attrs extends Record<string, unknown> &
-    AttrsIdentifitation &
-    AttrListening<Events>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Events extends Record<string, any>
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  AttrsCustom extends Record<string, unknown> = {},
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {},
+  Attrs extends AttrsSelf<AttrsCustom> = AttrsSelf<AttrsCustom>,
+  Events extends EventsSelf<EventsCustom> = EventsSelf<EventsCustom>
 > {
   static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
   static readonly type: string = "ContainerNode";
@@ -48,7 +88,7 @@ export abstract class ContainerNode<
   }
   public readonly attrs: Attrs;
   public readonly listeners = new Map<
-    keyof Events,
+    keyof Events | string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
     Array<(event: any) => void>
   >();
@@ -124,7 +164,10 @@ export abstract class ContainerNode<
   public on<Name extends keyof Events>(
     name: Name,
     callback: (this: this, event: Events[Name]) => void
-  ): this {
+  ): this;
+  public on(name: string, callback: (this: this, event: Event) => void): this;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public on(name: string | keyof Events, callback: (event: any) => void) {
     const listeners = this.listeners.get(name);
     if (listeners) {
       // eslint-disable-next-line functional/immutable-data
@@ -138,6 +181,12 @@ export abstract class ContainerNode<
   public off<Name extends keyof Events>(
     name: Name,
     callback?: (this: this, event: Events[Name]) => void
+  ): this;
+  public off(name: string, callback?: (this: this, event: Event) => void): this;
+  public off(
+    name: string | keyof Events,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    callback?: (event: any) => void
   ): this {
     const listeners = this.listeners.get(name);
 
@@ -151,10 +200,9 @@ export abstract class ContainerNode<
 
     return this;
   }
-  public emit<Name extends keyof Events>(
-    name: Name,
-    event: Events[Name]
-  ): this {
+  public emit<Name extends keyof Events>(name: Name, event: Events[Name]): this;
+  public emit(name: string, event: Event): this;
+  public emit(name: string | keyof Events, event: Event): this {
     this.listeners.get(name)?.forEach((cb) => {
       cb.call(this, event);
     });

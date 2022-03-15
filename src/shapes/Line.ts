@@ -1,6 +1,6 @@
-import { AttrsDefault, Shape } from "../Shape";
+import { Shape } from "../Shape";
 
-type Attrs = AttrsDefault & {
+type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
   points: number[];
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -70,7 +70,12 @@ function expandPoints(p: number[], tension: number) {
   return allPoints;
 }
 
-export class Line extends Shape<Attrs> {
+export class Line<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {},
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  AttrsCustomMore extends Record<string, unknown> = {}
+> extends Shape<AttrsCustom & AttrsCustomMore, EventsCustom> {
   static readonly type = "Line";
   static readonly attrsReactSize = ["points", "tension", "bezier"];
 
