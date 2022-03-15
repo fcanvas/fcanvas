@@ -45,8 +45,8 @@ type EventsDefault = {
 export type EventsSelf<EventsCustom> = EventsDefault & EventsCustom;
 type AttrListening = {
   // eslint-disable-next-line functional/prefer-readonly-type
-  listening?:
-    | Map<
+  listening?: // eslint-disable-next-line functional/prefer-readonly-type
+  | Map<
         keyof EventsDefault | string,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
         Array<(event: any) => void>
@@ -68,16 +68,22 @@ type OptionsWatcher = {
   // eslint-disable-next-line functional/prefer-readonly-type
   deep?: boolean;
 };
-export abstract class ContainerNode<
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  AttrsCustom extends Record<string, unknown> = {},
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-  EventsCustom extends Record<string, any> = {},
+export declare class VirualParentNode {
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
+  add(...nodes: any[]): void;
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
+  delete(...nodes: any[]): void;
+}
+
+abstract class ContainerBasic<
+  AttrsCustom extends Record<string, unknown>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  EventsCustom extends Record<string, any>,
   Attrs extends AttrsSelf<AttrsCustom> = AttrsSelf<AttrsCustom>,
   Events extends EventsSelf<EventsCustom> = EventsSelf<EventsCustom>
 > {
   static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
-  static readonly type: string = "ContainerNode";
+  static readonly type: string;
 
   public get type(): string {
     return (this.constructor as typeof ContainerNode).type ?? "unknown";
@@ -279,29 +285,61 @@ export abstract class ContainerNode<
   }
 }
 
-declare class Empty {
+export abstract class ContainerNode<
+    AttrsCustom extends Record<string, unknown>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    EventsCustom extends Record<string, any>,
+    IParentNode extends VirualParentNode = VirualParentNode
+  >
+  extends ContainerBasic<AttrsCustom, EventsCustom>
+  implements VirualChildNode
+{
+  static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
+  static readonly type: string = "ContainerNode";
+  public readonly parents = new Set<IParentNode>();
+
+  public _onAddToParent(parent: IParentNode): void {
+    this.parents.add(parent);
+  }
+  public _onDeleteParent(parent: IParentNode): void {
+    this.parents.delete(parent);
+  }
+}
+
+export declare class VirualChildNode {
   matches(selector: string): boolean;
+  _onAddToParent(parent: VirualParentNode): void;
+  _onDeleteParent(parent: VirualParentNode): void;
 }
 export abstract class Container<
-  Attrs extends Record<string, unknown> & AttrsIdentifitation,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Events extends Record<string, any>,
-  T extends Empty
-> extends ContainerNode<Attrs, Events> {
+    AttrsCustom extends Record<string, unknown> & AttrsIdentifitation,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    EventsCustom extends Record<string, any>,
+    IChildNode extends VirualChildNode
+  >
+  extends ContainerBasic<AttrsCustom, EventsCustom>
+  implements VirualParentNode
+{
   static readonly type: string = "Container";
-  public readonly children = new Set<T>();
+  public readonly children = new Set<IChildNode>();
 
   public find(selector: string) {
     return Array.from(this.children).filter((item) => item.matches(selector));
   }
 
-  // eslint-disable-next-line functional/functional-parameters
-  public add(...nodes: readonly T[]): void {
-    nodes.forEach((node) => this.children.add(node));
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
+  public add(...nodes: IChildNode[]): void {
+    nodes.forEach((node) => {
+      this.children.add(node);
+      node._onAddToParent(this);
+    });
   }
   // eslint-disable-next-line functional/functional-parameters
-  public delete(...nodes: readonly T[]): void {
-    nodes.forEach((node) => this.children.delete(node));
+  public delete(...nodes: readonly IChildNode[]): void {
+    nodes.forEach((node) => {
+      this.children.delete(node);
+      node._onDeleteParent(this);
+    });
   }
 
   public destroy(): void {

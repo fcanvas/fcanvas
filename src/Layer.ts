@@ -1,7 +1,11 @@
 import { Container, EventsSelf } from "./Container";
+import { Group } from "./Group";
 import type { Shape } from "./Shape";
-import { createFilter, OptionFilter } from "./helpers/createFilter";
-import { createTransform, OptionTransform } from "./helpers/createTransform";
+import { Stage } from "./Stage";
+import {
+  AttrsDrawLayerContext,
+  drawLayerContextUseOpacityClipTransformFilter,
+} from "./helpers/drawLayerContextUseOpacityClipTransformFilter";
 import { realMousePosition } from "./helpers/realMousePosition";
 import { Offset } from "./types/Offset";
 
@@ -14,21 +18,7 @@ type Attrs = Partial<Offset> & {
   height?: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   visible?: boolean;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  opacity?: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  clip?:
-    | (Offset & {
-        // eslint-disable-next-line functional/prefer-readonly-type
-        width: number;
-        // eslint-disable-next-line functional/prefer-readonly-type
-        height: number;
-      })
-    | ((this: Layer, context: Path2D) => void);
-} & OptionTransform & {
-    // eslint-disable-next-line functional/prefer-readonly-type
-    filter?: OptionFilter;
-  };
+} & AttrsDrawLayerContext;
 
 const EventsDefault = [
   "mouseover",
@@ -50,19 +40,23 @@ const EventsDefault = [
 
 type EventsCustom = HTMLElementEventMap;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
+export class Layer extends Container<
+  Attrs,
+  EventsCustom,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Shape<any, any> | Group
+> {
   static readonly _attrNoReactDraw = ["x", "y", "visible"];
   static readonly type: string = "Layer";
 
-  public get canvas() {
-    return this.#context.canvas;
-  }
+  public readonly parents = new Set<Stage>();
   // eslint-disable-next-line functional/prefer-readonly-type
   public loopCasting = false;
   // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload = true;
-
+  public get canvas() {
+    return this.#context.canvas;
+  }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   readonly #context = document.createElement("canvas").getContext("2d")!;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -87,23 +81,23 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
     this.watch(
       ["x", "y"],
       () => {
-        this.canvas.style.left = (this.attrs.x ?? 0) + "px";
-        this.canvas.style.top = (this.attrs.y ?? 0) + "px";
+        this.#context.canvas.style.left = (this.attrs.x ?? 0) + "px";
+        this.#context.canvas.style.top = (this.attrs.y ?? 0) + "px";
       },
       { immediate: true }
     );
     this.watch(
       ["width", "height"],
       () => {
-        this.canvas.style.width = this.attrs.width
+        this.#context.canvas.style.width = this.attrs.width
           ? `${this.attrs.width}px`
           : "100%";
-        this.canvas.style.height = this.attrs.height
+        this.#context.canvas.style.height = this.attrs.height
           ? `${this.attrs.height}px`
           : "100%";
-        [this.canvas.width, this.canvas.height] = [
-          this.canvas.scrollWidth,
-          this.canvas.scrollHeight,
+        [this.#context.canvas.width, this.#context.canvas.height] = [
+          this.#context.canvas.scrollWidth,
+          this.#context.canvas.scrollHeight,
         ];
       },
       { immediate: true }
@@ -111,16 +105,16 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
     this.watch(
       "visible",
       () => {
-        this.displayBp = this.canvas.style.display;
-        const display = getComputedStyle(this.canvas).getPropertyValue(
+        this.displayBp = this.#context.canvas.style.display;
+        const display = getComputedStyle(this.#context.canvas).getPropertyValue(
           "display"
         );
 
         if (this.attrs.visible ?? true) {
           if (display === "none") {
-            this.canvas.style.display = "block";
+            this.#context.canvas.style.display = "block";
           } else {
-            this.canvas.style.display =
+            this.#context.canvas.style.display =
               this.displayBp === "none" ? "" : this.displayBp;
           }
 
@@ -131,21 +125,21 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
           return;
         }
 
-        this.canvas.style.display = "none";
+        this.#context.canvas.style.display = "none";
       },
       { immediate: true }
     );
     this.watch(
       "id",
       () => {
-        this.canvas.setAttribute("id", this.attrs.id ?? "");
+        this.#context.canvas.setAttribute("id", this.attrs.id ?? "");
       },
       { immediate: true }
     );
     this.watch(
       "name",
       () => {
-        this.canvas.setAttribute("class", this.attrs.name ?? "");
+        this.#context.canvas.setAttribute("class", this.attrs.name ?? "");
       },
       { immediate: true }
     );
@@ -157,6 +151,13 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
         this.activatorEventChildren.bind(this)
       );
     });
+  }
+
+  public _onAddToParent(parent: Stage) {
+    this.parents.add(parent);
+  }
+  public _onDeleteParent(parent: Stage) {
+    this.parents.delete(parent);
   }
 
   private activatorEventChildren(event: Event): void {
@@ -172,7 +173,11 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
               ? Array.from((event as TouchEvent).changedTouches)
               : [event as MouseEvent | WheelEvent]
           ).map((touch) =>
-            realMousePosition(this.canvas, touch.clientX, touch.clientY)
+            realMousePosition(
+              this.#context.canvas,
+              touch.clientX,
+              touch.clientY
+            )
           );
         }
 
@@ -184,99 +189,31 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
   }
 
   public draw() {
-    const needReload = this.currentNeedReload;
-    if (needReload === false) {
+    if (this.currentNeedReload === false || !(this.attrs.visible ?? true)) {
       return;
     }
 
-    const context = this.#context;
-
-    if (this.attrs.clearBeforeDraw ?? true) {
-      context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-    const needBackup = this.attrs.clip !== void 0;
-
-    if (needBackup) {
-      context.save();
-
-      if (typeof this.attrs.clip === "function") {
-        const path = new Path2D();
-        this.attrs.clip.call(this, path);
-        context.clip(path);
-      } else {
-        context.rect(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          this.attrs.clip!.x,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          this.attrs.clip!.y,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          this.attrs.clip!.width,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          this.attrs.clip!.height
-        );
-      }
-    }
-    const needUseTransform =
-      this.attrs.scale !== void 0 ||
-      this.attrs.rotation !== void 0 ||
-      this.attrs.offset !== void 0 ||
-      this.attrs.skewX !== void 0 ||
-      this.attrs.skewY !== void 0 ||
-      !context;
-    const needSetAlpha = this.attrs.opacity !== void 0;
-    const useFilter = this.attrs.filter !== void 0;
-    // eslint-disable-next-line functional/no-let
-    let backupTransform, backupAlpha: number, backupFilter: string;
-
-    if (needSetAlpha) {
-      backupAlpha = context.globalAlpha;
-      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
-      context.globalAlpha = this.attrs.opacity!;
-    }
-    if (needUseTransform) {
-      backupTransform = context.getTransform();
-
-      context.setTransform(createTransform(this.attrs, !context));
-    }
-    if (useFilter) {
-      backupFilter = context.filter;
-
-      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
-      context.filter = createFilter(this.attrs.filter!);
-    }
-
-    this.children.forEach((node) => {
-      node.draw(context);
-    });
-
-    if (useFilter) {
-      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
-      context.filter = backupFilter!;
-    }
-    if (needUseTransform) {
-      context.setTransform(backupTransform);
-    }
-    if (needSetAlpha) {
-      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
-      context.globalAlpha = backupAlpha!;
-    }
-    if (needBackup) {
-      context.restore();
-    }
+    drawLayerContextUseOpacityClipTransformFilter(
+      this.#context,
+      this.attrs.clearBeforeDraw ?? true,
+      this.attrs,
+      this.children,
+      this
+    );
 
     this.currentNeedReload = false;
   }
 
   // @overwrite
-  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
-  public add(...nodes: Shape[]): void {
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
+  public add(...nodes: (Shape<any, any> | Group)[]): void {
     super.add(...nodes);
-    nodes.forEach((node) => node._onAddToLayer(this));
+    nodes.forEach((node) => node._onAddToParent(this));
   }
-  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
-  public delete(...nodes: Shape[]): void {
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
+  public delete(...nodes: (Shape<any, any> | Group)[]): void {
     super.delete(...nodes);
-    nodes.forEach((node) => node._onRemoveLayer(this));
+    nodes.forEach((node) => node._onDeleteParent(this));
   }
 
   public batchDraw() {
@@ -315,7 +252,7 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
 
     if (this.listeners) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.canvas.addEventListener(name, callback as unknown as any);
+      this.#context.canvas.addEventListener(name, callback as unknown as any);
     }
 
     return this;
@@ -331,13 +268,16 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
     callback?: (event: any) => void
   ): this {
     if (callback) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.canvas.removeEventListener(name, callback as unknown as any);
+      this.#context.canvas.removeEventListener(
+        name,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        callback as unknown as any
+      );
     } else {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.listeners
         ?.get(name)!
-        .forEach((cb) => this.canvas.removeEventListener(name, cb));
+        .forEach((cb) => this.#context.canvas.removeEventListener(name, cb));
     }
 
     super.off(name, callback);
@@ -350,6 +290,6 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
     this.children.forEach((node) => this.delete(node));
     this.listeners?.forEach((_cbs, name) => this.off(name));
     super.destroy();
-    this.canvas.remove();
+    this.#context.canvas.remove();
   }
 }
