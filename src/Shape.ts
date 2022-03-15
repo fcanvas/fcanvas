@@ -1,8 +1,11 @@
 import { transparent } from "./Colors";
 import { ContainerNode } from "./Container";
+import { Group } from "./Group";
 import type { Layer } from "./Layer";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
+import { pointInBox } from "./helpers/pointInBox";
+import { setNeedReloadParentTrue } from "./helpers/setNeedReloadParentTrue";
 import { transformedRect } from "./helpers/transformerRect";
 import { Offset } from "./types/Offset";
 import { Size } from "./types/Size";
@@ -141,7 +144,7 @@ export class Shape<
   EventsCustom extends Record<string, any> = {},
   Attrs extends AttrsDefault & AttrsCustom = AttrsDefault & AttrsCustom,
   Events extends EventsCustom = EventsCustom
-> extends ContainerNode<Attrs, Events> {
+> extends ContainerNode<Attrs, Events, Layer | Group> {
   static readonly attrsReactSize: readonly string[] = ["width", "height"];
   static readonly type: string = "Shape";
 
@@ -153,7 +156,6 @@ export class Shape<
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   protected _sceneFunc(context: CanvasRenderingContext2D) {}
 
-  readonly #layers = new Set<Layer>();
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
 
@@ -163,18 +165,23 @@ export class Shape<
         this.currentNeedReload = true;
       }
 
-      this.#layers.forEach((layer) => {
-        if (layer.currentNeedReload === true) return;
-        layer.currentNeedReload = true;
-      });
+      setNeedReloadParentTrue(this.parents);
 
-      if (
-        (this.constructor as unknown as typeof Shape).attrsReactSize.some(
-          (test) =>
-            test === (prop as string) || test.startsWith(`${prop as string}.`)
-        )
-      ) {
+      const sizeChanged = (
+        this.constructor as unknown as typeof Shape
+      ).attrsReactSize.some(
+        (test) =>
+          test === (prop as string) || test.startsWith(`${prop as string}.`)
+      );
+      if (sizeChanged) {
         this.onresize();
+      }
+      if (sizeChanged || prop === "x" || prop === "y") {
+        this.parents.forEach((parent) => {
+          if (parent instanceof Group) {
+            parent._onChildResize();
+          }
+        });
       }
     });
 
@@ -510,14 +517,16 @@ export class Shape<
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const hitStroke = this.getHitStroke();
 
-    return x === this.attrs.x && y === this.attrs.y;
-  }
+    const selfRect = this.getSelfRect();
 
-  public _onAddToLayer(layer: Layer): void {
-    this.#layers.add(layer);
-  }
-  public _onRemoveLayer(layer: Layer): void {
-    this.#layers.delete(layer);
+    return pointInBox(
+      x,
+      y,
+      this.attrs.x + selfRect.x,
+      this.attrs.y + selfRect.y,
+      selfRect.width,
+      selfRect.height
+    );
   }
 
   draw(context: CanvasRenderingContext2D) {
