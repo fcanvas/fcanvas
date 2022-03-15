@@ -1,6 +1,6 @@
 import { Shape } from "../Shape";
 
-type AttrsCustom = {
+export type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
   points: number[];
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -73,11 +73,16 @@ function expandPoints(p: number[], tension: number) {
 export class Line<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  AttrsCustomMore extends Record<string, unknown> = {}
-> extends Shape<AttrsCustom & AttrsCustomMore, EventsCustom> {
-  static readonly type = "Line";
-  static readonly attrsReactSize = ["points", "tension", "bezier"];
+  AttrsCustomMore extends Record<string, unknown> &
+    Omit<AttrsCustom, "closed"> = AttrsCustom
+> extends Shape<AttrsCustomMore, EventsCustom> {
+  static readonly type: string = "Line";
+  static readonly attrsReactSize: readonly string[] = [
+    "points",
+    "tension",
+    "bezier",
+    "closed",
+  ];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     const points = this.attrs.points,
@@ -154,14 +159,14 @@ export class Line<
     }
   }
 
-  private getTensionPoints() {
+  protected getTensionPoints() {
     if (this.attrs.closed) {
       return this.getTensionPointsClosed();
     } else {
       return expandPoints(this.attrs.points, this.attrs.tension ?? 0);
     }
   }
-  private getTensionPointsClosed() {
+  protected getTensionPointsClosed() {
     const p = this.attrs.points,
       len = p.length,
       tension = this.attrs.tension ?? 0,

@@ -45,11 +45,13 @@ type EventsDefault = {
 export type EventsSelf<EventsCustom> = EventsDefault & EventsCustom;
 type AttrListening = {
   // eslint-disable-next-line functional/prefer-readonly-type
-  listening?: Map<
-    keyof EventsDefault | string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
-    Array<(event: any) => void>
-  >;
+  listening?:
+    | Map<
+        keyof EventsDefault | string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
+        Array<(event: any) => void>
+      >
+    | false;
 };
 
 type AttrsDefault = AttrsIdentifitation & AttrListening;
@@ -87,11 +89,12 @@ export abstract class ContainerNode<
     return this.attrs.name ?? "";
   }
   public readonly attrs: Attrs;
-  public readonly listeners = new Map<
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public readonly listeners?: Map<
     keyof Events | string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
     Array<(event: any) => void>
-  >();
+  >;
   public readonly watchers = new Map<
     keyof Attrs | "*",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
@@ -104,6 +107,13 @@ export abstract class ContainerNode<
     // eslint-disable-next-line functional/prefer-readonly-type
     attrNoReactDraw?: string[]
   ) {
+    if (attrs.listening !== false) {
+      this.listeners = new Map<
+        keyof Events | string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
+        Array<(event: any) => void>
+      >();
+    }
     this.attrs = createProxy(attrs, (prop, newVal, oldVal) => {
       this.watchers.forEach((listeners, selfProp) => {
         if (selfProp === "*") return;
@@ -136,9 +146,11 @@ export abstract class ContainerNode<
       }
     });
 
-    this.attrs.listening?.forEach((cbs, name) => {
-      cbs.forEach((cb) => this.on(name, cb));
-    });
+    if (this.attrs.listening !== false) {
+      this.attrs.listening?.forEach((cbs, name) => {
+        cbs.forEach((cb) => this.on(name, cb));
+      });
+    }
   }
 
   public matches(selector: string): boolean {
@@ -168,12 +180,14 @@ export abstract class ContainerNode<
   public on(name: string, callback: (this: this, event: Event) => void): this;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public on(name: string | keyof Events, callback: (event: any) => void) {
-    const listeners = this.listeners.get(name);
-    if (listeners) {
-      // eslint-disable-next-line functional/immutable-data
-      listeners.push(callback);
-    } else {
-      this.listeners.set(name, [callback]);
+    if (this.listeners) {
+      const listeners = this.listeners.get(name);
+      if (listeners) {
+        // eslint-disable-next-line functional/immutable-data
+        listeners.push(callback);
+      } else {
+        this.listeners.set(name, [callback]);
+      }
     }
 
     return this;
@@ -188,14 +202,16 @@ export abstract class ContainerNode<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     callback?: (event: any) => void
   ): this {
-    const listeners = this.listeners.get(name);
+    if (this.listeners) {
+      const listeners = this.listeners.get(name);
 
-    if (callback) {
-      // eslint-disable-next-line functional/immutable-data
-      listeners?.splice(listeners.indexOf(callback) >>> 0, 1);
-    } else {
-      // eslint-disable-next-line functional/immutable-data
-      listeners?.splice(0);
+      if (callback) {
+        // eslint-disable-next-line functional/immutable-data
+        listeners?.splice(listeners.indexOf(callback) >>> 0, 1);
+      } else {
+        // eslint-disable-next-line functional/immutable-data
+        listeners?.splice(0);
+      }
     }
 
     return this;
@@ -203,9 +219,11 @@ export abstract class ContainerNode<
   public emit<Name extends keyof Events>(name: Name, event: Events[Name]): this;
   public emit(name: string, event: Event): this;
   public emit(name: string | keyof Events, event: Event): this {
-    this.listeners.get(name)?.forEach((cb) => {
-      cb.call(this, event);
-    });
+    if (this.listeners) {
+      this.listeners.get(name)?.forEach((cb) => {
+        cb.call(this, event);
+      });
+    }
 
     return this;
   }
@@ -256,7 +274,7 @@ export abstract class ContainerNode<
   }
 
   public destroy(): void {
-    this.listeners.clear();
+    this.listeners?.clear();
     this.watchers.clear();
   }
 }

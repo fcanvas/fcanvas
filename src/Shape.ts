@@ -398,7 +398,7 @@ export class Shape<
       }
     }
   }
-  private fillStrokeScene(context: CanvasRenderingContext2D) {
+  protected fillStrokeScene(context: CanvasRenderingContext2D) {
     const shadowForStrokeEnabled = this.attrs.shadowForStrokeEnabled ?? true;
     if (this.attrs.fillAfterStrokeEnabled) {
       if (shadowForStrokeEnabled) {

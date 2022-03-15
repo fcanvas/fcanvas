@@ -1,31 +1,47 @@
 import { Shape } from "../Shape";
-import { pointInCircle } from "../helpers/pointInCircle";
+import { pointInEllipse } from "../helpers/pointInEllipse";
+import { Offset } from "../types/Offset";
 
 type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
-  radius: number;
+  radius: Offset;
 };
 
-export class Circle<
+export class Ellipse<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {}
 > extends Shape<AttrsCustom, EventsCustom> {
-  static readonly type = "Circle";
+  static readonly type = "Ellipse";
   static readonly attrsReactSize = ["radius"];
   public readonly _centroid = true;
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    context.arc(0, 0, this.attrs.radius, 0, Math.PI * 2);
+    context.ellipse(
+      0,
+      0,
+      0,
+      this.attrs.radius.x,
+      this.attrs.radius.y,
+      0,
+      Math.PI * 2
+    );
   }
 
   public size() {
     return {
-      width: this.attrs.radius * 2,
-      height: this.attrs.radius * 2,
+      width: this.attrs.radius.x * 2,
+      height: this.attrs.radius.y * 2,
     };
   }
 
   public isPressedPoint(x: number, y: number) {
-    return pointInCircle(x, y, this.attrs.x, this.attrs.y, this.attrs.radius);
+    return pointInEllipse(
+      x,
+      y,
+      this.attrs.x,
+      this.attrs.y,
+      this.attrs.radius.x,
+      this.attrs.radius.y
+    );
   }
 }
