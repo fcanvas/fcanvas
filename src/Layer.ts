@@ -164,7 +164,7 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
     let clients: readonly ReturnType<typeof realMousePosition>[];
 
     this.children.forEach((node) => {
-      if (node.listeners.has(event.type)) {
+      if (node.listeners?.has(event.type)) {
         console.log(`active event ${event.type}`);
         if (!clients) {
           clients = (
@@ -313,8 +313,10 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
   ): this {
     super.on(name, callback);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.canvas.addEventListener(name, callback as unknown as any);
+    if (this.listeners) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.canvas.addEventListener(name, callback as unknown as any);
+    }
 
     return this;
   }
@@ -334,7 +336,7 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
     } else {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.listeners
-        .get(name)!
+        ?.get(name)!
         .forEach((cb) => this.canvas.removeEventListener(name, cb));
     }
 
@@ -346,7 +348,7 @@ export class Layer extends Container<Attrs, EventsCustom, Shape<any, any>> {
   public destroy(): void {
     this.stopDraw();
     this.children.forEach((node) => this.delete(node));
-    this.listeners.forEach((_cbs, name) => this.off(name));
+    this.listeners?.forEach((_cbs, name) => this.off(name));
     super.destroy();
     this.canvas.remove();
   }

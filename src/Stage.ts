@@ -150,8 +150,10 @@ export class Stage extends Container<Attrs, EventsCustom, Layer> {
   ): this {
     super.on(name, callback);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.#container.addEventListener(name, callback as unknown as any);
+    if (this.listeners) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.#container.addEventListener(name, callback as unknown as any);
+    }
 
     return this;
   }
@@ -169,10 +171,12 @@ export class Stage extends Container<Attrs, EventsCustom, Layer> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.#container.removeEventListener(name, callback as unknown as any);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.listeners
-        .get(name)!
-        .forEach((cb) => this.#container.removeEventListener(name, cb));
+      if (this.listeners) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.listeners
+          .get(name)!
+          .forEach((cb) => this.#container.removeEventListener(name, cb));
+      }
     }
 
     super.off(name, callback);
@@ -181,7 +185,7 @@ export class Stage extends Container<Attrs, EventsCustom, Layer> {
   }
 
   public destroy(): void {
-    this.listeners.forEach((_cbs, name) => this.off(name));
+    this.listeners?.forEach((_cbs, name) => this.off(name));
     super.destroy();
     this.#container.remove();
   }
