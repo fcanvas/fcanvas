@@ -1,10 +1,9 @@
-import { AttrListening, AttrsIdentifitation, Container } from "./Container";
+import { AttrsSelf, Container, EventsSelf } from "./Container";
 import { Layer } from "./Layer";
 import { globalConfigs } from "./global-configs";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Attrs<Events extends Record<string, any>> = {
+type Attrs = {
   // eslint-disable-next-line functional/prefer-readonly-type
   width: number;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -15,17 +14,15 @@ type Attrs<Events extends Record<string, any>> = {
   visible?: boolean;
   // eslint-disable-next-line functional/prefer-readonly-type
   opacity?: number;
-} & OptionTransform &
-  AttrsIdentifitation &
-  AttrListening<Events>;
+} & OptionTransform;
 
-type Events = HTMLElementEventMap;
+type EventsCustom = HTMLElementEventMap;
 
-export class Stage extends Container<Attrs<Events>, Events, Layer> {
+export class Stage extends Container<Attrs, EventsCustom, Layer> {
   static readonly type: string = "Stage";
   readonly #container = document.createElement("div");
 
-  constructor(attrs: Attrs<Events>) {
+  constructor(attrs: AttrsSelf<Attrs>) {
     super(attrs);
 
     const el = document.getElementById(attrs.container);
@@ -141,9 +138,15 @@ export class Stage extends Container<Attrs<Events>, Events, Layer> {
     });
   }
 
-  public on<Name extends keyof Events>(
+  public on<Name extends keyof EventsSelf<EventsCustom>>(
     name: Name,
-    callback: (this: this, event: Events[Name]) => void
+    callback: (this: this, event: EventsSelf<EventsCustom>[Name]) => void
+  ): this;
+  public on(name: string, callback: (this: this, event: Event) => void): this;
+  public on(
+    name: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    callback: (event: any) => void
   ): this {
     super.on(name, callback);
 
@@ -152,9 +155,15 @@ export class Stage extends Container<Attrs<Events>, Events, Layer> {
 
     return this;
   }
-  public off<Name extends keyof Events>(
+  public off<Name extends keyof EventsSelf<EventsCustom>>(
     name: Name,
-    callback?: (this: this, event: Events[Name]) => void
+    callback?: (this: this, event: EventsSelf<EventsCustom>[Name]) => void
+  ): this;
+  public off(name: string, callback?: (this: this, event: Event) => void): this;
+  public off(
+    name: string | keyof EventsSelf<EventsCustom>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    callback?: (event: any) => void
   ): this {
     if (callback) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

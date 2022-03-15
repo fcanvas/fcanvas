@@ -1,16 +1,16 @@
-import { AttrsDefault, EventsDefault, Shape } from "../Shape";
-import { TWO_PI } from "../constants/TWO_PI";
+import { Shape } from "../Shape";
 import { pointInCircle } from "../helpers/pointInCircle";
 
-type Attrs<Events> = AttrsDefault<Events> & {
+type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
   radius: number;
 };
 
+const TWO_PI = Math.PI * 2;
 export class Circle<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  EventsCustom extends Record<string, any> & EventsDefault
-> extends Shape<Attrs<EventsCustom>, EventsCustom> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {}
+> extends Shape<AttrsCustom, EventsCustom> {
   static readonly type = "Circle";
   static readonly attrsReactSize = ["radius"];
   public readonly _centroid = true;

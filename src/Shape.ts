@@ -1,6 +1,6 @@
-import { AttrListening, AttrsIdentifitation, ContainerNode } from "./Container";
+import { transparent } from "./Colors";
+import { ContainerNode } from "./Container";
 import type { Layer } from "./Layer";
-import { transparent } from "./constants/Colors";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { transformedRect } from "./helpers/transformerRect";
@@ -77,108 +77,70 @@ type FillModeMixture = {
   Partial<FillModeLinearGradient> &
   Partial<FillModeRadialGradient>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AttrsDefault<Events extends Record<string, any> = EventsDefault> =
-  Offset & {
+type AttrsDefault = Offset & {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  fillAfterStrokeEnabled?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  fillEnabled?: bool;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  stroke?: FillStyle;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  strokeWidth?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  strokeEnabled?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  hitStrokeWidth?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  strokeHitEnabled?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  perfectDrawEnabled?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  shadowForStrokeEnabled?: boolean;
+  // strokeScaleEnabled?: boolean
+  // eslint-disable-next-line functional/prefer-readonly-type
+  lineJoin?: "bevel" | "round" | "miter";
+  // eslint-disable-next-line functional/prefer-readonly-type
+  lineCap?: "butt" | "round" | "square";
+  // eslint-disable-next-line functional/prefer-readonly-type
+  sceneFunc?: (context: CanvasRenderingContext2D) => void;
+} & Partial<FillModeMixture> /* & FillModeMonopole*/ & {
     // eslint-disable-next-line functional/prefer-readonly-type
-    fillAfterStrokeEnabled?: boolean;
+    shadowEnabled?: boolean;
     // eslint-disable-next-line functional/prefer-readonly-type
-    fillEnabled?: bool;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    stroke?: FillStyle;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    strokeWidth?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    strokeEnabled?: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    hitStrokeWidth?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    strokeHitEnabled?: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    perfectDrawEnabled?: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    shadowForStrokeEnabled?: boolean;
-    // strokeScaleEnabled?: boolean
-    // eslint-disable-next-line functional/prefer-readonly-type
-    lineJoin?: "bevel" | "round" | "miter";
-    // eslint-disable-next-line functional/prefer-readonly-type
-    lineCap?: "butt" | "round" | "square";
-    // eslint-disable-next-line functional/prefer-readonly-type
-    sceneFunc?: (context: CanvasRenderingContext2D) => void;
-  } & Partial<FillModeMixture> /* & FillModeMonopole*/ & {
+    shadow?: Partial<Offset> & {
       // eslint-disable-next-line functional/prefer-readonly-type
-      shadowEnabled?: boolean;
+      color: Color;
       // eslint-disable-next-line functional/prefer-readonly-type
-      shadow?: Partial<Offset> & {
-        // eslint-disable-next-line functional/prefer-readonly-type
-        color: Color;
-        // eslint-disable-next-line functional/prefer-readonly-type
-        blur: number;
-        // opacity?: number
-      };
-    } & {
-      // eslint-disable-next-line functional/prefer-readonly-type
-      dash?: number[];
-      // eslint-disable-next-line functional/prefer-readonly-type
-      dashEnabled?: boolean;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      visible?: boolean;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      opacity?: number;
-    } & AttrsIdentifitation &
-    OptionTransform & {
-      // eslint-disable-next-line functional/prefer-readonly-type
-      filter?: OptionFilter;
-    } & AttrListening<Events>;
-
-export type EventsDefault = {
-  /* @mouse event */
-  // eslint-disable-next-line functional/prefer-readonly-type
-  mouseover: MouseEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  mouseout: MouseEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  mouseenter: MouseEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  mouseleave: MouseEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  mousemove: MouseEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  mousedown: MouseEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  mouseup: MouseEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  wheel: WheelEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  click: MouseEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  dblclick: MouseEvent;
-
-  /* touch event */
-  // eslint-disable-next-line functional/prefer-readonly-type
-  touchstart: TouchEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  touchmove: TouchEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  touchend: TouchEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  tap: TouchEvent;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  dbltap: TouchEvent;
-};
+      blur: number;
+      // opacity?: number
+    };
+  } & {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    dash?: number[];
+    // eslint-disable-next-line functional/prefer-readonly-type
+    dashEnabled?: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    visible?: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    opacity?: number;
+  } & OptionTransform & {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    filter?: OptionFilter;
+  };
 
 const EmptyArray: Iterable<number> = [];
 
 export class Shape<
-  Attrs extends Record<string, unknown> &
-    AttrsDefault<Events> = AttrsDefault<EventsDefault> & {
+  AttrsCustom extends Record<string, unknown> = {
     // eslint-disable-next-line functional/prefer-readonly-type
     width: number;
     // eslint-disable-next-line functional/prefer-readonly-type
     height: number;
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Events extends Record<string, any> & EventsDefault = EventsDefault
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {},
+  Attrs extends AttrsDefault & AttrsCustom = AttrsDefault & AttrsCustom,
+  Events extends EventsCustom = EventsCustom
 > extends ContainerNode<Attrs, Events> {
   static readonly attrsReactSize: readonly string[] = ["width", "height"];
   static readonly type: string = "Shape";
