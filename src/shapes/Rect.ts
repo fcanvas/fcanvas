@@ -5,6 +5,8 @@ type AttrsCustom = {
   width: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   height: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  cornerRadius?: number | [number, number] | [number, number, number, number]
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
