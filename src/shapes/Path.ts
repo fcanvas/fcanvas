@@ -2,20 +2,17 @@ import { Shape } from "../Shape";
 
 type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
-  width: number;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  height: number;
+  data: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-export class Rect<EventsCustom extends Record<string, any> = {}> extends Shape<
+export class Path<EventsCustom extends Record<string, any> = {}> extends Shape<
   AttrsCustom,
   EventsCustom
 > {
-  static readonly type = "Rect";
+  static readonly type = "Path";
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    context.rect(0, 0, this.attrs.width, this.attrs.height);
-    this.fillStrokeScene(context);
+    this.fillScene(context, new Path2D(this.attrs.data))
   }
 }

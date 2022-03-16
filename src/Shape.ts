@@ -304,7 +304,7 @@ export class Shape<
 
     return "color";
   }
-  private fillScene(context: CanvasRenderingContext2D) {
+  private fillScene(context: CanvasRenderingContext2D, rules?: Path2D) {
     // eslint-disable-next-line functional/no-let
     let style: FillStyle | void;
     // "color" | "linear-gradient" | "radial-graident" | "pattern"
@@ -370,7 +370,7 @@ export class Shape<
     // eslint-disable-next-line functional/immutable-data
     context.fillStyle = style ?? transparent;
     if (style) {
-      context.fill();
+      context.fill(rules);
     }
   }
   private strokeScene(context: CanvasRenderingContext2D) {
@@ -488,7 +488,7 @@ export class Shape<
 
     this.lineSet(context);
     scene?.call(this, context);
-    this.fillStrokeScene(context);
+    // this.fillStrokeScene(context);
 
     context.closePath();
 

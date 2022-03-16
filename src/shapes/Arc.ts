@@ -79,6 +79,8 @@ export class Arc<EventsCustom extends Record<string, any> = {}> extends Shape<
       +sinEnd * (this.attrs.innerRadius ?? 0),
       -cosEnd * this.attrs.outerRadius
     );
+    
+    this.fillStrokeScene(context);
   }
 
   public size() {

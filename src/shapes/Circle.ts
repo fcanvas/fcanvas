@@ -16,6 +16,7 @@ export class Circle<
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     context.arc(0, 0, this.attrs.radius, 0, Math.PI * 2);
+    this.fillStrokeScene(context);
   }
 
   public size() {

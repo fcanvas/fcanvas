@@ -22,23 +22,18 @@
       var layer = new Konva.Layer();
 
       // create our shape
-      var circle = new Konva.Shape({
-        sceneFunc(ctx) {
-          // ctx.arc(0,0, 50,0, 1000)
-          //ctx.fillStrokeShape(this);
-          console.log(ctx);
-        },
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 70,
-        fill: "red",
-        stroke: "black",
-        strokeWidth: 4,
+      var circle = new Konva.Group({
+        x: 100,
+        y: 100,
+        width: 10,
+        height: 10,
+        stroke: "red"
       });
       // create our shape
-      var circle2 = new Konva.Arrow({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
+      var circle2 = new Konva.Circle({
+        x: 0,
+        y: 0,
+        radius: 50,
         points: [0, 0, 100, 0, 150, 150],
         pointerLength: 50,
         pointerWidth: 150,
@@ -48,8 +43,9 @@
         strokeWidth: 4,
       });
 
+circle.add(circle2)
       // add the shape to the layer
-      layer.add(circle, circle2);
+      layer.add(circle);
 
       // add the layer to the stage
       stage.add(layer);

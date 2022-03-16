@@ -57,9 +57,7 @@ export class Image<
         this.attrs.width ?? this.attrs.crop.width,
         this.attrs.height ?? this.attrs.crop.height
       );
-
-      return;
-    }
+    } else
     if (this.attrs.width !== void 0 && this.attrs.height !== void 0) {
       context.drawImage(
         this.attrs.image,
@@ -68,11 +66,11 @@ export class Image<
         this.attrs.width,
         this.attrs.height
       );
-
-      return;
+    } else {
+      context.drawImage(this.attrs.image, this.attrs.x, this.attrs.y);
     }
-
-    context.drawImage(this.attrs.image, this.attrs.x, this.attrs.y);
+    
+    this.fillStrokeScene(context);
   }
 
   public size() {

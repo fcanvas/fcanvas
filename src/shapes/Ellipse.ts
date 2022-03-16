@@ -25,6 +25,7 @@ export class Ellipse<
       0,
       Math.PI * 2
     );
+    this.fillStrokeScene(context);
   }
 
   public size() {
