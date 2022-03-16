@@ -155,7 +155,9 @@ export class Line<
 
     // closed e.g. polygons and blobs
     if (closed) {
-      context.closePath();
+      this.strokeScene(context);
+    } else {
+      this.fillStrokeScene(context);
     }
   }
 
