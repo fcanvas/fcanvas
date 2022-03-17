@@ -100,7 +100,8 @@ export class Layer extends Container<
             this.#context.canvas.scrollWidth,
             this.#context.canvas.scrollHeight,
           ];
-        }, 10);
+          this.currentNeedReload = true;
+        });
       },
       { immediate: true }
     );
