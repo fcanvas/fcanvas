@@ -13,6 +13,6 @@ export class Path<EventsCustom extends Record<string, any> = {}> extends Shape<
   static readonly type = "Path";
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    this.fillScene(context, new Path2D(this.attrs.data))
+    this.fillScene(context, new Path2D(this.attrs.data));
   }
 }

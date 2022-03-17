@@ -304,7 +304,7 @@ export class Shape<
 
     return "color";
   }
-  private fillScene(context: CanvasRenderingContext2D, rules?: Path2D) {
+  protected fillScene(context: CanvasRenderingContext2D, path?: Path2D) {
     // eslint-disable-next-line functional/no-let
     let style: FillStyle | void;
     // "color" | "linear-gradient" | "radial-graident" | "pattern"
@@ -370,10 +370,11 @@ export class Shape<
     // eslint-disable-next-line functional/immutable-data
     context.fillStyle = style ?? transparent;
     if (style) {
-      context.fill(rules);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      context.fill(path!);
     }
   }
-  private strokeScene(context: CanvasRenderingContext2D) {
+  protected strokeScene(context: CanvasRenderingContext2D) {
     const style = this.attrs.strokeEnabled ?? true ? this.attrs.stroke : void 0;
 
     // eslint-disable-next-line functional/immutable-data
