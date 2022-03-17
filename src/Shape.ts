@@ -462,6 +462,10 @@ export class Shape<
       return;
     }
 
+    if (this._centroid) {
+      const { x, y } = this.getSelfRect()
+      context.translate(-x, -y)
+    }
     const needUseTransform = this.transformExists() && !this.#context;
     const needSetAlpha = this.attrs.opacity !== void 0;
     const useFilter = this.attrs.filter !== void 0;
@@ -503,6 +507,10 @@ export class Shape<
     if (needSetAlpha) {
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
       context.globalAlpha = backupAlpha!;
+    }
+    if (this._centroid) {
+      const { x, y } = this.getSelfRect()
+      context.translate(x, y)
     }
   }
 
@@ -549,7 +557,8 @@ export class Shape<
 
       // finished drawing in the cache
       // draw to main context
-      context.drawImage(this.#context.canvas, this.attrs.x, this.attrs.y);
+      const { x, y } = this.getSelfRect()
+      context.drawImage(this.#context.canvas, x, y);
     } else {
       // キャッシュさせないでください
       this.drawInSandBox(context);
