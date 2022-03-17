@@ -1,7 +1,9 @@
-import { Stage, Layer, Shape, Circle } from "../../src/index";
+import { Stage, Layer, Circle } from "../../src/index";
 
 const stage = new Stage({
   container: "app",
+  width: 300,
+  height: 300,
 });
 
 const layer = new Layer();
@@ -10,20 +12,10 @@ const circle = new Circle({
   x: 0,
   y: 0,
   radius: 50,
-  // fill: "red"
-  stroke: "black",
-});
-circle.on("mousedown", (event) => {
-  console.table({
-    name: "mousedown",
-    event,
-  });
-});
+  fill: "red"
+})
 
-layer.add(circle);
-stage.add(layer);
+layer.add(circle)
+stage.add(layer)
 
-layer.draw();
-
-window.layer = layer;
-window.circle = circle;
+window.circle = circle
