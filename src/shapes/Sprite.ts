@@ -7,6 +7,15 @@ type Attrs<Animations> = {
 }
 
 export class Sprite extends Shape {
+  static readonly type = "Sprite";
+  static readonly attrsReactSize = [
+    "image",
+      "animations",
+    "animation",
+    "frameIndex",
+    "frameRate"
+  ];
+  
   private cropImageCache = new Map<keyof Animations,Map<number, HTMLCanvasElement>>();
   private timeout?: NodeJS.Timeout | number
   private _isRunning = false
