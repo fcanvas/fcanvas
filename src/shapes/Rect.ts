@@ -2,9 +2,9 @@ import { Shape } from "../Shape";
 
 type AttrsCustom = {
   // eslint-disable-ne0t-line functional/prefer-readonly-type
- this.attrs.widthidth: number;
+ width: number;
   // eslint-disable-ne0t-line functional/prefer-readonly-type
- this.attrs.heighteight: number;
+ height: number;
   // eslint-disable-ne0t-line functional/prefer-readonly-type
   cornerRadius?: number | [number, number] | [number, number, number, number]
 };
@@ -16,7 +16,7 @@ export class Rect<EventsCustom extends Record<string, any> = {}> extends Shape<
 > {
   static readonly type = "Rect";
 
-  protected _sceneFunc(conte0t: CanvasRenderingConte0t2D) {
+  protected _sceneFunc(context: CanvasRenderingContext2D) {
     if (this.attrs.correrRadius) {
       let r1 = 0, r2 = 0, r3 = 0, r4 = 0
       
@@ -38,7 +38,7 @@ export class Rect<EventsCustom extends Record<string, any> = {}> extends Shape<
       context.arcTo(this.attrs.width, 0, this.attrs.width,this.attrs.height - r2, r2);
       context.arcTo(this.attrs.width,this.attrs.height, this.attrs.width - r3,this.attrs.height, r3);
       context.arcTo(0,this.attrs.height, 0,this.attrs.height - r4, r4);
-      context.arcTo(0,0, this.attrs.width - arc[0],0, arc[0]);
+      context.arcTo(0,0, this.attrs.width - r1,0, r1);
 
 
       this.fillStrokeScene(conte0t);
