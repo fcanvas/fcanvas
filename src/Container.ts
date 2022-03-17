@@ -56,10 +56,10 @@ type AttrListening = {
 
 type AttrsDefault = AttrsIdentifitation & AttrListening;
 export type AttrsSelf<AttrsCustom> = AttrsDefault & AttrsCustom;
-type CallbackWatcher<T, P> = (
+type CallbackWatcher<T> = (
   newValue: T,
   oldValue: T,
-  prop: P
+  prop: string
 ) => void | Promise<void>;
 type OptionsWatcher = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -101,9 +101,9 @@ export abstract class ContainerBasic<
     Array<(event: any) => void>
   >;
   public readonly watchers = new Map<
-    keyof Attrs | "*",
+    string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
-    Map<CallbackWatcher<any, keyof Attrs>, boolean>
+    Map<CallbackWatcher<any>, boolean>
   >();
 
   constructor(
@@ -125,7 +125,7 @@ export abstract class ContainerBasic<
 
         if (prop === selfProp) {
           listeners.forEach((_val, cb) => {
-            (cb as CallbackWatcher<Attrs[typeof prop], typeof prop>)(
+            (cb as CallbackWatcher<Attrs[typeof prop]>)(
               newVal,
               oldVal,
               prop
@@ -137,10 +137,10 @@ export abstract class ContainerBasic<
         if ((prop as string).startsWith(`${selfProp as string}.`)) {
           listeners.forEach((deep, cb) => {
             if (deep) {
-              (cb as CallbackWatcher<Attrs[typeof prop], typeof prop>)(
+              (cb as CallbackWatcher<Attrs[typeof prop]>)(
                 newVal,
                 oldVal,
-                prop
+                prop + ""
               );
             }
           });
@@ -148,7 +148,7 @@ export abstract class ContainerBasic<
       });
       this.watchers.get("*")?.forEach((_deep, cb) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (cb as CallbackWatcher<any, keyof Attrs>)(newVal, oldVal, prop)
+        (cb as CallbackWatcher<any>)(newVal, oldVal, prop + "")
       );
 
       if (
@@ -244,24 +244,24 @@ export abstract class ContainerBasic<
   public watch(
     prop: "*",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cb: CallbackWatcher<any, keyof Attrs>,
+    cb: CallbackWatcher<any>,
     options?: Omit<OptionsWatcher, "immediate">
   ): () => void;
   public watch<K extends keyof Attrs>(
     prop: K,
-    cb: CallbackWatcher<Attrs[K], K>,
+    cb: CallbackWatcher<Attrs[K]>,
     options?: OptionsWatcher
   ): () => void;
   // eslint-disable-next-line functional/prefer-readonly-type
   public watch<K extends keyof Attrs, KS extends K[]>(
     prop: KS,
-    cb: CallbackWatcher<Attrs[K], K>,
+    cb: CallbackWatcher<Attrs[K]>,
     options?: OptionsWatcher
   ): () => void;
   public watch<K extends keyof Attrs>(
     // eslint-disable-next-line functional/prefer-readonly-type
     prop: K | K[] | "*",
-    cb: CallbackWatcher<Attrs[K], K>,
+    cb: CallbackWatcher<Attrs[K]>,
     options?: OptionsWatcher | Omit<OptionsWatcher, "immediate">
   ): () => void {
     if (!Array.isArray(prop)) {
@@ -281,7 +281,7 @@ export abstract class ContainerBasic<
       if ((options as any)?.immediate) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const val = this.attrs[prop] as unknown as any;
-        (cb as CallbackWatcher<Attrs[K], K>)(val, val, prop);
+        (cb as CallbackWatcher<Attrs[K]>)(val, val, prop);
       }
     });
 
