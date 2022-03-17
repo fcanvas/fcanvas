@@ -57,8 +57,7 @@ export class Image<
         this.attrs.width ?? this.attrs.crop.width,
         this.attrs.height ?? this.attrs.crop.height
       );
-    } else
-    if (this.attrs.width !== void 0 && this.attrs.height !== void 0) {
+    } else if (this.attrs.width !== void 0 && this.attrs.height !== void 0) {
       context.drawImage(
         this.attrs.image,
         this.attrs.x,
@@ -69,7 +68,7 @@ export class Image<
     } else {
       context.drawImage(this.attrs.image, this.attrs.x, this.attrs.y);
     }
-    
+
     this.fillStrokeScene(context);
   }
 
