@@ -29,8 +29,6 @@ export class Group
 {
   static readonly type: string = "Group";
 
-  // eslint-disable-next-line functional/prefer-readonly-type
-  public currentNeedReload = true;
   public readonly parents = new Set<Layer | Group>();
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

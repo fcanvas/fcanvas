@@ -52,8 +52,6 @@ export class Layer extends Container<
   public readonly parents = new Set<Stage>();
   // eslint-disable-next-line functional/prefer-readonly-type
   public loopCasting = false;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  public currentNeedReload = true;
   public get canvas() {
     return this.#context.canvas;
   }
@@ -169,7 +167,6 @@ export class Layer extends Container<
 
     this.children.forEach((node) => {
       if (node.listeners?.has(event.type)) {
-        console.log(`active event ${event.type}`);
         if (!clients) {
           clients = (
             event.type.startsWith("touch")

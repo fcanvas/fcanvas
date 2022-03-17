@@ -297,6 +297,8 @@ export abstract class ContainerNode<
   static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
   static readonly type: string = "ContainerNode";
   public readonly parents = new Set<IParentNode>();
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public currentNeedReload: boolean = true;
 
   public _onAddToParent(parent: IParentNode): void {
     this.parents.add(parent);
@@ -322,6 +324,8 @@ export abstract class Container<
 {
   static readonly type: string = "Container";
   public readonly children = new Set<IChildNode>();
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public currentNeedReload: boolean = true;
 
   public find(selector: string) {
     return Array.from(this.children).filter((item) => item.matches(selector));
@@ -333,6 +337,7 @@ export abstract class Container<
       this.children.add(node);
       node._onAddToParent(this);
     });
+    this.currentNeedReload = true;
   }
   // eslint-disable-next-line functional/functional-parameters
   public delete(...nodes: readonly IChildNode[]): void {
@@ -340,6 +345,7 @@ export abstract class Container<
       this.children.delete(node);
       node._onDeleteParent(this);
     });
+    this.currentNeedReload = true;
   }
 
   public destroy(): void {

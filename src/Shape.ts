@@ -150,8 +150,6 @@ export class Shape<
 
   public readonly _centroid: boolean = false;
 
-  // eslint-disable-next-line functional/prefer-readonly-type
-  public currentNeedReload = true;
   // @overwrite
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   protected _sceneFunc(context: CanvasRenderingContext2D) {}
@@ -265,19 +263,10 @@ export class Shape<
     return rect;
   }
 
-  private getSizeContainer() {
-    const rect = this.getClientRect();
-
-    return {
-      width: rect.x + rect.width,
-      height: rect.y + rect.height,
-    };
-  }
-
   private onresize() {
     // reactive
     if (this.#context) {
-      const { width, height } = this.getSizeContainer();
+      const { width, height } = this.getClientRect();
       [this.#context.canvas.width, this.#context.canvas.height] = [
         width,
         height,
@@ -462,8 +451,10 @@ export class Shape<
       return;
     }
 
+    let transX: number, transY: number
     if (this._centroid) {
-      const { x, y } = this.getSelfRect()
+      const { x, y } = this.getSelfRect();
+      [transX, transY] = [x, y]
       context.translate(-x, -y)
     }
     const needUseTransform = this.transformExists() && !this.#context;
@@ -509,8 +500,8 @@ export class Shape<
       context.globalAlpha = backupAlpha!;
     }
     if (this._centroid) {
-      const { x, y } = this.getSelfRect()
-      context.translate(x, y)
+      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
+      context.translate(transX!, transY!)
     }
   }
 
@@ -558,7 +549,7 @@ export class Shape<
       // finished drawing in the cache
       // draw to main context
       const { x, y } = this.getSelfRect()
-      context.drawImage(this.#context.canvas, x, y);
+      context.drawImage(this.#context.canvas, this.attrs.x + x, this.attrs.y + y)
     } else {
       // キャッシュさせないでください
       this.drawInSandBox(context);
