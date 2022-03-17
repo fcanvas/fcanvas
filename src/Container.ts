@@ -327,7 +327,7 @@ export abstract class Container<
   // eslint-disable-next-line functional/prefer-readonly-type
   public currentNeedReload: boolean = true;
 
-  public find(selector: string) {
+  public find<T = IChildNode>(selector: string): T[] {
     return Array.from(this.children).filter((item) => item.matches(selector));
   }
 
