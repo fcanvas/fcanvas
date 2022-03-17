@@ -11,6 +11,8 @@ export { Ellipse } from "./shapes/Ellipse";
 export { Image } from "./shapes/Image";
 export { Line } from "./shapes/Line";
 export { Rect } from "./shapes/Rect";
+export { RegularPolygon } from "./shapes/RegularPolygon"
+export { Ring } from "./shapes/Ring"
 
 export { cropImage } from "./methods/cropImage";
 
