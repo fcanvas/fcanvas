@@ -35,12 +35,13 @@ export function createProxy<R extends Record<string, any>>(
     },
     set(target, prop, val) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const oldVal = (target as any)[prop as string]
+      const oldVal = (target as any)[prop as string];
 
       if (Object.is(oldVal, val)) {
         return true;
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/immutable-data
       (target as any)[prop as string] = val;
 
       onsetter(

@@ -133,6 +133,8 @@ type AttrsDefault = Offset & {
 
 const EmptyArray: Iterable<number> = [];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AttrsShapeSelf<T extends Record<string, any>> = AttrsDefault & T;
 export class Shape<
   AttrsCustom extends Record<string, unknown> = {
     // eslint-disable-next-line functional/prefer-readonly-type
@@ -142,9 +144,11 @@ export class Shape<
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  Attrs extends AttrsDefault & AttrsCustom = AttrsDefault & AttrsCustom,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  IParent extends Layer | Group<any> = Layer | Group,
+  Attrs extends AttrsShapeSelf<AttrsCustom> = AttrsShapeSelf<AttrsCustom>,
   Events extends EventsCustom = EventsCustom
-> extends ContainerNode<Attrs, Events, Layer | Group> {
+> extends ContainerNode<Attrs, Events, IParent> {
   static readonly attrsReactSize: readonly string[] = ["width", "height"];
   static readonly type: string = "Shape";
 
@@ -152,7 +156,7 @@ export class Shape<
 
   // @overwrite
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-  protected _sceneFunc(context: CanvasRenderingContext2D) {}
+  protected _sceneFunc(_context: CanvasRenderingContext2D) {}
 
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
@@ -190,7 +194,7 @@ export class Shape<
         document.createElement("canvas").getContext("2d") ?? void 0;
     }
   }
-  public size(): Size {
+  protected size(): Size {
     return {
       width: this.attrs.width as number,
       height: this.attrs.height as number,
@@ -293,7 +297,7 @@ export class Shape<
 
     return "color";
   }
-  protected fillScene(context: CanvasRenderingContext2D, path?: Path2D) {
+  protected getFill(context: CanvasRenderingContext2D) {
     // eslint-disable-next-line functional/no-let
     let style: FillStyle | void;
     // "color" | "linear-gradient" | "radial-graident" | "pattern"
@@ -356,6 +360,10 @@ export class Shape<
         break;
     }
 
+    return style;
+  }
+  protected fillScene(context: CanvasRenderingContext2D, path?: Path2D) {
+    const style = this.getFill(context);
     // eslint-disable-next-line functional/immutable-data
     context.fillStyle = style ?? transparent;
     if (style) {
@@ -363,8 +371,12 @@ export class Shape<
       context.fill(path!);
     }
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected getStroke(_context: CanvasRenderingContext2D) {
+    return this.attrs.strokeEnabled ?? true ? this.attrs.stroke : void 0;
+  }
   protected strokeScene(context: CanvasRenderingContext2D) {
-    const style = this.attrs.strokeEnabled ?? true ? this.attrs.stroke : void 0;
+    const style = this.getStroke(context);
 
     // eslint-disable-next-line functional/immutable-data
     context.strokeStyle = style ?? transparent;
@@ -451,11 +463,12 @@ export class Shape<
       return;
     }
 
-    let transX: number, transY: number
+    // eslint-disable-next-line functional/no-let
+    let transX: number, transY: number;
     if (this._centroid) {
       const { x, y } = this.getSelfRect();
-      [transX, transY] = [x, y]
-      context.translate(-x, -y)
+      [transX, transY] = [x, y];
+      context.translate(-x, -y);
     }
     const needUseTransform = this.transformExists() && !this.#context;
     const needSetAlpha = this.attrs.opacity !== void 0;
@@ -500,21 +513,20 @@ export class Shape<
       context.globalAlpha = backupAlpha!;
     }
     if (this._centroid) {
-      // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
-      context.translate(transX!, transY!)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      context.translate(transX!, transY!);
     }
   }
 
   protected getHitStroke() {
     return (
-      (this.attrs.strokeHitEnabled ?? true
+      ((this.attrs.strokeHitEnabled ?? true
         ? this.attrs.hitStrokeWidth ?? this.attrs.strokeWidth
-        : this.attrs.strokeWidth) ?? 1
+        : this.attrs.strokeWidth) ?? 1) - 1
     );
   }
   // @overwrite
   public isPressedPoint(x: number, y: number): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const hitStroke = this.getHitStroke();
 
     const selfRect = this.getSelfRect();
@@ -522,10 +534,10 @@ export class Shape<
     return pointInBox(
       x,
       y,
-      this.attrs.x + selfRect.x,
-      this.attrs.y + selfRect.y,
-      selfRect.width,
-      selfRect.height
+      this.attrs.x + selfRect.x - hitStroke,
+      this.attrs.y + selfRect.y - hitStroke,
+      selfRect.width + hitStroke,
+      selfRect.height + hitStroke
     );
   }
 
@@ -548,8 +560,12 @@ export class Shape<
 
       // finished drawing in the cache
       // draw to main context
-      const { x, y } = this.getSelfRect()
-      context.drawImage(this.#context.canvas, this.attrs.x + x, this.attrs.y + y)
+      const { x, y } = this.getSelfRect();
+      context.drawImage(
+        this.#context.canvas,
+        this.attrs.x + x,
+        this.attrs.y + y
+      );
     } else {
       // キャッシュさせないでください
       this.drawInSandBox(context);

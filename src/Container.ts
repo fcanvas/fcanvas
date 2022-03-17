@@ -56,11 +56,10 @@ type AttrListening = {
 
 type AttrsDefault = AttrsIdentifitation & AttrListening;
 export type AttrsSelf<AttrsCustom> = AttrsDefault & AttrsCustom;
-type CallbackWatcher<T> = (newValue: T, oldValue: T) => void | Promise<void>;
-type CallbackWatcherAll<P, T> = (
-  prop: P,
+type CallbackWatcher<T, P> = (
   newValue: T,
-  oldValue: T
+  oldValue: T,
+  prop: P
 ) => void | Promise<void>;
 type OptionsWatcher = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -75,7 +74,7 @@ export declare class VirualParentNode {
   delete(...nodes: any[]): void;
 }
 
-abstract class ContainerBasic<
+export abstract class ContainerBasic<
   AttrsCustom extends Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EventsCustom extends Record<string, any>,
@@ -104,7 +103,7 @@ abstract class ContainerBasic<
   public readonly watchers = new Map<
     keyof Attrs | "*",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
-    Map<CallbackWatcher<any> | CallbackWatcherAll<keyof Attrs, any>, boolean>
+    Map<CallbackWatcher<any, keyof Attrs>, boolean>
   >();
 
   constructor(
@@ -126,7 +125,11 @@ abstract class ContainerBasic<
 
         if (prop === selfProp) {
           listeners.forEach((_val, cb) => {
-            (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal);
+            (cb as CallbackWatcher<Attrs[typeof prop], typeof prop>)(
+              newVal,
+              oldVal,
+              prop
+            );
           });
           return;
         }
@@ -134,14 +137,18 @@ abstract class ContainerBasic<
         if ((prop as string).startsWith(`${selfProp as string}.`)) {
           listeners.forEach((deep, cb) => {
             if (deep) {
-              (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal);
+              (cb as CallbackWatcher<Attrs[typeof prop], typeof prop>)(
+                newVal,
+                oldVal,
+                prop
+              );
             }
           });
         }
       });
       this.watchers.get("*")?.forEach((_deep, cb) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (cb as CallbackWatcherAll<keyof Attrs, any>)(prop, newVal, oldVal)
+        (cb as CallbackWatcher<any, keyof Attrs>)(newVal, oldVal, prop)
       );
 
       if (
@@ -237,20 +244,24 @@ abstract class ContainerBasic<
   public watch(
     prop: "*",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cb: CallbackWatcherAll<keyof Attrs, any>,
+    cb: CallbackWatcher<any, keyof Attrs>,
     options?: Omit<OptionsWatcher, "immediate">
   ): () => void;
   public watch<K extends keyof Attrs>(
-    // eslint-disable-next-line functional/prefer-readonly-type
-    prop: K | K[],
-    cb: CallbackWatcher<Attrs[K]>,
+    prop: K,
+    cb: CallbackWatcher<Attrs[K], K>,
+    options?: OptionsWatcher
+  ): () => void;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public watch<K extends keyof Attrs, KS extends K[]>(
+    prop: KS,
+    cb: CallbackWatcher<Attrs[K], K>,
     options?: OptionsWatcher
   ): () => void;
   public watch<K extends keyof Attrs>(
     // eslint-disable-next-line functional/prefer-readonly-type
     prop: K | K[] | "*",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cb: CallbackWatcher<Attrs[K]> | CallbackWatcherAll<keyof Attrs, any>,
+    cb: CallbackWatcher<Attrs[K], K>,
     options?: OptionsWatcher | Omit<OptionsWatcher, "immediate">
   ): () => void {
     if (!Array.isArray(prop)) {
@@ -263,20 +274,22 @@ abstract class ContainerBasic<
         this.watchers.set(prop, new Map());
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.watchers.get(prop)!.set(cb, options?.deep ?? false);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-explicit-any
+      this.watchers.get(prop)!.set(cb as any, options?.deep ?? false);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((options as any)?.immediate) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const val = this.attrs[prop] as unknown as any;
-        (cb as CallbackWatcher<Attrs[K]>)(val, val);
+        (cb as CallbackWatcher<Attrs[K], K>)(val, val, prop);
       }
     });
 
     return () =>
-      // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-non-null-assertion
-      (prop as K[]).forEach((prop) => this.watchers.get(prop)!.delete(cb));
+      (prop as readonly K[]).forEach((prop) =>
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-explicit-any
+        this.watchers.get(prop)!.delete(cb as any)
+      );
   }
 
   public destroy(): void {
@@ -297,7 +310,7 @@ export abstract class ContainerNode<
   static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
   static readonly type: string = "ContainerNode";
   public readonly parents = new Set<IParentNode>();
-  // eslint-disable-next-line functional/prefer-readonly-type
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-inferrable-types
   public currentNeedReload: boolean = true;
 
   public _onAddToParent(parent: IParentNode): void {
@@ -324,11 +337,15 @@ export abstract class Container<
 {
   static readonly type: string = "Container";
   public readonly children = new Set<IChildNode>();
-  // eslint-disable-next-line functional/prefer-readonly-type
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-inferrable-types
   public currentNeedReload: boolean = true;
 
+  // eslint-disable-next-line functional/prefer-readonly-type
   public find<T = IChildNode>(selector: string): T[] {
-    return Array.from(this.children).filter((item) => item.matches(selector));
+    return Array.from(this.children).filter(
+      (item) => item.matches(selector)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ) as any;
   }
 
   // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type

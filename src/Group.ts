@@ -17,13 +17,23 @@ type Attrs = Offset & {
   visible?: boolean;
 } & AttrsDrawLayerContext;
 
-export class Group
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IChild = Shape<any, any> | Group<any>;
+export class Group<
+    ChildNode extends VirualChildNode & {
+      // eslint-disable-next-line functional/no-method-signature
+      isPressedPoint(x: number, y: number): boolean;
+      // eslint-disable-next-line functional/prefer-readonly-type
+      getClientRect: Shape["getClientRect"];
+      // eslint-disable-next-line functional/no-method-signature
+      draw(context: CanvasRenderingContext2D): void;
+    } = IChild
+  >
   extends Container<
     Attrs,
     // eslint-disable-next-line @typescript-eslint/ban-types
     {},
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Shape<any, any> | Group
+    ChildNode
   >
   implements VirualChildNode
 {
@@ -55,10 +65,12 @@ export class Group
     );
   }
 
-  public _onAddToParent(parent: Layer | Group) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public _onAddToParent(parent: Layer | Group<any>) {
     this.parents.add(parent);
   }
-  public _onDeleteParent(parent: Layer | Group) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public _onDeleteParent(parent: Layer | Group<any>) {
     this.parents.delete(parent);
   }
 

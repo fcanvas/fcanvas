@@ -41,8 +41,8 @@ export class Ellipse<
       y,
       this.attrs.x,
       this.attrs.y,
-      this.attrs.radius.x,
-      this.attrs.radius.y
+      this.attrs.radius.x + this.getHitStroke(),
+      this.attrs.radius.y + this.getHitStroke()
     );
   }
 }

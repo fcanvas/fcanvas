@@ -27,6 +27,12 @@ export class Circle<
   }
 
   public isPressedPoint(x: number, y: number) {
-    return pointInCircle(x, y, this.attrs.x, this.attrs.y, this.attrs.radius);
+    return pointInCircle(
+      x,
+      y,
+      this.attrs.x,
+      this.attrs.y,
+      this.attrs.radius + this.getHitStroke()
+    );
   }
 }
