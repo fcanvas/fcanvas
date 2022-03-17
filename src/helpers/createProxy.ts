@@ -35,16 +35,13 @@ export function createProxy<R extends Record<string, any>>(
     },
     set(target, prop, val) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const oldVal = (target as any)[prop as string](
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        target as any
-      );
+      const oldVal = (target as any)[prop as string]
 
       if (Object.is(oldVal, val)) {
         return true;
       }
 
-      [prop as string] = val;
+      (target as any)[prop as string] = val;
 
       onsetter(
         props === "" ? (prop as string) : `${props}.${prop as string}`,
