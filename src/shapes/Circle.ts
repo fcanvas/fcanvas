@@ -19,7 +19,7 @@ export class Circle<
     this.fillStrokeScene(context);
   }
 
-  public size() {
+  protected size() {
     return {
       width: this.attrs.radius * 2,
       height: this.attrs.radius * 2,

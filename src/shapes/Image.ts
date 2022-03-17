@@ -72,7 +72,7 @@ export class Image<
     this.fillStrokeScene(context);
   }
 
-  public size() {
+  protected size() {
     return {
       width:
         this.attrs.width ??
