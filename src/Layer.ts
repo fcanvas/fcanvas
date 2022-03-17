@@ -87,12 +87,10 @@ export class Layer extends Container<
     this.watch(
       ["width", "height"],
       () => {
-        this.#context.canvas.style.width = this.attrs.width !== void 0
-          ? `${this.attrs.width}px`
-          : "100%";
-        this.#context.canvas.style.height = this.attrs.height !== void 0
-          ? `${this.attrs.height}px`
-          : "100%";
+        this.#context.canvas.style.width =
+          this.attrs.width !== void 0 ? `${this.attrs.width}px` : "100%";
+        this.#context.canvas.style.height =
+          this.attrs.height !== void 0 ? `${this.attrs.height}px` : "100%";
         setTimeout(() => {
           [this.#context.canvas.width, this.#context.canvas.height] = [
             this.#context.canvas.scrollWidth,

@@ -1,54 +1,78 @@
-type AttrsCustom = {
-  pointerDirection?: "up" | "down" | "left" | "right" | "none";
-  pointerWidth?: number
-  pointerHeight?: number
-  cornerRadius?: number | number[];
-  width?: number;
-  height?: number;
-}
+import { Group } from "../Group";
+import { Layer } from "../Layer";
+import { Shape } from "../Shape";
 
-export class Tag extends Shape {
+import { Label } from "./Label";
+
+type AttrsCustom = {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  pointerDirection?: "up" | "down" | "left" | "right" | "none";
+  // eslint-disable-next-line functional/prefer-readonly-type
+  pointerWidth?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  pointerHeight?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  cornerRadius?: number | number[];
+  // eslint-disable-next-line functional/prefer-readonly-type
+  width?: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  height?: number;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+export class Tag<EventsCustom extends Record<string, any> = {}> extends Shape<
+  AttrsCustom,
+  EventsCustom,
+  Layer | Group | Label
+> {
   static readonly type = "Tag";
   static readonly attrsReactSize = [
     "pointerDirection",
     "pointerWidth",
     "pointerHeight",
     "width",
-    "height"
+    "height",
   ];
-  
+
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     const width = this.attrs.width ?? 0,
       height = this.attrs.height ?? 0,
       pointerDirection = this.attrs.pointerDirection,
-      { pointerWidth ,
-      pointerHeight,
-      cornerRadius } = this.attrs;
+      { pointerWidth = 20, pointerHeight = 20, cornerRadius } = this.attrs;
 
- 
+    // eslint-disable-next-line functional/no-let
+    let topLeft = 0,
+      topRight = 0,
+      bottomRight = 0,
+      bottomLeft = 0;
+    const ws2 = (this.attrs.width ?? 0) / 2;
+    const hs2 = (this.attrs.height ?? 0) / 2;
+    if (typeof cornerRadius === "number") {
+      topLeft = Math.min(cornerRadius, ws2, hs2);
+      topRight = topLeft;
+      bottomRight = topLeft;
+      bottomLeft = topLeft;
+      // eslint-disable-next-line functional/prefer-readonly-type
+    } else if ((cornerRadius as number[]).length === 2) {
+      // eslint-disable-next-line functional/prefer-readonly-type
+      topLeft = Math.min((cornerRadius as number[])[0], ws2, hs2);
+      bottomRight = topLeft;
+      // eslint-disable-next-line functional/prefer-readonly-type
+      topRight = Math.min((cornerRadius as number[])[1], ws2, hs2);
+      bottomLeft = topRight;
+    } else {
+      [topLeft, topRight, bottomRight, bottomLeft] = [
+        // eslint-disable-next-line functional/prefer-readonly-type
+        Math.min((cornerRadius as number[])[0], ws2, hs2),
+        // eslint-disable-next-line functional/prefer-readonly-type
+        Math.min((cornerRadius as number[])[1], ws2, hs2),
+        // eslint-disable-next-line functional/prefer-readonly-type
+        Math.min((cornerRadius as number[])[2], ws2, hs2),
+        // eslint-disable-next-line functional/prefer-readonly-type
+        Math.min((cornerRadius as number[])[3], ws2, hs2),
+      ];
+    }
 
-let topLeft = 0,
-        topRight = 0,
-        bottomRight = 0,
-        bottomLeft = 0;
-const ws2 = this.attrs.width / 2
-const hs2 = this.attrs.height / 2
-      if (typeof this.attrs.cornerRadius === "number") {
-        topLeft = Math.min(this.attrs.cornerRadius,ws2,hs2);
-        topRight = topLeft;
-        bottomRight = topLeft;
-        bottomLeft = topLeft;
-      } else if (this.attrs.cornerRadius.length === 2) {
-        topLeft = Math.min(this.attrs.cornerRadius[0],ws2,hs2)
-        bottomRight = topLeft;
-        topRight = Math. min(this.attrs.cornerRadius[1],ws2,hs2)
-        bottomLeft = topRight;
-      } else {
-        [topLeft, topRight, bottomRight, bottomLeft] = [Math.min(this.attrs.cornerRadius[0],ws2,hs2),Math.min(this.attrs.cornerRadius[1],ws2,hs2),Math.min(this.attrs.cornerRadius[2],ws2,hs2),Math.min(this.attrs.cornerRadius[3],ws2,hs2),];
-      }
-      
-
-  
     context.moveTo(topLeft, 0);
 
     if (pointerDirection === "up") {
@@ -111,30 +135,33 @@ const hs2 = this.attrs.height / 2
     this.fillStrokeScene(context);
   }
   public getSelfRect() {
-    const x = 0,
+    // eslint-disable-next-line functional/no-let
+    let x = 0,
       y = 0,
-      {pointerWidth,
-      pointerHeight,
-      direction} = this.attrs,
       width = this.attrs.width ?? 0,
       height = this.attrs.height ?? 0;
+    const {
+      pointerWidth = 20,
+      pointerHeight = 20,
+      pointerDirection: direction,
+    } = this.attrs;
 
-    switch (direction ) {
+    switch (direction) {
       case "up":
-      y -= pointerHeight;
-      height += pointerHeight;
-      break
-    case "down":
-      height += pointerHeight;
-      break
-    case "left":
-      // ARGH!!! I have no idea why should I used magic 1.5!!!!!!!!!
-      x -= pointerWidth * 1.5;
-      width += pointerWidth;
-      break
-    case "right":
-      width += pointerWidth * 1.5;
-      break
+        y -= pointerHeight;
+        height += pointerHeight;
+        break;
+      case "down":
+        height += pointerHeight;
+        break;
+      case "left":
+        // ARGH!!! I have no idea why should I used magic 1.5!!!!!!!!!
+        x -= pointerWidth * 1.5;
+        width += pointerWidth;
+        break;
+      case "right":
+        width += pointerWidth * 1.5;
+        break;
     }
     return {
       x: x,
