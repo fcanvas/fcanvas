@@ -8,6 +8,15 @@ type AttrsCustom = {
 }
 
 export class Tag extends Shape {
+  static readonly type = "Tag";
+  static readonly attrsReactSize = [
+    "pointerDirection",
+    "pointerWidth",
+    "pointerHeight",
+    "width",
+    "height"
+  ];
+  
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     const width = this.attrs.width ?? 0,
       height = this.attrs.height ?? 0,
