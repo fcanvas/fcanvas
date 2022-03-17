@@ -83,7 +83,7 @@ export class Arc<EventsCustom extends Record<string, any> = {}> extends Shape<
     this.fillStrokeScene(context);
   }
 
-  public size() {
+  protected size() {
     return {
       width: this.attrs.outerRadius * 2,
       height: this.attrs.outerRadius * 2,

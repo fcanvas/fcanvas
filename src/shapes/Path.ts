@@ -11,6 +11,9 @@ export class Path<EventsCustom extends Record<string, any> = {}> extends Shape<
   EventsCustom
 > {
   static readonly type = "Path";
+  static readonly attrsReactSize = [
+      "data"
+    ];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     this.fillScene(context, new Path2D(this.attrs.data));

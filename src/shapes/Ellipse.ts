@@ -28,7 +28,7 @@ export class Ellipse<
     this.fillStrokeScene(context);
   }
 
-  public size() {
+  protected size() {
     return {
       width: this.attrs.radius.x * 2,
       height: this.attrs.radius.y * 2,
