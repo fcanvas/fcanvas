@@ -131,7 +131,8 @@ type AttrsDefault = Offset & {
     filter?: OptionFilter;
   };
 
-const EmptyArray: Iterable<number> = [];
+// eslint-disable-next-line functional/prefer-readonly-type
+const EmptyArray: Array<number> = [];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AttrsShapeSelf<T extends Record<string, any>> = AttrsDefault & T;
