@@ -1,4 +1,4 @@
-import { Easing, Tween as TweenJS } from "@tweenjs/tween.js";
+import { Easing, getAll, Tween as TweenJS, update } from "@tweenjs/tween.js";
 import clonedeep from "lodash.clonedeep";
 
 import { Group } from "./Group";
@@ -18,6 +18,14 @@ function assign<T>(obj1: T, obj2: T) {
     obj1[prop] = obj2[prop];
   }
 }
+
+function startTween() {
+  if (getAll().length) {
+    update();
+    requestAnimationFrame(startTween);
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Tween<Node extends Shape<any, any, any> | Group | Label | Layer> {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -89,6 +97,7 @@ export class Tween<Node extends Shape<any, any, any> | Group | Label | Layer> {
   public play() {
     if (this.tween.isPaused()) {
       this.tween.start();
+      startTween();
     } else {
       this.tween.resume();
     }
