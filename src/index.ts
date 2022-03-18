@@ -4,6 +4,7 @@ export { Group } from "./Group";
 export { Layer } from "./Layer";
 export { Shape } from "./Shape";
 export { Stage } from "./Stage";
+export { Tween } from "./Tween";
 
 export { Arc } from "./shapes/Arc";
 export { Arrow } from "./shapes/Arrow";
