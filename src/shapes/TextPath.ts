@@ -268,7 +268,7 @@ export class TextPath<
       return EmptyObject;
     };
 
-    const findSegmentToFitCharacter = (c: string) => {
+    const findSegmentToFitCharacter = (c: string): void => {
       // eslint-disable-next-line functional/no-let
       let glyphWidth = this.getTextSize(c).width + letterSpacing;
 
