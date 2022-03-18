@@ -57,7 +57,7 @@ function normalizeFontFamily(fontFamily: string) {
     .map((family) => {
       family = family.trim();
       const hasSpace = family.includes(" ");
-      const hasQuotes = family.includes("\"") || family.includes("'");
+      const hasQuotes = family.includes('"') || family.includes("'");
       if (hasSpace && !hasQuotes) {
         family = `"${family}"`;
       }

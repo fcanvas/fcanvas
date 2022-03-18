@@ -125,11 +125,7 @@ export abstract class ContainerBasic<
 
         if (prop === selfProp) {
           listeners.forEach((_val, cb) => {
-            (cb as CallbackWatcher<Attrs[typeof prop]>)(
-              newVal,
-              oldVal,
-              prop
-            );
+            (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal, prop);
           });
           return;
         }
@@ -137,18 +133,14 @@ export abstract class ContainerBasic<
         if ((prop as string).startsWith(`${selfProp as string}.`)) {
           listeners.forEach((deep, cb) => {
             if (deep) {
-              (cb as CallbackWatcher<Attrs[typeof prop]>)(
-                newVal,
-                oldVal,
-                prop + ""
-              );
+              (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal, prop);
             }
           });
         }
       });
       this.watchers.get("*")?.forEach((_deep, cb) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (cb as CallbackWatcher<any>)(newVal, oldVal, prop + "")
+        (cb as CallbackWatcher<any>)(newVal, oldVal, prop)
       );
 
       if (
@@ -247,26 +239,28 @@ export abstract class ContainerBasic<
     cb: CallbackWatcher<any>,
     options?: Omit<OptionsWatcher, "immediate">
   ): () => void;
-  public watch<K extends keyof Attrs>(
+  public watch<K extends string & keyof Attrs>(
     prop: K,
     cb: CallbackWatcher<Attrs[K]>,
     options?: OptionsWatcher
   ): () => void;
   // eslint-disable-next-line functional/prefer-readonly-type
-  public watch<K extends keyof Attrs, KS extends K[]>(
+  public watch<K extends string & keyof Attrs, KS extends K[]>(
     prop: KS,
-    cb: CallbackWatcher<Attrs[K]>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    cb: CallbackWatcher<K extends keyof Attrs ? Attrs[K] : any>,
     options?: OptionsWatcher
   ): () => void;
-  public watch<K extends keyof Attrs>(
+  public watch(
     // eslint-disable-next-line functional/prefer-readonly-type
-    prop: K | K[] | "*",
-    cb: CallbackWatcher<Attrs[K]>,
+    prop: string | string[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    cb: CallbackWatcher<any>,
     options?: OptionsWatcher | Omit<OptionsWatcher, "immediate">
   ): () => void {
     if (!Array.isArray(prop)) {
       // eslint-disable-next-line functional/prefer-readonly-type
-      prop = [prop] as K[];
+      prop = [prop] as string[];
     }
 
     prop.forEach((prop) => {
@@ -281,12 +275,13 @@ export abstract class ContainerBasic<
       if ((options as any)?.immediate) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const val = this.attrs[prop] as unknown as any;
-        (cb as CallbackWatcher<Attrs[K]>)(val, val, prop);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (cb as CallbackWatcher<any>)(val, val, prop);
       }
     });
 
     return () =>
-      (prop as readonly K[]).forEach((prop) =>
+      (prop as readonly string[]).forEach((prop) =>
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-explicit-any
         this.watchers.get(prop)!.delete(cb as any)
       );
