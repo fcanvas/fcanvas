@@ -84,8 +84,6 @@ export class TextPath<
   private partialText = "";
   // eslint-disable-next-line functional/prefer-readonly-type
   private textWidth = 0;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  private textHeight = 0;
   constructor(attrs: AttrsShapeSelf<AttrsCustom>) {
     super(attrs);
 
@@ -105,6 +103,19 @@ export class TextPath<
     });
   }
 
+  protected fillStrokeScene(context: CanvasRenderingContext2D) {
+    // eslint-disable-next-line functional/immutable-data
+    context.fillStyle = this.getFill(context) ?? "black";
+    context.fillText(this.partialText, 0,0);
+    const _stroke = this.getStroke(context);
+    if (_stroke !== void 0) {
+      // eslint-disable-next-line functional/immutable-data
+      context.strokeStyle = _stroke;
+      context.strokeText(
+        this.partialText,0,0
+      );
+    }
+  }
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     // eslint-disable-next-line functional/immutable-data
     context.font = this.getContextFont();
@@ -191,7 +202,7 @@ export class TextPath<
     // const kerningFunc = null
 
     this.textWidth = size.width;
-    this.textHeight = size.height;
+    // this.textHeight = size.height;
 
     const textFullWidth = Math.max(
       this.textWidth + ((this.attrs.text || "").length - 1) * letterSpacing,
