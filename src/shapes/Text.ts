@@ -42,7 +42,7 @@ type AttrsCustom = {
 
 // eslint-disable-next-line functional/no-let
 let dummyContext: CanvasRenderingContext2D;
-function getDummyContext() {
+export function getDummyContext() {
   if (dummyContext) {
     return dummyContext;
   }
@@ -57,6 +57,7 @@ function normalizeFontFamily(fontFamily: string) {
     .map((family) => {
       family = family.trim();
       const hasSpace = family.includes(" ");
+      // eslint-disable-next-line quotes
       const hasQuotes = family.includes('"') || family.includes("'");
       if (hasSpace && !hasQuotes) {
         family = `"${family}"`;
@@ -315,7 +316,7 @@ export class Text<EventsCustom extends Record<string, any> = {}> extends Shape<
       height: fontSize,
     };
   }
-  private getContextFont() {
+  public getContextFont() {
     return (
       (this.attrs.fontStyle ?? "normal") +
       " " +

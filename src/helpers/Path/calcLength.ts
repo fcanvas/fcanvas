@@ -3,11 +3,11 @@ import { getPointOnCubicBezier } from "./getPointOnCubicBezier";
 import { getPointOnEllipticalArc } from "./getPointOnEllipticalArc";
 import { getPointOnQuadraticBezier } from "./getPointOnQuadraticBezier";
 
-// eslint-disable-next-line functional/prefer-readonly-type
 export function calcLength(
   x: number,
   y: number,
-  cmd: "L" | "C" | "Q" | "A",
+  cmd: string,
+  // eslint-disable-next-line functional/prefer-readonly-type
   points: number[]
 ) {
   // eslint-disable-next-line functional/no-let
@@ -143,4 +143,6 @@ export function calcLength(
 
       return len;
   }
+
+  return 0;
 }
