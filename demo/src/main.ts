@@ -17,5 +17,3 @@ const circle = new Circle({
 
 layer.add(circle)
 stage.add(layer)
-
-window.circle = circle
