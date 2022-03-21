@@ -1,6 +1,6 @@
 {
   "name": "fcanvas-next",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "author": "Tachibana Shin <thanhnguyennguyen1995@gmail.com>",
   "main": "dist/fcanvas-next.esm.js",
   "exports": {

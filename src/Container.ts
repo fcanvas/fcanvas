@@ -351,8 +351,8 @@ export abstract class Container<
     });
     this.currentNeedReload = true;
   }
-  // eslint-disable-next-line functional/functional-parameters
-  public delete(...nodes: readonly IChildNode[]): void {
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
+  public delete(...nodes: IChildNode[]): void {
     nodes.forEach((node) => {
       this.children.delete(node);
       node._onDeleteParent(this);
