@@ -157,10 +157,10 @@ export class Group<
         this.#context.canvas.width,
         this.#context.canvas.height
       );
-      // eslint-disable-next-line functional/no-let
+      
       const { x, y } = this.getClientRect();
-      if (x || y) {
-        context.translate(-x, -y);
+      if (x !== 0 || y !== 0) {
+        this.#context.translate(-x, -y);
       }
       drawLayerContextUseOpacityClipTransformFilter(
         this.#context,
@@ -169,9 +169,8 @@ export class Group<
         this
       );
 
-      if (x || y) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        context.translate(x!, y!);
+      if (x !== 0 || y !== 0) {
+        this.#context.translate(x!, y!);
       }
 
       this.currentNeedReload = false;
