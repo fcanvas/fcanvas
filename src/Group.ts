@@ -96,8 +96,8 @@ export class Group<
     this._onChildResize();
   }
   // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
-  public remove(...nodes: ChildNode[]) {
-    super.remove(...nodes);
+  public delete(...nodes: ChildNode[]) {
+    super.delete(...nodes);
     this._onChildResize();
   }
 
