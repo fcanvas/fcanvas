@@ -77,10 +77,10 @@ export class Group<
   public _onChildResize() {
     if (this.attrs.width !== void 0 && this.attrs.height !== void 0) return;
 
-    const { x, y, width, height } = this.getClientRect();
+    const { width, height } = this.getClientRect();
     [this.#context.canvas.width, this.#context.canvas.height] = [
-      width + x,
-      height + y,
+      width,
+      height,
     ];
     this.currentNeedReload = true;
     this.parents.forEach((parent) => {
@@ -120,6 +120,8 @@ export class Group<
     // eslint-disable-next-line functional/no-let
     let x = Infinity,
       y = 0,
+      width = 0,
+      height = 0,
       fillWidth = 0,
       fillHeight = 0;
     this.children.forEach((node) => {
@@ -146,13 +148,23 @@ export class Group<
   public draw(context: CanvasRenderingContext2D) {
     if (!(this.attrs.visible ?? true)) return;
     if (this.currentNeedReload) {
+      this.#context.clearRect(0, 0, this.#context.canvas.width, this.#context.canvas.height)
+      // eslint-disable-next-line functional/no-let
+      const { x, y } = this.getClientRect()
+      if (x || y) {
+      context.translate(-x, -y);
+    }
       drawLayerContextUseOpacityClipTransformFilter(
         this.#context,
-        true,
         this.attrs,
         this.children,
         this
       );
+
+    if (x || y) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      context.translate(x!, y!);
+    }
 
       this.currentNeedReload = false;
     }
