@@ -150,6 +150,8 @@ export class Group<
 
   public draw(context: CanvasRenderingContext2D) {
     if (!(this.attrs.visible ?? true)) return;
+    
+    const { x, y } = this.getClientRect();
     if (this.currentNeedReload) {
       this.#context.clearRect(
         0,
@@ -158,7 +160,6 @@ export class Group<
         this.#context.canvas.height
       );
       
-      const { x, y } = this.getClientRect();
       if (x !== 0 || y !== 0) {
         this.#context.translate(-x, -y);
       }
@@ -175,6 +176,6 @@ export class Group<
       this.currentNeedReload = false;
     }
 
-    context.drawImage(this.#context.canvas, this.attrs.x, this.attrs.y);
+    context.drawImage(this.#context.canvas, this.attrs.x + x, this.attrs.y + y);
   }
 }
