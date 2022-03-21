@@ -119,7 +119,7 @@ export class Group<
   ) {
     // eslint-disable-next-line functional/no-let
     let x = Infinity,
-      y = Infinity,
+      y = 0,
       fillWidth = 0,
       fillHeight = 0;
     this.children.forEach((node) => {
