@@ -89,6 +89,17 @@ export class Group<
       }
     });
   }
+  
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
+  public add(...nodes: ChildNode[]) {
+    super.add(...nodes)
+    this._onChildResize()
+  }
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
+  public remove(...nodes: ChildNode[]) {
+    super.remove(...nodes)
+    this._onChildResize()
+  }
 
   public isPressedPoint(x: number, y: number): boolean {
     return Array.from(this.children.values()).some((node) =>
