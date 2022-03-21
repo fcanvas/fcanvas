@@ -132,13 +132,19 @@ export class Group<
 
       fillWidth = Math.max(fillWidth, sumWidth);
       fillHeight = Math.max(fillHeight, sumHeight);
+      if (fillWidth === sumWidth) {
+        width = clientRect.width;
+      }
+      if (fillHeight === sumHeight) {
+        height = clientRect.height;
+      }
     });
 
     return {
       x,
       y,
-      width: fillWidth - x,
-      height: fillHeight - y,
+      width,
+      height,
     };
   }
 
