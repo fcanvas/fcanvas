@@ -78,10 +78,7 @@ export class Group<
     if (this.attrs.width !== void 0 && this.attrs.height !== void 0) return;
 
     const { width, height } = this.getClientRect();
-    [this.#context.canvas.width, this.#context.canvas.height] = [
-      width,
-      height,
-    ];
+    [this.#context.canvas.width, this.#context.canvas.height] = [width, height];
     this.currentNeedReload = true;
     this.parents.forEach((parent) => {
       if (parent instanceof Group) {
@@ -148,12 +145,17 @@ export class Group<
   public draw(context: CanvasRenderingContext2D) {
     if (!(this.attrs.visible ?? true)) return;
     if (this.currentNeedReload) {
-      this.#context.clearRect(0, 0, this.#context.canvas.width, this.#context.canvas.height)
+      this.#context.clearRect(
+        0,
+        0,
+        this.#context.canvas.width,
+        this.#context.canvas.height
+      );
       // eslint-disable-next-line functional/no-let
-      const { x, y } = this.getClientRect()
+      const { x, y } = this.getClientRect();
       if (x || y) {
-      context.translate(-x, -y);
-    }
+        context.translate(-x, -y);
+      }
       drawLayerContextUseOpacityClipTransformFilter(
         this.#context,
         this.attrs,
@@ -161,10 +163,10 @@ export class Group<
         this
       );
 
-    if (x || y) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      context.translate(x!, y!);
-    }
+      if (x || y) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        context.translate(x!, y!);
+      }
 
       this.currentNeedReload = false;
     }
