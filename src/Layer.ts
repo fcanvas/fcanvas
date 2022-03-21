@@ -192,7 +192,12 @@ export class Layer extends Container<
     }
 
     if (this.attrs.clearBeforeDraw ?? true) {
-      this.#context.clearRect(0, 0, this.#context.canvas.width, this.#context.canvas.height)
+      this.#context.clearRect(
+        0,
+        0,
+        this.#context.canvas.width,
+        this.#context.canvas.height
+      );
     }
     drawLayerContextUseOpacityClipTransformFilter(
       this.#context,
