@@ -23,7 +23,6 @@ export type AttrsDrawLayerContext = {
 
 export function drawLayerContextUseOpacityClipTransformFilter(
   context: CanvasRenderingContext2D,
-  clear = false,
   attrs: AttrsDrawLayerContext,
   // eslint-disable-next-line functional/prefer-readonly-type
   children: Set<
@@ -35,9 +34,6 @@ export function drawLayerContextUseOpacityClipTransformFilter(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   argThis: any = void 0
 ) {
-  if (clear) {
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-  }
   const needBackup = attrs.clip !== void 0;
 
   if (needBackup) {
