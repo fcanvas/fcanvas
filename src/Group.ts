@@ -116,7 +116,7 @@ export class Group<
   ) {
     // eslint-disable-next-line functional/no-let
     let x = Infinity,
-      y = 0,
+      y = -Infinity,
       width = 0,
       height = 0,
       fillWidth = 0,
@@ -168,9 +168,8 @@ export class Group<
         this.children,
         this
       );
-
       if (x !== 0 || y !== 0) {
-        this.#context.translate(x!, y!);
+        this.#context.translate(x, y);
       }
 
       this.currentNeedReload = false;
