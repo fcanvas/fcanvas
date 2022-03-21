@@ -25,6 +25,7 @@ export { TextPath } from "./shapes/TextPath";
 export { Wedge } from "./shapes/Wedge";
 
 export { cropImage } from "./methods/cropImage";
+export { rqaf, stop } from "./methods/rqaf";
 
 export { degressToRadial } from "./utils/degressToRadial";
 export { radialToDegress } from "./utils/radialToDegress";

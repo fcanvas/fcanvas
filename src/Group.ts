@@ -150,7 +150,7 @@ export class Group<
 
   public draw(context: CanvasRenderingContext2D) {
     if (!(this.attrs.visible ?? true)) return;
-    
+
     const { x, y } = this.getClientRect();
     if (this.currentNeedReload) {
       this.#context.clearRect(
@@ -159,7 +159,7 @@ export class Group<
         this.#context.canvas.width,
         this.#context.canvas.height
       );
-      
+
       if (x !== 0 || y !== 0) {
         this.#context.translate(-x, -y);
       }
