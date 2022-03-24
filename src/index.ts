@@ -25,6 +25,8 @@ export { TextPath } from "./shapes/TextPath";
 export { Wedge } from "./shapes/Wedge";
 
 export { cropImage } from "./methods/cropImage";
+export { haveIntersection } from "./methods/haveIntersection";
+export { randomColor } from "./methods/randomColor";
 export { rqaf, stop } from "./methods/rqaf";
 
 export { degressToRadial } from "./utils/degressToRadial";
