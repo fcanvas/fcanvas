@@ -94,6 +94,9 @@ export abstract class ContainerBasic<
     return this.attrs.name ?? "";
   }
   public readonly attrs: Attrs;
+  public get _(): Attrs {
+      return this.attrs;
+  }
   // eslint-disable-next-line functional/prefer-readonly-type
   public readonly listeners?: Map<
     keyof Events | string,
