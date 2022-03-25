@@ -317,6 +317,17 @@ export abstract class ContainerNode<
   public _onDeleteParent(parent: IParentNode): void {
     this.parents.delete(parent);
   }
+
+  public moveTo(parent: IParentNode): void {
+    this.remove()
+    parent.add(this)
+  }
+
+  public remove(): void {
+    this.parents.forEach(parent => {
+      parent.delete(this)
+    })
+  }
 }
 
 export declare class VirualChildNode {
