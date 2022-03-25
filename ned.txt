@@ -1,7 +1,0 @@
-createJSON
-clone
-to
-toCanvas
-toDataURL
-toImage
-toJSON()
