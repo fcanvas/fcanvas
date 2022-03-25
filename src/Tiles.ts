@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { parse } from "plist";
+import { parse } from "plist/lib/parse";
 
 import { cropImage } from "./methods/cropImage";
 import { Image } from "./shapes/Image";
@@ -104,6 +103,7 @@ export class Tiles<TileNames extends string> {
         );
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return this.#cache.get(name)!;
     } else {
       // eslint-disable-next-line functional/no-throw-statement
