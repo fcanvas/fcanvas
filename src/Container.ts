@@ -95,7 +95,7 @@ export abstract class ContainerBasic<
   }
   public readonly attrs: Attrs;
   public get _(): Attrs {
-      return this.attrs;
+    return this.attrs;
   }
   // eslint-disable-next-line functional/prefer-readonly-type
   public readonly listeners?: Map<
@@ -319,14 +319,14 @@ export abstract class ContainerNode<
   }
 
   public moveTo(parent: IParentNode): void {
-    this.remove()
-    parent.add(this)
+    this.remove();
+    parent.add(this);
   }
 
   public remove(): void {
-    this.parents.forEach(parent => {
-      parent.delete(this)
-    })
+    this.parents.forEach((parent) => {
+      parent.delete(this);
+    });
   }
 }
 
