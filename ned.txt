@@ -1,7 +1,5 @@
 createJSON
-moveTo
 clone
-remove
 to
 toCanvas
 toDataURL
