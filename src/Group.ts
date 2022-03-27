@@ -22,6 +22,7 @@ type Attrs = Offset & {
 type IChild = Shape<any, any> | Group<any>;
 export class Group<
     ChildNode extends VirualChildNode & {
+      readonly _: Attrs;
       // eslint-disable-next-line functional/no-method-signature
       isPressedPoint(x: number, y: number): boolean;
       // eslint-disable-next-line functional/prefer-readonly-type
