@@ -75,14 +75,20 @@ export declare class VirualParentNode {
   delete(...nodes: any[]): void;
 }
 
-export abstract class ContainerBasic<
-  AttrsCustom extends Record<string, unknown>,
+abstract class ContainerBasic<
+  AttrsCustom extends Record<string, unknown> & {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    raws?: AttrsRaws;
+    refs?: AttrsRefs
+  },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EventsCustom extends Record<string, any>,
   Attrs extends AttrsSelf<AttrsCustom> = AttrsSelf<AttrsCustom>,
-  Events extends EventsSelf<EventsCustom> = EventsSelf<EventsCustom>
+  Events extends EventsSelf<EventsCustom> = EventsSelf<EventsCustom>,
+  AttrsRaws extends Record<string, unknown>,
+  AttrsRefs extends Record<string, unknown>,
 > {
-  static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
+  static readonly _attrNoReactDrawDefault = ["id", "name", "listeners", "raws"];
   static readonly type: string;
 
   public get type(): string {
