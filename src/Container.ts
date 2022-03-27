@@ -157,7 +157,7 @@ export abstract class ContainerBasic<
 
     if (this.attrs.listening !== false) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.attrs.listening!.forEach((cbs, name) => {
+      this.attrs.listening?.forEach((cbs, name) => {
         cbs.forEach((cb) => this.on(name, cb));
       });
     }
