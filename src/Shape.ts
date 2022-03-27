@@ -104,8 +104,11 @@ type AttrsDefault = Offset & {
   lineJoin?: "bevel" | "round" | "miter";
   // eslint-disable-next-line functional/prefer-readonly-type
   lineCap?: "butt" | "round" | "square";
-  // eslint-disable-next-line functional/prefer-readonly-type
-  sceneFunc?: (context: CanvasRenderingContext2D) => void;
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
+  sceneFunc?: <This extends any>(
+    this: This,
+    context: CanvasRenderingContext2D
+  ) => void;
 } & Partial<FillModeMixture> /* & FillModeMonopole*/ & {
     // eslint-disable-next-line functional/prefer-readonly-type
     shadowEnabled?: boolean;
@@ -155,9 +158,7 @@ export class Shape<
 
   public readonly _centroid: boolean = false;
 
-  // @overwrite
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-  protected _sceneFunc(_context: CanvasRenderingContext2D) {}
+  protected _sceneFunc?(_context: CanvasRenderingContext2D): void;
 
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;

@@ -6,7 +6,6 @@ import {
   AttrsDrawLayerContext,
   drawLayerContextUseOpacityClipTransformFilter,
 } from "./helpers/drawLayerContextUseOpacityClipTransformFilter";
-import { realMousePosition } from "./helpers/realMousePosition";
 import { Offset } from "./types/Offset";
 
 type Attrs = Partial<Offset> & {
@@ -147,7 +146,7 @@ export class Layer extends Container<
       this.on(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type as any,
-        this.activatorEventChildren.bind(this)
+        this.fireChild.bind(this)
       );
     });
   }
@@ -157,33 +156,6 @@ export class Layer extends Container<
   }
   public _onDeleteParent(parent: Stage) {
     this.parents.delete(parent);
-  }
-
-  private activatorEventChildren(event: Event): void {
-    // eslint-disable-next-line functional/no-let
-    let clients: readonly ReturnType<typeof realMousePosition>[];
-
-    this.children.forEach((node) => {
-      if (node.listeners?.has(event.type)) {
-        if (!clients) {
-          clients = (
-            event.type.startsWith("touch")
-              ? Array.from((event as TouchEvent).changedTouches)
-              : [event as MouseEvent | WheelEvent]
-          ).map((touch) =>
-            realMousePosition(
-              this.#context.canvas,
-              touch.clientX,
-              touch.clientY
-            )
-          );
-        }
-
-        if (clients.some((item) => node.isPressedPoint(item.x, item.y))) {
-          node.emit(event.type, event);
-        }
-      }
-    });
   }
 
   public draw() {

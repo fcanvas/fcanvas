@@ -1,4 +1,5 @@
 import { createProxy } from "./helpers/createProxy";
+import { realMousePosition } from "./helpers/realMousePosition";
 
 type AttrsIdentifitation = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -155,7 +156,8 @@ export abstract class ContainerBasic<
     });
 
     if (this.attrs.listening !== false) {
-      this.attrs.listening?.forEach((cbs, name) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.attrs.listening!.forEach((cbs, name) => {
         cbs.forEach((cb) => this.on(name, cb));
       });
     }
@@ -334,6 +336,17 @@ export declare class VirualChildNode {
   matches(selector: string): boolean;
   _onAddToParent(parent: VirualParentNode): void;
   _onDeleteParent(parent: VirualParentNode): void;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  readonly listeners?: Map<
+    unknown,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
+    Array<(event: any) => void>
+  >;
+
+  public isPressedPoint?(x: number, y: number, event?: Event): boolean;
+
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/ban-types
+  emit: Function;
 }
 export abstract class Container<
     AttrsCustom extends Record<string, unknown> & AttrsIdentifitation,
@@ -372,6 +385,42 @@ export abstract class Container<
       node._onDeleteParent(this);
     });
     this.currentNeedReload = true;
+  }
+
+  protected nodeHaveInClients(
+    node: IChildNode,
+    clients: readonly ReturnType<typeof realMousePosition>[],
+    event: Event
+  ): boolean {
+    return clients.some((item) => node.isPressedPoint?.(item.x, item.y, event));
+  }
+  protected fireChild(event: Event, target?: HTMLCanvasElement): void {
+    // eslint-disable-next-line functional/no-let
+    let clients: readonly ReturnType<typeof realMousePosition>[];
+
+    this.children.forEach((node) => {
+      if (node.listeners?.has(event.type)) {
+        if (!clients) {
+          clients = (
+            event.type.startsWith("touch")
+              ? Array.from((event as TouchEvent).changedTouches)
+              : [event as MouseEvent | WheelEvent]
+          ).map((touch) =>
+            realMousePosition(
+              (event.target ||
+                event.currentTarget ||
+                target) as HTMLCanvasElement,
+              touch.clientX,
+              touch.clientY
+            )
+          );
+        }
+
+        if (this.nodeHaveInClients(node, clients, event)) {
+          node.emit(event.type, event);
+        }
+      }
+    });
   }
 
   public destroy(): void {
