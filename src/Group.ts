@@ -5,6 +5,7 @@ import {
   AttrsDrawLayerContext,
   drawLayerContextUseOpacityClipTransformFilter,
 } from "./helpers/drawLayerContextUseOpacityClipTransformFilter";
+import { realMousePosition } from "./helpers/realMousePosition";
 import { setNeedReloadParentTrue } from "./helpers/setNeedReloadParentTrue";
 import { Offset } from "./types/Offset";
 
@@ -98,7 +99,17 @@ export class Group<
     this._onChildResize();
   }
 
-  public isPressedPoint(x: number, y: number): boolean {
+  protected nodeHaveInClients(
+    node: ChildNode,
+    clients: readonly ReturnType<typeof realMousePosition>[]
+  ): boolean {
+    return clients.some((item) =>
+      node.isPressedPoint?.(item.x - this.attrs.x, item.y - this.attrs.y)
+    );
+  }
+  public isPressedPoint(x: number, y: number, event?: Event): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.fireChild(event!);
     return Array.from(this.children.values()).some((node) =>
       node.isPressedPoint(x, y)
     );
