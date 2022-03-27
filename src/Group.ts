@@ -135,8 +135,8 @@ export class Group<
     this.children.forEach((node) => {
       const clientRect = node.getClientRect(config);
 
-      x = Math.min(x, clientRect.x);
-      y = Math.max(y, clientRect.y);
+      x = Math.min(x, clientRect.x + node._.x);
+      y = Math.max(y, clientRect.y + node._.y);
 
       const sumWidth = clientRect.x + clientRect.width;
       const sumHeight = clientRect.y + clientRect.height;
