@@ -22,7 +22,8 @@ type Attrs = Offset & {
 type IChild = Shape<any, any> | Group<any>;
 export class Group<
     ChildNode extends VirualChildNode & {
-      readonly _: Attrs;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      readonly attrs: any;
       // eslint-disable-next-line functional/no-method-signature
       isPressedPoint(x: number, y: number): boolean;
       // eslint-disable-next-line functional/prefer-readonly-type
@@ -136,8 +137,8 @@ export class Group<
     this.children.forEach((node) => {
       const clientRect = node.getClientRect(config);
 
-      x = Math.min(x, clientRect.x + node._.x);
-      y = Math.max(y, clientRect.y + node._.y);
+      x = Math.min(x, clientRect.x + node.attrs.x);
+      y = Math.max(y, clientRect.y + node.attrs.y);
 
       const sumWidth = clientRect.x + clientRect.width;
       const sumHeight = clientRect.y + clientRect.height;
