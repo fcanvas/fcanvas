@@ -23,7 +23,7 @@ CDN:
 ## Example
 
 ```ts
-import { Stage, Layer, Circle } feom "fcanvas-next"
+import { Stage, Layer, Circle, rqaf, stop } feom "fcanvas-next"
 
 const stage = new Stage({
   container: "app",
@@ -33,10 +33,21 @@ const stage = new Stage({
 
 const layer = new Layer()
 stage.add(layer)
-layer.add(new Circle({
+
+const cỉrcle = new Circle({
   x: 0,
   y: 0,
   radius: 20,
   fill: "red"
-}))
+})
+
+layer.add(circle)
+
+rqaf(() => {
+  circle._.x += 1 // auto reactive and re-draw
+  
+  if (circle._.x === stage._.width) {
+    stop()
+  }
+})
 ```
