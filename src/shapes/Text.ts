@@ -1,7 +1,7 @@
-import { transparent } from "../Colors";
 import { Group } from "../Group";
 import { Layer } from "../Layer";
 import { AttrsShapeSelf, Shape } from "../Shape";
+import { transparent } from "../packages/Colors";
 import { Size } from "../types/Size";
 
 import { Label } from "./Label";
@@ -83,14 +83,20 @@ const ATTR_CHANGE_LIST: readonly (keyof AttrsCustom)[] = [
   "ellipsis",
   "letterSpacing",
 ];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-export class Text<EventsCustom extends Record<string, any> = {}> extends Shape<
+export class Text<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<
   AttrsCustom,
   EventsCustom,
+  AttrsRefs,
+  AttrsRaws,
   Layer | Group | Label
 > {
   static readonly type = "Text";
-  static readonly attrsReactSize = [
+  static readonly sizes = [
     "fontFamily",
     "fontSize",
     "fontStyle",
@@ -123,7 +129,7 @@ export class Text<EventsCustom extends Record<string, any> = {}> extends Shape<
   private partialText = "";
   // eslint-disable-next-line functional/prefer-readonly-type
   private textWidth = 0;
-  constructor(attrs: AttrsShapeSelf<AttrsCustom>) {
+  constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
     super(attrs);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.watch(ATTR_CHANGE_LIST as any, () => this.setTextData());

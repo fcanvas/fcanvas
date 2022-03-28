@@ -1,4 +1,6 @@
-import { transparent } from "../Colors";
+import { transparent } from "../packages/Colors";
+import { Group } from "../Group";
+import { Layer } from "../Layer";
 import { AttrsShapeSelf, Shape } from "../Shape";
 import { getLineLength } from "../helpers/Path/getLineLength";
 import { getPointOnCubicBezier } from "../helpers/Path/getPointOnCubicBezier";
@@ -51,10 +53,18 @@ const EmptyObject = Object.freeze(Object.create(null));
 
 export class TextPath<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-  EventsCustom extends Record<string, any> = {}
-> extends Shape<AttrsCustom, EventsCustom> {
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<
+  AttrsCustom,
+  EventsCustom,
+  AttrsRefs,
+  AttrsRaws,
+  Layer | Group
+> {
   static readonly type = "TextPath";
-  static readonly attrsReactSize = [
+  static readonly sizes = [
     "text",
     "data",
     "fontFamily",
@@ -84,13 +94,13 @@ export class TextPath<
   private partialText = "";
   // eslint-disable-next-line functional/prefer-readonly-type
   private textWidth = 0;
-  constructor(attrs: AttrsShapeSelf<AttrsCustom>) {
+  constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
     super(attrs);
 
     this.dataArray = parsePathData(this.attrs.data);
     this.watch(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      TextPath.attrsReactSize as any,
+      TextPath.sizes as any,
       () => {
         this.dataArray = parsePathData(this.attrs.data);
       },

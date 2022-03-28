@@ -26,9 +26,15 @@ export { Text } from "./shapes/Text";
 export { TextPath } from "./shapes/TextPath";
 export { Wedge } from "./shapes/Wedge";
 
+export { constrain } from "./methods/constrain";
 export { cropImage } from "./methods/cropImage";
 export { haveIntersection } from "./methods/haveIntersection";
+export { inRange } from "./methods/inRange";
+export { lerp } from "./methods/lerp";
+export { map } from "./methods/map";
+export { random } from "./methods/random";
 export { randomColor } from "./methods/randomColor";
+export { range } from "./methods/range";
 export { rqaf, stop } from "./methods/rqaf";
 
 export { degressToRadial } from "./utils/degressToRadial";

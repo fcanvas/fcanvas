@@ -1,3 +1,5 @@
+import { Group } from "../Group";
+import { Layer } from "../Layer";
 import { AttrsShapeSelf, Shape } from "../Shape";
 import { cropImage } from "../methods/cropImage";
 
@@ -18,10 +20,18 @@ export class Sprite<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
   // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/ban-types
-  Animations extends Record<string, number[]> = {}
-> extends Shape<AttrsCustom<Animations>, EventsCustom> {
+  Animations extends Record<string, number[]> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<
+  AttrsCustom<Animations>,
+  EventsCustom,
+  AttrsRefs,
+  AttrsRaws,
+  Layer | Group
+> {
   static readonly type = "Sprite";
-  static readonly attrsReactSize = [
+  static readonly sizes = [
     "image",
     "animations",
     "animation",
@@ -72,7 +82,9 @@ export class Sprite<
     return cropImageNow;
   }
 
-  constructor(attrs: AttrsShapeSelf<AttrsCustom<Animations>>) {
+  constructor(
+    attrs: AttrsShapeSelf<AttrsCustom<Animations>, AttrsRefs, AttrsRaws>
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any);
 

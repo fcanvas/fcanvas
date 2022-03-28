@@ -18,11 +18,14 @@ type Attrs = {
 
 type EventsCustom = HTMLElementEventMap;
 
-export class Stage extends Container<Attrs, EventsCustom, Layer> {
+export class Stage<
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Container<Attrs, EventsCustom, Layer, AttrsRefs, AttrsRaws> {
   static readonly type: string = "Stage";
   readonly #container = document.createElement("div");
 
-  constructor(attrs: AttrsSelf<Attrs>) {
+  constructor(attrs: AttrsSelf<Attrs, AttrsRefs, AttrsRaws>) {
     super(attrs);
 
     const el = document.getElementById(attrs.container);

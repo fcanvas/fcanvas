@@ -9,11 +9,12 @@ type AttrsCustom = {
   cornerRadius?: number | [number, number] | [number, number, number, number];
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-export class Rect<EventsCustom extends Record<string, any> = {}> extends Shape<
-  AttrsCustom,
-  EventsCustom
-> {
+export class Rect<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Rect";
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {

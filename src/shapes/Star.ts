@@ -9,13 +9,14 @@ type AttrsCustom = {
   outerRadius: number;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-export class Star<EventsCustom extends Record<string, any> = {}> extends Shape<
-  AttrsCustom,
-  EventsCustom
-> {
+export class Star<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Star";
-  static readonly attrsReactSize = ["innerRadius", "outerRadius"];
+  static readonly sizes = ["innerRadius", "outerRadius"];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     const { innerRadius, outerRadius, numPoints } = this.attrs;

@@ -13,10 +13,12 @@ type AttrsCustom = {
 
 export class Wedge<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-  EventsCustom extends Record<string, any> = {}
-> extends Shape<AttrsCustom, EventsCustom> {
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Wedge";
-  static readonly attrsReactSize = ["radius"];
+  static readonly sizes = ["radius"];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     context.arc(

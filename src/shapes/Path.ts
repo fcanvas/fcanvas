@@ -5,13 +5,14 @@ type AttrsCustom = {
   data: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-export class Path<EventsCustom extends Record<string, any> = {}> extends Shape<
-  AttrsCustom,
-  EventsCustom
-> {
+export class Path<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Path";
-  static readonly attrsReactSize = ["data"];
+  static readonly sizes = ["data"];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     this.fillScene(context, new Path2D(this.attrs.data));

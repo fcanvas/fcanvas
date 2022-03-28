@@ -41,6 +41,11 @@ export function createProxy<
         }
       }
 
+      if (target === void 0 && (prop === "raws" || prop === "refs")) {
+        // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
+        (target as any)[prop as string] = {} as unknown;
+      }
+
       return target[prop as string];
     },
     set(target, prop, val) {

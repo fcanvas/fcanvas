@@ -9,10 +9,12 @@ type AttrsCustom = {
 
 export class Ellipse<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-  EventsCustom extends Record<string, any> = {}
-> extends Shape<AttrsCustom, EventsCustom> {
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Ellipse";
-  static readonly attrsReactSize = ["radius"];
+  static readonly sizes = ["radius"];
   public readonly _centroid = true;
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
