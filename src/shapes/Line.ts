@@ -74,10 +74,12 @@ export class Line<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
   AttrsCustomMore extends Record<string, unknown> &
-    Omit<AttrsCustom, "closed"> = AttrsCustom
-> extends Shape<AttrsCustomMore, EventsCustom> {
+    Omit<AttrsCustom, "closed"> = AttrsCustom,
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<AttrsCustomMore, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type: string = "Line";
-  static readonly attrsReactSize: readonly string[] = [
+  static readonly sizes: readonly string[] = [
     "points",
     "tension",
     "bezier",

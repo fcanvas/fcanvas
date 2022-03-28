@@ -17,11 +17,13 @@ export class Arc<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
   AttrsCustomMore extends Record<string, unknown> &
-    Omit<AttrsCustom, "angle"> = AttrsCustom
-> extends Shape<AttrsCustomMore, EventsCustom> {
+    Omit<AttrsCustom, "angle"> = AttrsCustom,
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<AttrsCustomMore, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type: string = "Arc";
   // eslint-disable-next-line functional/prefer-readonly-type
-  static readonly attrsReactSize: string[] = [
+  static readonly sizes: string[] = [
     "angle",
     "innerRadius",
     "outerRadius",

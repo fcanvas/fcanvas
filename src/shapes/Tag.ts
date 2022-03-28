@@ -19,14 +19,20 @@ type AttrsCustom = {
   height?: number;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-export class Tag<EventsCustom extends Record<string, any> = {}> extends Shape<
+export class Tag<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<
   AttrsCustom,
   EventsCustom,
+  AttrsRefs,
+  AttrsRaws,
   Layer | Group | Label
 > {
   static readonly type = "Tag";
-  static readonly attrsReactSize = [
+  static readonly sizes = [
     "pointerDirection",
     "pointerWidth",
     "pointerHeight",

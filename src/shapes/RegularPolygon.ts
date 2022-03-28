@@ -10,10 +10,12 @@ type AttrsCustom = {
 
 export class RegularPolygon<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-  EventsCustom extends Record<string, any> = {}
-> extends Shape<AttrsCustom, EventsCustom> {
+  EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "RegularPolygon";
-  static readonly attrsReactSize = ["sides", "radius"];
+  static readonly sizes = ["sides", "radius"];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     const points = this.getPoints();

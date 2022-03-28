@@ -30,13 +30,17 @@ export class Group<
       getClientRect: Shape["getClientRect"];
       // eslint-disable-next-line functional/no-method-signature
       draw(context: CanvasRenderingContext2D): void;
-    } = IChild
+    } = IChild,
+    AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+    AttrsRaws extends Record<string, unknown> = Record<string, unknown>
   >
   extends Container<
     Attrs,
     // eslint-disable-next-line @typescript-eslint/ban-types
     {},
-    ChildNode
+    ChildNode,
+    AttrsRefs,
+    AttrsRaws
   >
   implements VirualChildNode
 {
@@ -47,7 +51,7 @@ export class Group<
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   readonly #context = document.createElement("canvas").getContext("2d")!;
 
-  constructor(attrs: AttrsSelf<Attrs>) {
+  constructor(attrs: AttrsSelf<Attrs, AttrsRefs, AttrsRaws>) {
     super(attrs, (prop) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;

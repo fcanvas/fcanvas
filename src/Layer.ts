@@ -1,4 +1,4 @@
-import { Container, EventsSelf } from "./Container";
+import { AttrsSelf, Container, EventsSelf } from "./Container";
 import { Group } from "./Group";
 import type { Shape } from "./Shape";
 import { Stage } from "./Stage";
@@ -39,11 +39,16 @@ const EventsDefault = [
 
 type EventsCustom = HTMLElementEventMap;
 
-export class Layer extends Container<
+export class Layer<
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+> extends Container<
   Attrs,
   EventsCustom,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Shape<any, any> | Group
+  Shape<any, any> | Group,
+  AttrsRefs,
+  AttrsRaws
 > {
   static readonly _attrNoReactDraw = ["x", "y", "visible"];
   static readonly type: string = "Layer";
@@ -63,7 +68,7 @@ export class Layer extends Container<
   // eslint-disable-next-line functional/prefer-readonly-type
   private idRequestFrame?: ReturnType<typeof requestAnimationFrame>;
 
-  constructor(attrs: Attrs = {}) {
+  constructor(attrs: AttrsSelf<Attrs, AttrsRefs, AttrsRaws> = {}) {
     super(
       attrs,
       () => {

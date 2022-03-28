@@ -56,7 +56,23 @@ type AttrListening = {
 };
 
 type AttrsDefault = AttrsIdentifitation & AttrListening;
-export type AttrsSelf<AttrsCustom> = AttrsDefault & AttrsCustom;
+export type AttrsSelf<
+  AttrsCustom,
+  AttrsRefs extends Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown>
+> = AttrsDefault &
+  AttrsCustom & {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    refs?: AttrsRefs;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    raws?: AttrsRaws;
+  };
+type NotNillRefsRaws<
+  AttrsCustom,
+  AttrsRefs extends Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown>
+> = AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws> &
+  Required<Pick<AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>, "raws" | "refs">>;
 type CallbackWatcher<T> = (
   newValue: T,
   oldValue: T,
@@ -75,24 +91,37 @@ export declare class VirualParentNode {
   delete(...nodes: any[]): void;
 }
 
+export declare class VirualChildNode {
+  matches(selector: string): boolean;
+  _onAddToParent(parent: VirualParentNode): void;
+  _onDeleteParent(parent: VirualParentNode): void;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  readonly listeners?: Map<
+    unknown,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
+    Array<(event: any) => void>
+  >;
+
+  public isPressedPoint?(x: number, y: number, event?: Event): boolean;
+
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/ban-types
+  emit: Function;
+}
+
 abstract class ContainerBasic<
-  AttrsCustom extends Record<string, unknown> & {
-    // eslint-disable-next-line functional/prefer-readonly-type
-    raws?: AttrsRaws;
-    refs?: AttrsRefs
-  },
+  AttrsCustom extends Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EventsCustom extends Record<string, any>,
-  Attrs extends AttrsSelf<AttrsCustom> = AttrsSelf<AttrsCustom>,
-  Events extends EventsSelf<EventsCustom> = EventsSelf<EventsCustom>,
-  AttrsRaws extends Record<string, unknown>,
   AttrsRefs extends Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown>
 > {
-  static readonly _attrNoReactDrawDefault = ["id", "name", "listeners", "raws"];
+  static readonly raws = ["id", "name", "listeners", "raws"];
   static readonly type: string;
 
   public get type(): string {
-    return (this.constructor as typeof ContainerNode).type ?? "unknown";
+    return (
+      (this.constructor as unknown as typeof ContainerNode).type ?? "unknown"
+    );
   }
   public get id(): string | null {
     return this.attrs.id ?? null;
@@ -100,13 +129,19 @@ abstract class ContainerBasic<
   public get name(): string {
     return this.attrs.name ?? "";
   }
-  public readonly attrs: Attrs;
-  public get _(): Attrs {
-    return this.attrs;
+  public readonly attrs: NotNillRefsRaws<AttrsCustom, AttrsRefs, AttrsRaws>;
+  public readonly _: NotNillRefsRaws<AttrsCustom, AttrsRefs, AttrsRaws>;
+  public get raws(): AttrsRaws {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.attrs.raws!;
+  }
+  public get refs(): AttrsRefs {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.attrs.refs!;
   }
   // eslint-disable-next-line functional/prefer-readonly-type
   public readonly listeners?: Map<
-    keyof Events | string,
+    keyof EventsSelf<EventsCustom> | string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
     Array<(event: any) => void>
   >;
@@ -117,14 +152,16 @@ abstract class ContainerBasic<
   >();
 
   constructor(
-    attrs: Attrs,
-    onNeedUpdate?: (prop: keyof Attrs) => void,
+    attrs: AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>,
+    onNeedUpdate?: (
+      prop: keyof AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>
+    ) => void,
     // eslint-disable-next-line functional/prefer-readonly-type
     attrNoReactDraw?: string[]
   ) {
     if (attrs.listening !== false) {
       this.listeners = new Map<
-        keyof Events | string,
+        keyof EventsSelf<EventsCustom> | string,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
         Array<(event: any) => void>
       >();
@@ -135,7 +172,11 @@ abstract class ContainerBasic<
 
         if (prop === selfProp) {
           listeners.forEach((_val, cb) => {
-            (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal, prop);
+            (
+              cb as CallbackWatcher<
+                AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>[typeof prop]
+              >
+            )(newVal, oldVal, prop);
           });
           return;
         }
@@ -143,7 +184,11 @@ abstract class ContainerBasic<
         if ((prop as string).startsWith(`${selfProp as string}.`)) {
           listeners.forEach((deep, cb) => {
             if (deep) {
-              (cb as CallbackWatcher<Attrs[typeof prop]>)(newVal, oldVal, prop);
+              (
+                cb as CallbackWatcher<
+                  AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>[typeof prop]
+                >
+              )(newVal, oldVal, prop);
             }
           });
         }
@@ -154,15 +199,15 @@ abstract class ContainerBasic<
       );
 
       if (
-        !ContainerNode._attrNoReactDrawDefault.includes(prop as string) &&
+        !ContainerNode.raws.includes(prop as string) &&
         !attrNoReactDraw?.includes(prop as string)
       ) {
         onNeedUpdate?.(prop);
       }
-    });
+    }) as NotNillRefsRaws<AttrsCustom, AttrsRefs, AttrsRaws>;
+    this._ = this.attrs;
 
     if (this.attrs.listening !== false) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.attrs.listening?.forEach((cbs, name) => {
         cbs.forEach((cb) => this.on(name, cb));
       });
@@ -189,13 +234,16 @@ abstract class ContainerBasic<
     });
   }
 
-  public on<Name extends keyof Events>(
+  public on<Name extends keyof EventsSelf<EventsCustom>>(
     name: Name,
-    callback: (this: this, event: Events[Name]) => void
+    callback: (this: this, event: EventsSelf<EventsCustom>[Name]) => void
   ): this;
   public on(name: string, callback: (this: this, event: Event) => void): this;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public on(name: string | keyof Events, callback: (event: any) => void) {
+  public on(
+    name: string | keyof EventsSelf<EventsCustom>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    callback: (event: any) => void
+  ) {
     if (this.listeners) {
       const listeners = this.listeners.get(name);
       if (listeners) {
@@ -208,13 +256,13 @@ abstract class ContainerBasic<
 
     return this;
   }
-  public off<Name extends keyof Events>(
+  public off<Name extends keyof EventsSelf<EventsCustom>>(
     name: Name,
-    callback?: (this: this, event: Events[Name]) => void
+    callback?: (this: this, event: EventsSelf<EventsCustom>[Name]) => void
   ): this;
   public off(name: string, callback?: (this: this, event: Event) => void): this;
   public off(
-    name: string | keyof Events,
+    name: string | keyof EventsSelf<EventsCustom>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     callback?: (event: any) => void
   ): this {
@@ -232,9 +280,15 @@ abstract class ContainerBasic<
 
     return this;
   }
-  public emit<Name extends keyof Events>(name: Name, event: Events[Name]): this;
+  public emit<Name extends keyof EventsSelf<EventsCustom>>(
+    name: Name,
+    event: EventsSelf<EventsCustom>[Name]
+  ): this;
   public emit(name: string, event: Event): this;
-  public emit(name: string | keyof Events, event: Event): this {
+  public emit(
+    name: string | keyof EventsSelf<EventsCustom>,
+    event: Event
+  ): this {
     if (this.listeners) {
       this.listeners.get(name)?.forEach((cb) => {
         cb.call(this, event);
@@ -250,16 +304,25 @@ abstract class ContainerBasic<
     cb: CallbackWatcher<any>,
     options?: Omit<OptionsWatcher, "immediate">
   ): () => void;
-  public watch<K extends string & keyof Attrs>(
+  public watch<
+    K extends string & keyof AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>
+  >(
     prop: K,
-    cb: CallbackWatcher<Attrs[K]>,
+    cb: CallbackWatcher<AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>[K]>,
     options?: OptionsWatcher
   ): () => void;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  public watch<K extends string & keyof Attrs, KS extends K[]>(
+  public watch<
+    K extends string & keyof AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>,
+    // eslint-disable-next-line functional/prefer-readonly-type
+    KS extends K[]
+  >(
     prop: KS,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cb: CallbackWatcher<K extends keyof Attrs ? Attrs[K] : any>,
+    cb: CallbackWatcher<
+      K extends keyof AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>
+        ? AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>[K]
+        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          any
+    >,
     options?: OptionsWatcher
   ): () => void;
   public watch(
@@ -308,12 +371,14 @@ export abstract class ContainerNode<
     AttrsCustom extends Record<string, unknown>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     EventsCustom extends Record<string, any>,
-    IParentNode extends VirualParentNode = VirualParentNode
+    IParentNode extends VirualParentNode,
+    AttrsRefs extends Record<string, unknown>,
+    AttrsRaws extends Record<string, unknown>
   >
-  extends ContainerBasic<AttrsCustom, EventsCustom>
+  extends ContainerBasic<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws>
   implements VirualChildNode
 {
-  static readonly _attrNoReactDrawDefault = ["id", "name", "listeners"];
+  static readonly raws = ["id", "name", "listeners"];
   static readonly type: string = "ContainerNode";
   public readonly parents = new Set<IParentNode>();
   // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-inferrable-types
@@ -338,29 +403,15 @@ export abstract class ContainerNode<
   }
 }
 
-export declare class VirualChildNode {
-  matches(selector: string): boolean;
-  _onAddToParent(parent: VirualParentNode): void;
-  _onDeleteParent(parent: VirualParentNode): void;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  readonly listeners?: Map<
-    unknown,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, functional/prefer-readonly-type
-    Array<(event: any) => void>
-  >;
-
-  public isPressedPoint?(x: number, y: number, event?: Event): boolean;
-
-  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/ban-types
-  emit: Function;
-}
 export abstract class Container<
     AttrsCustom extends Record<string, unknown> & AttrsIdentifitation,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     EventsCustom extends Record<string, any>,
-    IChildNode extends VirualChildNode
+    IChildNode extends VirualChildNode,
+    AttrsRefs extends Record<string, unknown>,
+    AttrsRaws extends Record<string, unknown>
   >
-  extends ContainerBasic<AttrsCustom, EventsCustom>
+  extends ContainerBasic<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws>
   implements VirualParentNode
 {
   static readonly type: string = "Container";

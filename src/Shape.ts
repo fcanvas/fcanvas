@@ -1,4 +1,3 @@
-import { transparent } from "./Colors";
 import { ContainerNode } from "./Container";
 import { Group } from "./Group";
 import type { Layer } from "./Layer";
@@ -7,6 +6,7 @@ import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { pointInBox } from "./helpers/pointInBox";
 import { setNeedReloadParentTrue } from "./helpers/setNeedReloadParentTrue";
 import { transformedRect } from "./helpers/transformerRect";
+import { transparent } from "./packages/Colors";
 import { Offset } from "./types/Offset";
 import { Size } from "./types/Size";
 
@@ -137,8 +137,18 @@ type AttrsDefault = Offset & {
 // eslint-disable-next-line functional/prefer-readonly-type
 const EmptyArray: Array<number> = [];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AttrsShapeSelf<T extends Record<string, any>> = AttrsDefault & T;
+export type AttrsShapeSelf<
+  T,
+  AttrsRefs extends Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown>
+> = AttrsDefault &
+  T & {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    refs?: AttrsRefs;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    raws?: AttrsRaws;
+  };
+
 export class Shape<
   AttrsCustom extends Record<string, unknown> = {
     // eslint-disable-next-line functional/prefer-readonly-type
@@ -148,12 +158,18 @@ export class Shape<
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
+  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown> = Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  IParent extends Layer | Group<any> = Layer | Group,
-  Attrs extends AttrsShapeSelf<AttrsCustom> = AttrsShapeSelf<AttrsCustom>,
-  Events extends EventsCustom = EventsCustom
-> extends ContainerNode<Attrs, Events, IParent> {
-  static readonly attrsReactSize: readonly string[] = ["width", "height"];
+  IParent extends Layer | Group<any> = Layer | Group
+> extends ContainerNode<
+  AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>,
+  EventsCustom,
+  IParent,
+  AttrsRefs,
+  AttrsRaws
+> {
+  static readonly sizes: readonly string[] = ["width", "height"];
   static readonly type: string = "Shape";
 
   public readonly _centroid: boolean = false;
@@ -163,7 +179,7 @@ export class Shape<
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
 
-  constructor(attrs: Attrs) {
+  constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
     super(attrs, (prop) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;
@@ -173,7 +189,7 @@ export class Shape<
 
       const sizeChanged = (
         this.constructor as unknown as typeof Shape
-      ).attrsReactSize.some(
+      ).sizes.some(
         (test) =>
           test === (prop as string) || test.startsWith(`${prop as string}.`)
       );

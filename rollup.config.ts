@@ -63,7 +63,7 @@ function createOptionsRender(filepath, name) {
         //   name: `${name}`,
         // },
         {
-          file: `dist/${name}.esm.js`,
+          file: `dist/${name}.js`,
           format: "esm",
           plugins: [],
           exports: "auto",
@@ -117,7 +117,7 @@ function createOptionsRender(filepath, name) {
           strict: true,
         },
         {
-          file: `dist/${name}.esm.min.js`,
+          file: `dist/${name}.min.js`,
           format: "esm",
           plugins: [],
           exports: "auto",
@@ -141,5 +141,6 @@ function createOptionsRender(filepath, name) {
 
 export default [
   ...createOptionsRender("index.ts", name),
-  ...createOptionsRender("Colors.ts", "colors"),
+  ...createOptionsRender("packages/Colors.ts", "colors"),
+  ...createOptionsRender("packages/Vector.ts", "vector")
 ];
