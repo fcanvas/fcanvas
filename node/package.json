@@ -1,0 +1,33 @@
+{
+  "name": "fcanvas-node",
+  "version": "1.0.0",
+  "description": "A version fcanvas for node.js",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tachibana-shin/fcanvas.git"
+  },
+  "keywords": [
+    "fcanvas",
+    "node",
+    "2d"
+  ],
+  "author": "Tachibana-shin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tachibana-shin/fcanvas/issues"
+  },
+  "homepage": "https://github.com/tachibana-shin/fcanvas#readme",
+  "dependencies": {
+    "canvas": "^2.9.1",
+    "fcanvas": "^0.1.4",
+    "path2d-polyfill": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "typescript": "^4.6.3"
+  }
+}
