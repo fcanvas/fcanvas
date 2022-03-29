@@ -29,16 +29,11 @@ specifiers:
   rollup-plugin-node-resolve: ^5.2.0
   ts-jest: ^27.0.5
   ts-node: ^10.4.0
-  tweenjs: ^1.0.2
   typedoc: ^0.22.4
   typescript: ^4.7.0-dev.20220312
 
-dependencies:
-  '@tweenjs/tween.js': 18.6.4
-  lodash.clonedeep: 4.5.0
-  tweenjs: 1.0.2
-
 devDependencies:
+  '@tweenjs/tween.js': 18.6.4
   '@types/jest': 27.4.1
   '@types/lodash.clonedeep': 4.5.6
   '@types/plist': 3.0.2
@@ -53,6 +48,7 @@ devDependencies:
   eslint-plugin-import: 2.25.4_eslint@7.32.0
   eslint-plugin-jest: 24.7.0_e449675f6d543fe4632426d2f1ae2b8d
   jest: 27.5.1_ts-node@10.7.0
+  lodash.clonedeep: 4.5.0
   mitt: 3.0.0
   npm-run-all: 4.1.5
   path-cross: 0.0.3
@@ -869,7 +865,7 @@ packages:
 
   /@tweenjs/tween.js/18.6.4:
     resolution: {integrity: sha512-lB9lMjuqjtuJrx7/kOkqQBtllspPIN+96OvTCeJ2j5FEzinoAXTdAMFnDAQT1KVPRlnYfBrqxtqP66vDM40xxQ==}
-    dev: false
+    dev: true
 
   /@types/babel__core/7.1.19:
     resolution: {integrity: sha512-WEOTgRsbYkvA/KCsDwVEGkd7WAr1e3g31VHQ8zy5gul/V1qKullU/BU5I68X5v7V3GnB9eotmom4v5a5gjxorw==}
@@ -3514,7 +3510,7 @@ packages:
 
   /lodash.clonedeep/4.5.0:
     resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
-    dev: false
+    dev: true
 
   /lodash.memoize/4.1.2:
     resolution: {integrity: sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=}
@@ -4574,10 +4570,6 @@ packages:
       tslib: 1.14.1
       typescript: 4.7.0-dev.20220329
     dev: true
-
-  /tweenjs/1.0.2:
-    resolution: {integrity: sha512-WnFozCNkUkmJtLqJyGrToxVojW2Srzudktr8BzFKQijQRVcmlq7Fc+qfo75ccnwIJGiRWbXKfg7qU67Tzbb1bg==}
-    dev: false
 
   /type-check/0.3.2:
     resolution: {integrity: sha1-WITKtRLPHTVeP7eE8wgEsrUg23I=}
