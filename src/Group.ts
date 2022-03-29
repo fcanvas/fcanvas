@@ -1,6 +1,7 @@
 import { AttrsSelf, Container, VirualChildNode } from "./Container";
 import type { Layer } from "./Layer";
 import { Shape } from "./Shape";
+import { Utils } from "./Utils";
 import {
   AttrsDrawLayerContext,
   drawLayerContextUseOpacityClipTransformFilter,
@@ -49,7 +50,7 @@ export class Group<
   public readonly parents = new Set<Layer | Group>();
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  readonly #context = document.createElement("canvas").getContext("2d")!;
+  readonly #context = Utils.createCanvas().getContext("2d")!;
 
   constructor(attrs: AttrsSelf<Attrs, AttrsRefs, AttrsRaws>) {
     super(attrs, (prop) => {

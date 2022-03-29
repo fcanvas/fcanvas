@@ -2,6 +2,7 @@ import { AttrsSelf, Container, EventsSelf } from "./Container";
 import { Group } from "./Group";
 import type { Shape } from "./Shape";
 import { Stage } from "./Stage";
+import { Utils } from "./Utils";
 import {
   AttrsDrawLayerContext,
   drawLayerContextUseOpacityClipTransformFilter,
@@ -60,7 +61,7 @@ export class Layer<
     return this.#context.canvas;
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  readonly #context = document.createElement("canvas").getContext("2d")!;
+  readonly #context = Utils.createCanvas().getContext("2d")!;
   // eslint-disable-next-line functional/prefer-readonly-type
   private waitDrawing = false;
   // eslint-disable-next-line functional/prefer-readonly-type

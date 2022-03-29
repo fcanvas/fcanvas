@@ -1,4 +1,5 @@
 import { Shape } from "../Shape";
+import { Utils } from "../Utils";
 import { Offset } from "../types/Offset";
 import { Size } from "../types/Size";
 
@@ -23,7 +24,7 @@ export class Image<
 > extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Image";
   static fromURL(url: string): Promise<HTMLImageElement> {
-    const img = new self.Image();
+    const img = new Utils.Image();
 
     return new Promise((resolve, reject) => {
       function done() {

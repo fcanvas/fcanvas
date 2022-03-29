@@ -1,6 +1,7 @@
 import { ContainerNode } from "./Container";
 import { Group } from "./Group";
 import type { Layer } from "./Layer";
+import { Utils } from "./Utils";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 import { pointInBox } from "./helpers/pointInBox";
@@ -208,8 +209,7 @@ export class Shape<
     this.onresize();
 
     if (this.attrs.perfectDrawEnabled ?? true) {
-      this.#context =
-        document.createElement("canvas").getContext("2d") ?? void 0;
+      this.#context = Utils.createCanvas().getContext("2d") ?? void 0;
     }
   }
   protected size(): Size {
@@ -333,7 +333,7 @@ export class Shape<
             this.attrs.fillPattern?.repeat ?? "repeat"
           )!;
           style.setTransform(
-            new DOMMatrix()
+            new Utils.DOMMatrix()
               .skewX(this.attrs.fillPattern?.x ?? 1)
               .skewY(this.attrs.fillPattern?.y ?? 1)
               .translate(

@@ -1,3 +1,5 @@
+import { Utils } from "../Utils";
+
 // by https://jsfiddle.net/casamia743/xqh48gno/
 function calcProjectedRectSizeOfRotatedRect(
   width: number,
@@ -20,9 +22,9 @@ export function cropImage(
   height: number = image.height as number,
   rotate = 0
 ): HTMLCanvasElement {
-  const virualContext = document
-    .createElement("canvas")
-    .getContext("2d") as CanvasRenderingContext2D; /// never null
+  const virualContext = Utils.createCanvas().getContext(
+    "2d"
+  ) as CanvasRenderingContext2D; /// never null
 
   /// ------------------ draw image canvas -----------------
   const rad: number = (rotate * Math.PI) / 180;

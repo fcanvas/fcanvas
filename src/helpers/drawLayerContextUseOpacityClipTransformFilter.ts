@@ -1,4 +1,5 @@
 import { VirualChildNode } from "../Container";
+import { Utils } from "../Utils";
 import { Offset } from "../types/Offset";
 
 import { createFilter, OptionFilter } from "./createFilter";
@@ -40,7 +41,7 @@ export function drawLayerContextUseOpacityClipTransformFilter(
     context.save();
 
     if (typeof attrs.clip === "function") {
-      const path = new Path2D();
+      const path = new Utils.Path2D();
       attrs.clip.call(argThis, path);
       context.clip(path);
     } else {
