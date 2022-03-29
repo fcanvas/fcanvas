@@ -1,5 +1,6 @@
 import { AttrsSelf, Container, EventsSelf } from "./Container";
 import { Layer } from "./Layer";
+import { Utils } from "./Utils";
 import { globalConfigs } from "./global-configs";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
 
@@ -23,12 +24,12 @@ export class Stage<
   AttrsRaws extends Record<string, unknown> = Record<string, unknown>
 > extends Container<Attrs, EventsCustom, Layer, AttrsRefs, AttrsRaws> {
   static readonly type: string = "Stage";
-  readonly #container = document.createElement("div");
+  readonly #container = Utils.createDiv();
 
   constructor(attrs: AttrsSelf<Attrs, AttrsRefs, AttrsRaws>) {
     super(attrs);
 
-    const el = document.getElementById(attrs.container);
+    const el = Utils.document.getElementById(attrs.container);
     if (!el) {
       // eslint-disable-next-line functional/no-throw-statement
       throw new Error(`#${attrs.container} not exists.`);

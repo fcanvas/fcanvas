@@ -1,6 +1,7 @@
 import { Group } from "../Group";
 import { Layer } from "../Layer";
 import { AttrsShapeSelf, Shape } from "../Shape";
+import { Utils } from "../Utils";
 import { transparent } from "../packages/Colors";
 import { Size } from "../types/Size";
 
@@ -47,7 +48,7 @@ export function getDummyContext() {
     return dummyContext;
   }
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  dummyContext = document.createElement("canvas").getContext("2d")!;
+  dummyContext = Utils.createCanvas().getContext("2d")!;
   return dummyContext;
 }
 

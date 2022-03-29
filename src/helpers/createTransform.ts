@@ -1,3 +1,4 @@
+import { Utils } from "../Utils";
 import { Offset } from "../types/Offset";
 
 import { convertToDegress } from "./convertToDegress";
@@ -18,7 +19,7 @@ export function createTransform(
   options: OptionTransform,
   force = false
 ): DOMMatrix {
-  const transform = new DOMMatrix();
+  const transform = new Utils.DOMMatrix();
 
   if (options.scale !== void 0) {
     transform.scale(options.scale.x || 1, options.scale.y || 1);

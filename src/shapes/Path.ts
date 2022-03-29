@@ -1,4 +1,5 @@
 import { Shape } from "../Shape";
+import { Utils } from "../Utils";
 
 type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -15,6 +16,6 @@ export class Path<
   static readonly sizes = ["data"];
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    this.fillScene(context, new Path2D(this.attrs.data));
+    this.fillScene(context, new Utils.Path2D(this.attrs.data));
   }
 }

@@ -7,6 +7,7 @@ export { Stage } from "./Stage";
 export { Tiles } from "./Tiles";
 export { loadTiles } from "./Tiles";
 export { Tween } from "./Tween";
+export { Utils } from "./Utils";
 
 export { Arc } from "./shapes/Arc";
 export { Arrow } from "./shapes/Arrow";
