@@ -51,7 +51,7 @@ export class Layer<
   AttrsRefs,
   AttrsRaws
 > {
-  static readonly _attrNoReactDraw = ["x", "y", "visible"];
+  static readonly raws = ["x", "y", "visible"];
   static readonly type: string = "Layer";
 
   public readonly parents = new Set<Stage>();
@@ -75,7 +75,7 @@ export class Layer<
       () => {
         this.currentNeedReload = true;
       },
-      Layer._attrNoReactDraw
+      Layer.raws
     );
 
     this.#context.canvas.style.cssText =
