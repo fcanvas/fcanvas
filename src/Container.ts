@@ -1,5 +1,9 @@
+import { Utils } from "./Utils";
 import { createProxy } from "./helpers/createProxy";
 import { realMousePosition } from "./helpers/realMousePosition";
+import { Offset } from "./types/Offset";
+import { Size } from "./types/Size";
+import { loadImage } from "./utils/loadImage";
 
 type AttrsIdentifitation = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -360,55 +364,83 @@ abstract class ContainerBasic<
         this.watchers.get(prop)!.delete(cb as any)
       );
   }
-  
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public toObject(): any {
-    return JSON.parse(JSON.stringify({
-      type: this.type,
-      attrs: this.attrs
-    }))
+    return JSON.parse(
+      JSON.stringify({
+        type: this.type,
+        attrs: this.attrs,
+      })
+    );
   }
   public toJSON() {
-    return JSON.stringify(this.toObject())
+    return JSON.stringify(this.toObject());
   }
-  public clone(): typeof this.constructor {
-    return new this.constructor(this.attrs)
+  public clone(): this {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return new (this.constructor as unknown as any)(this.attrs);
   }
-  public create(json: string): typeof this.constructor {
-    return new this.constructor(JSON.parse(json))
-  }
-  public toCanvas(config?: Partial<Offset>& Partial<Size>& {
-    pixelRatio?: number
-  }): HTMLCanvasElement {
-    if (this.canvas && !config) return this.canvas;
-    
+  public toCanvas(
+    config?: Partial<Offset> &
+      Partial<Size> & {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        pixelRatio?: number;
+      }
+  ): HTMLCanvasElement {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((this as any).canvas && !config) return (this as any).canvas;
+
     const canvas = Utils.createCanvas();
-    [canvas.width, canvas.height] = [config?.width ?? 300, config?.height ?? 300]
-    
+    [canvas.width, canvas.height] = [
+      config?.width ?? 300,
+      config?.height ?? 300,
+    ];
+    // eslint-disable-next-line functional/no-let
+    let pixelRatioBk: number | void;
+
     if (config?.pixelRatio !== void 0) {
-    canvas.devicePixelRatio = config.pixelRatio
+      pixelRatioBk = window.devicePixelRatio;
+      // eslint-disable-next-line functional/immutable-data
+      window.devicePixelRatio = config.pixelRatio;
     }
-    
-    const ctx = canvas.getContext("2d")!
-    ctx.translate(config?.x ?? 0, config?.y ?? 0)
-    
-    if (this.canvas) {
-      ctx.drawImage(this.canvas, 0, 0)
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const ctx = canvas.getContext("2d")!;
+    ctx.translate(config?.x ?? 0, config?.y ?? 0);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((this as any).canvas) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ctx.drawImage((this as any).canvas, 0, 0);
     } else {
-      this.draw(ctx)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (this as any).draw(ctx);
     }
-    
-    return canvas
+
+    if (pixelRatioBk !== void 0) {
+      // eslint-disable-next-line functional/immutable-data
+      window.devicePixelRatio = pixelRatioBk;
+    }
+    return canvas;
   }
   public toDataURL(type?: string, quality?: number): string {
-    return this.toCanvas().toDataURL(type, encoder)
+    return this.toCanvas().toDataURL(type, quality);
   }
-  public toImage(config?: 
-    Partial<Offset>& Partial<Size>& {
-    pixelRatio?: number
-    type?: string;
-    quality?: number
-  }) : Promise<HTMLImageElement> {
-    return loadImage(this.toCanvas(config).toDataURL(config?.type, config?.quality))
+  public toImage(
+    config?: Partial<Offset> &
+      Partial<Size> & {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        pixelRatio?: number;
+        // eslint-disable-next-line functional/prefer-readonly-type
+        type?: string;
+        // eslint-disable-next-line functional/prefer-readonly-type
+        quality?: number;
+      }
+  ): Promise<HTMLImageElement> {
+    return loadImage(
+      this.toCanvas(config).toDataURL(config?.type, config?.quality)
+    );
   }
 
   public destroy(): void {
@@ -471,35 +503,38 @@ export abstract class Container<
 
   // eslint-disable-next-line functional/prefer-readonly-type
   public find<T = IChildNode>(selector: string): T[] {
-    const els: T[] = []
-    
-    this.children.forEach(el => {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    const els: T[] = [];
+
+    this.children.forEach((el) => {
       if (el.matches(selector)) {
-        els.push(el)
+        // eslint-disable-next-line functional/immutable-data
+        els.push(el as unknown as T);
       }
       if (el instanceof Container) {
-        els.push(...el.find(selector))
+        // eslint-disable-next-line functional/immutable-data
+        els.push(...el.find(selector));
       }
-    })
-    
-    return els
+    });
+
+    return els;
   }
-  // eslint-disable-next-line functional/prefer-readonly-type
   public findOne<T = IChildNode>(selector: string): T | null {
-    let el: T | null = null
-    
+    // eslint-disable-next-line functional/no-let
+    let el: T | null = null;
+
+    // eslint-disable-next-line functional/no-loop-statement
     for (const i of this.children) {
       if (i.matches(selector)) {
-        el = i
-      } else
-      if (i instanceof Container) {
-        el = i.findOne(selector)
+        el = i as unknown as T;
+      } else if (i instanceof Container) {
+        el = i.findOne(selector);
       }
-       
-      if (el) break
+
+      if (el) break;
     }
-    
-    return el
+
+    return el;
   }
 
   // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type

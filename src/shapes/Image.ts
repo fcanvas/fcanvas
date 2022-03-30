@@ -1,7 +1,7 @@
 import { Shape } from "../Shape";
-import { Utils } from "../Utils";
 import { Offset } from "../types/Offset";
 import { Size } from "../types/Size";
+import { loadImage } from "../utils/loadImage";
 
 type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -23,29 +23,7 @@ export class Image<
   AttrsRaws extends Record<string, unknown> = Record<string, unknown>
 > extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Image";
-  static fromURL(url: string): Promise<HTMLImageElement> {
-    const img = new Utils.Image();
-
-    return new Promise((resolve, reject) => {
-      function done() {
-        resolve(img);
-        img.removeEventListener("load", done);
-        img.removeEventListener("error", fail);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      function fail(err: any) {
-        reject(err);
-        img.removeEventListener("load", done);
-        img.removeEventListener("error", fail);
-      }
-
-      img.addEventListener("load", done);
-      img.addEventListener("error", fail);
-
-      // eslint-disable-next-line functional/immutable-data
-      img.src = url;
-    });
-  }
+  static readonly fromURL = loadImage;
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     if (this.attrs.crop) {

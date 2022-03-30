@@ -40,3 +40,4 @@ export { rqaf, stop } from "./methods/rqaf";
 
 export { degressToRadial } from "./utils/degressToRadial";
 export { radialToDegress } from "./utils/radialToDegress";
+export { loadImage } from "./utils/loadImage";
