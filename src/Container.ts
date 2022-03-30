@@ -376,6 +376,40 @@ abstract class ContainerBasic<
   public create(json: string): typeof this.constructor {
     return new this.constructor(JSON.parse(json))
   }
+  public toCanvas(config?: Partial<Offset>& Partial<Size>& {
+    pixelRatio?: number
+  }): HTMLCanvasElement {
+    if (this.canvas && !config) return this.canvas;
+    
+    const canvas = Utils.createCanvas();
+    [canvas.width, canvas.height] = [config?.width ?? 300, config?.height ?? 300]
+    
+    if (config?.pixelRatio !== void 0) {
+    canvas.devicePixelRatio = config.pixelRatio
+    }
+    
+    const ctx = canvas.getContext("2d")!
+    ctx.translate(config?.x ?? 0, config?.y ?? 0)
+    
+    if (this.canvas) {
+      ctx.drawImage(this.canvas, 0, 0)
+    } else {
+      this.draw(ctx)
+    }
+    
+    return canvas
+  }
+  public toDataURL(type?: string, quality?: number): string {
+    return this.toCanvas().toDataURL(type, encoder)
+  }
+  public toImage(config?: 
+    Partial<Offset>& Partial<Size>& {
+    pixelRatio?: number
+    type?: string;
+    quality?: number
+  }) : Promise<HTMLImageElement> {
+    return loadImage(this.toCanvas(config).toDataURL(config?.type, config?.quality))
+  }
 
   public destroy(): void {
     this.listeners?.clear();
