@@ -360,6 +360,19 @@ abstract class ContainerBasic<
         this.watchers.get(prop)!.delete(cb as any)
       );
   }
+  
+  public toObject(): any {
+    return JSON.parse(JSON.stringify({
+      type: this.type,
+      attrs: this.attrs
+    }))
+  }
+  public toJSON() {
+    return JSON.stringify(this.toObject())
+  }
+  public clone(): typeof this.constructor {
+    return this.constructor(this.attrs)
+  }
 
   public destroy(): void {
     this.listeners?.clear();
@@ -421,10 +434,35 @@ export abstract class Container<
 
   // eslint-disable-next-line functional/prefer-readonly-type
   public find<T = IChildNode>(selector: string): T[] {
-    return Array.from(this.children).filter(
-      (item) => item.matches(selector)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ) as any;
+    const els: T[] = []
+    
+    this.children.forEach(el => {
+      if (el.matches(selector)) {
+        els.push(el)
+      }
+      if (el instanceof Container) {
+        els.push(...el.find(selector))
+      }
+    })
+    
+    return els
+  }
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public findOne<T = IChildNode>(selector: string): T | null {
+    let el: T | null = null
+    
+    for (const i of this.children) {
+      if (i.matches(selector)) {
+        el = i
+      } else
+      if (i instanceof Container) {
+        el = i.findOne(selector)
+      }
+       
+      if (el) break
+    }
+    
+    return el
   }
 
   // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
