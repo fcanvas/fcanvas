@@ -371,7 +371,10 @@ abstract class ContainerBasic<
     return JSON.stringify(this.toObject())
   }
   public clone(): typeof this.constructor {
-    return this.constructor(this.attrs)
+    return new this.constructor(this.attrs)
+  }
+  public create(json: string): typeof this.constructor {
+    return new this.constructor(JSON.parse(json))
   }
 
   public destroy(): void {
