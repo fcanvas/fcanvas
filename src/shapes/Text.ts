@@ -303,7 +303,7 @@ export class Text<
   private getHeight() {
     return this.attrs.height === "auto" || this.attrs.height === undefined
       ? (this.attrs.fontSize ?? 12) *
-          this.textArr.length *
+          (this.textArr?.length ?? 0) *
           (this.attrs.lineHeight ?? 1) +
           (this.attrs.padding ?? 0) * 2
       : (this.attrs.height as number);
