@@ -206,11 +206,11 @@ export class Shape<
       }
     });
 
-    this.onresize();
-
     if (this.attrs.perfectDrawEnabled ?? true) {
       this.#context = Utils.createCanvas().getContext("2d") ?? void 0;
     }
+
+    this.onresize();
   }
   protected size(): Size {
     return {
@@ -287,9 +287,10 @@ export class Shape<
 
   private onresize() {
     // reactive
-    if (this.#context) {
+    if (this.attrs.perfectDrawEnabled !== false) {
       const { width, height } = this.getClientRect();
-      [this.#context.canvas.width, this.#context.canvas.height] = [
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      [this.#context!.canvas.width, this.#context!.canvas.height] = [
         width,
         height,
       ];
@@ -564,23 +565,28 @@ export class Shape<
       return;
     }
     // ...
-    if (this.#context) {
+    if (this.attrs.perfectDrawEnabled !== false) {
       // caching mode
       if (this.currentNeedReload) {
-        this.#context.clearRect(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.#context!.clearRect(
           0,
           0,
-          this.#context.canvas.width,
-          this.#context.canvas.height
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.#context!.canvas.width,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.#context!.canvas.height
         );
-        this.drawInSandBox(this.#context);
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.drawInSandBox(this.#context!);
       }
 
       // finished drawing in the cache
       // draw to main context
       const { x, y } = this.getSelfRect();
       context.drawImage(
-        this.#context.canvas,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.#context!.canvas,
         this.attrs.x + x,
         this.attrs.y + y
       );

@@ -7,16 +7,11 @@ const stage = new Stage({
 });
 
 const layer = new Layer();
-
-const circle = new Circle({
-  x: 0,
-  y: 0,
-  fill: "red",
-  radius: 20,
-  raws: {
-      speedX: 12
-  }
-})
-circle.raws.speedX
-layer.add(circle)
 stage.add(layer)
+
+layer.add(new Circle({
+    x: 150,
+    y: 150,
+    radius: 150,
+    stroke: "black"
+}))
