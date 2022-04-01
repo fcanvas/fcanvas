@@ -131,10 +131,9 @@ export class Text<
   // eslint-disable-next-line functional/prefer-readonly-type
   private textWidth = 0;
   constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
-    super(attrs);
+    super(attrs, () => this.setTextData());
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.watch(ATTR_CHANGE_LIST as any, () => this.setTextData());
-    this.setTextData();
   }
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     if (!this.attrs.text) {

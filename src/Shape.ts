@@ -180,7 +180,10 @@ export class Shape<
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
 
-  constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
+  constructor(
+    attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>,
+    onBeforeMount?: () => void
+  ) {
     super(attrs, (prop) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;
@@ -205,6 +208,7 @@ export class Shape<
         });
       }
     });
+    onBeforeMount?.();
 
     if (this.attrs.perfectDrawEnabled ?? true) {
       this.#context = Utils.createCanvas().getContext("2d") ?? void 0;
@@ -577,7 +581,7 @@ export class Shape<
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           this.#context!.canvas.height
         );
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.drawInSandBox(this.#context!);
       }
 
@@ -585,7 +589,7 @@ export class Shape<
       // draw to main context
       const { x, y } = this.getSelfRect();
       context.drawImage(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.#context!.canvas,
         this.attrs.x + x,
         this.attrs.y + y
