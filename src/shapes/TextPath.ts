@@ -95,10 +95,8 @@ export class TextPath<
   // eslint-disable-next-line functional/prefer-readonly-type
   private textWidth = 0;
   constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
-    super(attrs, () => {
-      this.dataArray = parsePathData(this.attrs.data);
-      this.setTextData();
-    });
+    super(attrs);
+    this.dataArray = parsePathData(this.attrs.data);
 
     this.watch(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,7 +108,9 @@ export class TextPath<
         deep: true,
       }
     );
-    this.watch("text", () => this.setTextData());
+    this.watch("text", () => this.setTextData(), {
+      immediate: true,
+    });
   }
 
   protected fillStrokeScene(context: CanvasRenderingContext2D) {

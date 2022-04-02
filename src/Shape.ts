@@ -180,10 +180,7 @@ export class Shape<
   // eslint-disable-next-line functional/prefer-readonly-type
   #context?: CanvasRenderingContext2D;
 
-  constructor(
-    attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>,
-    onBeforeMount?: () => void
-  ) {
+  constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
     super(attrs, (prop) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;
@@ -208,7 +205,6 @@ export class Shape<
         });
       }
     });
-    onBeforeMount?.();
 
     if (this.attrs.perfectDrawEnabled ?? true) {
       this.#context = Utils.createCanvas().getContext("2d") ?? void 0;
