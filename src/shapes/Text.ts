@@ -131,9 +131,10 @@ export class Text<
   // eslint-disable-next-line functional/prefer-readonly-type
   private textWidth = 0;
   constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
-    super(attrs, () => this.setTextData());
+    super(attrs);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.watch(ATTR_CHANGE_LIST as any, () => this.setTextData());
+    this.setTextData();
   }
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     if (!this.attrs.text) {
@@ -295,14 +296,18 @@ export class Text<
     }
   }
   private getWidth() {
+    if (this.textWidth === void 0) this.setTextData();
+
     return this.attrs.width === "auto" || this.attrs.width === void 0
       ? this.textWidth + (this.attrs.padding ?? 0) * 2
       : this.attrs.width;
   }
   private getHeight() {
+    if (!this.textArr) this.setTextData();
+
     return this.attrs.height === "auto" || this.attrs.height === undefined
       ? (this.attrs.fontSize ?? 12) *
-          (this.textArr?.length ?? 0) *
+          this.textArr.length *
           (this.attrs.lineHeight ?? 1) +
           (this.attrs.padding ?? 0) * 2
       : (this.attrs.height as number);
@@ -362,8 +367,8 @@ export class Text<
       fixedWidth = width !== "auto" && width !== undefined,
       fixedHeight = height !== "auto" && height !== undefined,
       padding = this.attrs.padding ?? 0,
-      maxWidth = this.getWidth() - padding * 2,
-      maxHeightPx = this.getWidth() - padding * 2,
+      maxWidth = typeof width === "number" ? width - padding * 2 : NaN,
+      maxHeightPx = typeof height === "number" ? height - padding * 2 : NaN,
       wrap = this.attrs.wrap,
       // align = this.align(),
       shouldWrap = wrap !== "none",
@@ -372,8 +377,8 @@ export class Text<
     // eslint-disable-next-line functional/no-let
     let textWidth = 0,
       currentHeightPx = 0;
-    // eslint-disable-next-line functional/immutable-data
-    this.textArr.splice(0);
+    this.textArr = [];
+    this.textWidth = 0;
     // eslint-disable-next-line functional/immutable-data
     getDummyContext().font = this.getContextFont();
     const additionalWidth = shouldAddEllipsis ? this.getTextWidth("…") : 0;
