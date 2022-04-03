@@ -491,7 +491,7 @@ export class Shape<
     // }
     const { x: transX, y: transY } = this.getSelfRect();
     context.translate(-transX, -transY);
-    
+
     const needUseTransform = this.transformExists() && !this.#context;
     const needSetAlpha = this.attrs.opacity !== void 0;
     const useFilter = this.attrs.filter !== void 0;
