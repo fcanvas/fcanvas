@@ -482,13 +482,16 @@ export class Shape<
       return;
     }
 
-    // eslint-disable-next-line functional/no-let
-    let transX: number, transY: number;
-    if (this._centroid) {
-      const { x, y } = this.getSelfRect();
-      [transX, transY] = [x, y];
-      context.translate(-x, -y);
-    }
+    // // eslint-disable-next-line functional/no-let
+    // let transX: number, transY: number;
+    // if (this._centroid) {
+    //   const { x, y } = this.getSelfRect();
+    //   [transX, transY] = [x, y];
+    //   context.translate(-x, -y);
+    // }
+    const { x: transX, y: transY } = this.getSelfRect();
+    context.translate(-transX, -transY);
+    
     const needUseTransform = this.transformExists() && !this.#context;
     const needSetAlpha = this.attrs.opacity !== void 0;
     const useFilter = this.attrs.filter !== void 0;
@@ -531,10 +534,11 @@ export class Shape<
       // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
       context.globalAlpha = backupAlpha!;
     }
-    if (this._centroid) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      context.translate(transX!, transY!);
-    }
+    // if (this._centroid) {
+    //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    //   context.translate(transX!, transY!);
+    // }
+    context.translate(transX, transY);
   }
 
   protected getHitStroke() {
