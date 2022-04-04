@@ -374,7 +374,9 @@ abstract class ContainerBasic<
         type: this.type,
         attrs: this.attrs,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        children: (this as unknown as any).children?.map(item => item.toObject())
+        children: (this as unknown as any).children?.map((item: any) =>
+          item.toObject()
+        ),
       })
     );
   }
