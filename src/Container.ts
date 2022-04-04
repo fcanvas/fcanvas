@@ -1,5 +1,6 @@
 import { Utils } from "./Utils";
 import { createProxy } from "./helpers/createProxy";
+import { matchesSelector } from "./helpers/matchesSelector";
 import { realMousePosition } from "./helpers/realMousePosition";
 import { Offset } from "./types/Offset";
 import { Size } from "./types/Size";
@@ -219,23 +220,24 @@ abstract class ContainerBasic<
   }
 
   public matches(selector: string): boolean {
-    return selector.split(",").some((sel) => {
-      const [other, id] = sel.trim().split("#");
+    return matchesSelector(selector, this.type, this.name, this.id);
+    // return selector.split(",").some((sel) => {
+    //   const [other, id] = sel.trim().split("#");
 
-      const [tag, ...classes] = other.split(".");
+    //   const [tag, ...classes] = other.split(".");
 
-      const validTag =
-        tag === "" || tag?.toLowerCase() === this.type?.toLowerCase();
-      const validClass =
-        classes.length === 0
-          ? true
-          : classes.every((clazz) =>
-              new RegExp(`(^| )${clazz}( |$)`).test(this.name)
-            );
-      const validId = id ? id === this.id : true;
+    //   const validTag =
+    //     tag === "" || tag?.toLowerCase() === this.type?.toLowerCase();
+    //   const validClass =
+    //     classes.length === 0
+    //       ? true
+    //       : classes.every((clazz) =>
+    //           new RegExp(`(^| )${clazz}( |$)`).test(this.name)
+    //         );
+    //   const validId = id ? id === this.id : true;
 
-      return validTag && validClass && validId;
-    });
+    //   return validTag && validClass && validId;
+    // });
   }
 
   public on<Name extends keyof EventsSelf<EventsCustom>>(
