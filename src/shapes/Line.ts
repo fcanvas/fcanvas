@@ -100,6 +100,9 @@ export class Line<
       return;
     }
 
+    if (this.attrs.x || this.attrs.y) {
+        context.translate(this.attrs.x, this.attrs.y)
+    }
     context.moveTo(points[0], points[1]);
 
     // tension
@@ -160,6 +163,10 @@ export class Line<
       this.strokeScene(context);
     } else {
       this.fillStrokeScene(context);
+    }
+
+    if (this.attrs.x || this.attrs.y) {
+        context.translate(-this.attrs.x, -this.attrs.y)
     }
   }
 
