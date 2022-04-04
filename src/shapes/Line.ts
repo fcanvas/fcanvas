@@ -101,7 +101,7 @@ export class Line<
     }
 
     if (this.attrs.x || this.attrs.y) {
-        context.translate(this.attrs.x, this.attrs.y)
+      context.translate(this.attrs.x, this.attrs.y);
     }
     context.moveTo(points[0], points[1]);
 
@@ -166,7 +166,7 @@ export class Line<
     }
 
     if (this.attrs.x || this.attrs.y) {
-        context.translate(-this.attrs.x, -this.attrs.y)
+      context.translate(-this.attrs.x, -this.attrs.y);
     }
   }
 
