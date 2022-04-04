@@ -194,11 +194,6 @@ export class Shape<
         (test) =>
           test === (prop as string) || (prop as string).startsWith(`${test}.`)
       );
-      console.log(
-        prop,
-        (this.constructor as unknown as typeof Shape).sizes,
-        sizeChanged
-      );
 
       if (sizeChanged) {
         this.onresize();
