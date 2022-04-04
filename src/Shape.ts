@@ -192,8 +192,14 @@ export class Shape<
         this.constructor as unknown as typeof Shape
       ).sizes.some(
         (test) =>
-          test === (prop as string) || test.startsWith(`${prop as string}.`)
+          test === (prop as string) || (prop as string).startsWith(`${test}.`)
       );
+      console.log(
+        prop,
+        (this.constructor as unknown as typeof Shape).sizes,
+        sizeChanged
+      );
+
       if (sizeChanged) {
         this.onresize();
       }
@@ -289,10 +295,11 @@ export class Shape<
     // reactive
     if (this.attrs.perfectDrawEnabled !== false) {
       const { width, height } = this.getClientRect();
+      const adject = (this.attrs.strokeWidth ?? 1) * 2;
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       [this.#context!.canvas.width, this.#context!.canvas.height] = [
-        width,
-        height,
+        width + adject,
+        height + adject,
       ];
     }
   }
@@ -489,7 +496,9 @@ export class Shape<
     //   [transX, transY] = [x, y];
     //   context.translate(-x, -y);
     // }
-    const { x: transX, y: transY } = this.getSelfRect();
+    const clientRect = this.getClientRect();
+    const adject = this.attrs.strokeWidth ?? 1;
+    const [transX, transY] = [clientRect.x - adject, clientRect.y - adject];
     context.translate(-transX, -transY);
 
     const needUseTransform = this.transformExists() && !this.#context;
@@ -587,7 +596,7 @@ export class Shape<
 
       // finished drawing in the cache
       // draw to main context
-      const { x, y } = this.getSelfRect();
+      const { x, y } = this.getClientRect();
       context.drawImage(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.#context!.canvas,

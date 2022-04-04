@@ -2,16 +2,16 @@ import { Stage, Layer, Circle } from "../../src/index";
 
 const stage = new Stage({
   container: "app",
-  width: 300,
-  height: 300,
+  width: 400,
+  height: 400,
 });
 
 const layer = new Layer();
 stage.add(layer)
 
 layer.add(new Circle({
-    x: 150,
-    y: 150,
+    x: 160,
+    y: 160,
     radius: 150,
     stroke: "black"
 }))

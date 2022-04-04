@@ -1,10 +1,10 @@
 import { matchesSelector } from "./matchesSelector";
 
-const el = {
-  type: "Arc",
-  name: "hero main",
-  id: "main",
-};
+const el: readonly [string, string, string] = [
+  /* type: */ "Arc",
+  /* name: */ "hero main",
+  /* id: */ "main",
+];
 
 describe.each([
   { selector: "Arc", result: true },
@@ -20,6 +20,6 @@ describe.each([
   { selector: "Arc.hero#main", result: true },
 ])(".matches('$selector')", ({ selector, result }) => {
   test(`is ${result}`, () => {
-    expect(matchesSelector(selector, el)).toBe(result);
+    expect(matchesSelector(selector, ...el)).toBe(result);
   });
 });

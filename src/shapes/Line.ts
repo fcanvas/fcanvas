@@ -92,7 +92,7 @@ export class Line<
       tension = this.attrs.tension ?? 0,
       closed = this.attrs.closed,
       bezier = this.attrs.bezier;
-    length;
+
     // eslint-disable-next-line functional/no-let
     let tp, len, n;
 
