@@ -497,7 +497,7 @@ export class Shape<
     //   context.translate(-x, -y);
     // }
     const clientRect = this.getClientRect();
-    const adject = this.attrs.strokeWidth ?? 1;
+    const adject = this.#context ?(this.attrs.strokeWidth ?? 1) : 0;
     const [transX, transY] = [clientRect.x - adject, clientRect.y - adject];
     context.translate(-transX, -transY);
 
@@ -597,11 +597,12 @@ export class Shape<
       // finished drawing in the cache
       // draw to main context
       const { x, y } = this.getClientRect();
+      const adject =  (this.attrs.strokeWidth ?? 1) ;
       context.drawImage(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.#context!.canvas,
-        this.attrs.x + x,
-        this.attrs.y + y
+        this.attrs.x - adject + x,
+        this.attrs.y - adject+ y
       );
     } else {
       // キャッシュさせないでください
