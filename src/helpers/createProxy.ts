@@ -22,7 +22,12 @@ export function createProxy<
 
   const proxy = new Proxy(target, {
     get(target, prop) {
-      if (!propsProxyIgnore?.includes(prop as keyof R)) {
+        if (target === void 0 && (prop === "raws" || prop === "refs")) {
+          // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
+          (target as any)[prop as string] = {} as unknown;
+        }
+  
+      if (prop !== "raws" && (!propsProxyIgnore || propsProxyIgnore.every(test => test !== prop))) {
         const mykey = (
           props === "" ? (prop as string) : `${props}.${prop as string}`
         ) as K;
@@ -39,11 +44,6 @@ export function createProxy<
             mykey
           );
         }
-      }
-
-      if (target === void 0 && (prop === "raws" || prop === "refs")) {
-        // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
-        (target as any)[prop as string] = {} as unknown;
       }
 
       return target[prop as string];
