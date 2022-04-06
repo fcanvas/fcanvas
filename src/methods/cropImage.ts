@@ -42,7 +42,7 @@ export function cropImage(
   if (rotate !== 0) {
     virualContext.save();
     virualContext.translate(width / 2, height / 2);
-    virualContext.rotate((rotate * Math.PI) / 180);
+    virualContext.rotate(rad);
   }
   virualContext.drawImage(
     image,
@@ -50,8 +50,8 @@ export function cropImage(
     y,
     swidth,
     sheight,
-    -swidth / 2,
-    -sheight / 2,
+    rotate ? -swidth / 2 : 0,
+    rotate ? -sheight / 2 : 0,
     swidth,
     sheight
   );
@@ -59,6 +59,6 @@ export function cropImage(
     virualContext.restore();
   }
   /// -----------------------------------------------------------
-
+console.log(rotate)
   return virualContext.canvas;
 }
