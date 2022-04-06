@@ -209,7 +209,8 @@ abstract class ContainerBasic<
       ) {
         onNeedUpdate?.(prop);
       }
-    }) as NotNillRefsRaws<AttrsCustom, AttrsRefs, AttrsRaws>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }, (this.constructor as any).noRefs) as NotNillRefsRaws<AttrsCustom, AttrsRefs, AttrsRaws>;
     this._ = this.attrs;
 
     if (this.attrs.listening !== false) {
