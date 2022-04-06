@@ -171,46 +171,50 @@ abstract class ContainerBasic<
         Array<(event: any) => void>
       >();
     }
-    this.attrs = createProxy(attrs, (prop, newVal, oldVal) => {
-      this.watchers.forEach((listeners, selfProp) => {
-        if (selfProp === "*") return;
+    this.attrs = createProxy(
+      attrs,
+      (prop, newVal, oldVal) => {
+        this.watchers.forEach((listeners, selfProp) => {
+          if (selfProp === "*") return;
 
-        if (prop === selfProp) {
-          listeners.forEach((_val, cb) => {
-            (
-              cb as CallbackWatcher<
-                AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>[typeof prop]
-              >
-            )(newVal, oldVal, prop);
-          });
-          return;
-        }
-
-        if ((prop as string).startsWith(`${selfProp as string}.`)) {
-          listeners.forEach((deep, cb) => {
-            if (deep) {
+          if (prop === selfProp) {
+            listeners.forEach((_val, cb) => {
               (
                 cb as CallbackWatcher<
                   AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>[typeof prop]
                 >
               )(newVal, oldVal, prop);
-            }
-          });
-        }
-      });
-      this.watchers.get("*")?.forEach((_deep, cb) =>
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (cb as CallbackWatcher<any>)(newVal, oldVal, prop)
-      );
+            });
+            return;
+          }
 
-      if (
-        !ContainerNode.raws.includes(prop as string) &&
-        !attrNoReactDraw?.includes(prop as string)
-      ) {
-        onNeedUpdate?.(prop);
-      }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }, (this.constructor as any).noRefs) as NotNillRefsRaws<AttrsCustom, AttrsRefs, AttrsRaws>;
+          if ((prop as string).startsWith(`${selfProp as string}.`)) {
+            listeners.forEach((deep, cb) => {
+              if (deep) {
+                (
+                  cb as CallbackWatcher<
+                    AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>[typeof prop]
+                  >
+                )(newVal, oldVal, prop);
+              }
+            });
+          }
+        });
+        this.watchers.get("*")?.forEach((_deep, cb) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (cb as CallbackWatcher<any>)(newVal, oldVal, prop)
+        );
+
+        if (
+          !ContainerNode.raws.includes(prop as string) &&
+          !attrNoReactDraw?.includes(prop as string)
+        ) {
+          onNeedUpdate?.(prop);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      },
+      (this.constructor as any).noRefs
+    ) as NotNillRefsRaws<AttrsCustom, AttrsRefs, AttrsRaws>;
     this._ = this.attrs;
 
     if (this.attrs.listening !== false) {

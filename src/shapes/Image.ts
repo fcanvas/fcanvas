@@ -23,7 +23,7 @@ export class Image<
   AttrsRaws extends Record<string, unknown> = Record<string, unknown>
 > extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Image";
-  static readonly noRefs = ["image"]
+  static readonly noRefs = ["image"];
   static readonly fromURL = loadImage;
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
@@ -48,7 +48,7 @@ export class Image<
         this.attrs.height
       );
     } else {
-        console.log(this.attrs.image)
+      console.log(this.attrs.image);
       context.drawImage(this.attrs.image, this.attrs.x, this.attrs.y);
     }
 
