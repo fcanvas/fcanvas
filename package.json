@@ -1,7 +1,7 @@
 {
   "name": "fcanvas",
   "version": "0.2.0",
-  "author": "Tachibana Shin <thanhnguyennguyen1995@gmail.com>",
+  "author": "Tachibana Shin",
   "main": "dist/fcanvas.js",
   "exports": {
     ".": {
@@ -64,8 +64,12 @@
     "type": "git",
     "url": "git://github.com/tachibana-shin/fcanvas-next.git"
   },
-  "homepage": "https://tachibana-shin.github.io/fcanvas-next",
+  "homepage": "https://fcanvas.js.org",
   "keywords": [
-    "fcanvas-next"
+    "fcanvas-next",
+    "fcanvas",
+    "canvas",
+    "2d",
+    "html 5"
   ]
 }
