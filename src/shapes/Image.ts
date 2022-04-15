@@ -34,21 +34,21 @@ export class Image<
         this.attrs.crop.y,
         this.attrs.crop.width,
         this.attrs.crop.height,
-        this.attrs.x,
-        this.attrs.y,
+        0,
+        0,
         this.attrs.width ?? this.attrs.crop.width,
         this.attrs.height ?? this.attrs.crop.height
       );
     } else if (this.attrs.width !== void 0 && this.attrs.height !== void 0) {
       context.drawImage(
         this.attrs.image,
-        this.attrs.x,
-        this.attrs.y,
+        0,
+        0,
         this.attrs.width,
         this.attrs.height
       );
     } else {
-      context.drawImage(this.attrs.image, this.attrs.x, this.attrs.y);
+      context.drawImage(this.attrs.image, 0, 0);
     }
     this.fillStrokeScene(context);
   }
