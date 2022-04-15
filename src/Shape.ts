@@ -596,8 +596,8 @@ export class Shape<
       context.drawImage(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.#context!.canvas,
-        this.attrs.x - adject + x,
-        this.attrs.y - adject + y
+        -adject + x,
+        -adject + y
       );
     } else {
       // キャッシュさせないでください
