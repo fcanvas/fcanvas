@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "Tachibana Shin",
   "main": "dist/fcanvas.js",
   "exports": {
