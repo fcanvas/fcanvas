@@ -48,7 +48,6 @@ export class Image<
         this.attrs.height
       );
     } else {
-        console.log(this.attrs.image)
       context.drawImage(this.attrs.image, this.attrs.x, this.attrs.y);
     }
     this.fillStrokeScene(context);

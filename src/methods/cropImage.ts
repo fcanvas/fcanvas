@@ -59,6 +59,6 @@ export function cropImage(
     virualContext.restore();
   }
   /// -----------------------------------------------------------
-console.log(rotate)
+
   return virualContext.canvas;
 }
