@@ -131,7 +131,7 @@ function createOptionsRender(filepath, name) {
       output: [
         {
           file: `dist/${name}.d.ts`,
-          format: "es",
+          format: "esm",
         },
       ],
       plugins: [dts()],

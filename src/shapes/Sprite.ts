@@ -3,34 +3,34 @@ import { Layer } from "../Layer";
 import { AttrsShapeSelf, Shape } from "../Shape";
 import { cropImage } from "../methods/cropImage";
 
-type AttrsCustom<Animations> = {
+type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
   image: HTMLImageElement;
   // eslint-disable-next-line functional/prefer-readonly-type
-  animations: Animations;
+  animations: Record<string, number[]>;
   // eslint-disable-next-line functional/prefer-readonly-type
-  animation: keyof Animations;
+  animation: string;
   // eslint-disable-next-line functional/prefer-readonly-type
   frameIndex?: number; // 0
   // eslint-disable-next-line functional/prefer-readonly-type
   frameRate?: number; // 17
+  infinite?: boolean; // true
 };
 
 export class Sprite<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/ban-types
-  Animations extends Record<string, number[]> = {},
   AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
   AttrsRaws extends Record<string, unknown> = Record<string, unknown>
 > extends Shape<
-  AttrsCustom<Animations>,
+  AttrsCustom,
   EventsCustom,
   AttrsRefs,
   AttrsRaws,
   Layer | Group
 > {
   static readonly type = "Sprite";
+  static readonly noRefs = ["image"];
   static readonly sizes = [
     "image",
     "animations",
@@ -40,28 +40,18 @@ export class Sprite<
   ];
 
   private readonly cropImageCache = new Map<
-    keyof Animations,
+    string,
     // eslint-disable-next-line functional/prefer-readonly-type
     Map<number, HTMLCanvasElement>
   >();
   // eslint-disable-next-line functional/prefer-readonly-type
-  private timeout?: number;
+  private interval?: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   private _isRunning = false;
-
-  private createCropImage(): HTMLCanvasElement {
+  private get frameIndex(): number {
     const _frameIndex = this.attrs.frameIndex ?? 0;
-    const cropImageInCache = this.cropImageCache
-      .get(this.attrs.animation)
-      ?.get(_frameIndex);
 
-    if (cropImageInCache) return cropImageInCache;
-
-    if (!this.cropImageCache.has(this.attrs.animation)) {
-      this.cropImageCache.set(this.attrs.animation, new Map());
-    }
-    const animation = this.attrs.animations[this.attrs.animation];
-    const frameLength = ~~animation.length / 4;
+    const frameLength = ~~this.attrs.animations[this.attrs.animation].length / 4;
     const frameIndex =
       _frameIndex > frameLength
         ? (_frameIndex % frameLength) - 1
@@ -69,21 +59,38 @@ export class Sprite<
         ? frameLength + _frameIndex + 1
         : _frameIndex;
 
+    return frameIndex;
+  }
+
+  private createCropImage(): HTMLCanvasElement {
+    const indexStart = this.frameIndex * 4;
+    const cropImageInCache = this.cropImageCache
+      .get(this.attrs.animation)
+      ?.get(indexStart);
+
+    if (cropImageInCache) return cropImageInCache;
+
+    if (!this.cropImageCache.has(this.attrs.animation)) {
+      this.cropImageCache.set(this.attrs.animation, new Map());
+    }
+
+    const animation = this.attrs.animations[this.attrs.animation];
+
     const cropImageNow = cropImage(
       this.attrs.image,
-      ...animation.slice(frameIndex, frameIndex + 4)
+      ...animation.slice(indexStart, indexStart + 4)
     );
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.cropImageCache
       .get(this.attrs.animation)!
-      .set(_frameIndex, cropImageNow);
+      .set(indexStart, cropImageNow);
 
     return cropImageNow;
   }
 
   constructor(
-    attrs: AttrsShapeSelf<AttrsCustom<Animations>, AttrsRefs, AttrsRaws>
+    attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any);
@@ -120,7 +127,7 @@ export class Sprite<
     context.drawImage(crop, 0, 0);
   }
 
-  public animation(name: keyof Animations) {
+  public animation(name: string) {
     // eslint-disable-next-line functional/immutable-data
     this.attrs.animation = name;
   }
@@ -128,25 +135,30 @@ export class Sprite<
     if (this._isRunning) return;
 
     this._isRunning = true;
-    this.timeout = setTimeout(() => {
-      // eslint-disable-next-line functional/no-let
-      let index = (this.attrs.frameIndex ?? 0) + 1;
-      if (index > ~~this.attrs.animations[this.attrs.animation].length / 4) {
-        index = 0;
+    this.interval = setInterval(() => {
+      const { frameIndex } = this;
+      const countFrame = ~~this.attrs.animations[this.attrs.animation].length / 4;
+
+      if (this.attrs.infinite !== false && this.attrs.frameIndex === countFrame - 1) {
+        // last frame repeat -> reset;
+        this.attrs.frameIndex = 0;
+        return
+      }
+      if (this.attrs.infinite === false && frameIndex === countFrame - 2) { // this frame last
+        this.stop();
       }
 
-      // eslint-disable-next-line functional/immutable-data
-      this.attrs.frameIndex = index;
+      this.attrs.frameIndex = frameIndex + 1;
     }, 1000 / (this.attrs.frameRate ?? 17)) as unknown as number;
   }
   public stop(): void {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-      this.timeout = void 0;
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = void 0;
     }
-    // eslint-disable-next-line functional/immutable-data
-    this.attrs.frameIndex =
-      ~~this.attrs.animations[this.attrs.animation].length / 4;
+    //// eslint-disable-next-line functional/immutable-data
+    // this.attrs.frameIndex =
+    //   ~~this.attrs.animations[this.attrs.animation].length / 4;
     this._isRunning = false;
   }
   public isRunning() {
@@ -154,7 +166,9 @@ export class Sprite<
   }
 
   protected size() {
-    const { width, height } = this.createCropImage();
+    const indexStart = this.frameIndex  * 4;
+    const [ width, height ] = this.attrs.animations[this.attrs.animation].slice(indexStart + 2, indexStart + 4)
+
     return {
       width,
       height,
