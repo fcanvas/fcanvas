@@ -51,7 +51,8 @@ export class Sprite<
   private get frameIndex(): number {
     const _frameIndex = this.attrs.frameIndex ?? 0;
 
-    const frameLength = ~~this.attrs.animations[this.attrs.animation].length / 4;
+    const frameLength =
+      ~~this.attrs.animations[this.attrs.animation].length / 4;
     const frameIndex =
       _frameIndex > frameLength
         ? (_frameIndex % frameLength) - 1
@@ -89,9 +90,7 @@ export class Sprite<
     return cropImageNow;
   }
 
-  constructor(
-    attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>
-  ) {
+  constructor(attrs: AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any);
 
@@ -137,14 +136,19 @@ export class Sprite<
     this._isRunning = true;
     this.interval = setInterval(() => {
       const { frameIndex } = this;
-      const countFrame = ~~this.attrs.animations[this.attrs.animation].length / 4;
+      const countFrame =
+        ~~this.attrs.animations[this.attrs.animation].length / 4;
 
-      if (this.attrs.infinite !== false && this.attrs.frameIndex === countFrame - 1) {
+      if (
+        this.attrs.infinite !== false &&
+        this.attrs.frameIndex === countFrame - 1
+      ) {
         // last frame repeat -> reset;
         this.attrs.frameIndex = 0;
-        return
+        return;
       }
-      if (this.attrs.infinite === false && frameIndex === countFrame - 2) { // this frame last
+      if (this.attrs.infinite === false && frameIndex === countFrame - 2) {
+        // this frame last
         this.stop();
       }
 
@@ -166,8 +170,11 @@ export class Sprite<
   }
 
   protected size() {
-    const indexStart = this.frameIndex  * 4;
-    const [ width, height ] = this.attrs.animations[this.attrs.animation].slice(indexStart + 2, indexStart + 4)
+    const indexStart = this.frameIndex * 4;
+    const [width, height] = this.attrs.animations[this.attrs.animation].slice(
+      indexStart + 2,
+      indexStart + 4
+    );
 
     return {
       width,

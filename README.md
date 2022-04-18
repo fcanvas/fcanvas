@@ -45,7 +45,7 @@ layer.add(circle)
 
 rqaf(() => {
   circle._.x += 1 // auto reactive and re-draw
-  
+
   if (circle._.x === stage._.width) {
     stop()
   }
@@ -53,4 +53,5 @@ rqaf(() => {
 ```
 
 ## Demos
+
 - Clock: https://codesandbox.io/s/clock-fcanvas-next-kti3b4
