@@ -143,5 +143,5 @@ export default [
   ...createOptionsRender("index.ts", name),
   ...createOptionsRender("packages/Colors.ts", "colors"),
   ...createOptionsRender("packages/Vector.ts", "vector"),
-  ...createOptionsRender("packages/loadFont.ts", "loadFont")
+  ...createOptionsRender("packages/loadFont.ts", "loadFont"),
 ];
