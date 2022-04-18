@@ -6,3 +6,5 @@ node-types/
 /docs
 /types
 /coverage
+
+.pnpm-debug.log
