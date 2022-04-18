@@ -10,6 +10,7 @@ import { transformedRect } from "./helpers/transformerRect";
 import { transparent } from "./packages/Colors";
 import { Offset } from "./types/Offset";
 import { Size } from "./types/Size";
+import { ClientRectOptions } from "./types/ClientRectOptions";
 
 // add ctx.filter
 type Color = string;
@@ -229,16 +230,7 @@ export class Shape<
       height: size.height,
     };
   }
-  public getClientRect(
-    config: {
-      // eslint-disable-next-line functional/prefer-readonly-type
-      skipTransform?: boolean;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      skipStroke?: boolean;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      skipShadow?: boolean;
-    } = {}
-  ) {
+  public getClientRect(config: ClientRectOptions = {}) {
     const fillRect = this.getSelfRect();
 
     const applyStroke =

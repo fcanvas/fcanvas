@@ -9,7 +9,7 @@ import {
 import { realMousePosition } from "./helpers/realMousePosition";
 import { setNeedReloadParentTrue } from "./helpers/setNeedReloadParentTrue";
 import { Offset } from "./types/Offset";
-
+import { ClientRectOptions } from "./types/ClientRectOptions";
 type Attrs = Offset & {
   // eslint-disable-next-line functional/prefer-readonly-type
   width?: number;
@@ -122,16 +122,7 @@ export class Group<
     );
   }
 
-  public getClientRect(
-    config: {
-      // eslint-disable-next-line functional/prefer-readonly-type
-      skipTransform?: boolean;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      skipStroke?: boolean;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      skipShadow?: boolean;
-    } = {}
-  ) {
+  public getClientRect(config: ClientRectOptions = {}) {
     // eslint-disable-next-line functional/no-let
     let x = Infinity,
       y = -Infinity,
