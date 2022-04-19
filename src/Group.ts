@@ -12,13 +12,15 @@ import { getClientRectGroup } from "./methods/getClientRectGroup";
 import { ClientRectOptions } from "./types/ClientRectOptions";
 import { Offset } from "./types/Offset";
 
-type Attrs = Offset & {
+type Attrs<Node> = Offset & {
   // eslint-disable-next-line functional/prefer-readonly-type
   width?: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   height?: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   visible?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  filterItem?: (node: Node, index: number) => void | boolean;
 } & AttrsDrawLayerContext;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,7 +43,7 @@ export class Group<
     AttrsRaws extends Record<string, unknown> = Record<string, unknown>
   >
   extends Container<
-    Attrs,
+    Attrs<ChildNode>,
     // eslint-disable-next-line @typescript-eslint/ban-types
     {},
     ChildNode,
@@ -57,7 +59,7 @@ export class Group<
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   readonly #context = Utils.createCanvas().getContext("2d")!;
 
-  constructor(attrs: AttrsSelf<Attrs, AttrsRefs, AttrsRaws>) {
+  constructor(attrs: AttrsSelf<Attrs<ChildNode>, AttrsRefs, AttrsRaws>) {
     super(attrs, (prop) => {
       if (!this.#context || (prop !== "x" && prop !== "y")) {
         this.currentNeedReload = true;
@@ -154,6 +156,7 @@ export class Group<
         this.#context,
         this.attrs,
         this.children,
+        this.attrs.filterItem,
         this
       );
       if (x !== 0 || y !== 0) {
