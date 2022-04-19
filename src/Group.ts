@@ -136,7 +136,7 @@ export class Group<
   }
 
   public draw(context: CanvasRenderingContext2D) {
-    if (!(this.attrs.visible ?? true)) return;
+    if (this.attrs.visible === false) return;
 
     const { x, y } = this.getClientRect();
     if (this.currentNeedReload) {

@@ -199,7 +199,7 @@ export class Shape<
       }
     });
 
-    if (this.attrs.perfectDrawEnabled ?? true) {
+    if (this.attrs.perfectDrawEnabled !== false) {
       this.#context = Utils.createCanvas().getContext("2d") ?? void 0;
     }
 
@@ -235,7 +235,7 @@ export class Shape<
 
     const applyShadow =
       !config.skipShadow &&
-      (this.attrs.shadowEnabled ?? true) &&
+      this.attrs.shadowEnabled !== false &&
       this.attrs.shadow !== void 0;
     const shadowOffsetX = applyShadow ? this.attrs.shadow?.x ?? 0 : 0;
     const shadowOffsetY = applyShadow ? this.attrs.shadow?.y ?? 0 : 0;
@@ -308,7 +308,7 @@ export class Shape<
     // "color" | "linear-gradient" | "radial-gradient" | "pattern"
     // fill pattern is preferred
     // các tổ hợp của nó dunce ưu tied
-    switch ((this.attrs.fillEnabled ?? true) && this.getFillPriority()) {
+    switch (this.attrs.fillEnabled !== false && this.getFillPriority()) {
       case "color":
         style = this.attrs.fill;
         break;
@@ -370,7 +370,7 @@ export class Shape<
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getStroke(_context: CanvasRenderingContext2D) {
-    return this.attrs.strokeEnabled ?? true ? this.attrs.stroke : void 0;
+    return this.attrs.strokeEnabled !== false ? this.attrs.stroke : void 0;
   }
   protected strokeScene(context: CanvasRenderingContext2D) {
     const style = this.getStroke(context);
@@ -382,7 +382,7 @@ export class Shape<
     }
   }
   private lineSet(context: CanvasRenderingContext2D) {
-    if (!(this.attrs.strokeEnabled ?? true)) {
+    if (this.attrs.strokeEnabled === false) {
       return;
     }
 
@@ -428,7 +428,7 @@ export class Shape<
     }
   }
   private shadowScene(context: CanvasRenderingContext2D) {
-    if ((this.attrs.shadowEnabled ?? true) && this.attrs.shadow !== void 0) {
+    if (this.attrs.shadowEnabled !== false && this.attrs.shadow !== void 0) {
       // eslint-disable-next-line functional/immutable-data
       context.shadowColor = this.attrs.shadow.color;
       // eslint-disable-next-line functional/immutable-data
@@ -515,7 +515,7 @@ export class Shape<
 
   protected getHitStroke() {
     return (
-      ((this.attrs.strokeHitEnabled ?? true
+      ((this.attrs.strokeHitEnabled !== false
         ? this.attrs.hitStrokeWidth ?? this.attrs.strokeWidth
         : this.attrs.strokeWidth) ?? 1) - 1
     );
@@ -537,7 +537,7 @@ export class Shape<
   }
 
   draw(context: CanvasRenderingContext2D) {
-    if (!(this.attrs.visible ?? true)) {
+    if (this.attrs.visible === false) {
       return;
     }
     // ...
