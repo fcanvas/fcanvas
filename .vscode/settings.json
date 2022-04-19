@@ -15,6 +15,7 @@
     "chtm",
     "cldc",
     "Cuted",
+    "dbltap",
     "dbte",
     "degress",
     "desync",
@@ -74,6 +75,16 @@
     "wonu",
     "xiino",
     "zeto"
+  ],
+  "cSpell.ignorePaths": [
+    "package-lock.json",
+    "jest.config.ts",
+    "node_modules",
+    "vscode-extension",
+    ".git/objects",
+    ".vscode",
+    ".vscode-insiders",
+    "demo/"
   ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

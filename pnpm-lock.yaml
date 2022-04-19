@@ -1,9 +1,12 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@rollup/plugin-commonjs': ^21.1.0
+  '@rollup/plugin-node-resolve': ^13.2.1
   '@tweenjs/tween.js': ^18.6.4
   '@types/jest': ^27.0.2
   '@types/lodash.clonedeep': ^4.5.6
+  '@types/node': ^17.0.25
   '@types/plist': ^3.0.2
   '@typescript-eslint/eslint-plugin': ^4.0.1
   '@typescript-eslint/parser': ^4.0.1
@@ -16,26 +19,31 @@ specifiers:
   eslint-plugin-import: ^2.22.0
   eslint-plugin-jest: ^24.4.2
   jest: ^27.2.1
+  jest-canvas-mock: ^2.3.1
+  just: 0.1.8
   lodash.clonedeep: ^4.5.0
   mitt: ^3.0.0
   npm-run-all: ^4.1.5
   path-cross: ^0.0.3
   plist: ^3.0.5
+  plugin dts: link:@rollup/plugin dts
+  plugin esbuild: link:@rollup/plugin esbuild
   prettier: ^2.1.1
   rollup: ^2.45.2
-  rollup-plugin-commonjs: ^10.1.0
-  rollup-plugin-dts: ^4.0.1
-  rollup-plugin-esbuild: ^4.6.0
-  rollup-plugin-node-resolve: ^5.2.0
-  ts-jest: ^27.0.5
+  rollup-plugin-dts: ^4.2.1
+  rollup-plugin-esbuild: ^4.9.1
+  ts-jest: 27.1.4
   ts-node: ^10.4.0
   typedoc: ^0.22.4
   typescript: ^4.7.0-dev.20220312
 
 devDependencies:
+  '@rollup/plugin-commonjs': 21.1.0_rollup@2.70.1
+  '@rollup/plugin-node-resolve': 13.2.1_rollup@2.70.1
   '@tweenjs/tween.js': 18.6.4
   '@types/jest': 27.4.1
   '@types/lodash.clonedeep': 4.5.6
+  '@types/node': 17.0.25
   '@types/plist': 3.0.2
   '@typescript-eslint/eslint-plugin': 4.33.0_da339908ca535bba8fb2ffadb79957fc
   '@typescript-eslint/parser': 4.33.0_f54e95ebb811554afaec1c5e851ca673
@@ -48,19 +56,21 @@ devDependencies:
   eslint-plugin-import: 2.25.4_eslint@7.32.0
   eslint-plugin-jest: 24.7.0_e449675f6d543fe4632426d2f1ae2b8d
   jest: 27.5.1_ts-node@10.7.0
+  jest-canvas-mock: 2.3.1
+  just: 0.1.8
   lodash.clonedeep: 4.5.0
   mitt: 3.0.0
   npm-run-all: 4.1.5
   path-cross: 0.0.3
   plist: 3.0.5
+  plugin dts: link:@rollup/plugin dts
+  plugin esbuild: link:@rollup/plugin esbuild
   prettier: 2.6.1
   rollup: 2.70.1
-  rollup-plugin-commonjs: 10.1.0_rollup@2.70.1
-  rollup-plugin-dts: 4.2.0_5ae542a691ec26d454916d38bad87667
-  rollup-plugin-esbuild: 4.8.2_esbuild@0.13.15+rollup@2.70.1
-  rollup-plugin-node-resolve: 5.2.0_rollup@2.70.1
+  rollup-plugin-dts: 4.2.1_5ae542a691ec26d454916d38bad87667
+  rollup-plugin-esbuild: 4.9.1_esbuild@0.13.15+rollup@2.70.1
   ts-jest: 27.1.4_8c536b43a5dc9e60b77923bff3360098
-  ts-node: 10.7.0_typescript@4.7.0-dev.20220329
+  ts-node: 10.7.0_5df23fb2accd63aed4d2d94882b244d2
   typedoc: 0.22.13_typescript@4.7.0-dev.20220329
   typescript: 4.7.0-dev.20220329
 
@@ -599,7 +609,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       chalk: 4.1.2
       jest-message-util: 27.5.1
       jest-util: 27.5.1
@@ -620,7 +630,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.8.1
@@ -657,7 +667,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       jest-mock: 27.5.1
     dev: true
 
@@ -667,7 +677,7 @@ packages:
     dependencies:
       '@jest/types': 27.5.1
       '@sinonjs/fake-timers': 8.1.0
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       jest-message-util: 27.5.1
       jest-mock: 27.5.1
       jest-util: 27.5.1
@@ -696,7 +706,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       chalk: 4.1.2
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
@@ -780,7 +790,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       '@types/yargs': 16.0.4
       chalk: 4.1.2
     dev: true
@@ -822,8 +832,51 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@rollup/pluginutils/4.2.0:
-    resolution: {integrity: sha512-2WUyJNRkyH5p487pGnn4tWAsxhEFKN/pT8CMgHshd5H+IXkOnKvKZwsz5ZWz+YCXkleZRAU5kwbfgF8CPfDRqA==}
+  /@rollup/plugin-commonjs/21.1.0_rollup@2.70.1:
+    resolution: {integrity: sha512-6ZtHx3VHIp2ReNNDxHjuUml6ur+WcQ28N1yHgCQwsbNkQg2suhxGMDQGJOn/KuDxKtd1xuZP5xSTwBA4GQ8hbA==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      rollup: ^2.38.3
+    dependencies:
+      '@rollup/pluginutils': 3.1.0_rollup@2.70.1
+      commondir: 1.0.1
+      estree-walker: 2.0.2
+      glob: 7.2.0
+      is-reference: 1.2.1
+      magic-string: 0.25.9
+      resolve: 1.22.0
+      rollup: 2.70.1
+    dev: true
+
+  /@rollup/plugin-node-resolve/13.2.1_rollup@2.70.1:
+    resolution: {integrity: sha512-btX7kzGvp1JwShQI9V6IM841YKNPYjKCvUbNrQ2EcVYbULtUd/GH6wZ/qdqH13j9pOHBER+EZXNN2L8RSJhVRA==}
+    engines: {node: '>= 10.0.0'}
+    peerDependencies:
+      rollup: ^2.42.0
+    dependencies:
+      '@rollup/pluginutils': 3.1.0_rollup@2.70.1
+      '@types/resolve': 1.17.1
+      builtin-modules: 3.2.0
+      deepmerge: 4.2.2
+      is-module: 1.0.0
+      resolve: 1.22.0
+      rollup: 2.70.1
+    dev: true
+
+  /@rollup/pluginutils/3.1.0_rollup@2.70.1:
+    resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0
+    dependencies:
+      '@types/estree': 0.0.39
+      estree-walker: 1.0.1
+      picomatch: 2.3.1
+      rollup: 2.70.1
+    dev: true
+
+  /@rollup/pluginutils/4.2.1:
+    resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
     engines: {node: '>= 8.0.0'}
     dependencies:
       estree-walker: 2.0.2
@@ -896,6 +949,10 @@ packages:
       '@babel/types': 7.17.0
     dev: true
 
+  /@types/estree/0.0.39:
+    resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
+    dev: true
+
   /@types/estree/0.0.51:
     resolution: {integrity: sha512-CuPgU6f3eT/XgKKPqKd/gLZV1Xmvf1a2R5POBOGQa6uv82xpls89HU5zKeVoyR8XzHd1RGNOlQlvUe3CFkjWNQ==}
     dev: true
@@ -903,7 +960,7 @@ packages:
   /@types/graceful-fs/4.1.5:
     resolution: {integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==}
     dependencies:
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
     dev: true
 
   /@types/istanbul-lib-coverage/2.0.4:
@@ -947,14 +1004,14 @@ packages:
     resolution: {integrity: sha512-XOKXa1KIxtNXgASAnwj7cnttJxS4fksBRywK/9LzRV5YxrF80BXZIGeQSuoESQ/VkUj30Ae0+YcuHc15wJCB2g==}
     dev: true
 
-  /@types/node/17.0.23:
-    resolution: {integrity: sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==}
+  /@types/node/17.0.25:
+    resolution: {integrity: sha512-wANk6fBrUwdpY4isjWrKTufkrXdu1D2YHCot2fD/DfWxF5sMrVSA+KN7ydckvaTCh0HiqX9IVl0L5/ZoXg5M7w==}
     dev: true
 
   /@types/plist/3.0.2:
     resolution: {integrity: sha512-ULqvZNGMv0zRFvqn8/4LSPtnmN4MfhlPNtJCTpKuIIxGVGZ2rYWzFXrvEBoh9CVyqSE7D6YFRJ1hydLHI6kbWw==}
     dependencies:
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       xmlbuilder: 15.1.1
     dev: true
 
@@ -962,10 +1019,10 @@ packages:
     resolution: {integrity: sha512-ReVR2rLTV1kvtlWFyuot+d1pkpG2Fw/XKE3PDAdj57rbM97ttSp9JZ2UsP+2EHTylra9cUf6JA7tGwW1INzUrA==}
     dev: true
 
-  /@types/resolve/0.0.8:
-    resolution: {integrity: sha512-auApPaJf3NPfe18hSoJkp8EbZzer2ISk7o8mCC3M9he/a04+gbMF97NkpD2S8riMGvm4BMRI59/SZQSaLTKpsQ==}
+  /@types/resolve/1.17.1:
+    resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
     dev: true
 
   /@types/stack-utils/2.0.1:
@@ -1518,6 +1575,10 @@ packages:
       repeat-string: 1.6.1
     dev: true
 
+  /commondir/1.0.1:
+    resolution: {integrity: sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=}
+    dev: true
+
   /concat-map/0.0.1:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
     dev: true
@@ -1665,6 +1726,10 @@ packages:
       get-stdin: 8.0.0
       glob: 7.2.0
       minimatch: 3.1.2
+    dev: true
+
+  /cssfontparser/1.2.1:
+    resolution: {integrity: sha1-9AIvyPlwDGgCnVQghK+69CWj8+M=}
     dev: true
 
   /cssom/0.3.8:
@@ -2275,8 +2340,8 @@ packages:
     engines: {node: '>=4.0'}
     dev: true
 
-  /estree-walker/0.6.1:
-    resolution: {integrity: sha512-SqmZANLWS0mnatqbSfRP5g8OXZC12Fgg1IwNtLsyHDzJizORW4khDfjPqJZsemPWBB2uqykUah5YpQ6epsqC/w==}
+  /estree-walker/1.0.1:
+    resolution: {integrity: sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==}
     dev: true
 
   /estree-walker/2.0.2:
@@ -2876,6 +2941,13 @@ packages:
     engines: {node: '>=8.0.0'}
     dev: true
 
+  /jest-canvas-mock/2.3.1:
+    resolution: {integrity: sha512-5FnSZPrX3Q2ZfsbYNE3wqKR3+XorN8qFzDzB5o0golWgt6EOX1+emBnpOc9IAQ+NXFj8Nzm3h7ZdE/9H0ylBcg==}
+    dependencies:
+      cssfontparser: 1.2.1
+      moo-color: 1.0.3
+    dev: true
+
   /jest-changed-files/27.5.1:
     resolution: {integrity: sha512-buBLMiByfWGCoMsLLzGUUSpAmIAGnbR2KJoMN10ziLhOLvP4e0SlypHnAel8iqQXTrcbmfEY9sSqae5sgUsTvw==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -2892,7 +2964,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       chalk: 4.1.2
       co: 4.6.0
       dedent: 0.7.0
@@ -2975,7 +3047,7 @@ packages:
       pretty-format: 27.5.1
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.7.0_typescript@4.7.0-dev.20220329
+      ts-node: 10.7.0_5df23fb2accd63aed4d2d94882b244d2
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -3018,7 +3090,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       jest-mock: 27.5.1
       jest-util: 27.5.1
       jsdom: 16.7.0
@@ -3036,7 +3108,7 @@ packages:
       '@jest/environment': 27.5.1
       '@jest/fake-timers': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       jest-mock: 27.5.1
       jest-util: 27.5.1
     dev: true
@@ -3052,7 +3124,7 @@ packages:
     dependencies:
       '@jest/types': 27.5.1
       '@types/graceful-fs': 4.1.5
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       anymatch: 3.1.2
       fb-watchman: 2.0.1
       graceful-fs: 4.2.9
@@ -3074,7 +3146,7 @@ packages:
       '@jest/source-map': 27.5.1
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       chalk: 4.1.2
       co: 4.6.0
       expect: 27.5.1
@@ -3129,7 +3201,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
     dev: true
 
   /jest-pnp-resolver/1.2.2_jest-resolve@27.5.1:
@@ -3185,7 +3257,7 @@ packages:
       '@jest/test-result': 27.5.1
       '@jest/transform': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       chalk: 4.1.2
       emittery: 0.8.1
       graceful-fs: 4.2.9
@@ -3242,7 +3314,7 @@ packages:
     resolution: {integrity: sha512-jZCyo6iIxO1aqUxpuBlwTDMkzOAJS4a3eYz3YzgxxVQFwLeSA7Jfq5cbqCY+JLvTDrWirgusI/0KwxKMgrdf7w==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       graceful-fs: 4.2.9
     dev: true
 
@@ -3281,7 +3353,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       chalk: 4.1.2
       ci-info: 3.3.0
       graceful-fs: 4.2.9
@@ -3306,7 +3378,7 @@ packages:
     dependencies:
       '@jest/test-result': 27.5.1
       '@jest/types': 27.5.1
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       jest-util: 27.5.1
@@ -3317,7 +3389,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 17.0.23
+      '@types/node': 17.0.25
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
@@ -3451,6 +3523,11 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.9
+    dev: true
+
+  /just/0.1.8:
+    resolution: {integrity: sha1-60VkuZIVfAFKVLzfMi7En9Alg/E=}
+    engines: {node: '>= 0.4.0'}
     dev: true
 
   /kleur/3.0.3:
@@ -3633,6 +3710,12 @@ packages:
 
   /mitt/3.0.0:
     resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: true
+
+  /moo-color/1.0.3:
+    resolution: {integrity: sha512-i/+ZKXMDf6aqYtBhuOcej71YSlbjT3wCO/4H1j8rPvxDJEifdwgg5MaFyu6iYAT8GBZJg2z0dkgK4YMzvURALQ==}
+    dependencies:
+      color-name: 1.1.4
     dev: true
 
   /ms/2.0.0:
@@ -4072,26 +4155,12 @@ packages:
       glob: 7.2.0
     dev: true
 
-  /rollup-plugin-commonjs/10.1.0_rollup@2.70.1:
-    resolution: {integrity: sha512-jlXbjZSQg8EIeAAvepNwhJj++qJWNJw1Cl0YnOqKtP5Djx+fFGkp3WRh+W0ASCaFG5w1jhmzDxgu3SJuVxPF4Q==}
-    deprecated: This package has been deprecated and is no longer maintained. Please use @rollup/plugin-commonjs.
+  /rollup-plugin-dts/4.2.1_5ae542a691ec26d454916d38bad87667:
+    resolution: {integrity: sha512-eaxQZNUJ5iQcxNGlpJ1CUgG4OSVqWjDZ3nNSWBIoGrpcote2aNphSe1RJOaSYkb8dwn3o+rYm1vvld/5z3EGSQ==}
+    engines: {node: '>=v12.22.11'}
     peerDependencies:
-      rollup: '>=1.12.0'
-    dependencies:
-      estree-walker: 0.6.1
-      is-reference: 1.2.1
-      magic-string: 0.25.9
-      resolve: 1.22.0
-      rollup: 2.70.1
-      rollup-pluginutils: 2.8.2
-    dev: true
-
-  /rollup-plugin-dts/4.2.0_5ae542a691ec26d454916d38bad87667:
-    resolution: {integrity: sha512-lx6irWVhz/x4//tIqRhzk4FOqGQ0n37ZM2wpPCn4uafl/EmiV92om7ZdAsq7Bzho6C+Xh5GfsyuP9H+Udv72Lg==}
-    engines: {node: '>=v12.22.10'}
-    peerDependencies:
-      rollup: ^2.55
-      typescript: ^4.1
+      rollup: ^2.70
+      typescript: ^4.6
     dependencies:
       magic-string: 0.26.1
       rollup: 2.70.1
@@ -4100,14 +4169,14 @@ packages:
       '@babel/code-frame': 7.16.7
     dev: true
 
-  /rollup-plugin-esbuild/4.8.2_esbuild@0.13.15+rollup@2.70.1:
-    resolution: {integrity: sha512-wsaYNOjzTb6dN1qCIZsMZ7Q0LWiPJklYs2TDI8vJA2LUbvtPUY+17TC8C0vSat3jPMInfR9XWKdA7ttuwkjsGQ==}
+  /rollup-plugin-esbuild/4.9.1_esbuild@0.13.15+rollup@2.70.1:
+    resolution: {integrity: sha512-qn/x7Wz9p3Xnva99qcb+nopH0d2VJwVnsxJTGEg+Sh2Z3tqQl33MhOwzekVo1YTKgv+yAmosjcBRJygMfGrtLw==}
     engines: {node: '>=12'}
     peerDependencies:
       esbuild: '>=0.10.1'
       rollup: ^1.20.0 || ^2.0.0
     dependencies:
-      '@rollup/pluginutils': 4.2.0
+      '@rollup/pluginutils': 4.2.1
       debug: 4.3.4
       es-module-lexer: 0.9.3
       esbuild: 0.13.15
@@ -4116,26 +4185,6 @@ packages:
       rollup: 2.70.1
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /rollup-plugin-node-resolve/5.2.0_rollup@2.70.1:
-    resolution: {integrity: sha512-jUlyaDXts7TW2CqQ4GaO5VJ4PwwaV8VUGA7+km3n6k6xtOEacf61u0VXwN80phY/evMcaS+9eIeJ9MOyDxt5Zw==}
-    deprecated: This package has been deprecated and is no longer maintained. Please use @rollup/plugin-node-resolve.
-    peerDependencies:
-      rollup: '>=1.11.0'
-    dependencies:
-      '@types/resolve': 0.0.8
-      builtin-modules: 3.2.0
-      is-module: 1.0.0
-      resolve: 1.22.0
-      rollup: 2.70.1
-      rollup-pluginutils: 2.8.2
-    dev: true
-
-  /rollup-pluginutils/2.8.2:
-    resolution: {integrity: sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==}
-    dependencies:
-      estree-walker: 0.6.1
     dev: true
 
   /rollup/2.70.1:
@@ -4518,7 +4567,7 @@ packages:
       yargs-parser: 20.2.9
     dev: true
 
-  /ts-node/10.7.0_typescript@4.7.0-dev.20220329:
+  /ts-node/10.7.0_5df23fb2accd63aed4d2d94882b244d2:
     resolution: {integrity: sha512-TbIGS4xgJoX2i3do417KSaep1uRAW/Lu+WAL2doDHC0D6ummjirVOXU5/7aiZotbQ5p1Zp9tP7U6cYhA0O7M8A==}
     hasBin: true
     peerDependencies:
@@ -4537,6 +4586,7 @@ packages:
       '@tsconfig/node12': 1.0.9
       '@tsconfig/node14': 1.0.1
       '@tsconfig/node16': 1.0.2
+      '@types/node': 17.0.25
       acorn: 8.7.0
       acorn-walk: 8.2.0
       arg: 4.1.3

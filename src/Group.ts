@@ -1,4 +1,4 @@
-import { AttrsSelf, Container, VirualChildNode } from "./Container";
+import { AttrsSelf, Container, VirtualChildNode } from "./Container";
 import type { Layer } from "./Layer";
 import { Shape } from "./Shape";
 import { Utils } from "./Utils";
@@ -8,9 +8,9 @@ import {
 } from "./helpers/drawLayerContextUseOpacityClipTransformFilter";
 import { realMousePosition } from "./helpers/realMousePosition";
 import { setNeedReloadParentTrue } from "./helpers/setNeedReloadParentTrue";
-import { Offset } from "./types/Offset";
+import { getClientRectGroup } from "./methods/getClientRectGroup";
 import { ClientRectOptions } from "./types/ClientRectOptions";
-import { getClientRectGroup } from "./methods/getClientRectGroup"
+import { Offset } from "./types/Offset";
 
 type Attrs = Offset & {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -23,17 +23,20 @@ type Attrs = Offset & {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type IChild = Shape<any, any> | Group<any>;
+export type IChildrenAllowGroup = VirtualChildNode & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly attrs: any;
+  // eslint-disable-next-line functional/no-method-signature
+  isPressedPoint(x: number, y: number): boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  getClientRect: Shape["getClientRect"];
+  // eslint-disable-next-line functional/prefer-readonly-type
+  getSelfRect?: Shape["getSelfRect"];
+  // eslint-disable-next-line functional/no-method-signature
+  draw(context: CanvasRenderingContext2D): void;
+};
 export class Group<
-    ChildNode extends VirualChildNode & {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      readonly attrs: any;
-      // eslint-disable-next-line functional/no-method-signature
-      isPressedPoint(x: number, y: number): boolean;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      getClientRect: Shape["getClientRect"];
-      // eslint-disable-next-line functional/no-method-signature
-      draw(context: CanvasRenderingContext2D): void;
-    } = IChild,
+    ChildNode extends IChildrenAllowGroup = IChild,
     AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
     AttrsRaws extends Record<string, unknown> = Record<string, unknown>
   >
@@ -45,7 +48,7 @@ export class Group<
     AttrsRefs,
     AttrsRaws
   >
-  implements VirualChildNode
+  implements VirtualChildNode
 {
   static readonly type: string = "Group";
 
@@ -119,16 +122,17 @@ export class Group<
   public isPressedPoint(x: number, y: number, event?: Event): boolean {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.fireChild(event!);
+    // eslint-disable-next-line functional/no-loop-statement
     for (const node of this.children.values()) {
       if (node.isPressedPoint(x, y)) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   public getClientRect(config: ClientRectOptions = {}) {
-    return getClientRectGroup(config)
+    return getClientRectGroup(this.children, config);
   }
 
   public draw(context: CanvasRenderingContext2D) {

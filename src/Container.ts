@@ -6,7 +6,7 @@ import { Offset } from "./types/Offset";
 import { Size } from "./types/Size";
 import { loadImage } from "./utils/loadImage";
 
-type AttrsIdentifitation = {
+type AttrsIdentification = {
   // eslint-disable-next-line functional/prefer-readonly-type
   id?: string;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -60,7 +60,7 @@ type AttrListening = {
     | false;
 };
 
-type AttrsDefault = AttrsIdentifitation & AttrListening;
+type AttrsDefault = AttrsIdentification & AttrListening;
 export type AttrsSelf<
   AttrsCustom,
   AttrsRefs extends Record<string, unknown>,
@@ -89,17 +89,17 @@ type OptionsWatcher = {
   // eslint-disable-next-line functional/prefer-readonly-type
   deep?: boolean;
 };
-export declare class VirualParentNode {
+export declare class VirtualParentNode {
   // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
   add(...nodes: any[]): void;
   // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
   delete(...nodes: any[]): void;
 }
 
-export declare class VirualChildNode {
+export declare class VirtualChildNode {
   matches(selector: string): boolean;
-  _onAddToParent(parent: VirualParentNode): void;
-  _onDeleteParent(parent: VirualParentNode): void;
+  _onAddToParent(parent: VirtualParentNode): void;
+  _onDeleteParent(parent: VirtualParentNode): void;
   // eslint-disable-next-line functional/prefer-readonly-type
   readonly listeners?: Map<
     unknown,
@@ -211,8 +211,8 @@ abstract class ContainerBasic<
         ) {
           onNeedUpdate?.(prop);
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (this.constructor as any).noRefs
     ) as NotNillRefsRaws<AttrsCustom, AttrsRefs, AttrsRaws>;
     this._ = this.attrs;
@@ -226,23 +226,6 @@ abstract class ContainerBasic<
 
   public matches(selector: string): boolean {
     return matchesSelector(selector, this.type, this.name, this.id);
-    // return selector.split(",").some((sel) => {
-    //   const [other, id] = sel.trim().split("#");
-
-    //   const [tag, ...classes] = other.split(".");
-
-    //   const validTag =
-    //     tag === "" || tag?.toLowerCase() === this.type?.toLowerCase();
-    //   const validClass =
-    //     classes.length === 0
-    //       ? true
-    //       : classes.every((clazz) =>
-    //           new RegExp(`(^| )${clazz}( |$)`).test(this.name)
-    //         );
-    //   const validId = id ? id === this.id : true;
-
-    //   return validTag && validClass && validId;
-    // });
   }
 
   public on<Name extends keyof EventsSelf<EventsCustom>>(
@@ -464,12 +447,12 @@ export abstract class ContainerNode<
     AttrsCustom extends Record<string, unknown>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     EventsCustom extends Record<string, any>,
-    IParentNode extends VirualParentNode,
+    IParentNode extends VirtualParentNode,
     AttrsRefs extends Record<string, unknown>,
     AttrsRaws extends Record<string, unknown>
   >
   extends ContainerBasic<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws>
-  implements VirualChildNode
+  implements VirtualChildNode
 {
   static readonly raws = ["id", "name", "listeners"];
   static readonly type: string = "ContainerNode";
@@ -497,15 +480,15 @@ export abstract class ContainerNode<
 }
 
 export abstract class Container<
-    AttrsCustom extends Record<string, unknown> & AttrsIdentifitation,
+    AttrsCustom extends Record<string, unknown> & AttrsIdentification,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     EventsCustom extends Record<string, any>,
-    IChildNode extends VirualChildNode,
+    IChildNode extends VirtualChildNode,
     AttrsRefs extends Record<string, unknown>,
     AttrsRaws extends Record<string, unknown>
   >
   extends ContainerBasic<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws>
-  implements VirualParentNode
+  implements VirtualParentNode
 {
   static readonly type: string = "Container";
   public readonly children = new Set<IChildNode>();

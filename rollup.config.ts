@@ -1,15 +1,15 @@
 import { join } from "path";
 
-import commonjs from "rollup-plugin-commonjs";
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
 import dts from "rollup-plugin-dts";
 import esbuild from "rollup-plugin-esbuild";
-import resolve from "rollup-plugin-node-resolve";
 // import { terser } from "rollup-plugin-terser";
 
 import { name, version } from "./package.json";
 
 const banner = `/**
- * This library created by Tachibana Shin <thanhnguyennguyen1995@gmail.com> (c) ${new Date().getFullYear()}
+ * This library created by Tachibana Shin (c) ${new Date().getFullYear()}
  * MIT License
  * ${name} version ${version}
  * */`;
