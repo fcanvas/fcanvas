@@ -1,4 +1,4 @@
-import { VirualChildNode } from "../Container";
+import { VirtualChildNode } from "../Container";
 import { Utils } from "../Utils";
 import { Offset } from "../types/Offset";
 
@@ -27,7 +27,7 @@ export function drawLayerContextUseOpacityClipTransformFilter(
   attrs: AttrsDrawLayerContext,
   // eslint-disable-next-line functional/prefer-readonly-type
   children: Set<
-    VirualChildNode & {
+    VirtualChildNode & {
       // eslint-disable-next-line functional/no-method-signature
       draw(context: CanvasRenderingContext2D): void;
     }

@@ -4,13 +4,14 @@ import type { Layer } from "./Layer";
 import { Utils } from "./Utils";
 import { createFilter, OptionFilter } from "./helpers/createFilter";
 import { createTransform, OptionTransform } from "./helpers/createTransform";
+import { existsTransform } from "./helpers/existsTransform";
 import { pointInBox } from "./helpers/pointInBox";
 import { setNeedReloadParentTrue } from "./helpers/setNeedReloadParentTrue";
 import { transformedRect } from "./helpers/transformerRect";
 import { transparent } from "./packages/Colors";
+import { ClientRectOptions } from "./types/ClientRectOptions";
 import { Offset } from "./types/Offset";
 import { Size } from "./types/Size";
-import { ClientRectOptions } from "./types/ClientRectOptions";
 
 // add ctx.filter
 type Color = string;
@@ -29,18 +30,8 @@ type FillModePattern = {
   // eslint-disable-next-line functional/prefer-readonly-type
   fillPattern?: {
     // eslint-disable-next-line functional/prefer-readonly-type
-    x?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    y?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    offset?: Partial<Offset>;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    scale?: Partial<Offset>;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    rotation?: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
     repeat?: "repeat" | "repeat-x" | "repeat-y" | "no-repeat";
-  };
+  } & OptionTransform;
   /* /pattern */
 };
 type FillModeLinearGradient = {
@@ -270,9 +261,10 @@ export class Shape<
         fillRect.y,
     };
 
-    const applyTransform = !config.skipTransform && this.transformExists();
+    const applyTransform =
+      !config.skipTransform && existsTransform(this.attrs, false);
     if (applyTransform) {
-      return transformedRect(rect, createTransform(this.attrs));
+      return transformedRect(rect, createTransform(this.attrs, !this.#context));
     }
 
     return rect;
@@ -282,11 +274,11 @@ export class Shape<
     // reactive
     if (this.attrs.perfectDrawEnabled !== false) {
       const { width, height } = this.getClientRect();
-      const adject = (this.attrs.strokeWidth ?? 1) * 2;
+      const adjust = (this.attrs.strokeWidth ?? 1) * 2;
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       [this.#context!.canvas.width, this.#context!.canvas.height] = [
-        width + adject,
-        height + adject,
+        width + adjust,
+        height + adjust,
       ];
     }
   }
@@ -313,9 +305,9 @@ export class Shape<
   protected getFill(context: CanvasRenderingContext2D) {
     // eslint-disable-next-line functional/no-let
     let style: FillStyle | void;
-    // "color" | "linear-gradient" | "radial-graident" | "pattern"
+    // "color" | "linear-gradient" | "radial-gradient" | "pattern"
     // fill pattern is preferred
-    // các tổ hợp của nó được ưu tiên
+    // các tổ hợp của nó dunce ưu tied
     switch ((this.attrs.fillEnabled ?? true) && this.getFillPriority()) {
       case "color":
         style = this.attrs.fill;
@@ -327,20 +319,12 @@ export class Shape<
             this.attrs.fillPatternImage,
             this.attrs.fillPattern?.repeat ?? "repeat"
           )!;
-          style.setTransform(
-            new Utils.DOMMatrix()
-              .skewX(this.attrs.fillPattern?.x ?? 1)
-              .skewY(this.attrs.fillPattern?.y ?? 1)
-              .translate(
-                this.attrs.fillPattern?.offset?.x ?? 0,
-                this.attrs.fillPattern?.offset?.y ?? 0
-              )
-              .scale(
-                this.attrs.fillPattern?.scale?.x ?? 1,
-                this.attrs.fillPattern?.scale?.y ?? 1
-              )
-              .rotate(this.attrs.fillPattern?.rotation ?? 0)
-          );
+          if (
+            this.attrs.fillPattern &&
+            existsTransform(this.attrs.fillPattern, true)
+          ) {
+            style.setTransform(createTransform(this.attrs.fillPattern, true));
+          }
         }
         break;
       case "linear-gradient":
@@ -460,15 +444,6 @@ export class Shape<
       }
     }
   }
-  private transformExists() {
-    return (
-      this.attrs.scale !== void 0 ||
-      this.attrs.rotation !== void 0 ||
-      this.attrs.offset !== void 0 ||
-      this.attrs.skewX !== void 0 ||
-      this.attrs.skewY !== void 0
-    );
-  }
   private drawInSandBox(context: CanvasRenderingContext2D) {
     const scene = this.getSceneFunc();
 
@@ -484,11 +459,12 @@ export class Shape<
     //   context.translate(-x, -y);
     // }
     const clientRect = this.getClientRect();
-    const adject = this.#context ? this.attrs.strokeWidth ?? 1 : 0;
-    const [transX, transY] = [clientRect.x - adject, clientRect.y - adject];
+    const adjust = this.#context ? this.attrs.strokeWidth ?? 1 : 0;
+    const [transX, transY] = [clientRect.x - adjust, clientRect.y - adjust];
     context.translate(-transX, -transY);
 
-    const needUseTransform = this.transformExists() && !this.#context;
+    const needUseTransform =
+      existsTransform(this.attrs, !this.#context) && !this.#context;
     const needSetAlpha = this.attrs.opacity !== void 0;
     const useFilter = this.attrs.filter !== void 0;
     // eslint-disable-next-line functional/no-let
@@ -584,12 +560,12 @@ export class Shape<
       // finished drawing in the cache
       // draw to main context
       const { x, y } = this.getClientRect();
-      const adject = this.attrs.strokeWidth ?? 1;
+      const adjust = this.attrs.strokeWidth ?? 1;
       context.drawImage(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.#context!.canvas,
-        this.attrs.x - adject + x,
-        this.attrs.y - adject + y
+        this.attrs.x - adjust + x,
+        this.attrs.y - adjust + y
       );
     } else {
       // キャッシュさせないでください

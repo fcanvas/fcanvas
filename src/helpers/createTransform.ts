@@ -29,10 +29,8 @@ export function createTransform(
   }
   if (options.offset !== void 0 || force) {
     transform.translate(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      options.offset?.x || 0 + options.x!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      options.offset?.y || 0 + options.y!
+      options.offset?.x || 0 + (options.x ?? 0),
+      options.offset?.y || 0 + (options.y ?? 0)
     );
   }
   if (options.skewX !== void 0) {
