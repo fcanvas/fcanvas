@@ -18,6 +18,11 @@ type Attrs = Partial<Offset> & {
   height?: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   visible?: boolean;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  filterItem?: <Node extends Shape<any, any> | Group>(
+    node: Node,
+    index: number
+  ) => void | boolean;
 } & AttrsDrawLayerContext;
 
 const EventsDefault = [
@@ -181,6 +186,7 @@ export class Layer<
       this.#context,
       this.attrs,
       this.children,
+      this.attrs.filterItem,
       this
     );
 
