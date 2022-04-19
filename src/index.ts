@@ -37,6 +37,7 @@ export { random } from "./methods/random";
 export { randomColor } from "./methods/randomColor";
 export { range } from "./methods/range";
 export { rqaf, stop } from "./methods/rqaf";
+export { getClientRectGroup } from "./methods/getClientRectGroup"
 
 export { degressToRadial } from "./utils/degressToRadial";
 export { radialToDegress } from "./utils/radialToDegress";

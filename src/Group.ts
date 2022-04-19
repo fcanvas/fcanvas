@@ -10,6 +10,8 @@ import { realMousePosition } from "./helpers/realMousePosition";
 import { setNeedReloadParentTrue } from "./helpers/setNeedReloadParentTrue";
 import { Offset } from "./types/Offset";
 import { ClientRectOptions } from "./types/ClientRectOptions";
+import { getClientRectGroup } from "./methods/getClientRectGroup"
+
 type Attrs = Offset & {
   // eslint-disable-next-line functional/prefer-readonly-type
   width?: number;
@@ -117,44 +119,16 @@ export class Group<
   public isPressedPoint(x: number, y: number, event?: Event): boolean {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.fireChild(event!);
-    return Array.from(this.children.values()).some((node) =>
-      node.isPressedPoint(x, y)
-    );
+    for (const node of this.children.values()) {
+      if (node.isPressedPoint(x, y)) {
+        return true
+      }
+    }
+    return false
   }
 
   public getClientRect(config: ClientRectOptions = {}) {
-    // eslint-disable-next-line functional/no-let
-    let x = Infinity,
-      y = -Infinity,
-      width = 0,
-      height = 0,
-      fillWidth = 0,
-      fillHeight = 0;
-    this.children.forEach((node) => {
-      const clientRect = node.getClientRect(config);
-
-      x = Math.min(x, clientRect.x + node.attrs.x);
-      y = Math.max(y, clientRect.y + node.attrs.y);
-
-      const sumWidth = clientRect.x + clientRect.width;
-      const sumHeight = clientRect.y + clientRect.height;
-
-      fillWidth = Math.max(fillWidth, sumWidth);
-      fillHeight = Math.max(fillHeight, sumHeight);
-      if (fillWidth === sumWidth) {
-        width = clientRect.width;
-      }
-      if (fillHeight === sumHeight) {
-        height = clientRect.height;
-      }
-    });
-
-    return {
-      x,
-      y,
-      width,
-      height,
-    };
+    return getClientRectGroup(config)
   }
 
   public draw(context: CanvasRenderingContext2D) {
