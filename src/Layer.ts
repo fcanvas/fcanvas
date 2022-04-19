@@ -114,7 +114,7 @@ export class Layer<
           "display"
         );
 
-        if (this.attrs.visible ?? true) {
+        if (this.attrs.visible !== false) {
           if (display === "none") {
             this.#context.canvas.style.display = "block";
           } else {
@@ -165,11 +165,11 @@ export class Layer<
   }
 
   public draw() {
-    if (this.currentNeedReload === false || !(this.attrs.visible ?? true)) {
+    if (this.currentNeedReload === false || this.attrs.visible === false) {
       return;
     }
 
-    if (this.attrs.clearBeforeDraw ?? true) {
+    if (this.attrs.clearBeforeDraw !== false) {
       this.#context.clearRect(
         0,
         0,

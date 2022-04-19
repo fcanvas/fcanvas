@@ -112,8 +112,8 @@ export class Sprite<
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     if (
-      (this.attrs.fillEnabled ?? true) ||
-      (this.attrs.strokeEnabled ?? true)
+      this.attrs.fillEnabled !== false ||
+      this.attrs.strokeEnabled !== false
     ) {
       context.beginPath();
       const { width, height } = this.size();
