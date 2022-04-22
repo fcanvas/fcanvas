@@ -18,7 +18,7 @@ type Attrs = Partial<Offset> & {
   height?: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   visible?: boolean;
-  // eslint-disable-next-line functional/prefer-readonly-type
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
   filterItem?: <Node extends Shape<any, any> | Group>(
     node: Node,
     index: number
