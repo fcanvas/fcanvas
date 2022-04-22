@@ -142,6 +142,10 @@ export type AttrsShapeSelf<
     raws?: AttrsRaws;
   };
 
+  type AttrsCustomShape = {
+      readonly "resize-self": void 
+  }
+
 export class Shape<
   AttrsCustom extends Record<string, unknown> = {
     // eslint-disable-next-line functional/prefer-readonly-type
@@ -149,17 +153,15 @@ export class Shape<
     // eslint-disable-next-line functional/prefer-readonly-type
     height: number;
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-  EventsCustom extends Record<string, any> = {},
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  EventsCustom extends Record<string, any> & AttrsCustomShape = AttrsCustomShape,
   AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
   AttrsRaws extends Record<string, unknown> = Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   IParent extends Layer | Group<any> = Layer | Group
 > extends ContainerNode<
   AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>,
-  EventsCustom & {
-    $resize: void
-  },
+  EventsCustom,
   IParent,
   AttrsRefs,
   AttrsRaws
@@ -283,7 +285,7 @@ export class Shape<
         height + adjust,
       ];
     }
-    this.emit("$resize", void 0);
+    this.emit("resize-self", void 0);
   }
   private getSceneFunc() {
     return this.attrs.sceneFunc || this._sceneFunc;
