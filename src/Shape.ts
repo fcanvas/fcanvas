@@ -157,7 +157,9 @@ export class Shape<
   IParent extends Layer | Group<any> = Layer | Group
 > extends ContainerNode<
   AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>,
-  EventsCustom,
+  EventsCustom & {
+    $resize: void
+  },
   IParent,
   AttrsRefs,
   AttrsRaws
@@ -281,6 +283,7 @@ export class Shape<
         height + adjust,
       ];
     }
+    this.emit("$resize", void 0);
   }
   private getSceneFunc() {
     return this.attrs.sceneFunc || this._sceneFunc;

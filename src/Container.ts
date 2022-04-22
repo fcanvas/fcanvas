@@ -48,7 +48,7 @@ type EventsDefault = {
   // eslint-disable-next-line functional/prefer-readonly-type
   dbltap: TouchEvent;
 };
-export type EventsSelf<EventsCustom> = EventsDefault & EventsCustom;
+export type EventsSelf<EventsCustom extends Record<string, unknown>> = EventsDefault & EventsCustom;
 type AttrListening = {
   // eslint-disable-next-line functional/prefer-readonly-type
   listening?: // eslint-disable-next-line functional/prefer-readonly-type
