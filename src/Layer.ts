@@ -115,7 +115,10 @@ export class Layer<
       },
       { immediate: true }
     );
-    this.watch(["width", "height"], () => void this.emit("resize-self", void 0));
+    this.watch(
+      ["width", "height"],
+      () => void this.emit("resize-self", void 0)
+    );
     this.watch(
       "visible",
       () => {
