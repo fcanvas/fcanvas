@@ -82,7 +82,7 @@ export class Arrow<
 
     const width = this.attrs.pointerWidth ?? 10;
 
-    if (this.attrs.pointerAtEnding ?? true) {
+    if (this.attrs.pointerAtEnding !== false) {
       context.save();
       context.beginPath();
       context.translate(points[n - 2], points[n - 1]);

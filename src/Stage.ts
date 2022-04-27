@@ -69,7 +69,7 @@ export class Stage<
           "display"
         );
 
-        if (this.attrs.visible ?? true) {
+        if (this.attrs.visible !== false) {
           if (display === "none") {
             this.#container.style.display = "block";
           } else {
