@@ -41,6 +41,7 @@ export function loadFont(
               resolve(fontFamily);
             }
           } else {
+            // eslint-disable-next-line functional/no-throw-statement
             throw new Error("Request failed");
           }
         } catch (err) {
@@ -56,6 +57,7 @@ export function loadFont(
       request.addEventListener("progress", onProgress);
     }
 
+    // eslint-disable-next-line functional/immutable-data
     request.responseType = "arraybuffer";
 
     // Downloading a font from the path
