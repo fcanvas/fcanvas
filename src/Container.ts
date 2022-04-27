@@ -338,15 +338,15 @@ abstract class ContainerBasic<
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-explicit-any
       this.watchers.get(prop)!.set(cb as any, options?.deep ?? false);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((options as any)?.immediate) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const val = this.attrs[prop] as unknown as any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (cb as CallbackWatcher<any>)(val, val, prop);
-      }
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((options as any)?.immediate) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const val = this.attrs[prop] as unknown as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (cb as CallbackWatcher<any>)(val, val, prop);
+    }
 
     return () =>
       (prop as readonly string[]).forEach((prop) =>
