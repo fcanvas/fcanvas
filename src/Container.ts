@@ -424,41 +424,7 @@ export abstract class ContainerNode<
         pixelRatio?: number;
       }
   ): HTMLCanvasElement {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((this as any).canvas && !config) return (this as any).canvas;
-
-    const canvas = Utils.createCanvas();
-    [canvas.width, canvas.height] = [
-      config?.width ?? 300,
-      config?.height ?? 300,
-    ];
-    // eslint-disable-next-line functional/no-let
-    let pixelRatioBk: number | void;
-
-    if (config?.pixelRatio !== void 0) {
-      pixelRatioBk = window.devicePixelRatio;
-      // eslint-disable-next-line functional/immutable-data
-      window.devicePixelRatio = config.pixelRatio;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const ctx = canvas.getContext("2d")!;
-    ctx.translate(config?.x ?? 0, config?.y ?? 0);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((this as any).canvas) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ctx.drawImage((this as any).canvas, 0, 0);
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this as any).draw(ctx);
-    }
-
-    if (pixelRatioBk !== void 0) {
-      // eslint-disable-next-line functional/immutable-data
-      window.devicePixelRatio = pixelRatioBk;
-    }
-    return canvas;
+    return ContainerCanvas.prototype.toCanvas.call(this, config);
   }
   public toDataURL(type?: string, quality?: number): string {
     return this.toCanvas().toDataURL(type, quality);
@@ -613,13 +579,47 @@ export abstract class ContainerCanvas<
       }
   ): HTMLCanvasElement {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((this as any).canvas && !config) return (this as any).canvas;
+    const { canvas: canvasCache } = this as any as {
+      readonly canvas?: HTMLCanvasElement;
+    };
 
     const canvas = Utils.createCanvas();
-    [canvas.width, canvas.height] = [
-      config?.width ?? 300,
-      config?.height ?? 300,
-    ];
+
+    if (config?.width !== void 0) {
+      // eslint-disable-next-line functional/immutable-data
+      canvas.width = config.width;
+    } else {
+      if (canvasCache) {
+        // eslint-disable-next-line functional/immutable-data
+        canvas.width = canvasCache.width;
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { width } = (this as any).getClientRect();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const adjust = ((this as any).attrs.strokeWidth ?? 1) * 2;
+
+        // eslint-disable-next-line functional/immutable-data
+        canvas.width = width + adjust;
+      }
+    }
+    if (config?.height !== void 0) {
+      // eslint-disable-next-line functional/immutable-data
+      canvas.height = config.height;
+    } else {
+      if (canvasCache) {
+        // eslint-disable-next-line functional/immutable-data
+        canvas.height = canvasCache.height;
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { height } = (this as any).getClientRect();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const adjust = ((this as any).attrs.strokeWidth ?? 1) * 2;
+
+        // eslint-disable-next-line functional/immutable-data
+        canvas.height = height + adjust;
+      }
+    }
+
     // eslint-disable-next-line functional/no-let
     let pixelRatioBk: number | void;
 
@@ -634,12 +634,9 @@ export abstract class ContainerCanvas<
     ctx.translate(config?.x ?? 0, config?.y ?? 0);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((this as any).canvas) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ctx.drawImage((this as any).canvas, 0, 0);
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this as any).draw(ctx);
+    (this as any).draw(ctx);
+    if (canvasCache) {
+      ctx.drawImage(canvasCache, 0, 0);
     }
 
     if (pixelRatioBk !== void 0) {
