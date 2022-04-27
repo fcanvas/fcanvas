@@ -123,16 +123,15 @@ export class Stage<
 
   // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
   add(...layers: Layer[]) {
-    super.add(...layers);
-    this.children.forEach((layer) => {
+    layers.forEach((layer) => {
       if (this.#container.contains(layer.canvas) === false) {
         this.#container.appendChild(layer.canvas);
       }
-
-      if (globalConfigs.autoDrawEnabled) {
-        layer.batchDraw();
-      }
     });
+    super.add(...layers);
+    if (globalConfigs.autoDrawEnabled) {
+      layers.forEach((layer) => layer.batchDraw());
+    }
   }
   // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
   delete(...layers: Layer[]) {
