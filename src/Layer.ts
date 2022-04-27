@@ -1,12 +1,12 @@
 import { AttrsSelf, ContainerCanvas, EventsSelf } from "./Container";
 import { Group } from "./Group";
-import type { Shape } from "./Shape";
 import { Stage } from "./Stage";
 import { Utils } from "./Utils";
 import {
   AttrsDrawLayerContext,
   drawLayerContextUseOpacityClipTransformFilter,
 } from "./helpers/drawLayerContextUseOpacityClipTransformFilter";
+import AllShape from "./types/AllShape";
 import { Offset } from "./types/Offset";
 
 type Attrs = Partial<Offset> & {
@@ -18,8 +18,8 @@ type Attrs = Partial<Offset> & {
   height?: number;
   // eslint-disable-next-line functional/prefer-readonly-type
   visible?: boolean;
-  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
-  filterItem?: <Node extends Shape<any, any> | Group>(
+  // eslint-disable-next-line functional/prefer-readonly-type
+  filterItem?: <Node extends AllShape | Group>(
     node: Node,
     index: number
   ) => void | boolean;
@@ -51,8 +51,7 @@ export class Layer<
 > extends ContainerCanvas<
   Attrs,
   EventsCustom,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Shape<any, any> | Group,
+  AllShape | Group,
   AttrsRefs,
   AttrsRaws
 > {
@@ -194,13 +193,13 @@ export class Layer<
   }
 
   // @overwrite
-  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
-  public add(...nodes: (Shape<any, any> | Group)[]): void {
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
+  public add(...nodes: (AllShape | Group)[]): void {
     super.add(...nodes);
     nodes.forEach((node) => node._onAddToParent(this));
   }
-  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type, @typescript-eslint/no-explicit-any
-  public delete(...nodes: (Shape<any, any> | Group)[]): void {
+  // eslint-disable-next-line functional/functional-parameters, functional/prefer-readonly-type
+  public delete(...nodes: (AllShape | Group)[]): void {
     super.delete(...nodes);
     nodes.forEach((node) => node._onDeleteParent(this));
   }

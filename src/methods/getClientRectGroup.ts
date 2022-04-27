@@ -1,12 +1,11 @@
 import { IChildrenAllowGroup } from "../Group";
-import { Shape } from "../Shape";
+import AllShape from "../types/AllShape";
 import { ClientRectOptions } from "../types/ClientRectOptions";
 import { Offset } from "../types/Offset";
 import { Size } from "../types/Size";
 
 export function getClientRectGroup<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends IChildrenAllowGroup | Shape<any, any>
+  T extends IChildrenAllowGroup | AllShape
 >(
   // eslint-disable-next-line functional/prefer-readonly-type
   shapes: T[] | Set<T>,

@@ -7,20 +7,25 @@ type AttrsCustom = {
   // eslint-disable-next-line functional/prefer-readonly-type
   image: HTMLImageElement;
   // eslint-disable-next-line functional/prefer-readonly-type
-  animations: Record<string, number[] | {
-  // eslint-disable-next-line functional/prefer-readonly-type
-    frames: number[];
-    /**
-     * @default: 0
-     * */
-  // eslint-disable-next-line functional/prefer-readonly-type
-    frameIndex?: number;
-    /**
-     * @default: 17
-     * */
-  // eslint-disable-next-line functional/prefer-readonly-type
-    frameRate?: number;
-  }>;
+  animations: Record<
+    string,
+    // eslint-disable-next-line functional/prefer-readonly-type
+    | number[]
+    | {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        frames: number[];
+        /**
+         * @default: 0
+         * */
+        // eslint-disable-next-line functional/prefer-readonly-type
+        frameIndex?: number;
+        /**
+         * @default: 17
+         * */
+        // eslint-disable-next-line functional/prefer-readonly-type
+        frameRate?: number;
+      }
+  >;
   // eslint-disable-next-line functional/prefer-readonly-type
   animation: string;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -63,16 +68,15 @@ export class Sprite<
   // eslint-disable-next-line functional/prefer-readonly-type
   private _isRunning = false;
   private get _anim(): typeof this.attrs.animations["*"] {
-    return this.attrs.animations[ this.attrs.animation ];
+    return this.attrs.animations[this.attrs.animation];
   }
-  private get _frames(): number[] {
-    return "frames" in this._anim ? this._anim.frames : this._anim
+  private get _frames(): readonly number[] {
+    return "frames" in this._anim ? this._anim.frames : this._anim;
   }
   private get frameIndex(): number {
     const _frameIndex = this.attrs.frameIndex ?? 0;
 
-    const frameLength =
-      ~~this._frames.length / 4;
+    const frameLength = ~~this._frames.length / 4;
     const frameIndex =
       _frameIndex > frameLength
         ? (_frameIndex % frameLength) - 1
@@ -152,17 +156,16 @@ export class Sprite<
     if (this._isRunning) return;
 
     this._isRunning = true;
-    this.attrs.frameIndex = (this._anim as any),this.frameIndex ?? this.attrs.frameIndex ?? 0
     this.interval = setInterval(() => {
       const { frameIndex } = this;
-      const countFrame =
-        ~~this._frames.length / 4;
+      const countFrame = ~~this._frames.length / 4;
 
       if (
         this.attrs.infinite !== false &&
         this.attrs.frameIndex === countFrame - 1
       ) {
         // last frame repeat -> reset;
+        // eslint-disable-next-line functional/immutable-data
         this.attrs.frameIndex = 0;
         return;
       }
@@ -171,7 +174,9 @@ export class Sprite<
         this.stop();
       }
 
+      // eslint-disable-next-line functional/immutable-data
       this.attrs.frameIndex = frameIndex + 1;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, 1000 / ((this._anim as any).frameRate ?? this.attrs.frameRate ?? 17)) as unknown as number;
   }
   public stop(): void {
@@ -190,10 +195,7 @@ export class Sprite<
 
   protected size() {
     const indexStart = this.frameIndex * 4;
-    const [width, height] =this._frames.slice(
-      indexStart + 2,
-      indexStart + 4
-    );
+    const [width, height] = this._frames.slice(indexStart + 2, indexStart + 4);
 
     return {
       width,
