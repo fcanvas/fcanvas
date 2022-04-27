@@ -43,7 +43,9 @@ const EventsDefault = [
   "dbltap",
 ];
 
-type EventsCustom = HTMLElementEventMap;
+type EventsCustom = HTMLElementEventMap & {
+  readonly "resize-self": void;
+};
 
 export class Layer<
   AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
@@ -72,6 +74,7 @@ export class Layer<
   private displayBp = "";
   // eslint-disable-next-line functional/prefer-readonly-type
   private idRequestFrame?: ReturnType<typeof requestAnimationFrame>;
+  private __watcherParentSize?: () => void;
 
   constructor(attrs: AttrsSelf<Attrs, AttrsRefs, AttrsRaws> = {}) {
     super(
@@ -85,6 +88,24 @@ export class Layer<
     this.#context.canvas.style.cssText =
       "position: absolute; margin: 0; padding: 0";
 
+    const onResizeSelf = () => {
+      if (this.attrs.width !== void 0) {
+        this.#context.canvas.style.width = this.attrs.width;
+      } else {
+        this.#context.canvas.style.width = "100%";
+        this.#context.canvas.width = this.#context.canvas.scrollWidth;
+      }
+      if (this.attrs.height !== void 0) {
+        this.#context.canvas.style.height = this.attrs.height;
+      } else {
+        this.#context.canvas.style.height = "100%";
+        this.#context.canvas.height = this.#context.canvas.scrollHeight;
+      }
+      this.currentNeedReload = true;
+    };
+    void onResizeSelf();
+    this.on("resize-self", onResizeSelf);
+
     this.watch(
       ["x", "y"],
       () => {
@@ -93,23 +114,7 @@ export class Layer<
       },
       { immediate: true }
     );
-    this.watch(
-      ["width", "height"],
-      () => {
-        this.#context.canvas.style.width =
-          this.attrs.width !== void 0 ? `${this.attrs.width}px` : "100%";
-        this.#context.canvas.style.height =
-          this.attrs.height !== void 0 ? `${this.attrs.height}px` : "100%";
-        setTimeout(() => {
-          [this.#context.canvas.width, this.#context.canvas.height] = [
-            this.#context.canvas.scrollWidth,
-            this.#context.canvas.scrollHeight,
-          ];
-          this.currentNeedReload = true;
-        });
-      },
-      { immediate: true }
-    );
+    this.watch(["width", "height"], () => this.emit("resize-self"));
     this.watch(
       "visible",
       () => {
@@ -162,9 +167,19 @@ export class Layer<
   }
 
   public _onAddToParent(parent: Stage) {
+    this.__watcherParentSize = parent.watch(
+      ["width", "height"],
+      () => {
+        this.emit("resize-self", void 0);
+      },
+      {
+        immediate: true,
+      }
+    );
     this.parents.add(parent);
   }
   public _onDeleteParent(parent: Stage) {
+    this.__watcherParentSize?.(); // cancel watcher
     this.parents.delete(parent);
   }
 
