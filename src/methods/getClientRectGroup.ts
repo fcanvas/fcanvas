@@ -5,8 +5,8 @@ import { Offset } from "../types/Offset";
 import { Size } from "../types/Size";
 
 export function getClientRectGroup<
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-T extends IChildrenAllowGroup | Shape<any, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends IChildrenAllowGroup | Shape<any, any>
 >(
   // eslint-disable-next-line functional/prefer-readonly-type
   shapes: T[] | Set<T>,
