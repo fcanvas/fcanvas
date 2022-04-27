@@ -375,6 +375,48 @@ abstract class ContainerBasic<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new (this.constructor as unknown as any)(this.attrs);
   }
+
+  public destroy(): void {
+    this.listeners?.clear();
+    this.watchers.clear();
+  }
+}
+
+export abstract class ContainerNode<
+    AttrsCustom extends Record<string, unknown>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    EventsCustom extends Record<string, any>,
+    IParentNode extends VirtualParentNode,
+    AttrsRefs extends Record<string, unknown>,
+    AttrsRaws extends Record<string, unknown>
+  >
+  extends ContainerBasic<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws>
+  implements VirtualChildNode
+{
+  static readonly raws = ["id", "name", "listeners"];
+  static readonly type: string = "ContainerNode";
+  public readonly parents = new Set<IParentNode>();
+  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-inferrable-types
+  public currentNeedReload: boolean = true;
+
+  public _onAddToParent(parent: IParentNode): void {
+    this.parents.add(parent);
+  }
+  public _onDeleteParent(parent: IParentNode): void {
+    this.parents.delete(parent);
+  }
+
+  public moveTo(parent: IParentNode): void {
+    this.remove();
+    parent.add(this);
+  }
+
+  public remove(): void {
+    this.parents.forEach((parent) => {
+      parent.delete(this);
+    });
+  }
+
   public toCanvas(
     config?: Partial<Offset> &
       Partial<Size> & {
@@ -435,47 +477,6 @@ abstract class ContainerBasic<
     return loadImage(
       this.toCanvas(config).toDataURL(config?.type, config?.quality)
     );
-  }
-
-  public destroy(): void {
-    this.listeners?.clear();
-    this.watchers.clear();
-  }
-}
-
-export abstract class ContainerNode<
-    AttrsCustom extends Record<string, unknown>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    EventsCustom extends Record<string, any>,
-    IParentNode extends VirtualParentNode,
-    AttrsRefs extends Record<string, unknown>,
-    AttrsRaws extends Record<string, unknown>
-  >
-  extends ContainerBasic<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws>
-  implements VirtualChildNode
-{
-  static readonly raws = ["id", "name", "listeners"];
-  static readonly type: string = "ContainerNode";
-  public readonly parents = new Set<IParentNode>();
-  // eslint-disable-next-line functional/prefer-readonly-type, @typescript-eslint/no-inferrable-types
-  public currentNeedReload: boolean = true;
-
-  public _onAddToParent(parent: IParentNode): void {
-    this.parents.add(parent);
-  }
-  public _onDeleteParent(parent: IParentNode): void {
-    this.parents.delete(parent);
-  }
-
-  public moveTo(parent: IParentNode): void {
-    this.remove();
-    parent.add(this);
-  }
-
-  public remove(): void {
-    this.parents.forEach((parent) => {
-      parent.delete(this);
-    });
   }
 }
 
@@ -587,5 +588,82 @@ export abstract class Container<
   public destroy(): void {
     super.destroy();
     this.children.clear();
+  }
+}
+
+export abstract class ContainerCanvas<
+  AttrsCustom extends Record<string, unknown> & AttrsIdentification,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  EventsCustom extends Record<string, any>,
+  IChildNode extends VirtualChildNode,
+  AttrsRefs extends Record<string, unknown>,
+  AttrsRaws extends Record<string, unknown>
+> extends Container<
+  AttrsCustom,
+  EventsCustom,
+  IChildNode,
+  AttrsRefs,
+  AttrsRaws
+> {
+  public toCanvas(
+    config?: Partial<Offset> &
+      Partial<Size> & {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        pixelRatio?: number;
+      }
+  ): HTMLCanvasElement {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((this as any).canvas && !config) return (this as any).canvas;
+
+    const canvas = Utils.createCanvas();
+    [canvas.width, canvas.height] = [
+      config?.width ?? 300,
+      config?.height ?? 300,
+    ];
+    // eslint-disable-next-line functional/no-let
+    let pixelRatioBk: number | void;
+
+    if (config?.pixelRatio !== void 0) {
+      pixelRatioBk = window.devicePixelRatio;
+      // eslint-disable-next-line functional/immutable-data
+      window.devicePixelRatio = config.pixelRatio;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const ctx = canvas.getContext("2d")!;
+    ctx.translate(config?.x ?? 0, config?.y ?? 0);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((this as any).canvas) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ctx.drawImage((this as any).canvas, 0, 0);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (this as any).draw(ctx);
+    }
+
+    if (pixelRatioBk !== void 0) {
+      // eslint-disable-next-line functional/immutable-data
+      window.devicePixelRatio = pixelRatioBk;
+    }
+    return canvas;
+  }
+  public toDataURL(type?: string, quality?: number): string {
+    return this.toCanvas().toDataURL(type, quality);
+  }
+  public toImage(
+    config?: Partial<Offset> &
+      Partial<Size> & {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        pixelRatio?: number;
+        // eslint-disable-next-line functional/prefer-readonly-type
+        type?: string;
+        // eslint-disable-next-line functional/prefer-readonly-type
+        quality?: number;
+      }
+  ): Promise<HTMLImageElement> {
+    return loadImage(
+      this.toCanvas(config).toDataURL(config?.type, config?.quality)
+    );
   }
 }

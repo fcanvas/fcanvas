@@ -1,4 +1,4 @@
-import { AttrsSelf, Container, EventsSelf } from "./Container";
+import { AttrsSelf, ContainerCanvas, EventsSelf } from "./Container";
 import { Group } from "./Group";
 import type { Shape } from "./Shape";
 import { Stage } from "./Stage";
@@ -43,7 +43,7 @@ type EventsCustom = HTMLElementEventMap;
 export class Layer<
   AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
   AttrsRaws extends Record<string, unknown> = Record<string, unknown>
-> extends Container<
+> extends ContainerCanvas<
   Attrs,
   EventsCustom,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
