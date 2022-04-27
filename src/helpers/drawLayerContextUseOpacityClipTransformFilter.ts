@@ -22,16 +22,17 @@ export type AttrsDrawLayerContext = {
     filter?: OptionFilter;
   };
 
-export function drawLayerContextUseOpacityClipTransformFilter(
+export function drawLayerContextUseOpacityClipTransformFilter<
+  T extends VirtualChildNode & {
+    // eslint-disable-next-line functional/no-method-signature
+    draw(context: CanvasRenderingContext2D): void;
+  }
+>(
   context: CanvasRenderingContext2D,
   attrs: AttrsDrawLayerContext,
   // eslint-disable-next-line functional/prefer-readonly-type
-  children: Set<
-    VirtualChildNode & {
-      // eslint-disable-next-line functional/no-method-signature
-      draw(context: CanvasRenderingContext2D): void;
-    }
-  >,
+  children: Set<T>,
+  filterItem?: (node: T, index: number) => void | boolean,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   argThis: any = void 0
 ) {
@@ -86,8 +87,10 @@ export function drawLayerContextUseOpacityClipTransformFilter(
     context.filter = createFilter(attrs.filter!);
   }
 
-  children.forEach((node) => {
-    node.draw(context);
+  children.forEach((node, index) => {
+    if (!filterItem || filterItem?.(node, index as unknown as number)) {
+      node.draw(context);
+    }
   });
 
   if (useFilter) {
