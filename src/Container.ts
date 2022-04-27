@@ -343,9 +343,9 @@ abstract class ContainerBasic<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((options as any)?.immediate) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const val = this.attrs[prop] as unknown as any;
+      const val = this.attrs[prop[0]] as unknown as any;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (cb as CallbackWatcher<any>)(val, val, prop);
+      (cb as CallbackWatcher<any>)(val, val, prop[0]);
     }
 
     return () =>
