@@ -23,7 +23,7 @@ CDN:
 ## Example
 
 ```ts
-import { Stage, Layer, Circle, rqaf, stop } feom "fcanvas"
+import { Stage, Layer, Circle, rqaf, stop } from "fcanvas"
 
 const stage = new Stage({
   container: "app",
