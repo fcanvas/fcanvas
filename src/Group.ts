@@ -1,4 +1,4 @@
-import { AttrsSelf, Container, VirtualChildNode } from "./Container";
+import { AttrsSelf, ContainerCanvas, VirtualChildNode } from "./Container";
 import type { Layer } from "./Layer";
 import { Shape } from "./Shape";
 import { Utils } from "./Utils";
@@ -40,7 +40,7 @@ export class Group<
     AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
     AttrsRaws extends Record<string, unknown> = Record<string, unknown>
   >
-  extends Container<
+  extends ContainerCanvas<
     Attrs,
     // eslint-disable-next-line @typescript-eslint/ban-types
     {},
