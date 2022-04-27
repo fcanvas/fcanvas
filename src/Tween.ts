@@ -25,9 +25,7 @@ function startTween() {
     requestAnimationFrame(startTween);
   }
 }
-export class Tween<
-  Node extends AllShape | Group | Label | Layer
-> {
+export class Tween<Node extends AllShape | Group | Label | Layer> {
   // eslint-disable-next-line functional/prefer-readonly-type
   private tween!: TweenJS<Node["attrs"]>;
   // eslint-disable-next-line functional/prefer-readonly-type

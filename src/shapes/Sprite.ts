@@ -176,7 +176,7 @@ export class Sprite<
 
       // eslint-disable-next-line functional/immutable-data
       this.attrs.frameIndex = frameIndex + 1;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, 1000 / ((this._anim as any).frameRate ?? this.attrs.frameRate ?? 17)) as unknown as number;
   }
   public stop(): void {

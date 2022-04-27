@@ -4,9 +4,7 @@ import { ClientRectOptions } from "../types/ClientRectOptions";
 import { Offset } from "../types/Offset";
 import { Size } from "../types/Size";
 
-export function getClientRectGroup<
-  T extends IChildrenAllowGroup | AllShape
->(
+export function getClientRectGroup<T extends IChildrenAllowGroup | AllShape>(
   // eslint-disable-next-line functional/prefer-readonly-type
   shapes: T[] | Set<T>,
   config: ClientRectOptions | false = {}
