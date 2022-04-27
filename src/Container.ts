@@ -278,7 +278,7 @@ abstract class ContainerBasic<
     name: Name,
     event: EventsSelf<EventsCustom>[Name]
   ): this;
-//   public emit(name: string, event: Event): this;
+  //   public emit(name: string, event: Event): this;
   public emit(
     name: string | keyof EventsSelf<EventsCustom>,
     event: Event

@@ -142,9 +142,9 @@ export type AttrsShapeSelf<
     raws?: AttrsRaws;
   };
 
-  type EventsCustomShape = {
-      readonly "resize-self": void 
-  }
+type EventsCustomShape = {
+  readonly "resize-self": void;
+};
 
 export class Shape<
   AttrsCustom extends Record<string, unknown> = {
@@ -159,7 +159,8 @@ export class Shape<
   AttrsRaws extends Record<string, unknown> = Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   IParent extends Layer | Group<any> = Layer | Group,
-  EventsCustom extends EventsCustomM & EventsCustomShape = EventsCustomM & EventsCustomShape 
+  EventsCustom extends EventsCustomM & EventsCustomShape = EventsCustomM &
+    EventsCustomShape
 > extends ContainerNode<
   AttrsShapeSelf<AttrsCustom, AttrsRefs, AttrsRaws>,
   EventsCustom,

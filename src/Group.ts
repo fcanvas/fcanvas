@@ -9,6 +9,7 @@ import {
 import { realMousePosition } from "./helpers/realMousePosition";
 import { setNeedReloadParentTrue } from "./helpers/setNeedReloadParentTrue";
 import { getClientRectGroup } from "./methods/getClientRectGroup";
+import AllShape from "./types/AllShape";
 import { ClientRectOptions } from "./types/ClientRectOptions";
 import { Offset } from "./types/Offset";
 
@@ -24,7 +25,7 @@ type Attrs<Node> = Offset & {
 } & AttrsDrawLayerContext;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type IChild = Shape<any, any> | Group<any>;
+type IChild = AllShape | Group<any>;
 export type IChildrenAllowGroup = VirtualChildNode & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly attrs: any;

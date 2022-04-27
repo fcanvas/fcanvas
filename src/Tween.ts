@@ -3,9 +3,9 @@ import clonedeep from "lodash.clonedeep";
 
 import { Group } from "./Group";
 import { Layer } from "./Layer";
-import { Shape } from "./Shape";
 import { createProxy } from "./helpers/createProxy";
 import { Label } from "./shapes/Label";
+import AllShape from "./types/AllShape";
 
 function assign<T>(obj1: T, obj2: T) {
   // eslint-disable-next-line functional/no-loop-statement
@@ -25,9 +25,9 @@ function startTween() {
     requestAnimationFrame(startTween);
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class Tween<Node extends Shape<any, any, any> | Group | Label | Layer> {
+export class Tween<
+  Node extends AllShape | Group | Label | Layer
+> {
   // eslint-disable-next-line functional/prefer-readonly-type
   private tween!: TweenJS<Node["attrs"]>;
   // eslint-disable-next-line functional/prefer-readonly-type
