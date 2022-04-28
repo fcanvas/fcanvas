@@ -5,6 +5,11 @@ A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's
 
 [![Build](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/docs.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/docs.yml)
 [![NPM](https://badge.fury.io/js/fcanvas.svg)](http://badge.fury.io/js/fcanvas)
+[![Size](https://img.shields.io/bundlephobia/minzip/fcanvas/latest)](https://npmjs.org/package/fcanvas)
+[![Languages](https://img.shields.io/github/languages/top/tachibana-shin/fcanvas)](https://npmjs.org/package/fcanvas)
+[![License](https://img.shields.io/npm/l/fcanvas)](https://npmjs.org/package/fcanvas)
+[![Star](https://img.shields.io/github/stars/tachibana-shin/fcanvas)](https://github.com/tachibana-shin/fcanvas/stargazers)
+[![Download](https://img.shields.io/npm/dm/fcanvas)](https://npmjs.org/package/fcanvas)
 
 ## Installation
 
