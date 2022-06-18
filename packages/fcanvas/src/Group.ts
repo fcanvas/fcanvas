@@ -48,9 +48,7 @@ export class Group<
     AttrsRefs,
     AttrsRaws
   >
-  implements VirtualChildNode
-{
-  // eslint-disable-next-line brace-style
+  implements VirtualChildNode {
   static readonly type: string = "Group"
 
   public readonly parents = new Set<Layer | Group>()
