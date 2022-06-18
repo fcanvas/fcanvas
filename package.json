@@ -1,6 +1,6 @@
 {
   "name": "@fcanvas/core",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "private": true,
   "scripts": {
     "format": "prettier -w packages",
