@@ -1,21 +1,23 @@
 import { Shape } from "../Shape"
 import { convertToDegress } from "../helpers/convertToDegress"
 import { pointInCircle } from "../helpers/pointInCircle"
-
-interface AttrsCustom {
-  angle: number
-
-  radius: number
-
-  clockwise?: boolean
-}
+import type Props from "../types/Props"
 
 export class Wedge<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
-> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
+> extends Shape<
+  {
+    angle: number
+    radius: number
+    clockwise?: boolean
+  },
+  EventsCustom,
+  AttrsRefs,
+  AttrsRaws
+> {
   static readonly type = "Wedge"
   static readonly sizes = ["radius"]
 

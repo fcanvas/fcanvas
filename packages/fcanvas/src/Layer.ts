@@ -7,6 +7,7 @@ import type { AttrsDrawLayerContext } from "./helpers/drawLayerContextUseOpacity
 import { drawLayerContextUseOpacityClipTransformFilter } from "./helpers/drawLayerContextUseOpacityClipTransformFilter"
 import type AllShape from "./types/AllShape"
 import type { Offset } from "./types/Offset"
+import type Props from "./types/Props"
 
 type Attrs = Partial<Offset> & {
   clearBeforeDraw?: boolean
@@ -47,8 +48,8 @@ type EventsCustom = HTMLElementEventMap & {
 }
 
 export class Layer<
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends ContainerCanvas<
   Attrs,
   EventsCustom,

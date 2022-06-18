@@ -1,3 +1,5 @@
+import type Props from "../types/Props"
+
 import type { AttrsCustom as AttrsArc } from "./Arc"
 import { Arc } from "./Arc"
 
@@ -7,8 +9,8 @@ const PIx2 = Math.PI * 2
 export class Ring<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Arc<EventsCustom, AttrsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Ring"
   static readonly sizes = ["innerRadius", "outerRadius", "clockwise"]

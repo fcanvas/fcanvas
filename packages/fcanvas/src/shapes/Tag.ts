@@ -1,30 +1,24 @@
 import type { Group } from "../Group"
 import type { Layer } from "../Layer"
 import { Shape } from "../Shape"
+import type Props from "../types/Props"
 
 import type { Label } from "./Label"
-
-interface AttrsCustom {
-  pointerDirection?: "up" | "down" | "left" | "right" | "none"
-
-  pointerWidth?: number
-
-  pointerHeight?: number
-
-  cornerRadius?: number | number[]
-
-  width?: number
-
-  height?: number
-}
 
 export class Tag<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Shape<
-  AttrsCustom,
+  {
+    pointerDirection?: "up" | "down" | "left" | "right" | "none"
+    pointerWidth?: number
+    pointerHeight?: number
+    cornerRadius?: number | number[]
+    width?: number
+    height?: number
+  },
   EventsCustom,
   AttrsRefs,
   AttrsRaws,

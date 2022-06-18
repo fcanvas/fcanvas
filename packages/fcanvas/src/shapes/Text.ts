@@ -4,11 +4,13 @@ import type { AttrsShapeSelf } from "../Shape"
 import { Shape } from "../Shape"
 import { Utils } from "../Utils"
 import { transparent } from "../packages/Colors"
+import type Props from "../types/Props"
 import type { Size } from "../types/Size"
 
 import type { Label } from "./Label"
 
-interface AttrsCustom {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type AttrsCustom = {
   fontFamily?: string
 
   fontSize?: number
@@ -84,8 +86,8 @@ const ATTR_CHANGE_LIST: readonly (keyof AttrsCustom)[] = [
 export class Text<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Shape<
   AttrsCustom,
   EventsCustom,

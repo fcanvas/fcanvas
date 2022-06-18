@@ -1,17 +1,21 @@
 import { Shape } from "../Shape"
-
-interface AttrsCustom {
-  width: number
-  height: number
-  cornerRadius?: number | [number, number] | [number, number, number, number]
-}
+import type Props from "../types/Props"
 
 export class Rect<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
-> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
+> extends Shape<
+  {
+    width: number
+    height: number
+    cornerRadius?: number | [number, number] | [number, number, number, number]
+  },
+  EventsCustom,
+  AttrsRefs,
+  AttrsRaws
+> {
   static readonly type = "Rect"
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {

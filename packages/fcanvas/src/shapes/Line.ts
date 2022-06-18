@@ -1,12 +1,11 @@
 import { Shape } from "../Shape"
+import type Props from "../types/Props"
 
-export interface AttrsCustom {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type AttrsCustom = {
   points: number[]
-
   tension?: number
-
   closed?: boolean
-
   bezier?: boolean
 }
 
@@ -68,10 +67,9 @@ function expandPoints(p: number[], tension: number) {
 export class Line<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsCustomMore extends Record<string, unknown> &
-    Omit<AttrsCustom, "closed"> = AttrsCustom,
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsCustomMore extends Props & Omit<AttrsCustom, "closed"> = AttrsCustom,
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Shape<AttrsCustomMore, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type: string = "Line"
   static readonly sizes: readonly string[] = [

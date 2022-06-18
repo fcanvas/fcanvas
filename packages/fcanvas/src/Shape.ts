@@ -13,6 +13,7 @@ import { transformedRect } from "./helpers/transformerRect"
 import { transparent } from "./packages/Colors"
 import type { ClientRectOptions } from "./types/ClientRectOptions"
 import type { Offset } from "./types/Offset"
+import type Props from "./types/Props"
 import type { Size } from "./types/Size"
 
 // add ctx.filter
@@ -29,7 +30,6 @@ interface FillModePattern {
 
   // eslint-disable-next-line no-undef
   fillPatternImage: CanvasImageSource
-
   fillPattern?: {
     repeat?: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
   } & OptionTransform
@@ -73,44 +73,29 @@ type FillModeMixture = {
 
 type AttrsDefault = Offset & {
   fillAfterStrokeEnabled?: boolean
-
   fillEnabled?: bool
-
   stroke?: FillStyle
-
   strokeWidth?: number
-
   strokeEnabled?: boolean
-
   hitStrokeWidth?: number
-
   strokeHitEnabled?: boolean
-
   perfectDrawEnabled?: boolean
-
   shadowForStrokeEnabled?: boolean
   // strokeScaleEnabled?: boolean
-
   lineJoin?: "bevel" | "round" | "miter"
-
   lineCap?: "butt" | "round" | "square"
   sceneFunc?: (context: CanvasRenderingContext2D) => void
 } & Partial<FillModeMixture> /* & FillModeMonopole */ & {
     shadowEnabled?: boolean
-
     shadow?: Partial<Offset> & {
       color: Color
-
       blur: number
       // opacity?: number
     }
   } & {
     dash?: number[]
-
     dashEnabled?: boolean
-
     visible?: boolean
-
     opacity?: number
   } & OptionTransform & {
     filter?: OptionFilter
@@ -120,12 +105,11 @@ const EmptyArray: Array<number> = []
 
 export type AttrsShapeSelf<
   T,
-  AttrsRefs extends Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown>
+  AttrsRefs extends Props,
+  AttrsRaws extends Props
 > = AttrsDefault &
   T & {
     refs?: AttrsRefs
-
     raws?: AttrsRaws
   }
 
@@ -134,15 +118,14 @@ interface EventsCustomShape {
 }
 
 export class Shape<
-  AttrsCustom extends Record<string, unknown> = {
+  AttrsCustom extends Props = {
     width: number
-
     height: number
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustomM extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>,
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   IParent extends Layer | Group<any> = Layer | Group,
   EventsCustom extends EventsCustomM & EventsCustomShape = EventsCustomM &

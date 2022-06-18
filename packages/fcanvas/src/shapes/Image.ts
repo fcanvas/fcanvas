@@ -1,5 +1,6 @@
 import { Shape } from "../Shape"
 import type { Offset } from "../types/Offset"
+import type Props from "../types/Props"
 import type { Size } from "../types/Size"
 import { loadImage } from "../utils/loadImage"
 
@@ -18,8 +19,8 @@ function getValFromSource(val: SVGAnimatedLength | number) {
 export class Image<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Image"
   static readonly noRefs = ["image"]

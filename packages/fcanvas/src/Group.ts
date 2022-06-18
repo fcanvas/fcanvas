@@ -11,16 +11,15 @@ import { getClientRectGroup } from "./methods/getClientRectGroup"
 import type AllShape from "./types/AllShape"
 import type { ClientRectOptions } from "./types/ClientRectOptions"
 import type { Offset } from "./types/Offset"
+import type Props from "./types/Props"
 
-type Attrs<Node> = Offset & {
-  width?: number
-
-  height?: number
-
-  visible?: boolean
-
-  filterItem?: (node: Node, index: number) => void | boolean
-} & AttrsDrawLayerContext
+type Attrs<Node> = Offset &
+  AttrsDrawLayerContext & {
+    width?: number
+    height?: number
+    visible?: boolean
+    filterItem?: (node: Node, index: number) => void | boolean
+  }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-use-before-define
 type IChild = AllShape | Group<any, any, any>
@@ -38,8 +37,8 @@ export type IChildrenAllowGroup = VirtualChildNode & {
 }
 export class Group<
     ChildNode extends IChildrenAllowGroup = IChild,
-    AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-    AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+    AttrsRefs extends Props = Props,
+    AttrsRaws extends Props = Props
   >
   extends ContainerCanvas<
     Attrs<ChildNode>,
@@ -49,7 +48,9 @@ export class Group<
     AttrsRefs,
     AttrsRaws
   >
-  implements VirtualChildNode {
+  implements VirtualChildNode
+// eslint-disable-next-line brace-style
+{
   static readonly type: string = "Group"
 
   public readonly parents = new Set<Layer | Group>()

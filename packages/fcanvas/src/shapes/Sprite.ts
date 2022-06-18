@@ -3,10 +3,11 @@ import type { Layer } from "../Layer"
 import type { AttrsShapeSelf } from "../Shape"
 import { Shape } from "../Shape"
 import { cropImage } from "../methods/cropImage"
+import type Props from "../types/Props"
 
-interface AttrsCustom {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type AttrsCustom = {
   image: HTMLImageElement
-
   animations: Record<
     string,
     | number[]
@@ -24,21 +25,17 @@ interface AttrsCustom {
         frameRate?: number
       }
   >
-
   animation: string
-
   frameIndex?: number // 0
-
   frameRate?: number // 17
-
   infinite?: boolean // true
 }
 
 export class Sprite<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Shape<
   AttrsCustom,
   EventsCustom,

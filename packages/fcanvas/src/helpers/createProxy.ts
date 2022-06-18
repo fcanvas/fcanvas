@@ -1,5 +1,7 @@
+import type Props from "../types/Props"
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const weakCache = new WeakMap<Record<string, unknown>, any>()
+const weakCache = new WeakMap<Props, any>()
 
 export function createProxy<
   R extends {

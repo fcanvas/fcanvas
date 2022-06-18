@@ -1,24 +1,22 @@
 import { Shape } from "../Shape"
 import { convertToRadial } from "../helpers/convertToRadial"
 import { pointInCircle } from "../helpers/pointInCircle"
+import type Props from "../types/Props"
 
-export interface AttrsCustom {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type AttrsCustom = {
   angle: number
-
   innerRadius: number
-
   outerRadius: number
-
   clockwise?: boolean
 }
 
 export class Arc<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsCustomMore extends Record<string, unknown> &
-    Omit<AttrsCustom, "angle"> = AttrsCustom,
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsCustomMore extends Props & Omit<AttrsCustom, "angle"> = AttrsCustom,
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Shape<AttrsCustomMore, EventsCustom, AttrsRefs, AttrsRaws> {
   static readonly type: string = "Arc"
 

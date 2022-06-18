@@ -10,10 +10,12 @@ import { getPointOnQuadraticBezier } from "../helpers/Path/getPointOnQuadraticBe
 import { parsePathData } from "../helpers/Path/parsePathData"
 import { transparent } from "../packages/Colors"
 import type { Offset } from "../types/Offset"
+import type Props from "../types/Props"
 
 import { getDummyContext, Text } from "./Text"
 
-interface AttrsCustom {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type AttrsCustom = {
   text: string
 
   data: string
@@ -55,8 +57,8 @@ const EmptyObject = Object.freeze(Object.create(null))
 export class TextPath<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Shape<
   AttrsCustom,
   EventsCustom,

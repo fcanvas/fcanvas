@@ -1,24 +1,22 @@
 import { calcLength } from "../helpers/Path/calcLength"
 import { getPointOnQuadraticBezier } from "../helpers/Path/getPointOnQuadraticBezier"
+import type Props from "../types/Props"
 
 import type { AttrsCustom as AttrsCustomLine } from "./Line"
 import { Line } from "./Line"
 
 type AttrsCustom = AttrsCustomLine & {
   pointerLength?: number // 10
-
   pointerWidth?: number // 10
-
   pointerAtBeginning?: boolean // false
-
   pointerAtEnding?: boolean // true
 }
 
 export class Arrow<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Line<EventsCustom, AttrsCustom, AttrsRefs, AttrsRaws> {
   static readonly type = "Arrow"
   static readonly sizes = [

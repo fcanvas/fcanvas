@@ -3,6 +3,7 @@ import { createProxy } from "./helpers/createProxy"
 import { matchesSelector } from "./helpers/matchesSelector"
 import { realMousePosition } from "./helpers/realMousePosition"
 import type { Offset } from "./types/Offset"
+import type Props from "./types/Props"
 import type { Size } from "./types/Size"
 import { loadImage } from "./utils/loadImage"
 
@@ -60,8 +61,8 @@ interface AttrListening {
 type AttrsDefault = AttrsIdentification & AttrListening
 export type AttrsSelf<
   AttrsCustom,
-  AttrsRefs extends Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown>
+  AttrsRefs extends Props,
+  AttrsRaws extends Props
 > = AttrsDefault &
   AttrsCustom & {
     refs?: AttrsRefs
@@ -69,8 +70,8 @@ export type AttrsSelf<
   }
 type NotNillRefsRaws<
   AttrsCustom,
-  AttrsRefs extends Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown>
+  AttrsRefs extends Props,
+  AttrsRaws extends Props
 > = AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws> &
   Required<Pick<AttrsSelf<AttrsCustom, AttrsRefs, AttrsRaws>, "raws" | "refs">>
 type CallbackWatcher<T> = (
@@ -108,11 +109,11 @@ export declare class VirtualChildNode {
 }
 
 abstract class ContainerBasic<
-  AttrsCustom extends Record<string, unknown>,
+  AttrsCustom extends Props,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EventsCustom extends Record<string, any>,
-  AttrsRefs extends Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown>
+  AttrsRefs extends Props,
+  AttrsRaws extends Props
 > {
   static readonly raws = ["id", "name", "listeners", "raws"]
   static readonly type: string
@@ -369,12 +370,12 @@ abstract class ContainerBasic<
 }
 
 export abstract class ContainerNode<
-    AttrsCustom extends Record<string, unknown>,
+    AttrsCustom extends Props,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     EventsCustom extends Record<string, any>,
     IParentNode extends VirtualParentNode,
-    AttrsRefs extends Record<string, unknown>,
-    AttrsRaws extends Record<string, unknown>
+    AttrsRefs extends Props,
+    AttrsRaws extends Props
   >
   extends ContainerBasic<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws>
   implements VirtualChildNode {
@@ -433,12 +434,12 @@ export abstract class ContainerNode<
 }
 
 export abstract class Container<
-    AttrsCustom extends Record<string, unknown>,
+    AttrsCustom extends Props,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     EventsCustom extends Record<string, any>,
     IChildNode extends VirtualChildNode,
-    AttrsRefs extends Record<string, unknown>,
-    AttrsRaws extends Record<string, unknown>
+    AttrsRefs extends Props,
+    AttrsRaws extends Props
   >
   extends ContainerBasic<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws>
   implements VirtualParentNode {
@@ -534,12 +535,12 @@ export abstract class Container<
 }
 
 export abstract class ContainerCanvas<
-  AttrsCustom extends Record<string, unknown>,
+  AttrsCustom extends Props,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EventsCustom extends Record<string, any>,
   IChildNode extends VirtualChildNode,
-  AttrsRefs extends Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown>
+  AttrsRefs extends Props,
+  AttrsRaws extends Props
 > extends Container<
   AttrsCustom,
   EventsCustom,

@@ -1,16 +1,20 @@
 import { Shape } from "../Shape"
 import { pointInCircle } from "../helpers/pointInCircle"
-
-interface AttrsCustom {
-  radius: number
-}
+import type Props from "../types/Props"
 
 export class Circle<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   EventsCustom extends Record<string, any> = {},
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
-> extends Shape<AttrsCustom, EventsCustom, AttrsRefs, AttrsRaws> {
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
+> extends Shape<
+  {
+    radius: number
+  },
+  EventsCustom,
+  AttrsRefs,
+  AttrsRaws
+> {
   static readonly type = "Circle"
   static readonly sizes = ["radius"]
   public readonly _centroid = true

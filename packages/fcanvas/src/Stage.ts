@@ -5,6 +5,7 @@ import { Utils } from "./Utils"
 import { globalConfigs } from "./global-configs"
 import type { OptionTransform } from "./helpers/createTransform"
 import { createTransform } from "./helpers/createTransform"
+import type Props from "./types/Props"
 
 type Attrs = {
   width: number
@@ -22,8 +23,8 @@ type Attrs = {
 type EventsCustom = HTMLElementEventMap
 
 export class Stage<
-  AttrsRefs extends Record<string, unknown> = Record<string, unknown>,
-  AttrsRaws extends Record<string, unknown> = Record<string, unknown>
+  AttrsRefs extends Props = Props,
+  AttrsRaws extends Props = Props
 > extends Container<Attrs, EventsCustom, Layer, AttrsRefs, AttrsRaws> {
   static readonly type: string = "Stage"
   readonly #container = Utils.createDiv()

@@ -30,13 +30,18 @@ importers:
 
   packages/fcanvas:
     specifiers:
+      '@tweenjs/tween.js': ^18.6.4
+      '@types/lodash.clonedeep': ^4.5.7
       lodash.clonedeep: ^4.5.0
       mitt: ^3.0.0
       path-cross: ^0.0.3
       plist: ^3.0.5
       tsup: ^6.0.1
       vitest: ^0.13.0
+    dependencies:
+      '@tweenjs/tween.js': 18.6.4
     devDependencies:
+      '@types/lodash.clonedeep': 4.5.7
       lodash.clonedeep: 4.5.0
       mitt: 3.0.0
       path-cross: 0.0.3
@@ -47,13 +52,13 @@ importers:
   packages/node:
     specifiers:
       canvas: ^2.9.1
-      fcanvas: ^0.1.4
+      fcanvas: workspace:../fcavas
       path2d-polyfill: ^1.2.1
       tsup: ^6.0.1
       vitest: ^0.13.0
     dependencies:
       canvas: 2.9.1
-      fcanvas: 0.1.18
+      fcanvas: link:../fcavas
       path2d-polyfill: 1.2.1
     devDependencies:
       tsup: 6.1.2
@@ -412,6 +417,10 @@ packages:
       - tsutils
     dev: true
 
+  /@tweenjs/tween.js/18.6.4:
+    resolution: {integrity: sha512-lB9lMjuqjtuJrx7/kOkqQBtllspPIN+96OvTCeJ2j5FEzinoAXTdAMFnDAQT1KVPRlnYfBrqxtqP66vDM40xxQ==}
+    dev: false
+
   /@types/chai-subset/1.3.3:
     resolution: {integrity: sha512-frBecisrNGz+F4T6bcc+NLeolfiojh5FxW2klu669+8BARtyQv2C/GkNW6FUodVe4BroGMP/wER/YDGc7rEllw==}
     dependencies:
@@ -428,6 +437,16 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash.clonedeep/4.5.7:
+    resolution: {integrity: sha512-ccNqkPptFIXrpVqUECi60/DFxjNKsfoQxSQsgcBJCX/fuX1wgyQieojkcWH/KpE3xzLoWN/2k+ZeGqIN3paSvw==}
+    dependencies:
+      '@types/lodash': 4.14.182
+    dev: true
+
+  /@types/lodash/4.14.182:
+    resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
     dev: true
 
   /@types/minimist/1.2.2:
@@ -1966,10 +1985,6 @@ packages:
     dependencies:
       reusify: 1.0.4
     dev: true
-
-  /fcanvas/0.1.18:
-    resolution: {integrity: sha512-CVoJ4x6H6jL+qxdZXaHQmyQD3riD7yU35L0inZ+4tQvzsvo3IykYtRr0t+rXMCzPR6qZYIosUYrtASNBh9T+TA==}
-    dev: false
 
   /file-entry-cache/6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
