@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "a monorepo for fcanvas",
   "scripts": {
     "build": "tsup",
