@@ -15,6 +15,7 @@ function calcProjectedRectSizeOfRotatedRect(
 }
 
 export function cropImage(
+  // eslint-disable-next-line no-undef
   image: CanvasImageSource,
   x = 0,
   y = 0,

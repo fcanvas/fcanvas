@@ -57,7 +57,7 @@ function doIntersect(p1: Offset, q1: Offset, p2: Offset, q2: Offset): boolean {
 
   // General case
 
-  if (o1 != o2 && o3 != o4) return true
+  if (o1 !== o2 && o3 !== o4) return true
 
   // Special Cases
 
@@ -113,6 +113,7 @@ export function pointInPolygon(
 
   // eslint-disable-next-line functional/no-let
   let count = 0
+  // eslint-disable-next-line functional/no-let
   let i = 0
 
   do {
@@ -149,7 +150,7 @@ export function pointInPolygon(
     }
 
     i = next
-  } while (i != 0)
+  } while (i !== 0)
 
   // Return true if count is odd, false otherwise
 

@@ -4,8 +4,8 @@ import type { Size } from "../types/Size"
 import { loadImage } from "../utils/loadImage"
 
 type AttrsCustom = {
+  // eslint-disable-next-line no-undef
   image: CanvasImageSource
-
   crop?: Offset & Size
 } & Partial<Size>
 
@@ -38,7 +38,10 @@ export class Image<
         this.attrs.width ?? this.attrs.crop.width,
         this.attrs.height ?? this.attrs.crop.height
       )
-    } else if (this.attrs.width !== void 0 && this.attrs.height !== void 0) {
+    } else if (
+      this.attrs.width !== undefined &&
+      this.attrs.height !== undefined
+    ) {
       context.drawImage(
         this.attrs.image,
         0,

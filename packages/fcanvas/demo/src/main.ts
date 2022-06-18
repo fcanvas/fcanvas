@@ -1,6 +1,7 @@
 import "./style.scss"
 
-import { Layer, loadImage, Sprite, Stage } from "../../src/"
+// eslint-disable-next-line n/no-unpublished-import
+import { Layer, loadImage, Sprite, Stage } from "../../src/index"
 
 import DinoSprite from "./assets/dino-sprite.json"
 import DinoSpriteImage from "./assets/dino-sprite.png"

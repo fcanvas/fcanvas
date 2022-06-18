@@ -1,3 +1,5 @@
+import { describe, expect, test } from "vitest"
+
 import { matchesSelector } from "./matchesSelector"
 
 const el: readonly [string, string, string] = [

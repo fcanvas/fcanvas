@@ -3,7 +3,8 @@ const callbacks = new Set<() => void>()
 let cbNow: (() => void) | void
 
 function _loop() {
-  callbacks.forEach((cb) => ((cbNow = cb)(), (cbNow = void 0)))
+  // eslint-disable-next-line no-sequences
+  callbacks.forEach((cb) => ((cbNow = cb)(), (cbNow = undefined)))
 
   if (callbacks.size === 0) return
 
@@ -16,7 +17,9 @@ export function rqaf(callback: () => void): void {
 }
 
 export function stop(all: true): void
+// eslint-disable-next-line no-redeclare
 export function stop(callback?: () => void): void
+// eslint-disable-next-line no-redeclare
 export function stop(callback?: (() => void) | true) {
   if (callback === true) {
     callbacks.clear()

@@ -27,6 +27,7 @@ interface FillModeColor {
 interface FillModePattern {
   /* fill pattern */
 
+  // eslint-disable-next-line no-undef
   fillPatternImage: CanvasImageSource
 
   fillPattern?: {
@@ -93,11 +94,7 @@ type AttrsDefault = Offset & {
   lineJoin?: "bevel" | "round" | "miter"
 
   lineCap?: "butt" | "round" | "square"
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  sceneFunc?: <This extends any>(
-    this: This,
-    context: CanvasRenderingContext2D
-  ) => void
+  sceneFunc?: (context: CanvasRenderingContext2D) => void
 } & Partial<FillModeMixture> /* & FillModeMonopole */ & {
     shadowEnabled?: boolean
 
@@ -190,7 +187,7 @@ export class Shape<
     })
 
     if (this.attrs.perfectDrawEnabled !== false)
-      this.#context = Utils.createCanvas().getContext("2d") ?? void 0
+      this.#context = Utils.createCanvas().getContext("2d") ?? undefined
 
     this.onresize()
   }
@@ -219,7 +216,7 @@ export class Shape<
     const applyStroke =
       !config.skipStroke &&
       (this.attrs.strokeEnabled ?? true) &&
-      this.attrs.stroke !== void 0
+      this.attrs.stroke !== undefined
     const strokeWidth = (applyStroke && (this.attrs.strokeWidth ?? 1)) || 0
 
     const fillAndStrokeWidth = fillRect.width + strokeWidth
@@ -228,7 +225,7 @@ export class Shape<
     const applyShadow =
       !config.skipShadow &&
       this.attrs.shadowEnabled !== false &&
-      this.attrs.shadow !== void 0
+      this.attrs.shadow !== undefined
     const shadowOffsetX = applyShadow ? this.attrs.shadow?.x ?? 0 : 0
     const shadowOffsetY = applyShadow ? this.attrs.shadow?.y ?? 0 : 0
 
@@ -272,7 +269,7 @@ export class Shape<
         height + adjust
       ]
     }
-    this.emit("resize-self", void 0)
+    this.emit("resize-self", undefined)
   }
 
   private getSceneFunc() {
@@ -283,11 +280,11 @@ export class Shape<
     if (this.attrs.fillPriority)
       return this.attrs.fillPriority as FillModeMixture["fillPriority"]
 
-    if (this.attrs.fillPatternImage !== void 0) return "pattern"
+    if (this.attrs.fillPatternImage !== undefined) return "pattern"
 
-    if (this.attrs.fillLinearGradient !== void 0) return "linear-gradient"
+    if (this.attrs.fillLinearGradient !== undefined) return "linear-gradient"
 
-    if (this.attrs.fillRadialGradient !== void 0) return "radial-gradient"
+    if (this.attrs.fillRadialGradient !== undefined) return "radial-gradient"
 
     return "color"
   }
@@ -303,7 +300,7 @@ export class Shape<
         style = this.attrs.fill
         break
       case "pattern":
-        if (this.attrs.fillPatternImage !== void 0) {
+        if (this.attrs.fillPatternImage !== undefined) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           style = context.createPattern(
             this.attrs.fillPatternImage,
@@ -317,7 +314,7 @@ export class Shape<
         }
         break
       case "linear-gradient":
-        if (this.attrs.fillLinearGradient !== void 0) {
+        if (this.attrs.fillLinearGradient !== undefined) {
           style = context.createLinearGradient(
             this.attrs.fillLinearGradient.start.x,
             this.attrs.fillLinearGradient.start.y,
@@ -330,7 +327,7 @@ export class Shape<
         }
         break
       case "radial-gradient":
-        if (this.attrs.fillRadialGradient !== void 0) {
+        if (this.attrs.fillRadialGradient !== undefined) {
           style = context.createRadialGradient(
             this.attrs.fillRadialGradient.start.x,
             this.attrs.fillRadialGradient.start.y,
@@ -361,7 +358,7 @@ export class Shape<
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getStroke(_context: CanvasRenderingContext2D) {
-    return this.attrs.strokeEnabled !== false ? this.attrs.stroke : void 0
+    return this.attrs.strokeEnabled !== false ? this.attrs.stroke : undefined
   }
 
   protected strokeScene(context: CanvasRenderingContext2D) {
@@ -375,7 +372,7 @@ export class Shape<
   private lineSet(context: CanvasRenderingContext2D) {
     if (this.attrs.strokeEnabled === false) return
 
-    if (this.attrs.strokeWidth !== void 0) {
+    if (this.attrs.strokeWidth !== undefined) {
       // eslint-disable-next-line functional/immutable-data
       context.lineWidth = this.attrs.strokeWidth
     }
@@ -387,8 +384,7 @@ export class Shape<
 
     if (this.attrs.dashEnabled ?? true)
       context.setLineDash(this.attrs.dash ?? EmptyArray)
-    else
-    if (context.getLineDash().length) context.setLineDash(EmptyArray)
+    else if (context.getLineDash().length) context.setLineDash(EmptyArray)
   }
 
   protected fillStrokeScene(context: CanvasRenderingContext2D) {
@@ -416,7 +412,7 @@ export class Shape<
   }
 
   private shadowScene(context: CanvasRenderingContext2D) {
-    if (this.attrs.shadowEnabled !== false && this.attrs.shadow !== void 0) {
+    if (this.attrs.shadowEnabled !== false && this.attrs.shadow !== undefined) {
       // eslint-disable-next-line functional/immutable-data
       context.shadowColor = this.attrs.shadow.color
       // eslint-disable-next-line functional/immutable-data
@@ -452,8 +448,8 @@ export class Shape<
 
     const needUseTransform =
       existsTransform(this.attrs, !this.#context) && !this.#context
-    const needSetAlpha = this.attrs.opacity !== void 0
-    const useFilter = this.attrs.filter !== void 0
+    const needSetAlpha = this.attrs.opacity !== undefined
+    const useFilter = this.attrs.filter !== undefined
     // eslint-disable-next-line functional/no-let
     let backupTransform, backupAlpha: number, backupFilter: string
 

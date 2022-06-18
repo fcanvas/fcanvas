@@ -18,7 +18,7 @@ export class Range {
   constructor(stop: number)
   constructor(start: number, stop: number, step?: number)
   constructor(start: number, stop?: number, step = 1) {
-    if (stop === void 0) [start, stop] = [0, start]
+    if (stop === undefined) [start, stop] = [0, start]
     ;[this.start, this.stop, this.step] = [start, stop, step]
 
     return this
@@ -109,8 +109,9 @@ export class Range {
 }
 
 function range(stop: number): Range
+// eslint-disable-next-line no-redeclare
 function range(start: number, stop: number, step?: number): Range
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-redeclare
 function range(start: any, stop?: any, step?: any) {
   return new Range(start, stop, step)
 }

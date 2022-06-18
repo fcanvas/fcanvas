@@ -10,10 +10,13 @@ export function getClientRectGroup<T extends IChildrenAllowGroup | AllShape>(
 ): Offset & Size {
   // eslint-disable-next-line functional/no-let
   let x = Infinity
+  // eslint-disable-next-line functional/no-let
   let y = Infinity
   /* width = 0,
     height = 0, */
+  // eslint-disable-next-line functional/no-let
   let fillWidth = 0
+  // eslint-disable-next-line functional/no-let
   let fillHeight = 0
   shapes.forEach((node) => {
     const clientRect: Offset & Size = config

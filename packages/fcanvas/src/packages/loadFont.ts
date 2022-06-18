@@ -22,14 +22,16 @@ export function loadFont(
     const request = new XMLHttpRequest()
 
     request.addEventListener("readystatechange", async () => {
-      if (request.readyState == 4) {
+      if (request.readyState === 4) {
         try {
           if (
             request.status === 200 ||
             request.status === 201 ||
             request.status === 0
           ) {
+            // eslint-disable-next-line camelcase
             const junction_font = new FontFace(fontFamily, request.response)
+            // eslint-disable-next-line camelcase
             const loaded_face = await junction_font.load()
 
             document.fonts.add(loaded_face)

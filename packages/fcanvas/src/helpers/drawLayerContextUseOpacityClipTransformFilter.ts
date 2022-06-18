@@ -33,9 +33,9 @@ export function drawLayerContextUseOpacityClipTransformFilter<
   children: Set<T>,
   filterItem?: (node: T, index: number) => void | boolean,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  argThis: any = void 0
+  argThis: any = undefined
 ) {
-  const needBackup = attrs.clip !== void 0
+  const needBackup = attrs.clip !== undefined
 
   if (needBackup) {
     context.save()
@@ -58,14 +58,14 @@ export function drawLayerContextUseOpacityClipTransformFilter<
     }
   }
   const needUseTransform =
-    attrs.scale !== void 0 ||
-    attrs.rotation !== void 0 ||
-    attrs.offset !== void 0 ||
-    attrs.skewX !== void 0 ||
-    attrs.skewY !== void 0 ||
+    attrs.scale !== undefined ||
+    attrs.rotation !== undefined ||
+    attrs.offset !== undefined ||
+    attrs.skewX !== undefined ||
+    attrs.skewY !== undefined ||
     !context
-  const needSetAlpha = attrs.opacity !== void 0
-  const useFilter = attrs.filter !== void 0
+  const needSetAlpha = attrs.opacity !== undefined
+  const useFilter = attrs.filter !== undefined
   // eslint-disable-next-line functional/no-let
   let backupTransform, backupAlpha: number, backupFilter: string
 

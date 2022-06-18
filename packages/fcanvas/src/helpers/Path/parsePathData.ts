@@ -57,7 +57,7 @@ export function parsePathData(data: string) {
     "A"
   ]
   // convert white spaces to commas
-  cs = cs.replace(new RegExp(" ", "g"), ",")
+  cs = cs.replace(/ /g, ",")
   // create pipes so that we can split the data
   // eslint-disable-next-line functional/no-let
   for (let n = 0; n < cc.length; n++)
@@ -79,6 +79,7 @@ export function parsePathData(data: string) {
   // init context point
   // eslint-disable-next-line functional/no-let
   let cpx = 0
+  // eslint-disable-next-line functional/no-let
   let cpy = 0
 
   const re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi

@@ -1,3 +1,5 @@
+import { describe, expect, test } from "vitest"
+
 import { Shape } from "../Shape"
 
 import { getClientRectGroup } from "./getClientRectGroup"

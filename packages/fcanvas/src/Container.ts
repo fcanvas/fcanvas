@@ -8,7 +8,6 @@ import { loadImage } from "./utils/loadImage"
 
 interface AttrsIdentification {
   id?: string
-
   name?: string
 }
 
@@ -66,7 +65,6 @@ export type AttrsSelf<
 > = AttrsDefault &
   AttrsCustom & {
     refs?: AttrsRefs
-
     raws?: AttrsRaws
   }
 type NotNillRefsRaws<
@@ -435,7 +433,7 @@ export abstract class ContainerNode<
 }
 
 export abstract class Container<
-    AttrsCustom extends Record<string, unknown> & AttrsIdentification,
+    AttrsCustom extends Record<string, unknown>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     EventsCustom extends Record<string, any>,
     IChildNode extends VirtualChildNode,
@@ -536,7 +534,7 @@ export abstract class Container<
 }
 
 export abstract class ContainerCanvas<
-  AttrsCustom extends Record<string, unknown> & AttrsIdentification,
+  AttrsCustom extends Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   EventsCustom extends Record<string, any>,
   IChildNode extends VirtualChildNode,
@@ -562,7 +560,7 @@ export abstract class ContainerCanvas<
 
     const canvas = Utils.createCanvas()
 
-    if (config?.width !== void 0) {
+    if (config?.width !== undefined) {
       // eslint-disable-next-line functional/immutable-data
       canvas.width = config.width
     } else {
@@ -579,7 +577,7 @@ export abstract class ContainerCanvas<
         canvas.width = width + adjust
       }
     }
-    if (config?.height !== void 0) {
+    if (config?.height !== undefined) {
       // eslint-disable-next-line functional/immutable-data
       canvas.height = config.height
     } else {
@@ -600,7 +598,7 @@ export abstract class ContainerCanvas<
     // eslint-disable-next-line functional/no-let
     let pixelRatioBk: number | void
 
-    if (config?.pixelRatio !== void 0) {
+    if (config?.pixelRatio !== undefined) {
       pixelRatioBk = window.devicePixelRatio
       // eslint-disable-next-line functional/immutable-data
       window.devicePixelRatio = config.pixelRatio
@@ -614,7 +612,7 @@ export abstract class ContainerCanvas<
     ;(this as any).draw(ctx)
     if (canvasCache) ctx.drawImage(canvasCache, 0, 0)
 
-    if (pixelRatioBk !== void 0) {
+    if (pixelRatioBk !== undefined) {
       // eslint-disable-next-line functional/immutable-data
       window.devicePixelRatio = pixelRatioBk
     }

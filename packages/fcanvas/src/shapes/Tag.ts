@@ -47,8 +47,11 @@ export class Tag<
 
     // eslint-disable-next-line functional/no-let
     let topLeft = 0
+    // eslint-disable-next-line functional/no-let
     let topRight = 0
+    // eslint-disable-next-line functional/no-let
     let bottomRight = 0
+    // eslint-disable-next-line functional/no-let
     let bottomLeft = 0
     const ws2 = (this.attrs.width ?? 0) / 2
     const hs2 = (this.attrs.height ?? 0) / 2
@@ -140,8 +143,11 @@ export class Tag<
   public getSelfRect() {
     // eslint-disable-next-line functional/no-let
     let x = 0
+    // eslint-disable-next-line functional/no-let
     let y = 0
+    // eslint-disable-next-line functional/no-let
     let width = this.attrs.width ?? 0
+    // eslint-disable-next-line functional/no-let
     let height = this.attrs.height ?? 0
     const {
       pointerWidth = 20,

@@ -150,7 +150,9 @@ export class Text<
     const shouldLineThrough = textDecoration === "line-through"
     // eslint-disable-next-line functional/no-let
     let n
+    // eslint-disable-next-line functional/no-let
     let translateY = lineHeightPx / 2
+    // eslint-disable-next-line functional/no-let
     let alignY = 0
 
     // eslint-disable-next-line functional/immutable-data
@@ -275,7 +277,7 @@ export class Text<
     context.fillStyle = this.getFill(context) ?? "black"
     context.fillText(this.partialText, this.partialTextX, this.partialTextY)
     const _stroke = this.getStroke(context)
-    if (_stroke !== void 0) {
+    if (_stroke !== undefined) {
       // eslint-disable-next-line functional/immutable-data
       context.strokeStyle = _stroke
       context.strokeText(this.partialText, this.partialTextX, this.partialTextY)
@@ -283,9 +285,9 @@ export class Text<
   }
 
   private getWidth() {
-    if (this.textWidth === void 0) this.setTextData()
+    if (this.textWidth === undefined) this.setTextData()
 
-    return this.attrs.width === "auto" || this.attrs.width === void 0
+    return this.attrs.width === "auto" || this.attrs.width === undefined
       ? this.textWidth + (this.attrs.padding ?? 0) * 2
       : this.attrs.width
   }
@@ -368,6 +370,7 @@ export class Text<
     const shouldAddEllipsis = this.attrs.ellipsis
     // eslint-disable-next-line functional/no-let
     let textWidth = 0
+    // eslint-disable-next-line functional/no-let
     let currentHeightPx = 0
     this.textArr = []
     this.textWidth = 0
@@ -394,8 +397,11 @@ export class Text<
            */
           // eslint-disable-next-line functional/no-let
           let low = 0
+          // eslint-disable-next-line functional/no-let
           let high = line.length
+          // eslint-disable-next-line functional/no-let
           let match = ""
+          // eslint-disable-next-line functional/no-let
           let matchWidth = 0
 
           while (low < high) {

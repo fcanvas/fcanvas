@@ -11,15 +11,18 @@ type CanvasImageResource = HTMLCanvasElement & {
   readonly offset: Readonly<Offset>
 }
 interface Plist<TileNames extends string> {
-  readonly frames: {
-    readonly [filename in TileNames]: {
-      readonly frame: string
-      readonly offset: string
-      readonly rotated: boolean
-      readonly sourceColorRect: string
-      readonly sourceSize: string
-    }
-  }
+  readonly frames: Readonly<
+    Record<
+      TileNames,
+      {
+        readonly frame: string
+        readonly offset: string
+        readonly rotated: boolean
+        readonly sourceColorRect: string
+        readonly sourceSize: string
+      }
+    >
+  >
   readonly metadata: {
     readonly format: number
     readonly realTextureFileName: string
@@ -40,6 +43,7 @@ function parsePlistValueToArray<T>(value: string): readonly T[] {
         .replace(rCloseBracket, "]")
     )
 
+    // eslint-disable-next-line no-new-func
     return new Function(`return ${value}`)()
   }
 

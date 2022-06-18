@@ -22,8 +22,8 @@ type Attrs<Node> = Offset & {
   filterItem?: (node: Node, index: number) => void | boolean
 } & AttrsDrawLayerContext
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type IChild = AllShape | Group<any>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-use-before-define
+type IChild = AllShape | Group<any, any, any>
 export type IChildrenAllowGroup = VirtualChildNode & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly attrs: any
@@ -68,7 +68,8 @@ export class Group<
     this.watch(
       ["width", "height"],
       () => {
-        if (this.attrs.width === void 0 || this.attrs.height === void 0) return
+        if (this.attrs.width === undefined || this.attrs.height === undefined)
+          return
 
         this.#context.canvas.width = this.attrs.width
         this.#context.canvas.height = this.attrs.height
@@ -88,7 +89,8 @@ export class Group<
   }
 
   public _onChildResize() {
-    if (this.attrs.width !== void 0 && this.attrs.height !== void 0) return
+    if (this.attrs.width !== undefined && this.attrs.height !== undefined)
+      return
 
     const { width, height } = this.getClientRect()
     ;[this.#context.canvas.width, this.#context.canvas.height] = [width, height]

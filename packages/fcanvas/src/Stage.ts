@@ -18,6 +18,7 @@ type Attrs = {
   opacity?: number
 } & OptionTransform
 
+// eslint-disable-next-line no-undef
 type EventsCustom = HTMLElementEventMap
 
 export class Stage<

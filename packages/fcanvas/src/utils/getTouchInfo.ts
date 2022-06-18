@@ -23,6 +23,7 @@ export function getTouchInfo<
   const length = touches.length
   // eslint-disable-next-line functional/no-let
   let i = 0
+  // eslint-disable-next-line functional/no-let
   let touch: T
 
   while (i < length) {

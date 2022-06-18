@@ -3,7 +3,7 @@ const weakCache = new WeakMap<Record<string, unknown>, any>()
 
 export function createProxy<
   R extends {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
     [key in string]: any
   },
   K extends string & keyof R
@@ -19,7 +19,7 @@ export function createProxy<
 
   const proxy = new Proxy(target, {
     get(target, prop) {
-      if (target === void 0 && (prop === "raws" || prop === "refs")) {
+      if (target === undefined && (prop === "raws" || prop === "refs")) {
         // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
         ;(target as any)[prop as string] = {} as unknown
       }
@@ -40,7 +40,7 @@ export function createProxy<
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             target[prop as string] as any,
             onsetter,
-            void 0,
+            undefined,
             mykey
           )
         }

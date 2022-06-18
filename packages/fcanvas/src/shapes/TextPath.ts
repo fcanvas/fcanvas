@@ -46,6 +46,7 @@ interface AttrsCustom {
 
   height?: number | "auto"
 
+  // eslint-disable-next-line no-undef
   textBaseline?: CanvasTextBaseline
 }
 
@@ -116,7 +117,7 @@ export class TextPath<
     context.fillStyle = this.getFill(context) ?? "black"
     context.fillText(this.partialText, 0, 0)
     const _stroke = this.getStroke(context)
-    if (_stroke !== void 0) {
+    if (_stroke !== undefined) {
       // eslint-disable-next-line functional/immutable-data
       context.strokeStyle = _stroke
       context.strokeText(this.partialText, 0, 0)
@@ -236,9 +237,13 @@ export class TextPath<
 
     // eslint-disable-next-line functional/no-let
     let p0: Offset | void
+    // eslint-disable-next-line functional/no-let
     let p1: Offset | void
+    // eslint-disable-next-line functional/no-let, no-undef
     let pathCmd: typeof this.dataArray[0] | void
+    // eslint-disable-next-line functional/no-let
     let pIndex = -1
+    // eslint-disable-next-line functional/no-let
     let currentT = 0
     // var sumLength = 0;
     // for(var j = 0; j < that.dataArray.length; j++) {
@@ -282,7 +287,7 @@ export class TextPath<
       // eslint-disable-next-line functional/no-let
       let attempts = 0
 
-      p1 = void 0
+      p1 = undefined
 
       while (
         Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
@@ -300,7 +305,7 @@ export class TextPath<
             cumulativePathLength + pathCmd.pathLength < glyphWidth
           ) {
             cumulativePathLength += pathCmd.pathLength
-            pathCmd = void 0
+            pathCmd = undefined
           }
         }
 
@@ -325,7 +330,7 @@ export class TextPath<
                 p0.y
               )
             } else {
-              pathCmd = void 0
+              pathCmd = undefined
             }
             break
           case "A":
@@ -424,7 +429,7 @@ export class TextPath<
 
         if (needNewSegment) {
           needNewSegment = false
-          pathCmd = void 0
+          pathCmd = undefined
         }
       }
     }

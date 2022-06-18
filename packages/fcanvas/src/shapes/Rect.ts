@@ -2,9 +2,7 @@ import { Shape } from "../Shape"
 
 interface AttrsCustom {
   width: number
-
   height: number
-
   cornerRadius?: number | [number, number] | [number, number, number, number]
 }
 
@@ -20,8 +18,11 @@ export class Rect<
     if (this.attrs.cornerRadius) {
       // eslint-disable-next-line functional/no-let
       let r1 = 0
+      // eslint-disable-next-line functional/no-let
       let r2 = 0
+      // eslint-disable-next-line functional/no-let
       let r3 = 0
+      // eslint-disable-next-line functional/no-let
       let r4 = 0
       const ws2 = this.attrs.width / 2
       const hs2 = this.attrs.height / 2

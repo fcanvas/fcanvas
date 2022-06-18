@@ -64,6 +64,7 @@ export class Sprite<
   private interval?: number
 
   private _isRunning = false
+  // eslint-disable-next-line no-undef
   private get _anim(): typeof this.attrs.animations["*"] {
     return this.attrs.animations[this.attrs.animation]
   }
@@ -178,7 +179,7 @@ export class Sprite<
   public stop(): void {
     if (this.interval) {
       clearInterval(this.interval)
-      this.interval = void 0
+      this.interval = undefined
     }
     /// / eslint-disable-next-line functional/immutable-data
     // this.attrs.frameIndex =

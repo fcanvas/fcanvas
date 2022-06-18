@@ -41,6 +41,7 @@ const EventsDefault = [
   "dbltap"
 ]
 
+// eslint-disable-next-line no-undef
 type EventsCustom = HTMLElementEventMap & {
   readonly "resize-self": void
 }
@@ -89,13 +90,13 @@ export class Layer<
       "position: absolute; margin: 0; padding: 0"
 
     const onResizeSelf = () => {
-      if (this.attrs.width !== void 0) {
+      if (this.attrs.width !== undefined) {
         this.#context.canvas.width = this.attrs.width
       } else {
         this.#context.canvas.style.width = "100%"
         this.#context.canvas.width = this.#context.canvas.scrollWidth
       }
-      if (this.attrs.height !== void 0) {
+      if (this.attrs.height !== undefined) {
         this.#context.canvas.height = this.attrs.height
       } else {
         this.#context.canvas.style.height = "100%"
@@ -103,6 +104,7 @@ export class Layer<
       }
       this.currentNeedReload = true
     }
+    // eslint-disable-next-line no-void
     void onResizeSelf()
     this.on("resize-self", onResizeSelf)
 
@@ -114,7 +116,11 @@ export class Layer<
       },
       { immediate: true }
     )
-    this.watch(["width", "height"], () => void this.emit("resize-self", void 0))
+    this.watch(
+      ["width", "height"],
+      // eslint-disable-next-line no-void
+      () => void this.emit("resize-self", undefined)
+    )
     this.watch(
       "visible",
       () => {
@@ -168,7 +174,7 @@ export class Layer<
     this.__watcherParentSize = parent.watch(
       ["width", "height"],
       () => {
-        this.emit("resize-self", void 0)
+        this.emit("resize-self", undefined)
       },
       {
         immediate: true
