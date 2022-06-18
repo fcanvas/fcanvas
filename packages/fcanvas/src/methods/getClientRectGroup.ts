@@ -22,11 +22,11 @@ export function getClientRectGroup<T extends IChildrenAllowGroup | AllShape>(
     const clientRect: Offset & Size = config
       ? node.getClientRect(config)
       : node.getSelfRect?.() ?? {
-        x: 0,
-        y: 0,
-        width: node.attrs.width,
-        height: node.attrs.height
-      }
+          x: 0,
+          y: 0,
+          width: node.attrs.width,
+          height: node.attrs.height
+        }
 
     x = Math.min(x, clientRect.x + node.attrs.x)
     y = Math.min(y, clientRect.y + node.attrs.y)

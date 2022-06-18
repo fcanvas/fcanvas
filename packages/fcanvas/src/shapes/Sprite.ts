@@ -78,8 +78,8 @@ export class Sprite<
       _frameIndex > frameLength
         ? (_frameIndex % frameLength) - 1
         : _frameIndex < 0
-          ? frameLength + _frameIndex + 1
-          : _frameIndex
+        ? frameLength + _frameIndex + 1
+        : _frameIndex
 
     return frameIndex
   }
