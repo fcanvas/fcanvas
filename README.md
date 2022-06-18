@@ -1,62 +1,25 @@
-# fcanvas
+# epact-project
 
-A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's Proxy response system and minimizes redrawing.
-[https://fcanvas.js.org](https://fcanvas.js.org)
+a repository npm package
 
-[![Build](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/docs.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/docs.yml)
-[![NPM](https://badge.fury.io/js/fcanvas.svg)](http://badge.fury.io/js/fcanvas)
-[![Size](https://img.shields.io/bundlephobia/minzip/fcanvas/latest)](https://npmjs.org/package/fcanvas)
-[![Languages](https://img.shields.io/github/languages/top/tachibana-shin/fcanvas)](https://npmjs.org/package/fcanvas)
-[![License](https://img.shields.io/npm/l/fcanvas)](https://npmjs.org/package/fcanvas)
-[![Star](https://img.shields.io/github/stars/tachibana-shin/fcanvas)](https://github.com/tachibana-shin/fcanvas/stargazers)
-[![Download](https://img.shields.io/npm/dm/fcanvas)](https://npmjs.org/package/fcanvas)
+[https://tachibana-shin.github.io/epact-project](https://tachibana-shin.github.io/epact-project)
+
+[![Build](https://github.com/tachibana-shin/epact-project/actions/workflows/build-docs.yml/badge.svg)](https://github.com/tachibana-shin/epact-project/actions/workflows/docs.yml)
+[![NPM](https://badge.fury.io/js/epact-project.svg)](http://badge.fury.io/js/epact-project)
+[![Size](https://img.shields.io/bundlephobia/minzip/epact-project/latest)](https://npmjs.org/package/epact-project)
+[![Languages](https://img.shields.io/github/languages/top/tachibana-shin/epact-project)](https://npmjs.org/package/epact-project)
+[![License](https://img.shields.io/npm/l/epact-project)](https://npmjs.org/package/epact-project)
+[![Star](https://img.shields.io/github/stars/tachibana-shin/epact-project)](https://github.com/tachibana-shin/epact-project/stargazers)
+[![Download](https://img.shields.io/npm/dm/epact-project)](https://npmjs.org/package/epact-project)
 
 ## Installation
 
-NPM / Yarn:
-
+NPM / Yarn / Pnpm
 ```bash
-yarn add fcanvas
+pnpm add epact-project
 ```
 
 CDN:
-
-```html
-<script src="https://unpkg.com/fcanvas"></script>
+``` html
+<script src="https://unpkg.com/"></script>
 ```
-
-## Example
-
-```ts
-import { Stage, Layer, Circle, rqaf, stop } from "fcanvas"
-
-const stage = new Stage({
-  container: "app",
-  width: 300,
-  height: 300
-})
-
-const layer = new Layer()
-stage.add(layer)
-
-const cỉrcle = new Circle({
-  x: 0,
-  y: 0,
-  radius: 20,
-  fill: "red"
-})
-
-layer.add(circle)
-
-rqaf(() => {
-  circle._.x += 1 // auto reactive and re-draw
-
-  if (circle._.x === stage._.width) {
-    stop()
-  }
-})
-```
-
-## Demos
-
-- Clock: https://codesandbox.io/s/clock-fcanvas-next-kti3b4
