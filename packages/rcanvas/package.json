@@ -1,0 +1,51 @@
+{
+  "name": "rcanvas",
+  "version": "0.0.1",
+  "description": "a monorepo for packages",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx ./src/index.ts",
+    "prepublishOnly": "pnpm test && pnpm build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.mjs",
+  "jsdelivr": "dist/index.global.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "devDependencies": {
+		"tsup": "^6.0.1",
+    "vitest": "^0.13.0"
+  },
+  "license": "MIT",
+    "repository": {
+    "type": "git",
+    "url": "git://github.com/tachibana-shin/rcanvas.git"
+  },
+  "homepage": "https://tachibana-shin.github.io/rcanvas",
+  "keywords": [
+    "rcanvas",
+    "Tachibana Shin",
+    "tachibana-shin"
+  ],
+  "files": [
+    "dist" 
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "pnpm format"
+    }
+  },
+  "engines": {
+    "node": ">=10"
+  }
+}
