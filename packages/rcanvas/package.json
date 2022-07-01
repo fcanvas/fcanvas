@@ -23,11 +23,12 @@
     }
   },
   "devDependencies": {
-		"tsup": "^6.0.1",
+    "tsup": "^6.0.1",
+    "vite": "^2.9.13",
     "vitest": "^0.13.0"
   },
   "license": "MIT",
-    "repository": {
+  "repository": {
     "type": "git",
     "url": "git://github.com/tachibana-shin/rcanvas.git"
   },
@@ -38,7 +39,7 @@
     "tachibana-shin"
   ],
   "files": [
-    "dist" 
+    "dist"
   ],
   "husky": {
     "hooks": {
@@ -47,5 +48,10 @@
   },
   "engines": {
     "node": ">=10"
+  },
+  "dependencies": {
+    "@vue/reactivity": "^3.2.37",
+    "mitt": "^3.0.0",
+    "vue": "^3.2.37"
   }
 }
