@@ -1,48 +1,48 @@
-import { Group } from "../Group"
+import { computed } from "@vue/reactivity"
 
-import type { Tag } from "./Tag"
-import type { Text } from "./Text"
+import { Group } from "../Group"
+import { BOUNCE_CLIENT_RECT, CHILD_NODE } from "../symbols"
+
+import { Tag } from "./Tag"
+import { Text } from "./Text"
 
 export class Label extends Group<Tag | Text> {
-  private getText() {
-    return this.find<Text>("text")[0]
-  }
+  private readonly text = computed<Text | void>(() => {
+    for (const node of this[CHILD_NODE]) if (node instanceof Text) return node
+  })
 
-  private getTag() {
-    return this.find<Tag>("tag")[0]
-  }
+  private readonly tag = computed<Tag | void>(() => {
+    for (const node of this[CHILD_NODE]) if (node instanceof Tag) return node
+  })
 
   // eslint-disable-next-line functional/functional-parameters
   public add(...nodes: (Tag | Text)[]): void {
-    nodes.forEach((node) => {
-      this.children.add(node)
-      node._onAddToParent(this)
-    })
-    this.currentNeedReload = true
+    nodes.forEach((node) => this[CHILD_NODE].add(node))
     this.sync()
   }
 
   // eslint-disable-next-line functional/functional-parameters
   public delete(...nodes: readonly (Tag | Text)[]): void {
-    nodes.forEach((node) => {
-      this.children.delete(node)
-      node._onDeleteParent(this)
-    })
-    this.currentNeedReload = true
+    nodes.forEach((node) => this[CHILD_NODE].delete(node))
     this.sync()
   }
 
   private sync() {
-    const text = this.getText()
-    const tag = this.getTag()
-    // eslint-disable-next-line functional/no-let
-    let width, height, pointerDirection, pointerWidth, x, y, pointerHeight
+    const text = this.text.value
+    const tag = this.tag.value
 
     if (text && tag) {
-      ;({ width, height } = text.getSelfRect())
-      ;({ pointerDirection, pointerWidth = 20, pointerHeight = 20 } = tag.attrs)
-      x = 0
-      y = 0
+      const { width, height } = text[BOUNCE_CLIENT_RECT].value
+      const {
+        pointerDirection,
+        pointerWidth = 20,
+        pointerHeight = 20
+      } = tag.attrs
+
+      // eslint-disable-next-line functional/no-let
+      let x = 0
+      // eslint-disable-next-line functional/no-let
+      let y = 0
 
       switch (pointerDirection) {
         case "up":

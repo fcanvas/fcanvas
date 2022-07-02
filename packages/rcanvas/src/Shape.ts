@@ -4,6 +4,7 @@ import { computed, EffectScope, reactive } from "@vue/reactivity"
 import mitt from "mitt"
 import { watchEffect } from "vue"
 
+import type { Container } from "./Container"
 import type { OptionFilter } from "./helpers/createFilter"
 import { createFilter } from "./helpers/createFilter"
 import type { OptionTransform } from "./helpers/createTransform"
@@ -11,7 +12,18 @@ import { createTransform } from "./helpers/createTransform"
 import { existsTransform } from "./helpers/existsTransform"
 import { pointInBox } from "./helpers/pointInBox"
 import { transformedRect } from "./helpers/transformerRect"
+import {
+  BOUNCE_CLIENT_RECT,
+  COMPUTED_CACHE,
+  CONTEXT_CACHE,
+  CONTEXT_CACHE_SIZE,
+  DRAW_CONTEXT_ON_SANDBOX,
+  EMITTER
+} from "./symbols"
+import type { GetClientRectOptions } from "./type/GetClientRectOptions"
 import type { Offset } from "./type/Offset"
+import type { Rect } from "./type/Rect"
+import { createEvent } from "./utils/createEvent"
 
 type FillStyle = CanvasGradient | CanvasPattern | string
 
@@ -86,12 +98,6 @@ export type CommonAttrs<This = any> = Offset & {
     filter?: OptionFilter
   }
 
-const CONTEXT_CACHE = Symbol("context cache")
-const COMPUTED_CACHE = Symbol("computed cache")
-const DRAW_CONTEXT_ON_SANDBOX = Symbol("draw context on sandbox")
-const BOUNCE_CLIENT_RECT = Symbol("bounce client rect")
-const EMITTER = Symbol("emitter")
-
 function getFillPriority(
   attrs: Partial<
     Pick<
@@ -160,40 +166,27 @@ function drawShadow(
 function isCentroid(obj: any): boolean {
   return obj.constructor._centroid
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createEvent(type: string, target: any): Event {
-  const event = new Event(type)
-  Object.defineProperty(event, "target", {
-    writable: false,
-    value: target
-  })
 
-  return event
-}
-
-interface GetClientRectOptions {
-  skipTransform?: boolean
-  skipStroke?: boolean
-  skipShadow?: boolean
-}
-interface Rect {
-  x: number
-  y: number
-  width: number
-  height: number
-}
+// prettier-ignore
 // eslint-disable-next-line @typescript-eslint/ban-types
-export class Shape<PersonalAttrs extends Record<string, unknown> = {}> {
+export class Shape<PersonalAttrs extends Record<string, unknown> = {}>
+// prettier-ignore
+implements Container {
   static readonly _centroid: boolean = false
 
   public readonly attrs: ReturnType<
     typeof reactive<CommonAttrs & PersonalAttrs>
   >
 
+  public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private [CONTEXT_CACHE] = document.createElement("canvas").getContext("2d")!
+  private readonly [CONTEXT_CACHE] = document.createElement("canvas").getContext("2d")!
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
-  private readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
+  private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<
+    Pick<Rect, "width" | "height">
+  >
+
   private readonly [EMITTER] = mitt<{
     resize: Event
   }>()
@@ -225,22 +218,26 @@ export class Shape<PersonalAttrs extends Record<string, unknown> = {}> {
     })
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
+    this[CONTEXT_CACHE_SIZE] = computed(() => {
+      const { width, height } = this[BOUNCE_CLIENT_RECT].value
+      const adjust = (this.attrs.strokeWidth ?? 1) * 2
+      return {
+        width: width + adjust,
+        height: height + adjust
+      }
+    })
 
     // try watchEffect
     watchEffect(() => {
       // reactive
       if (this.attrs.perfectDrawEnabled !== false) {
         const ctx = this[CONTEXT_CACHE]
-        const { width, height } = this[BOUNCE_CLIENT_RECT].value
-        const adjust = (this.attrs.strokeWidth ?? 1) * 2
-        ;[ctx.canvas.width, ctx.canvas.height] = [
-          width + adjust,
-          height + adjust
-        ]
+        const { width, height } = this[CONTEXT_CACHE_SIZE].value
+        ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
         this[EMITTER].emit("resize", createEvent("resize", ctx.canvas))
         console.log(
-          "[cache]: size changed %sx%s",
+          "[cache::shape]: size changed %sx%s",
           ctx.canvas.width,
           ctx.canvas.height
         )
@@ -424,7 +421,7 @@ export class Shape<PersonalAttrs extends Record<string, unknown> = {}> {
   // or context cache or context draw
 
   private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
-    console.log("[sandbox]: draw context on sandbox")
+    console.log("[sandbox::shape]: draw context on sandbox")
     const isCache = !!this[CONTEXT_CACHE]
     const scene = this.attrs.sceneFunc || this._sceneFunc
 

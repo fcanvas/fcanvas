@@ -1,12 +1,6 @@
-export function transformedRect(
-  rect: {
-    width: number
-    height: number
-    x: number
-    y: number
-  },
-  matrix: DOMMatrix
-) {
+import type { Rect } from "../type/Rect"
+
+export function transformedRect(rect: Rect, matrix: DOMMatrix) {
   const points = [
     { x: rect.x, y: rect.y },
     { x: rect.x + rect.width, y: rect.y },

@@ -1,47 +1,35 @@
-import type { VirtualChildNode } from "../Container"
-import { Utils } from "../Utils"
-import type { Offset } from "../types/Offset"
+import type { Rect } from "../type/Rect"
 
 import type { OptionFilter } from "./createFilter"
 import { createFilter } from "./createFilter"
 import type { OptionTransform } from "./createTransform"
 import { createTransform } from "./createTransform"
+import { existsTransform } from "./existsTransform"
 
-export type AttrsDrawLayerContext = {
+export type DrawLayerAttrs = {
   opacity?: number
-
-  clip?:
-    | (Offset & {
-        width: number
-
-        height: number
-      })
-    | ((context: Path2D) => void)
+  clip?: Rect | ((context: Path2D) => void)
 } & OptionTransform & {
     filter?: OptionFilter
   }
 
-export function drawLayerContextUseOpacityClipTransformFilter<
-  T extends VirtualChildNode & {
+export function drawLayer(
+  context: CanvasRenderingContext2D,
+  attrs: DrawLayerAttrs,
+  children: Set<{
     // eslint-disable-next-line functional/no-method-signature
     draw(context: CanvasRenderingContext2D): void
-  }
->(
-  context: CanvasRenderingContext2D,
-  attrs: AttrsDrawLayerContext,
-
-  children: Set<T>,
-  filterItem?: (node: T, index: number) => void | boolean,
+  }>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  argThis: any = undefined
+  argThis: any
 ) {
-  const needBackup = attrs.clip !== undefined
+  const useClip = attrs.clip !== undefined
 
-  if (needBackup) {
+  if (useClip) {
     context.save()
 
     if (typeof attrs.clip === "function") {
-      const path = new Utils.Path2D()
+      const path = new Path2D()
       attrs.clip.call(argThis, path)
       context.clip(path)
     } else {
@@ -57,13 +45,7 @@ export function drawLayerContextUseOpacityClipTransformFilter<
       )
     }
   }
-  const needUseTransform =
-    attrs.scale !== undefined ||
-    attrs.rotation !== undefined ||
-    attrs.offset !== undefined ||
-    attrs.skewX !== undefined ||
-    attrs.skewY !== undefined ||
-    !context
+  const useTransform = existsTransform(attrs) || !context
   const needSetAlpha = attrs.opacity !== undefined
   const useFilter = attrs.filter !== undefined
   // eslint-disable-next-line functional/no-let
@@ -74,7 +56,7 @@ export function drawLayerContextUseOpacityClipTransformFilter<
     // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
     context.globalAlpha = attrs.opacity!
   }
-  if (needUseTransform) {
+  if (useTransform) {
     backupTransform = context.getTransform()
 
     context.setTransform(createTransform(attrs, !context))
@@ -86,20 +68,19 @@ export function drawLayerContextUseOpacityClipTransformFilter<
     context.filter = createFilter(attrs.filter!)
   }
 
-  children.forEach((node, index) => {
-    if (!filterItem || filterItem?.(node, index as unknown as number))
-      node.draw(context)
+  children.forEach((node) => {
+    node.draw(context)
   })
 
   if (useFilter) {
     // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
     context.filter = backupFilter!
   }
-  if (needUseTransform) context.setTransform(backupTransform)
+  if (useTransform) context.setTransform(backupTransform)
 
   if (needSetAlpha) {
     // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
     context.globalAlpha = backupAlpha!
   }
-  if (needBackup) context.restore()
+  if (useClip) context.restore()
 }

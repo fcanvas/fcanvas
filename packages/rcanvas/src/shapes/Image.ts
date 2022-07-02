@@ -1,15 +1,11 @@
 import { Shape } from "../Shape"
+import type { Rect } from "../type/Rect"
 import { loadImage } from "../utils/loadImage"
 
 type PersonalAttrs = {
   // eslint-disable-next-line no-undef
   image: CanvasImageSource
-  crop?: {
-    x: number
-    y: number
-    width: number
-    height: number
-  }
+  crop?: Rect
 } & Partial<{
   width: number
   height: number

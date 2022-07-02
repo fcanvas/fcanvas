@@ -52,9 +52,7 @@ export class Text extends Shape<PersonalAttrs> {
 
   private textArr: Array<{
     text: string
-
     width: number
-
     lastInParagraph: boolean
   }> = []
 
