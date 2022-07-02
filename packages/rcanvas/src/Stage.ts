@@ -8,8 +8,8 @@ import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { DIV_CONTAINER, SCOPE } from "./symbols"
 
 type PersonalAttrs = DrawLayerAttrs & {
-  width: number
-  height: number
+  width?: number
+  height?: number
   container: string
   visible?: boolean
   opacity?: number
@@ -73,6 +73,12 @@ export class Stage extends APIChildNode<Layer> {
     const el = document.getElementById(attrs.container)
     if (!el) console.warn(`#${attrs.container} not exists.`)
     else el.appendChild(container)
+  }
+
+  // eslint-disable-next-line functional/functional-parameters
+  public add(...nodes: Layer[]): void {
+    super.add(...nodes)
+    nodes.forEach((node) => node.batchDraw())
   }
 
   public destroy(): void {
