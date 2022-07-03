@@ -3,7 +3,11 @@ import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 import { watchEffect } from "vue"
 
-import type { CommonShapeAttrs, FillModeMixture, FillStyle } from "./CommonShapeAttrs"
+import type {
+  CommonShapeAttrs,
+  FillModeMixture,
+  FillStyle
+} from "./CommonShapeAttrs"
 import type { CommonShapeEvents } from "./CommonShapeEvents"
 import { APIEvent } from "./apis/APIEvent"
 import { createFilter } from "./helpers/createFilter"
@@ -192,28 +196,30 @@ export class Shape<PersonalAttrs extends Record<string, unknown> = {}> extends A
         break
       case "linear-gradient":
         if (this.attrs.fillLinearGradient !== undefined) {
+          const { fillLinearGradient } = this.attrs
           style = context.createLinearGradient(
-            this.attrs.fillLinearGradient.start.x,
-            this.attrs.fillLinearGradient.start.y,
-            this.attrs.fillLinearGradient.end.x,
-            this.attrs.fillLinearGradient.end.y
+            fillLinearGradient.start.x,
+            fillLinearGradient.start.y,
+            fillLinearGradient.end.x,
+            fillLinearGradient.end.y
           )
-          this.attrs.fillLinearGradient.colorStops.forEach(([color, point]) => {
+          fillLinearGradient.colorStops.forEach(([color, point]) => {
             ;(style as CanvasGradient).addColorStop(color, point)
           })
         }
         break
       case "radial-gradient":
         if (this.attrs.fillRadialGradient !== undefined) {
+          const { fillRadialGradient } = this.attrs
           style = context.createRadialGradient(
-            this.attrs.fillRadialGradient.start.x,
-            this.attrs.fillRadialGradient.start.y,
-            this.attrs.fillRadialGradient.startRadius,
-            this.attrs.fillRadialGradient.end.x,
-            this.attrs.fillRadialGradient.end.y,
-            this.attrs.fillRadialGradient.endRadius
+            fillRadialGradient.start.x,
+            fillRadialGradient.start.y,
+            fillRadialGradient.startRadius,
+            fillRadialGradient.end.x,
+            fillRadialGradient.end.y,
+            fillRadialGradient.endRadius
           )
-          this.attrs.fillRadialGradient.colorStops.forEach(([color, point]) => {
+          fillRadialGradient.colorStops.forEach(([color, point]) => {
             ;(style as CanvasGradient).addColorStop(color, point)
           })
         }
