@@ -3,6 +3,7 @@ import { computed, EffectScope, reactive } from "@vue/reactivity"
 import { watchPostEffect } from "vue"
 
 import type { Container } from "./Container"
+import type { ReactiveType } from "./ReactiveType"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -82,7 +83,7 @@ export class Group<ChildNode extends Shape = Shape>
     stop: () => void
   }
 
-  constructor(attrs: PersonalAttrs) {
+  constructor(attrs: ReactiveType< PersonalAttrs >) {
     super()
     this[SCOPE].on()
 

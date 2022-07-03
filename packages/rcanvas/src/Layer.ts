@@ -5,6 +5,7 @@ import { watchEffect, watchPostEffect } from "vue"
 import type { CommonShapeEvents } from "./CommonShapeEvents"
 import type { Group } from "./Group"
 import { createContextCacheSize } from "./Group"
+import type { ReactiveType } from "./ReactiveType"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -82,7 +83,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   private [WAIT_DRAWING] = false
   private [ID_REQUEST_FRAME]: number | null = null
 
-  constructor(attrs: PersonalAttrs = {}) {
+  constructor(attrs: ReactiveType<PersonalAttrs> = {}) {
     super()
     this[SCOPE].on()
 

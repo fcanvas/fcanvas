@@ -2,6 +2,7 @@ import { EffectScope, reactive } from "@vue/reactivity"
 import { watchEffect } from "vue"
 
 import type { Layer } from "./Layer"
+import type { ReactiveType } from "./ReactiveType"
 import { APIChildNode } from "./apis/APIGroup"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -33,12 +34,12 @@ export class Stage extends APIChildNode<
     stop: () => void
   }
 
-  constructor(attrs: PersonalAttrs) {
+  constructor(attrs: ReactiveType<PersonalAttrs>) {
     super()
 
     this[SCOPE].on()
 
-    this.attrs = reactive(attrs)
+    this.attrs = reactive(attrs as PersonalAttrs)
 
     const container = this[DIV_CONTAINER]
     container.style.cssText = "position: relative;"
@@ -88,7 +89,7 @@ export class Stage extends APIChildNode<
 
     this[SCOPE].off()
 
-    const el = document.getElementById(attrs.container)
+    const el = document.getElementById(this.attrs.container)
     if (!el) console.warn(`#${attrs.container} not exists.`)
     else el.appendChild(container)
   }

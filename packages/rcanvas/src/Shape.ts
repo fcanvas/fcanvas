@@ -9,6 +9,7 @@ import type {
   FillStyle
 } from "./CommonShapeAttrs"
 import type { CommonShapeEvents } from "./CommonShapeEvents"
+import type { ReactiveType } from "./ReactiveType"
 import { APIEvent } from "./apis/APIEvent"
 import { createFilter } from "./helpers/createFilter"
 import { createTransform } from "./helpers/createTransform"
@@ -95,9 +96,10 @@ function isCentroid(obj: any): boolean {
   return obj.constructor._centroid
 }
 
-// prettier-ignore
-// eslint-disable-next-line @typescript-eslint/ban-types
-export class Shape<PersonalAttrs extends Record<string, unknown> = {}> extends APIEvent<CommonShapeEvents> {
+export class Shape<
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  PersonalAttrs extends Record<string, unknown> = {}
+> extends APIEvent<CommonShapeEvents> {
   static readonly _centroid: boolean = false
 
   public readonly attrs: ReturnType<
@@ -107,7 +109,10 @@ export class Shape<PersonalAttrs extends Record<string, unknown> = {}> extends A
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private readonly [CONTEXT_CACHE] = document.createElement("canvas").getContext("2d")!
+  private readonly [CONTEXT_CACHE] = document
+    .createElement("canvas")
+    .getContext("2d")!
+
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<
     Pick<Rect, "width" | "height">
@@ -122,11 +127,11 @@ export class Shape<PersonalAttrs extends Record<string, unknown> = {}> extends A
 
   protected _sceneFunc?(context: CanvasRenderingContext2D): void
 
-  constructor(attrs: CommonShapeAttrs<Shape> & PersonalAttrs) {
+  constructor(attrs: ReactiveType<CommonShapeAttrs<Shape> & PersonalAttrs>) {
     super()
     this.scope.on()
 
-    this.attrs = reactive(attrs)
+    this.attrs = reactive(attrs as CommonShapeAttrs<Shape> & PersonalAttrs)
 
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
