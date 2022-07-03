@@ -1,9 +1,7 @@
 export function getTouchInfo<
   T extends {
     clientX: number
-
     clientY: number
-
     identifier?: number
   }
 >(

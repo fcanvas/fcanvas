@@ -1,7 +1,5 @@
-import { Utils } from "../Utils"
-
 export function loadImage(url: string): Promise<HTMLImageElement> {
-  const img = new Utils.Image()
+  const img = new Image()
 
   return new Promise((resolve, reject) => {
     function done() {

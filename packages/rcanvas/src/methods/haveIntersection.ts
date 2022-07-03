@@ -1,10 +1,6 @@
-import type { Offset } from "../types/Offset"
-import type { Size } from "../types/Size"
+import type { Rect } from "../type/Rect"
 
-export function haveIntersection(
-  r1: Offset & Size,
-  r2: Offset & Size
-): boolean {
+export function haveIntersection(r1: Rect, r2: Rect): boolean {
   return !(
     r2.x > r1.x + r1.width ||
     r2.x + r2.width < r1.x ||
