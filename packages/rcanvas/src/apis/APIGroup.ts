@@ -1,13 +1,18 @@
 import type { ShallowReactive } from "@vue/reactivity"
 import { shallowReactive } from "@vue/reactivity"
 
-import { CHILD_NODE } from "./symbols"
-import type { GetClientRectOptions } from "./type/GetClientRectOptions"
-import type { FakeShape } from "./utils/getClientRectOfGroup"
-import { getClientRectGroup } from "./utils/getClientRectOfGroup"
+import { CHILD_NODE } from "../symbols"
+import type { GetClientRectOptions } from "../type/GetClientRectOptions"
+import type { FakeShape } from "../utils/getClientRectOfGroup"
+import { getClientRectGroup } from "../utils/getClientRectOfGroup"
 
-export abstract class APIChildNode<ChildNode extends Omit<FakeShape, "attrs">> {
-  protected readonly [CHILD_NODE]: ShallowReactive<Set<ChildNode>> =
+import { APIEvent } from "./APIEvent"
+
+export abstract class APIChildNode<
+  ChildNode extends Omit<FakeShape, "attrs">,
+  Events extends Record<string, unknown>
+> extends APIEvent<Events> {
+  public readonly [CHILD_NODE]: ShallowReactive<Set<ChildNode>> =
     shallowReactive(new Set())
 
   // eslint-disable-next-line functional/functional-parameters
@@ -22,8 +27,9 @@ export abstract class APIChildNode<ChildNode extends Omit<FakeShape, "attrs">> {
 }
 
 export abstract class APIGroup<
-  ChildNode extends FakeShape
-> extends APIChildNode<ChildNode> {
+  ChildNode extends FakeShape,
+  Events extends Record<string, unknown>
+> extends APIChildNode<ChildNode, Events> {
   public getClientRect(config?: GetClientRectOptions) {
     return getClientRectGroup(this[CHILD_NODE], config)
   }

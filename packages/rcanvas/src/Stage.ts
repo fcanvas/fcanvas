@@ -1,11 +1,11 @@
 import { EffectScope, reactive } from "@vue/reactivity"
 import { watchEffect } from "vue"
 
-import { APIChildNode } from "./APIGroup"
 import type { Layer } from "./Layer"
+import { APIChildNode } from "./apis/APIGroup"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
-import { DIV_CONTAINER, SCOPE } from "./symbols"
+import { CANVAS_ELEMENT, DIV_CONTAINER, LISTENERS, SCOPE } from "./symbols"
 
 type PersonalAttrs = DrawLayerAttrs & {
   width?: number
@@ -15,9 +15,11 @@ type PersonalAttrs = DrawLayerAttrs & {
   opacity?: number
 }
 
-// type EventsCustom = HTMLElementEventMap
-
-export class Stage extends APIChildNode<Layer> {
+export class Stage extends APIChildNode<
+  Layer,
+  // eslint-disable-next-line no-undef
+  Pick<GlobalEventHandlersEventMap, keyof GlobalEventHandlersEventMap>
+> {
   static readonly type: string = "Stage"
 
   public readonly attrs: ReturnType<typeof reactive<PersonalAttrs>>
@@ -67,6 +69,22 @@ export class Stage extends APIChildNode<Layer> {
     watchEffect(() => {
       container.style.opacity = (this.attrs.opacity ?? 1) + ""
     })
+    // event binding
+    // eslint-disable-next-line func-call-spacing
+    const handlersMap = new Map<string, (event: Event) => void>()
+    watchEffect(() => {
+      this[LISTENERS].forEach((listeners, name) => {
+        // if exists on handlersMap => first removeEventListener
+        const oldHandler = handlersMap.get(name)
+        if (oldHandler) container.removeEventListener(name, oldHandler)
+
+        const handler = (event: Event) => {
+          listeners.forEach((listener) => listener(event))
+        }
+        handlersMap.set(name, handler)
+        container.addEventListener(name, handler)
+      })
+    })
 
     this[SCOPE].off()
 
@@ -78,7 +96,10 @@ export class Stage extends APIChildNode<Layer> {
   // eslint-disable-next-line functional/functional-parameters
   public add(...nodes: Layer[]): void {
     super.add(...nodes)
-    nodes.forEach((node) => node.batchDraw())
+    nodes.forEach((node) => {
+      this[DIV_CONTAINER].appendChild(node[CANVAS_ELEMENT])
+      node.batchDraw()
+    })
   }
 
   public destroy(): void {

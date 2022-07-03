@@ -1,11 +1,10 @@
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
-import mitt from "mitt"
 import { watchPostEffect } from "vue"
 
-import { APIGroup } from "./APIGroup"
 import type { Container } from "./Container"
 import type { Shape } from "./Shape"
+import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
 import {
@@ -15,12 +14,11 @@ import {
   CONTEXT_CACHE,
   CONTEXT_CACHE_SIZE,
   DRAW_CONTEXT_ON_SANDBOX,
-  EMITTER,
   SCOPE
 } from "./symbols"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
-import { createEvent } from "./utils/createEvent"
+import { extendTarget } from "./utils/extendTarget"
 
 type PersonalAttrs = Offset &
   DrawLayerAttrs & {
@@ -56,7 +54,9 @@ export function createContextCacheSize(group: {
 }
 
 export class Group<ChildNode extends Shape = Shape>
-  extends APIGroup<ChildNode>
+  extends APIGroup<ChildNode, {
+  resize: Event
+}>
   // prettier-ignore
   implements Container {
   static readonly type: string = "Group"
@@ -74,10 +74,6 @@ export class Group<ChildNode extends Shape = Shape>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<
     Pick<Rect, "width" | "height">
   >
-
-  private readonly [EMITTER] = mitt<{
-    resize: Event
-  }>()
 
   private readonly [SCOPE] = new EffectScope(true) as unknown as {
     active: boolean
@@ -112,7 +108,7 @@ export class Group<ChildNode extends Shape = Shape>
       const { width, height } = this[CONTEXT_CACHE_SIZE].value
       ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
-      this[EMITTER].emit("resize", createEvent("resize", ctx.canvas))
+      this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
       console.log(
         "[cache::group]: size changed %sx%s",
         ctx.canvas.width,

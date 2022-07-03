@@ -1,13 +1,12 @@
 /* eslint-disable functional/immutable-data */
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
-import mitt from "mitt"
 import { watchEffect } from "vue"
 
-import type { Container } from "./Container"
-import type { OptionFilter } from "./helpers/createFilter"
+import type { CommonShapeAttrs, FillModeMixture, FillStyle } from "./CommonShapeAttrs"
+import type { CommonShapeEvents } from "./CommonShapeEvents"
+import { APIEvent } from "./apis/APIEvent"
 import { createFilter } from "./helpers/createFilter"
-import type { OptionTransform } from "./helpers/createTransform"
 import { createTransform } from "./helpers/createTransform"
 import { existsTransform } from "./helpers/existsTransform"
 import { pointInBox } from "./helpers/pointInBox"
@@ -17,91 +16,16 @@ import {
   COMPUTED_CACHE,
   CONTEXT_CACHE,
   CONTEXT_CACHE_SIZE,
-  DRAW_CONTEXT_ON_SANDBOX,
-  EMITTER
+  DRAW_CONTEXT_ON_SANDBOX
 } from "./symbols"
 import type { GetClientRectOptions } from "./type/GetClientRectOptions"
-import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
-import { createEvent } from "./utils/createEvent"
-
-type FillStyle = CanvasGradient | CanvasPattern | string
-
-interface FillModeColor {
-  fill: FillStyle
-}
-interface FillModePattern {
-  /* fill pattern */
-  // eslint-disable-next-line no-undef
-  fillPatternImage: CanvasImageSource
-  fillPattern?: {
-    repeat?: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
-  } & OptionTransform
-  /* /pattern */
-}
-interface FillModeLinearGradient {
-  /* fill linear gradient */
-  fillLinearGradient: {
-    start: Offset
-    end: Offset
-    colorStops: [number, string][]
-  }
-  /* /linear-gradient */
-}
-interface FillModeRadialGradient {
-  /* fill radial gradient */
-  fillRadialGradient: {
-    start: Offset
-    startRadius: number
-    end: Offset
-    endRadius: number
-    colorStops: [number, string][]
-  }
-  /* /radial-gradient */
-}
-
-type FillModeMixture = {
-  fillPriority: "color" | "linear-gradient" | "radial-gradient" | "pattern"
-} & Partial<FillModeColor> &
-  Partial<FillModePattern> &
-  Partial<FillModeLinearGradient> &
-  Partial<FillModeRadialGradient>
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CommonAttrs<This = any> = Offset & {
-  fillAfterStrokeEnabled?: boolean
-  fillEnabled?: boolean
-  stroke?: FillStyle
-  strokeWidth?: number
-  strokeEnabled?: boolean
-  hitStrokeWidth?: number
-  strokeHitEnabled?: boolean
-  perfectDrawEnabled?: boolean
-  shadowForStrokeEnabled?: boolean
-  // strokeScaleEnabled?: boolean
-  lineJoin?: "bevel" | "round" | "miter"
-  lineCap?: "butt" | "round" | "square"
-  sceneFunc?: (this: This, context: CanvasRenderingContext2D) => void
-} & Partial<FillModeMixture> /* & FillModeMonopole */ & {
-    shadowEnabled?: boolean
-    shadow?: Partial<Offset> & {
-      color: string
-      blur: number
-      // opacity?: number
-    }
-  } & {
-    dash?: number[]
-    dashEnabled?: boolean
-    visible?: boolean
-    opacity?: number
-  } & OptionTransform & {
-    filter?: OptionFilter
-  }
+import { extendTarget } from "./utils/extendTarget"
 
 function getFillPriority(
   attrs: Partial<
     Pick<
-      CommonAttrs,
+      CommonShapeAttrs,
       | "fillPriority"
       | "fillPatternImage"
       | "fillLinearGradient"
@@ -125,7 +49,7 @@ function setLineStyle(
   context: CanvasRenderingContext2D,
   attrs: Partial<
     Pick<
-      CommonAttrs,
+      CommonShapeAttrs,
       | "strokeEnabled"
       | "strokeWidth"
       | "lineCap"
@@ -150,7 +74,7 @@ function setLineStyle(
 }
 function drawShadow(
   context: CanvasRenderingContext2D,
-  attrs: Partial<Pick<CommonAttrs, "shadowEnabled" | "shadow">>
+  attrs: Partial<Pick<CommonShapeAttrs, "shadowEnabled" | "shadow">>
 ) {
   if (attrs.shadowEnabled !== false && attrs.shadow !== undefined) {
     context.shadowColor = attrs.shadow.color
@@ -169,13 +93,11 @@ function isCentroid(obj: any): boolean {
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/ban-types
-export class Shape<PersonalAttrs extends Record<string, unknown> = {}>
-// prettier-ignore
-implements Container {
+export class Shape<PersonalAttrs extends Record<string, unknown> = {}> extends APIEvent<CommonShapeEvents> {
   static readonly _centroid: boolean = false
 
   public readonly attrs: ReturnType<
-    typeof reactive<CommonAttrs & PersonalAttrs>
+    typeof reactive<CommonShapeAttrs & PersonalAttrs>
   >
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
@@ -187,10 +109,6 @@ implements Container {
     Pick<Rect, "width" | "height">
   >
 
-  private readonly [EMITTER] = mitt<{
-    resize: Event
-  }>()
-
   private readonly scope = new EffectScope(true) as unknown as {
     active: boolean
     on: () => void
@@ -200,7 +118,8 @@ implements Container {
 
   protected _sceneFunc?(context: CanvasRenderingContext2D): void
 
-  constructor(attrs: CommonAttrs<Shape> & PersonalAttrs) {
+  constructor(attrs: CommonShapeAttrs<Shape> & PersonalAttrs) {
+    super()
     this.scope.on()
 
     this.attrs = reactive(attrs)
@@ -235,7 +154,7 @@ implements Container {
         const { width, height } = this[CONTEXT_CACHE_SIZE].value
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
-        this[EMITTER].emit("resize", createEvent("resize", ctx.canvas))
+        this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
         console.log(
           "[cache::shape]: size changed %sx%s",
           ctx.canvas.width,

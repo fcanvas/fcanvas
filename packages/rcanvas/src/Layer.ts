@@ -1,12 +1,12 @@
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
-import mitt from "mitt"
 import { watchEffect, watchPostEffect } from "vue"
 
-import { APIGroup } from "./APIGroup"
+import type { CommonShapeEvents } from "./CommonShapeEvents"
 import type { Group } from "./Group"
 import { createContextCacheSize } from "./Group"
 import type { Shape } from "./Shape"
+import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
 import {
@@ -17,12 +17,12 @@ import {
   CONTEXT_CACHE,
   CONTEXT_CACHE_SIZE,
   DRAW_CONTEXT_ON_SANDBOX,
-  EMITTER,
+  LISTENERS,
   SCOPE
 } from "./symbols"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
-import { createEvent } from "./utils/createEvent"
+import { extendTarget } from "./utils/extendTarget"
 
 type PersonalAttrs = Partial<Offset> &
   DrawLayerAttrs & {
@@ -34,7 +34,28 @@ type PersonalAttrs = Partial<Offset> &
 
 const WAIT_DRAWING = Symbol("wait drawing")
 const ID_REQUEST_FRAME = Symbol("ID_REQUEST_FRAME")
-export class Layer extends APIGroup<Shape | Group> {
+/**
+ * @protected
+ */
+function getListenersOnDeep(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  layer: APIGroup<any, Record<string, string>>,
+  allListeners = new Map<string, Set<Set<(event: Event) => void>>>()
+) {
+  layer[LISTENERS]?.forEach((listeners, name) => {
+    if (!allListeners.has(name)) allListeners.set(name, new Set())
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    allListeners.get(name)!.add(listeners)
+  })
+  layer[CHILD_NODE]?.forEach((shape) => {
+    getListenersOnDeep(shape, allListeners)
+  })
+
+  return allListeners
+}
+
+export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   static readonly type: string = "Layer"
 
   public readonly attrs: ReturnType<typeof reactive<PersonalAttrs>>
@@ -50,10 +71,6 @@ export class Layer extends APIGroup<Shape | Group> {
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<
     Pick<Rect, "width" | "height">
   >
-
-  private readonly [EMITTER] = mitt<{
-    resize: Event
-  }>()
 
   private readonly [SCOPE] = new EffectScope(true) as unknown as {
     active: boolean
@@ -115,13 +132,71 @@ export class Layer extends APIGroup<Shape | Group> {
       const { width, height } = this[CONTEXT_CACHE_SIZE].value
       ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
-      this[EMITTER].emit("resize", createEvent("resize", ctx.canvas))
+      this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
       console.log(
         "[cache::layer]: size changed %sx%s",
         ctx.canvas.width,
         ctx.canvas.height
       )
     })
+
+    // event binding
+    {
+      // sync event on layer
+      const handlersMap = new Map<
+        // eslint-disable-next-line func-call-spacing
+        keyof CommonShapeEvents,
+        (event: Event) => void
+      >()
+      watchEffect(() => {
+        this[LISTENERS].forEach((listeners, name) => {
+          // if exists on handlersMap => first removeEventListener
+          const oldHandler = handlersMap.get(name)
+          if (oldHandler) canvas.removeEventListener(name, oldHandler)
+
+          const handler = (event: Event) => {
+            listeners.forEach((listener) => listener(event))
+          }
+          handlersMap.set(name, handler)
+          canvas.addEventListener(name, handler)
+        })
+        handlersMap.forEach((handler, name) => {
+          if (!this[LISTENERS].has(name))
+            canvas.removeEventListener(name, handler)
+        })
+      })
+    }
+    // sync event on child node
+    {
+      const handlersChildrenMap = new Map<
+        // eslint-disable-next-line func-call-spacing
+        keyof CommonShapeEvents,
+        (event: Event) => void
+      >()
+      watchEffect(() => {
+        console.log("[event::layer]: scan deep listeners")
+        // scan all events in children
+        const allListeners = getListenersOnDeep(this)
+        allListeners.forEach((listenersGroup, name) => {
+          const oldHandler = handlersChildrenMap.get(
+            name as keyof CommonShapeEvents
+          )
+          if (oldHandler) canvas.removeEventListener(name, oldHandler)
+
+          const handler = (event: Event) => {
+            console.log("[event:layer] emit event %s", event.type)
+            listenersGroup.forEach((listeners) => {
+              listeners.forEach((listener) => listener(event))
+            })
+          }
+          handlersChildrenMap.set(name as keyof CommonShapeEvents, handler)
+          canvas.addEventListener(name, handler)
+        })
+        handlersChildrenMap.forEach((handler, name) => {
+          if (!allListeners.has(name)) canvas.removeEventListener(name, handler)
+        })
+      })
+    }
 
     this[SCOPE].off()
   }
