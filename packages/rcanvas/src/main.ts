@@ -22,7 +22,7 @@ layer.add(circle)
 
 layer.batchDraw()
 
-circle.on("click", () => {
+circle.on("mouseover", () => {
   console.log("click")
 })
 
