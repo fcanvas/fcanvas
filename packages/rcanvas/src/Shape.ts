@@ -1,8 +1,11 @@
 /* eslint-disable functional/immutable-data */
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
+import gsap from "gsap"
 import { watchEffect } from "vue"
 
+import type { AnimationP } from "./Animation"
+import { Animation } from "./Animation"
 import type {
   CommonShapeAttrs,
   FillModeMixture,
@@ -30,7 +33,7 @@ import { extendTarget } from "./utils/extendTarget"
 function getFillPriority(
   attrs: Partial<
     Pick<
-      CommonShapeAttrs,
+      CommonShapeAttrs<string>,
       | "fillPriority"
       | "fillPatternImage"
       | "fillLinearGradient"
@@ -54,7 +57,7 @@ function setLineStyle(
   context: CanvasRenderingContext2D,
   attrs: Partial<
     Pick<
-      CommonShapeAttrs,
+      CommonShapeAttrs<string>,
       | "strokeEnabled"
       | "strokeWidth"
       | "lineCap"
@@ -79,7 +82,7 @@ function setLineStyle(
 }
 function drawShadow(
   context: CanvasRenderingContext2D,
-  attrs: Partial<Pick<CommonShapeAttrs, "shadowEnabled" | "shadow">>
+  attrs: Partial<Pick<CommonShapeAttrs<string>, "shadowEnabled" | "shadow">>
 ) {
   if (attrs.shadowEnabled !== false && attrs.shadow !== undefined) {
     context.shadowColor = attrs.shadow.color
@@ -103,10 +106,18 @@ export class Shape<
   static readonly _centroid: boolean = false
 
   public readonly attrs: ReturnType<
-    typeof reactive<CommonShapeAttrs & PersonalAttrs>
+    typeof reactive<
+      CommonShapeAttrs &
+        PersonalAttrs & {
+          animation: AnimationP<CommonShapeAttrs & PersonalAttrs>
+        }
+    >
   >
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
+  public readonly animate: Animation<
+    ReturnType<typeof reactive<CommonShapeAttrs & PersonalAttrs>>
+  >
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private readonly [CONTEXT_CACHE] = document
@@ -127,11 +138,22 @@ export class Shape<
 
   protected _sceneFunc?(context: CanvasRenderingContext2D): void
 
-  constructor(attrs: ReactiveType<CommonShapeAttrs<Shape> & PersonalAttrs>) {
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<Shape> &
+        PersonalAttrs & {
+          animation: AnimationP<CommonShapeAttrs<Shape> & PersonalAttrs>
+        }
+    >
+  ) {
     super()
     this.scope.on()
 
-    this.attrs = reactive(attrs as CommonShapeAttrs<Shape> & PersonalAttrs)
+    this.attrs = reactive(
+      attrs as CommonShapeAttrs<Shape> &
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        PersonalAttrs & { animation: AnimationP<any> }
+    )
 
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
@@ -154,6 +176,8 @@ export class Shape<
         height: height + adjust
       }
     })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.animate = new Animation(this.attrs as unknown as any)
 
     // try watchEffect
     watchEffect(() => {
@@ -173,6 +197,12 @@ export class Shape<
     })
 
     this.scope.off()
+  }
+
+  public to(
+    attrs: gsap.TweenVars & Partial<CommonShapeAttrs & PersonalAttrs>
+  ): gsap.core.Tween {
+    return gsap.to(this.attrs, attrs)
   }
 
   protected getFill(context: CanvasRenderingContext2D) {

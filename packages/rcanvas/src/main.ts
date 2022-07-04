@@ -15,7 +15,24 @@ const circle = new Circle({
   x: 10,
   y: 10,
   radius,
-  stroke: "black"
+  stroke: "black",
+  animation: {
+    moveX: {
+      keyframes: {
+        "0%": {
+          x: 0
+        },
+        "50%": {
+          x: 200
+        },
+        "100%": {
+          x: 150
+        }
+      },
+      duration: 1,
+      repeat: -1
+    }
+  }
 })
 
 layer.add(circle)
@@ -25,5 +42,5 @@ layer.batchDraw()
 circle.on("mouseover", () => {
   console.log("click")
 })
-
+window.circle = circle
 window.radius = radius

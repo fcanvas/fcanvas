@@ -6,7 +6,13 @@ import type { ReactiveType } from "./ReactiveType"
 import { APIChildNode } from "./apis/APIGroup"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
-import { CANVAS_ELEMENT, DIV_CONTAINER, LISTENERS, SCOPE } from "./symbols"
+import {
+  CANVAS_ELEMENT,
+  CHILD_NODE,
+  DIV_CONTAINER,
+  LISTENERS,
+  SCOPE
+} from "./symbols"
 
 type PersonalAttrs = DrawLayerAttrs & {
   width?: number
@@ -84,6 +90,14 @@ export class Stage extends APIChildNode<
         }
         handlersMap.set(name, handler)
         container.addEventListener(name, handler)
+      })
+    })
+
+    // set max size for children
+    watchEffect(() => {
+      this[CHILD_NODE].forEach((node) => {
+        node[CANVAS_ELEMENT].width = this.attrs.width ?? 300
+        node[CANVAS_ELEMENT].height = this.attrs.height ?? 300
       })
     })
 

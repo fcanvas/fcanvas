@@ -4,7 +4,6 @@ import { watchEffect, watchPostEffect } from "vue"
 
 import type { CommonShapeEvents } from "./CommonShapeEvents"
 import type { Group } from "./Group"
-import { createContextCacheSize } from "./Group"
 import type { ReactiveType } from "./ReactiveType"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
@@ -17,7 +16,6 @@ import {
   CHILD_NODE,
   COMPUTED_CACHE,
   CONTEXT_CACHE,
-  CONTEXT_CACHE_SIZE,
   DRAW_CONTEXT_ON_SANDBOX,
   LISTENERS,
   SCOPE
@@ -73,9 +71,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     .getContext("2d")!
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
-  private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<
-    Pick<Rect, "width" | "height">
-  >
 
   private readonly [SCOPE] = new EffectScope(true) as unknown as {
     active: boolean
@@ -128,13 +123,16 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     })
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
-    this[CONTEXT_CACHE_SIZE] = createContextCacheSize(this)
 
     // try watchEffect
     watchPostEffect(() => {
+      const { width, height } = this.attrs
+      const useConfig = width !== undefined && height !== undefined
+
+      if (!useConfig) return
+
       // reactive
       const ctx = this[CONTEXT_CACHE]
-      const { width, height } = this[CONTEXT_CACHE_SIZE].value
       ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
       this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))

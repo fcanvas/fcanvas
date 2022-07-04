@@ -28,32 +28,6 @@ type PersonalAttrs = Offset &
     visible?: boolean
   }
 
-export function createContextCacheSize(group: {
-  attrs: Partial<Pick<Rect, "width" | "height">>
-  [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
-}) {
-  return computed(() => {
-    const useConfig =
-      group.attrs.width !== undefined && group.attrs.height !== undefined
-
-    if (useConfig) {
-      return {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        width: group.attrs.width!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        height: group.attrs.height!
-      }
-    }
-
-    const { width, height } = group[BOUNCE_CLIENT_RECT].value
-
-    return {
-      width,
-      height
-    }
-  })
-}
-
 export class Group<ChildNode extends Shape = Shape>
   extends APIGroup<ChildNode, {
   resize: Event
@@ -100,7 +74,26 @@ export class Group<ChildNode extends Shape = Shape>
     })
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
-    this[CONTEXT_CACHE_SIZE] = createContextCacheSize(this)
+    this[CONTEXT_CACHE_SIZE] = computed(() => {
+      const useConfig =
+        this.attrs.width !== undefined && this.attrs.height !== undefined
+
+      if (useConfig) {
+        return {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          width: this.attrs.width!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          height: this.attrs.height!
+        }
+      }
+
+      const { width, height } = this[BOUNCE_CLIENT_RECT].value
+
+      return {
+        width,
+        height
+      }
+    })
 
     // try watchEffect
     watchPostEffect(() => {
