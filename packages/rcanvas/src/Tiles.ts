@@ -1,9 +1,11 @@
-import { parse } from "plist/lib/parse"
+import { parse } from "plist"
 
 import { cropImage } from "./methods/cropImage"
-import { Image } from "./shapes/Image"
-import type { Offset } from "./types/Offset"
-import type { Size } from "./types/Size"
+import type { Offset } from "./type/Offset"
+import type { Rect } from "./type/Rect"
+import { loadImage } from "./utils/loadImage"
+
+type Size = Pick<Rect, "width" | "height">
 
 type CanvasImageResource = HTMLCanvasElement & {
   readonly sourceSize: Readonly<Size>
@@ -129,13 +131,13 @@ export async function loadTiles<TileNames extends string>(
       fetch(plistSrc)
         .then((res) => res.text())
         .then(parse) as Promise<Plist<TileNames>>,
-      Image.fromURL(tileSrc)
+      loadImage(tileSrc)
     ])
   } else {
     plist = (await fetch(plistSrc)
       .then((res) => res.text())
       .then(parse)) as Plist<TileNames>
-    tile = await Image.fromURL(
+    tile = await loadImage(
       plistSrc
         .split("/")
         .filter((item) => /[^\s]/.test(item))
