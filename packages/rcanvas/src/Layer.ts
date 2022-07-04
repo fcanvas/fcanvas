@@ -2,7 +2,6 @@ import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 import { watchEffect, watchPostEffect } from "vue"
 
-import type { CommonShapeEvents } from "./CommonShapeEvents"
 import type { Group } from "./Group"
 import type { ReactiveType } from "./ReactiveType"
 import type { Shape } from "./Shape"
@@ -20,6 +19,7 @@ import {
   LISTENERS,
   SCOPE
 } from "./symbols"
+import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
 import { extendTarget } from "./utils/extendTarget"

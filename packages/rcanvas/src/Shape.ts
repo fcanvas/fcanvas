@@ -6,12 +6,6 @@ import { watchEffect } from "vue"
 
 import type { AnimationP } from "./Animation"
 import { Animation } from "./Animation"
-import type {
-  CommonShapeAttrs,
-  FillModeMixture,
-  FillStyle
-} from "./CommonShapeAttrs"
-import type { CommonShapeEvents } from "./CommonShapeEvents"
 import type { ReactiveType } from "./ReactiveType"
 import { APIEvent } from "./apis/APIEvent"
 import { createFilter } from "./helpers/createFilter"
@@ -26,6 +20,12 @@ import {
   CONTEXT_CACHE_SIZE,
   DRAW_CONTEXT_ON_SANDBOX
 } from "./symbols"
+import type {
+  CommonShapeAttrs,
+  FillModeMixture,
+  FillStyle
+} from "./type/CommonShapeAttrs"
+import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { GetClientRectOptions } from "./type/GetClientRectOptions"
 import type { Rect } from "./type/Rect"
 import { extendTarget } from "./utils/extendTarget"

@@ -1,6 +1,7 @@
-import type { OptionFilter } from "./helpers/createFilter"
-import type { OptionTransform } from "./helpers/createTransform"
-import type { Offset } from "./type/Offset"
+import type { OptionFilter } from "../helpers/createFilter"
+import type { OptionTransform } from "../helpers/createTransform"
+
+import type { Offset } from "./Offset"
 
 export type FillStyle = CanvasGradient | CanvasPattern | string
 
