@@ -1,3 +1,4 @@
+import { Group } from "./Group"
 import { Layer } from "./Layer"
 import { Shape } from "./Shape"
 import { Stage } from "./Stage"
@@ -28,7 +29,7 @@ import { Wedge } from "./shapes/Wedge"
 import { Rect } from "./type/Rect"
 
 export * from "@vue/reactivity"
-export { Layer, Shape, Stage }
+export { Group, Layer, Shape, Stage }
 
 export {
   Arc,
@@ -60,3 +61,5 @@ export {
   random,
   range
 }
+
+export * from "./symbols"
