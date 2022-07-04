@@ -76,5 +76,6 @@ export type CommonShapeAttrs<
     opacity?: number
   } & OptionTransform & {
     filter?: OptionFilter
-    animate?: AnimationP<Omit<CommonShapeAttrs, "animation"> & PersonalAttrs>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    animate?: AnimationP<CommonShapeAttrs<any> & PersonalAttrs>
   } & PersonalAttrs

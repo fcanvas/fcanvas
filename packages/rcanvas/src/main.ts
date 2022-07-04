@@ -21,12 +21,6 @@ const circle = new Circle({
       keyframes: {
         "0%": {
           x: 0
-        },
-        "50%": {
-          x: 200
-        },
-        "100%": {
-          x: 150
         }
       },
       duration: 1,

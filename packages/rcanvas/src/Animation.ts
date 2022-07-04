@@ -1,4 +1,4 @@
-import type { ComputedRef, reactive } from "@vue/reactivity"
+import type { ComputedRef } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
 import gsap from "gsap"
 
@@ -26,13 +26,9 @@ export class Animation<Props extends Record<string, unknown>> {
   >
 
   constructor(
-    attrs: ReturnType<
-      typeof reactive<
-        Props & {
-          animate: AnimationP<Omit<Props, "animation">>
-        }
-      >
-    >
+    attrs: Props & {
+      animate: AnimationP<Omit<Props, "animation">>
+    }
   ) {
     // create gsap to ANIMATION_STORE
     this[ANIMATION_STORE] = computed<Readonly<Map<string, gsap.core.Tween>>>(
