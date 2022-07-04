@@ -7,7 +7,7 @@ import type { Rect } from "../type/Rect"
 
 // eslint-disable-next-line functional/no-mixed-type
 export interface FakeShape {
-  attrs: Offset
+  attrs: Partial<Offset>
   [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   // eslint-disable-next-line functional/no-method-signature
   getClientRect(): Rect
@@ -31,12 +31,13 @@ export function getClientRectGroup(
     const clientRect = config
       ? node.getClientRect()
       : node[BOUNCE_CLIENT_RECT].value
+    const { x: attrX = 0, y: attrY = 0 } = node.attrs
 
-    x = Math.min(x, clientRect.x + node.attrs.x)
-    y = Math.min(y, clientRect.y + node.attrs.y)
+    x = Math.min(x, clientRect.x + attrX)
+    y = Math.min(y, clientRect.y + attrY)
 
-    const sumWidth = -clientRect.x + node.attrs.x + clientRect.width
-    const sumHeight = -clientRect.y + node.attrs.y + clientRect.height
+    const sumWidth = -clientRect.x + attrX + clientRect.width
+    const sumHeight = -clientRect.y + attrY + clientRect.height
 
     // fillWidth = Math.max(fillWidth, sumWidth);
     // fillHeight = Math.max(fillHeight, sumHeight);

@@ -17,7 +17,7 @@ import {
 type PersonalAttrs = DrawLayerAttrs & {
   width?: number
   height?: number
-  container: string
+  container?: string
   visible?: boolean
   opacity?: number
 }
@@ -40,7 +40,7 @@ export class Stage extends APIChildNode<
     stop: () => void
   }
 
-  constructor(attrs: ReactiveType<PersonalAttrs>) {
+  constructor(attrs: ReactiveType<PersonalAttrs> = {}) {
     super()
 
     this[SCOPE].on()
@@ -101,11 +101,16 @@ export class Stage extends APIChildNode<
       })
     })
 
-    this[SCOPE].off()
+    watchEffect(() => {
+      const { container: id } = this.attrs
+      if (id !== undefined) {
+        const el = document.getElementById(id)
+        if (!el) console.warn(`#${id} not exists.`)
+        else el.appendChild(container)
+      }
+    })
 
-    const el = document.getElementById(this.attrs.container)
-    if (!el) console.warn(`#${attrs.container} not exists.`)
-    else el.appendChild(container)
+    this[SCOPE].off()
   }
 
   // eslint-disable-next-line functional/functional-parameters

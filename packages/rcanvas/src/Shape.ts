@@ -102,12 +102,17 @@ export class Shape<
   // eslint-disable-next-line @typescript-eslint/ban-types
   PersonalAttrs extends Record<string, unknown> = {}
 > extends APIEvent<CommonShapeEvents> {
+  static readonly type: string = "Shape"
   static readonly _centroid: boolean = false
 
   public readonly attrs: ReturnType<
     // eslint-disable-next-line no-use-before-define
     typeof reactive<CommonShapeAttrs<PersonalAttrs> & ThisType<Shape>>
   >
+
+  public get type(): string {
+    return (this.constructor as any).type
+  }
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly animate: Animation<

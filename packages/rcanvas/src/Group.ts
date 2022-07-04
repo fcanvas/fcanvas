@@ -20,7 +20,7 @@ import type { Rect } from "./type/Rect"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
-type PersonalAttrs = Offset &
+type PersonalAttrs = Partial<Offset> &
   DrawLayerAttrs & {
     width?: number
     height?: number
@@ -56,7 +56,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     stop: () => void
   }
 
-  constructor(attrs: ReactiveType<PersonalAttrs>) {
+  constructor(attrs: ReactiveType<PersonalAttrs> = {}) {
     super()
     this[SCOPE].on()
 
@@ -134,8 +134,8 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
 
     context.drawImage(
       this[CONTEXT_CACHE].canvas,
-      this.attrs.x + x,
-      this.attrs.y + y
+      (this.attrs.x ?? 0) + x,
+      (this.attrs.y ?? 0) + y
     )
   }
 
