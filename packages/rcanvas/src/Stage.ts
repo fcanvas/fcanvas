@@ -2,7 +2,7 @@ import { EffectScope, reactive } from "@vue/reactivity"
 import { watchEffect } from "vue"
 
 import type { Layer } from "./Layer"
-import type { ReactiveType } from "./ReactiveType"
+import type { ReactiveType } from "./type/fn/ReactiveType"
 import { APIChildNode } from "./apis/APIGroup"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"

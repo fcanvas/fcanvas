@@ -3,7 +3,6 @@ import { computed, EffectScope, reactive } from "@vue/reactivity"
 import { watchEffect, watchPostEffect } from "vue"
 
 import type { Group } from "./Group"
-import type { ReactiveType } from "./ReactiveType"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -22,6 +21,7 @@ import {
 import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
+import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
 type PersonalAttrs = Partial<Offset> &

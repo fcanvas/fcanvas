@@ -2,8 +2,6 @@ import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 import { watchPostEffect } from "vue"
 
-import type { Container } from "./Container"
-import type { ReactiveType } from "./ReactiveType"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -19,6 +17,7 @@ import {
 } from "./symbols"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
+import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
 type PersonalAttrs = Offset &
@@ -28,12 +27,12 @@ type PersonalAttrs = Offset &
     visible?: boolean
   }
 
-export class Group<ChildNode extends Shape = Shape>
-  extends APIGroup<ChildNode, {
-  resize: Event
-}>
-  // prettier-ignore
-  implements Container {
+export class Group<ChildNode extends Shape = Shape> extends APIGroup<
+  ChildNode,
+  {
+    resize: Event
+  }
+> {
   static readonly type: string = "Group"
 
   public readonly attrs: ReturnType<typeof reactive<PersonalAttrs>>
@@ -57,7 +56,7 @@ export class Group<ChildNode extends Shape = Shape>
     stop: () => void
   }
 
-  constructor(attrs: ReactiveType< PersonalAttrs >) {
+  constructor(attrs: ReactiveType<PersonalAttrs>) {
     super()
     this[SCOPE].on()
 

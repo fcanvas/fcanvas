@@ -6,7 +6,6 @@ import { watchEffect } from "vue"
 
 import type { AnimationP } from "./Animation"
 import { Animation } from "./Animation"
-import type { ReactiveType } from "./ReactiveType"
 import { APIEvent } from "./apis/APIEvent"
 import { createFilter } from "./helpers/createFilter"
 import { createTransform } from "./helpers/createTransform"
@@ -28,6 +27,7 @@ import type {
 import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { GetClientRectOptions } from "./type/GetClientRectOptions"
 import type { Rect } from "./type/Rect"
+import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
 function getFillPriority(
