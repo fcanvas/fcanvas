@@ -26,7 +26,7 @@ import { Tag } from "./shapes/Tag"
 import { Text } from "./shapes/Text"
 import { TextPath } from "./shapes/TextPath"
 import { Wedge } from "./shapes/Wedge"
-import { Rect } from "./type/Rect"
+import { Rect } from "./shapes/Rect"
 
 export * from "@vue/reactivity"
 export { Group, Layer, Shape, Stage }
