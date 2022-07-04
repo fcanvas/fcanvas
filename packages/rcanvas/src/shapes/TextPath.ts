@@ -1,6 +1,5 @@
 import { effect } from "@vue/reactivity"
 
-import type { CommonAttrs } from "../Shape"
 import { Shape } from "../Shape"
 import { getLineLength } from "../helpers/Path/getLineLength"
 import { getPointOnCubicBezier } from "../helpers/Path/getPointOnCubicBezier"
@@ -8,7 +7,9 @@ import { getPointOnEllipticalArc } from "../helpers/Path/getPointOnEllipticalArc
 import { getPointOnLine } from "../helpers/Path/getPointOnLine"
 import { getPointOnQuadraticBezier } from "../helpers/Path/getPointOnQuadraticBezier"
 import { parsePathData } from "../helpers/Path/parsePathData"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { Offset } from "../type/Offset"
+import type { ReactiveType } from "../type/fn/ReactiveType"
 
 import { getDummyContext, Text } from "./Text"
 
@@ -53,7 +54,7 @@ export class TextPath extends Shape<PersonalAttrs> {
   private partialText = ""
 
   private textWidth = 0
-  constructor(attrs: CommonAttrs & PersonalAttrs) {
+  constructor(attrs: ReactiveType<CommonShapeAttrs<PersonalAttrs>>) {
     super(attrs)
     this.dataArray = parsePathData(this.attrs.data)
 

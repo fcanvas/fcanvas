@@ -1,4 +1,5 @@
 import { Shape } from "../Shape"
+import { pointInCircle } from "../helpers/pointInCircle"
 
 export class Circle extends Shape<{
   radius: number
@@ -16,5 +17,10 @@ export class Circle extends Shape<{
       width: this.attrs.radius * 2,
       height: this.attrs.radius * 2
     }
+  }
+
+  public isPressedPoint(x: number, y: number) {
+    // check
+    return pointInCircle(x, y, this.attrs.x, this.attrs.y, this.attrs.radius)
   }
 }

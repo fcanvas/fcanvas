@@ -1,7 +1,8 @@
 import { watchEffect } from "vue"
 
-import type { CommonAttrs } from "../Shape"
 import { Shape } from "../Shape"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { ReactiveType } from "../type/fn/ReactiveType"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PersonalAttrs = {
@@ -63,7 +64,7 @@ export class Text extends Shape<PersonalAttrs> {
   private partialText = ""
 
   private textWidth = 0
-  constructor(attrs: CommonAttrs & PersonalAttrs) {
+  constructor(attrs: ReactiveType<CommonShapeAttrs<PersonalAttrs>>) {
     super(attrs)
 
     watchEffect(() => {

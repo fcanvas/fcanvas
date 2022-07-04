@@ -4,7 +4,6 @@ import { computed, EffectScope, reactive } from "@vue/reactivity"
 import gsap from "gsap"
 import { watchEffect } from "vue"
 
-import type { AnimationP } from "./Animation"
 import { Animation } from "./Animation"
 import { APIEvent } from "./apis/APIEvent"
 import { createFilter } from "./helpers/createFilter"
@@ -33,7 +32,7 @@ import { extendTarget } from "./utils/extendTarget"
 function getFillPriority(
   attrs: Partial<
     Pick<
-      CommonShapeAttrs<string>,
+      CommonShapeAttrs,
       | "fillPriority"
       | "fillPatternImage"
       | "fillLinearGradient"
@@ -57,7 +56,7 @@ function setLineStyle(
   context: CanvasRenderingContext2D,
   attrs: Partial<
     Pick<
-      CommonShapeAttrs<string>,
+      CommonShapeAttrs,
       | "strokeEnabled"
       | "strokeWidth"
       | "lineCap"
@@ -82,7 +81,7 @@ function setLineStyle(
 }
 function drawShadow(
   context: CanvasRenderingContext2D,
-  attrs: Partial<Pick<CommonShapeAttrs<string>, "shadowEnabled" | "shadow">>
+  attrs: Partial<Pick<CommonShapeAttrs, "shadowEnabled" | "shadow">>
 ) {
   if (attrs.shadowEnabled !== false && attrs.shadow !== undefined) {
     context.shadowColor = attrs.shadow.color
@@ -106,12 +105,8 @@ export class Shape<
   static readonly _centroid: boolean = false
 
   public readonly attrs: ReturnType<
-    typeof reactive<
-      CommonShapeAttrs &
-        PersonalAttrs & {
-          animation: AnimationP<CommonShapeAttrs & PersonalAttrs>
-        }
-    >
+    // eslint-disable-next-line no-use-before-define
+    typeof reactive<CommonShapeAttrs<PersonalAttrs> & ThisType<Shape>>
   >
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
@@ -139,21 +134,12 @@ export class Shape<
   protected _sceneFunc?(context: CanvasRenderingContext2D): void
 
   constructor(
-    attrs: ReactiveType<
-      CommonShapeAttrs<Shape> &
-        PersonalAttrs & {
-          animation: AnimationP<CommonShapeAttrs<Shape> & PersonalAttrs>
-        }
-    >
+    attrs: ReactiveType<CommonShapeAttrs<PersonalAttrs> & ThisType<Shape>>
   ) {
     super()
     this.scope.on()
 
-    this.attrs = reactive(
-      attrs as CommonShapeAttrs<Shape> &
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        PersonalAttrs & { animation: AnimationP<any> }
-    )
+    this.attrs = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
 
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...

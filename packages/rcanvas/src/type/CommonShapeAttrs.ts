@@ -1,3 +1,4 @@
+import type { AnimationP } from "../Animation"
 import type { OptionFilter } from "../helpers/createFilter"
 import type { OptionTransform } from "../helpers/createTransform"
 
@@ -45,8 +46,9 @@ export type FillModeMixture = {
   Partial<FillModeLinearGradient> &
   Partial<FillModeRadialGradient>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CommonShapeAttrs<This = any> = Offset & {
+export type CommonShapeAttrs<
+  PersonalAttrs extends Record<string, unknown> = Record<string, string>
+> = Offset & {
   fillAfterStrokeEnabled?: boolean
   fillEnabled?: boolean
   stroke?: FillStyle
@@ -59,7 +61,7 @@ export type CommonShapeAttrs<This = any> = Offset & {
   // strokeScaleEnabled?: boolean
   lineJoin?: "bevel" | "round" | "miter"
   lineCap?: "butt" | "round" | "square"
-  sceneFunc?: (this: This, context: CanvasRenderingContext2D) => void
+  sceneFunc?: (context: CanvasRenderingContext2D) => void
 } & Partial<FillModeMixture> /* & FillModeMonopole */ & {
     shadowEnabled?: boolean
     shadow?: Partial<Offset> & {
@@ -74,4 +76,5 @@ export type CommonShapeAttrs<This = any> = Offset & {
     opacity?: number
   } & OptionTransform & {
     filter?: OptionFilter
-  }
+    animate?: AnimationP<Omit<CommonShapeAttrs, "animation"> & PersonalAttrs>
+  } & PersonalAttrs

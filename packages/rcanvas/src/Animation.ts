@@ -29,7 +29,7 @@ export class Animation<Props extends Record<string, unknown>> {
     attrs: ReturnType<
       typeof reactive<
         Props & {
-          animation: AnimationP<Omit<Props, "animation">>
+          animate: AnimationP<Omit<Props, "animation">>
         }
       >
     >
@@ -39,8 +39,8 @@ export class Animation<Props extends Record<string, unknown>> {
       () => {
         const store = new Map<string, gsap.core.Tween>()
 
-        for (const name in attrs.animation) {
-          const animation = attrs.animation[name]
+        for (const name in attrs.animate) {
+          const animation = attrs.animate[name]
           const anim = gsap.to(attrs, {
             keyframes: animation.keyframes,
             duration: animation.duration,

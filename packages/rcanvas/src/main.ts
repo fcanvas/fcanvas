@@ -16,7 +16,7 @@ const circle = new Circle({
   y: 10,
   radius,
   stroke: "black",
-  animation: {
+  animate: {
     moveX: {
       keyframes: {
         "0%": {
