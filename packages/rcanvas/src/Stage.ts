@@ -2,7 +2,6 @@ import { EffectScope, reactive } from "@vue/reactivity"
 import { watchEffect } from "vue"
 
 import type { Layer } from "./Layer"
-import type { ReactiveType } from "./type/fn/ReactiveType"
 import { APIChildNode } from "./apis/APIGroup"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -13,6 +12,8 @@ import {
   LISTENERS,
   SCOPE
 } from "./symbols"
+import type { Rect } from "./type/Rect"
+import type { ReactiveType } from "./type/fn/ReactiveType"
 
 type PersonalAttrs = DrawLayerAttrs & {
   width?: number
@@ -30,6 +31,9 @@ export class Stage extends APIChildNode<
   static readonly type: string = "Stage"
 
   public readonly attrs: ReturnType<typeof reactive<PersonalAttrs>>
+  public readonly size: ReturnType<
+    typeof reactive<Pick<Rect, "width" | "height">>
+  > = reactive({ width: 300, height: 300 })
 
   private readonly [DIV_CONTAINER] = document.createElement("div")
 
@@ -46,6 +50,10 @@ export class Stage extends APIChildNode<
     this[SCOPE].on()
 
     this.attrs = reactive(attrs as PersonalAttrs)
+    watchEffect(() => {
+      this.size.width = this.attrs.width ?? 300
+      this.size.height = this.attrs.height ?? 300
+    })
 
     const container = this[DIV_CONTAINER]
     container.style.cssText = "position: relative;"
@@ -53,8 +61,9 @@ export class Stage extends APIChildNode<
       container.style.transform = createTransform(this.attrs).toString()
     })
     watchEffect(() => {
-      container.style.width = `${this.attrs.width ?? 300}px`
-      container.style.height = `${this.attrs.height ?? 300}px`
+      const { width, height } = this.size
+      container.style.width = `${width}px`
+      container.style.height = `${height}px`
     })
     // eslint-disable-next-line functional/no-let
     let displayBp = ""
@@ -95,9 +104,10 @@ export class Stage extends APIChildNode<
 
     // set max size for children
     watchEffect(() => {
+      const { width, height } = this.size
       this[CHILD_NODE].forEach((node) => {
-        node[CANVAS_ELEMENT].width = this.attrs.width ?? 300
-        node[CANVAS_ELEMENT].height = this.attrs.height ?? 300
+        node[CANVAS_ELEMENT].width = width
+        node[CANVAS_ELEMENT].height = height
       })
     })
 

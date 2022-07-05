@@ -111,6 +111,7 @@ export class Shape<
   >
 
   public get type(): string {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (this.constructor as any).type
   }
 
