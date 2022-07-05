@@ -27,6 +27,12 @@ import { Text } from "./shapes/Text"
 import { TextPath } from "./shapes/TextPath"
 import { Wedge } from "./shapes/Wedge"
 import { Rect } from "./shapes/Rect"
+import { loadFont } from "./methods/loadFont"
+import { randomColor } from "./methods/randomColor"
+import { getMousePos } from "./methods/getMousePos"
+import { useClientActivated } from "./useApi/useClientActivated"
+import { useEvent } from "./useApi/useEvent"
+import { useMousePos } from "./useApi/useMousePos"
 
 export * from "@vue/reactivity"
 export { Group, Layer, Shape, Stage }
@@ -59,7 +65,12 @@ export {
   lerp,
   map,
   random,
-  range
+  randomColor,
+  range,
+  loadFont,
+  getMousePos
 }
 
 export * from "./symbols"
+
+export { useClientActivated, useEvent, useMousePos }

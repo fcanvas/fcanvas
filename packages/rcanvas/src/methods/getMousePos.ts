@@ -1,28 +1,27 @@
-export function getTouchInfo<
-  T extends {
-    clientX: number
-    clientY: number
-    identifier?: number
-  }
->(
+interface MousePos {
+  x: number
+  y: number
+  winX: number
+  winY: number
+  id: number
+}
+
+export function getMousePos(
   element: HTMLCanvasElement,
-  touches: readonly T[]
-): readonly {
-  readonly x: number
-  readonly y: number
-  readonly winX: number
-  readonly winY: number
-  readonly id: number
-}[] {
+  event: TouchEvent | MouseEvent
+): MousePos[] {
   const rect = element.getBoundingClientRect()
   const sx = element.scrollWidth / element.width || 1
   const sy = element.scrollHeight / element.height || 1
+
+  const touches = (event as TouchEvent).touches ||
+    (event as TouchEvent).changedTouches || [event]
   const _touches = []
   const length = touches.length
   // eslint-disable-next-line functional/no-let
   let i = 0
   // eslint-disable-next-line functional/no-let
-  let touch: T
+  let touch
 
   while (i < length) {
     touch = touches[i++]

@@ -7,7 +7,6 @@ import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
-import { realMousePosition } from "./helpers/realMousePosition"
 import {
   BOUNCE_CLIENT_RECT,
   CANVAS_ELEMENT,
@@ -23,6 +22,10 @@ import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
+import { _setEvent } from "./useApi/useEvent"
+import { _setClientActivated } from "./useApi/useClientActivated"
+import { getMousePos } from "./methods/getMousePos"
+import { _setMousePos } from "./useApi/useMousePos"
 
 type PersonalAttrs = Partial<Offset> &
   DrawLayerAttrs & {
@@ -39,7 +42,7 @@ const ID_REQUEST_FRAME = Symbol("ID_REQUEST_FRAME")
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AllLayer = APIGroup<any, Record<string, string>> & {
-  isPressedPoint?: (x: number, y: number, event: unknown) => boolean
+  isPressedPoint?: (x: number, y: number) => boolean
 }
 function getListenersOnDeep(
   layer: AllLayer,
@@ -187,30 +190,39 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
           if (oldHandler) canvas.removeEventListener(name, oldHandler)
 
           const handler = (event: Event) => {
+            // ================== set use api =================
+            _setEvent(event)
+            // ================================================
+
             console.log("[event:layer] emit event %s", event.type)
             // eslint-disable-next-line functional/no-let
-            let clients: readonly ReturnType<typeof realMousePosition>[]
+            let mousePos: ReturnType<typeof getMousePos>
             listenersGroup.forEach((listeners, node) => {
-              if (!clients) {
-                clients = (
-                  event.type.startsWith("touch")
-                    ? Array.from((event as TouchEvent).changedTouches)
-                    : [event as MouseEvent | WheelEvent]
-                ).map((touch) =>
-                  realMousePosition(canvas, touch.clientX, touch.clientY)
-                )
+              if (!mousePos) {
+                mousePos = getMousePos(canvas, event as MouseEvent | TouchEvent)
+                _setMousePos(mousePos)
               }
 
               if (
-                !clients ||
+                !mousePos ||
                 !node.isPressedPoint ||
-                clients.some((client) =>
+                mousePos.some((client) => {
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  node.isPressedPoint!(client.x, client.y, event)
-                )
-              )
+                  if (node.isPressedPoint!(client.x, client.y)) {
+                    _setClientActivated(client)
+                    return true
+                  }
+                })
+              ) {
                 listeners.forEach((listener) => listener(event))
+                _setClientActivated(null)
+              }
             })
+            // =================== free memory ================
+            _setEvent(null)
+            _setClientActivated(null)
+            _setMousePos(null)
+            // ================================================
           }
           handlersChildrenMap.set(name as keyof CommonShapeEvents, handler)
           canvas.addEventListener(name, handler)

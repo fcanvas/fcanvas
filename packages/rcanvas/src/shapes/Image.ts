@@ -1,6 +1,6 @@
 import { Shape } from "../Shape"
 import type { Rect } from "../type/Rect"
-import { loadImage } from "../utils/loadImage"
+import { loadImage } from "../methods/loadImage"
 
 type PersonalAttrs = {
   // eslint-disable-next-line no-undef

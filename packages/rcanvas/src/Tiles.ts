@@ -3,7 +3,7 @@ import { parse } from "plist"
 import { cropImage } from "./methods/cropImage"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
-import { loadImage } from "./utils/loadImage"
+import { loadImage } from "./methods/loadImage"
 
 type Size = Pick<Rect, "width" | "height">
 
