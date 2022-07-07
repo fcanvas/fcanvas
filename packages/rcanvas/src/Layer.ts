@@ -25,7 +25,6 @@ import { extendTarget } from "./utils/extendTarget"
 import { _setEvent } from "./useApi/useEvent"
 import { _setClientActivated } from "./useApi/useClientActivated"
 import { getMousePos } from "./methods/getMousePos"
-import { _setMousePos } from "./useApi/useMousePos"
 
 type PersonalAttrs = Partial<Offset> &
   DrawLayerAttrs & {
@@ -200,7 +199,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
             listenersGroup.forEach((listeners, node) => {
               if (!mousePos) {
                 mousePos = getMousePos(canvas, event as MouseEvent | TouchEvent)
-                _setMousePos(mousePos)
               }
 
               if (
@@ -221,7 +219,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
             // =================== free memory ================
             _setEvent(null)
             _setClientActivated(null)
-            _setMousePos(null)
             // ================================================
           }
           handlersChildrenMap.set(name as keyof CommonShapeEvents, handler)

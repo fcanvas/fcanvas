@@ -33,6 +33,7 @@ import { getMousePos } from "./methods/getMousePos"
 import { useClientActivated } from "./useApi/useClientActivated"
 import { useEvent } from "./useApi/useEvent"
 import { useMousePos } from "./useApi/useMousePos"
+import { useMouseIsPressed } from "./useApi/useMouseIsPressed"
 
 export * from "@vue/reactivity"
 export { Group, Layer, Shape, Stage }
@@ -73,4 +74,4 @@ export {
 
 export * from "./symbols"
 
-export { useClientActivated, useEvent, useMousePos }
+export { useClientActivated, useEvent, useMouseIsPressed, useMousePos }

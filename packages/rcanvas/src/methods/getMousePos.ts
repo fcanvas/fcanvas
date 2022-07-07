@@ -7,12 +7,16 @@ interface MousePos {
 }
 
 export function getMousePos(
-  element: HTMLCanvasElement,
-  event: TouchEvent | MouseEvent
+  element: HTMLElement & {
+    width?: number
+    height?: number
+  },
+  event: TouchEvent | MouseEvent,
+  limit = 1
 ): MousePos[] {
   const rect = element.getBoundingClientRect()
-  const sx = element.scrollWidth / element.width || 1
-  const sy = element.scrollHeight / element.height || 1
+  const sx = (element.width && element.scrollWidth / element.width) || 1
+  const sy = (element.height && element.scrollHeight / element.height) || 1
 
   const touches = (event as TouchEvent).touches ||
     (event as TouchEvent).changedTouches || [event]
@@ -33,6 +37,8 @@ export function getMousePos(
       winY: touch.clientY,
       id: touch.identifier ?? Math.random()
     })
+
+    if (limit === i) break
   }
   return _touches
 }

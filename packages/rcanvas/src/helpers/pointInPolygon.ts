@@ -1,6 +1,6 @@
 // source code by; https://www.geeksforgeeks.org/how-to-check-if-a-given-point-lies-inside-a-polygon/amp/
 
-import type { Offset } from "../types/Offset"
+import type { Offset } from "../type/Offset"
 
 // Given three collinear points p, q, r,
 
