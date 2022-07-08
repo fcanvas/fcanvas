@@ -7,7 +7,16 @@ import { addEvents } from "../helpers/addEvents"
 import { getMousePos } from "../methods/getMousePos"
 import { CANVAS_ELEMENT } from "../symbols"
 
-const mousePosMap = new WeakMap()
+const mousePosMap = new WeakMap<
+  object,
+  {
+    mouseX: number
+    mouseY: number
+    winMouseX: number
+    winMouseY: number
+    isTouch: boolean
+  }
+>()
 export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
   instance = (instance as Layer)[CANVAS_ELEMENT] ?? instance
 

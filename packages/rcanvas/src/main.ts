@@ -16,8 +16,8 @@ stage.add(layer)
 class CircleCustom extends Circle {
   setup() {
     const { attrs } = this
-    const mousePos = useMousePos(layer)
-    const mouseIsPressed = useMouseIsPressed(layer)
+    const mousePos = useMousePos()
+    const mouseIsPressed = useMouseIsPressed()
 
     watchEffect(() => {
       if (mouseIsPressed.value) {
@@ -55,8 +55,8 @@ const circle = new CircleCustom({
   },
 
   setup(attrs) {
-    const mousePos = useMousePos(layer)
-    const mouseIsPressed = useMouseIsPressed(layer)
+    const mousePos = useMousePos()
+    const mouseIsPressed = useMouseIsPressed()
 
     watchEffect(() => {
       if (mouseIsPressed.value) {

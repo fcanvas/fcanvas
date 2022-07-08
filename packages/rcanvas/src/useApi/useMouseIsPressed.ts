@@ -1,3 +1,4 @@
+import type { Ref } from "@vue/reactivity"
 import { ref } from "@vue/reactivity"
 
 import type { Layer } from "../Layer"
@@ -6,7 +7,7 @@ import type { ElAddEventListener } from "../helpers/addEvents"
 import { addEvents } from "../helpers/addEvents"
 import { CANVAS_ELEMENT } from "../symbols"
 
-const mouseIsPressedMap = new WeakMap()
+const mouseIsPressedMap = new WeakMap<object, Ref<boolean>>()
 export function useMouseIsPressed(
   instance: ElAddEventListener = getCurrentShape()
 ) {
