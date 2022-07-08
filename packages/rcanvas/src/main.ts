@@ -13,8 +13,31 @@ const stage = new Stage({
 const layer = new Layer()
 stage.add(layer)
 
+class CircleCustom extends Circle {
+  setup() {
+    const { attrs } = this
+    const mousePos = useMousePos(layer)
+    const mouseIsPressed = useMouseIsPressed(layer)
+
+    watchEffect(() => {
+      if (mouseIsPressed.value) {
+        // eslint-disable-next-line functional/immutable-data
+        attrs.x = mousePos.mouseX
+        // eslint-disable-next-line functional/immutable-data
+        attrs.y = mousePos.mouseY
+
+        // eslint-disable-next-line functional/immutable-data
+        attrs.fill = "red"
+      } else {
+        // eslint-disable-next-line functional/immutable-data
+        attrs.fill = "transparent"
+      }
+    })
+  }
+}
+
 const radius = ref(10)
-const circle = new Circle({
+const circle = new CircleCustom({
   x: 10,
   y: 10,
   radius,
@@ -29,22 +52,26 @@ const circle = new Circle({
       duration: 1,
       repeat: -1
     }
-  }
-})
-const mousePos = useMousePos(layer)
-const mouseIsPressed = useMouseIsPressed(layer)
-watchEffect(() => {
-  if (mouseIsPressed.value) {
-    // eslint-disable-next-line functional/immutable-data
-    circle.attrs.x = mousePos.mouseX
-    // eslint-disable-next-line functional/immutable-data
-    circle.attrs.y = mousePos.mouseY
+  },
 
-    // eslint-disable-next-line functional/immutable-data
-    circle.attrs.fill = "red"
-  } else {
-    // eslint-disable-next-line functional/immutable-data
-    circle.attrs.fill = "transparent"
+  setup(attrs) {
+    const mousePos = useMousePos(layer)
+    const mouseIsPressed = useMouseIsPressed(layer)
+
+    watchEffect(() => {
+      if (mouseIsPressed.value) {
+        // eslint-disable-next-line functional/immutable-data
+        attrs.x = mousePos.mouseX
+        // eslint-disable-next-line functional/immutable-data
+        attrs.y = mousePos.mouseY
+
+        // eslint-disable-next-line functional/immutable-data
+        attrs.fill = "red"
+      } else {
+        // eslint-disable-next-line functional/immutable-data
+        attrs.fill = "transparent"
+      }
+    })
   }
 })
 
@@ -55,6 +82,5 @@ layer.batchDraw()
 circle.on("mouseover", () => {
   console.log("click")
 }) // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
-;(window as any).circle = circle
-;// eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
-(window as any).radius = radius
+;(window as any).circle = circle // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
+;(window as any).radius = radius
