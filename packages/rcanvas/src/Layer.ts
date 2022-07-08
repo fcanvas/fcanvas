@@ -16,6 +16,7 @@ import {
   CONTEXT_CACHE,
   DRAW_CONTEXT_ON_SANDBOX,
   LISTENERS,
+  LISTENERS_ROOT,
   SCOPE
 } from "./symbols"
 import type { CommonShapeEvents } from "./type/CommonShapeEvents"
@@ -45,13 +46,35 @@ type AllLayer = APIGroup<any, Record<string, string>> & {
 }
 function getListenersOnDeep(
   layer: AllLayer,
-  allListeners = new Map<string, Map<AllLayer, Set<(event: Event) => void>>>()
+  allListeners = new Map<
+    string,
+    {
+      all: Map<AllLayer, Set<(event: Event) => void>>
+      root: boolean
+    }
+  >()
 ) {
   layer[LISTENERS]?.forEach((listeners, name) => {
-    if (!allListeners.has(name)) allListeners.set(name, new Map())
+    if (!allListeners.has(name)) {
+      allListeners.set(name, {
+        all: new Map(),
+        root: false
+      })
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    allListeners.get(name)!.set(layer, listeners)
+    allListeners.get(name)!.all.set(layer, listeners)
+  })
+  layer[LISTENERS_ROOT]?.forEach((listeners, name) => {
+    if (!allListeners.has(name)) {
+      allListeners.set(name, {
+        all: new Map(),
+        root: true
+      })
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    allListeners.get(name)!.all.set(layer, listeners)
   })
   layer[CHILD_NODE]?.forEach((shape) => {
     getListenersOnDeep(shape, allListeners)
@@ -188,39 +211,50 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
           )
           if (oldHandler) canvas.removeEventListener(name, oldHandler)
 
-          const handler = (event: Event) => {
-            // ================== set use api =================
-            _setEvent(event)
-            // ================================================
+          const handler = listenersGroup.root
+            ? (event: Event) => {
+                console.log("[event::root:layer] emit event %s", event.type)
+                listenersGroup.all.forEach((listeners) => {
+                  listeners.forEach((listener) => listener(event))
+                })
+              }
+            : (event: Event) => {
+                // ================== set use api =================
+                _setEvent(event)
+                // ================================================
 
-            console.log("[event:layer] emit event %s", event.type)
-            // eslint-disable-next-line functional/no-let
-            let mousePos: ReturnType<typeof getMousePos>
-            listenersGroup.forEach((listeners, node) => {
-              if (!mousePos)
-                mousePos = getMousePos(event as MouseEvent | TouchEvent, canvas)
+                console.log("[event:layer] emit event %s", event.type)
+                // eslint-disable-next-line functional/no-let
+                let mousePos: ReturnType<typeof getMousePos>
+                listenersGroup.all.forEach((listeners, node) => {
+                  if (!mousePos) {
+                    mousePos = getMousePos(
+                      event as MouseEvent | TouchEvent,
+                      canvas
+                    )
+                  }
 
-              if (
-                !mousePos ||
-                !node.isPressedPoint ||
-                // eslint-disable-next-line array-callback-return
-                mousePos.some((client) => {
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  if (node.isPressedPoint!(client.x, client.y)) {
-                    _setClientActivated(client)
-                    return true
+                  if (
+                    !mousePos ||
+                    !node.isPressedPoint ||
+                    // eslint-disable-next-line array-callback-return
+                    mousePos.some((client) => {
+                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                      if (node.isPressedPoint!(client.x, client.y)) {
+                        _setClientActivated(client)
+                        return true
+                      }
+                    })
+                  ) {
+                    listeners.forEach((listener) => listener(event))
+                    _setClientActivated(null)
                   }
                 })
-              ) {
-                listeners.forEach((listener) => listener(event))
+                // =================== free memory ================
+                _setEvent(null)
                 _setClientActivated(null)
+                // ================================================
               }
-            })
-            // =================== free memory ================
-            _setEvent(null)
-            _setClientActivated(null)
-            // ================================================
-          }
           handlersChildrenMap.set(name as keyof CommonShapeEvents, handler)
           canvas.addEventListener(name, handler)
         })

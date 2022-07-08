@@ -1,7 +1,7 @@
 import type { ShallowReactive } from "@vue/reactivity"
 import { shallowReactive } from "@vue/reactivity"
 
-import { LISTENERS } from "../symbols"
+import { LISTENERS, LISTENERS_ROOT } from "../symbols"
 
 export class APIEvent<Events extends Record<string, unknown>> {
   public readonly [LISTENERS]: ShallowReactive<
@@ -9,22 +9,31 @@ export class APIEvent<Events extends Record<string, unknown>> {
     Map<keyof Events, Set<(event: any) => void>>
   > = shallowReactive(new Map())
 
+  public readonly [LISTENERS_ROOT]: ShallowReactive<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Map<keyof Events, Set<(event: any) => void>>
+  > = shallowReactive(new Map())
+
   public on<Event extends keyof Events>(
     event: Event,
-    listener: (event: Events[Event]) => void
+    listener: (event: Events[Event]) => void,
+    root = false
   ): void {
-    if (!this[LISTENERS].has(event)) this[LISTENERS].set(event, new Set())
+    const key = root ? LISTENERS_ROOT : LISTENERS
+    if (!this[key].has(event)) this[key].set(event, new Set())
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this[LISTENERS].get(event)!.add(listener)
+    this[key].get(event)!.add(listener)
   }
 
   public off<Event extends keyof Events>(
     event: Event,
-    listener?: (event: Events[Event]) => void
+    listener?: (event: Events[Event]) => void,
+    root = false
   ): void {
-    if (listener) this[LISTENERS].get(event)?.delete(listener)
-    else this[LISTENERS].delete(event)
+    if (listener)
+      this[root ? LISTENERS_ROOT : LISTENERS].get(event)?.delete(listener)
+    else this[root ? LISTENERS_ROOT : LISTENERS].delete(event)
   }
 
   public emit<Event extends keyof Events>(
