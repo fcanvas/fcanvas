@@ -1,6 +1,8 @@
+import type { reactive } from "@vue/reactivity"
 import { watchEffect } from "vue"
 
 import { Shape } from "../Shape"
+import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
@@ -64,12 +66,22 @@ export class Text extends Shape<PersonalAttrs> {
   private partialText = ""
 
   private textWidth = 0
-  constructor(attrs: ReactiveType<CommonShapeAttrs<PersonalAttrs>>) {
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+        ) => void
+      } & ThisType<Text>
+    >
+  ) {
     super(attrs)
 
+    this[SCOPE].on()
     watchEffect(() => {
       this.setTextData()
     })
+    this[SCOPE].off()
   }
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {

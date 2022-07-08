@@ -16,7 +16,8 @@ import {
   COMPUTED_CACHE,
   CONTEXT_CACHE,
   CONTEXT_CACHE_SIZE,
-  DRAW_CONTEXT_ON_SANDBOX
+  DRAW_CONTEXT_ON_SANDBOX,
+  SCOPE
 } from "./symbols"
 import type {
   CommonShapeAttrs,
@@ -130,7 +131,7 @@ export class Shape<
     Pick<Rect, "width" | "height">
   >
 
-  private readonly scope = new EffectScope(true) as unknown as {
+  protected readonly [SCOPE] = new EffectScope(true) as unknown as {
     active: boolean
     on: () => void
     off: () => void
@@ -140,10 +141,20 @@ export class Shape<
   protected _sceneFunc?(context: CanvasRenderingContext2D): void
 
   constructor(
-    attrs: ReactiveType<CommonShapeAttrs<PersonalAttrs> & ThisType<Shape>>
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+        ) => void
+      } & ThisType<Shape>
+    >
   ) {
     super()
-    this.scope.on()
+
+    this[SCOPE].on()
+
+    const { setup: setupFn } = attrs
+    delete attrs.setup
 
     this.attrs = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
 
@@ -187,8 +198,10 @@ export class Shape<
         )
       }
     })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(setupFn as any)?.(this.attrs)
 
-    this.scope.off()
+    this[SCOPE].off()
   }
 
   public to(
@@ -486,6 +499,6 @@ export class Shape<
   }
 
   public destroy() {
-    this.scope.stop()
+    this[SCOPE].stop()
   }
 }

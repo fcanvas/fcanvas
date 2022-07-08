@@ -1,3 +1,4 @@
+import type { reactive } from "@vue/reactivity"
 import { effect } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
@@ -7,6 +8,7 @@ import { getPointOnEllipticalArc } from "../helpers/Path/getPointOnEllipticalArc
 import { getPointOnLine } from "../helpers/Path/getPointOnLine"
 import { getPointOnQuadraticBezier } from "../helpers/Path/getPointOnQuadraticBezier"
 import { parsePathData } from "../helpers/Path/parsePathData"
+import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { Offset } from "../type/Offset"
 import type { ReactiveType } from "../type/fn/ReactiveType"
@@ -54,8 +56,18 @@ export class TextPath extends Shape<PersonalAttrs> {
   private partialText = ""
 
   private textWidth = 0
-  constructor(attrs: ReactiveType<CommonShapeAttrs<PersonalAttrs>>) {
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+        ) => void
+      } & ThisType<TextPath>
+    >
+  ) {
     super(attrs)
+
+    this[SCOPE].on()
     this.dataArray = parsePathData(this.attrs.data)
 
     effect(() => {
@@ -64,6 +76,7 @@ export class TextPath extends Shape<PersonalAttrs> {
     effect(() => {
       this.setTextData()
     })
+    this[SCOPE].off()
   }
 
   protected fillStrokeScene(context: CanvasRenderingContext2D) {
