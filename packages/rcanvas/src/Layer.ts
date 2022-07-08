@@ -198,7 +198,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
             let mousePos: ReturnType<typeof getMousePos>
             listenersGroup.forEach((listeners, node) => {
               if (!mousePos)
-                mousePos = getMousePos(canvas, event as MouseEvent | TouchEvent)
+                mousePos = getMousePos(event as MouseEvent | TouchEvent, canvas)
 
               if (
                 !mousePos ||
