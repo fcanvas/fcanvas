@@ -7,6 +7,7 @@ import { watchEffect } from "vue"
 import { Animation } from "./Animation"
 import { APIEvent } from "./apis/APIEvent"
 import { _setCurrentShape } from "./currentShape"
+import { convertToDegrees } from "./helpers/convertToDegrees"
 import { createFilter } from "./helpers/createFilter"
 import { createTransform } from "./helpers/createTransform"
 import { existsTransform } from "./helpers/existsTransform"
@@ -30,7 +31,6 @@ import type { GetClientRectOptions } from "./type/GetClientRectOptions"
 import type { Rect } from "./type/Rect"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
-import { convertToDegrees } from "./helpers/convertToDegrees"
 
 function getFillPriority(
   attrs: Partial<
