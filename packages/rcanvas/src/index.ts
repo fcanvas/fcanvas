@@ -2,6 +2,7 @@ import { Group } from "./Group"
 import { Layer } from "./Layer"
 import { Shape } from "./Shape"
 import { Stage } from "./Stage"
+import { getCurrentShape } from "./currentShape"
 import { constrain } from "./methods/constrain"
 import { cropImage } from "./methods/cropImage"
 import { getMousePos } from "./methods/getMousePos"
@@ -75,3 +76,5 @@ export {
 export * from "./symbols"
 
 export { useClientActivated, useEvent, useMouseIsPressed, useMousePos }
+
+export { getCurrentShape }

@@ -6,6 +6,7 @@ import { watchEffect } from "vue"
 
 import { Animation } from "./Animation"
 import { APIEvent } from "./apis/APIEvent"
+import { _setCurrentShape } from "./currentShape"
 import { createFilter } from "./helpers/createFilter"
 import { createTransform } from "./helpers/createTransform"
 import { existsTransform } from "./helpers/existsTransform"
@@ -201,9 +202,14 @@ export class Shape<
         )
       }
     })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(setupFn as any)?.(this.attrs)
+    // =========== current shape ===========
+    _setCurrentShape(this)
+    // =====================================
+    ;(setupFn as typeof this.setup)?.(this.attrs)
     this.setup?.(this.attrs)
+    // =========== current shape ===========
+    _setCurrentShape(null)
+    // =====================================
 
     this[SCOPE].off()
   }
