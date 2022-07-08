@@ -1,4 +1,4 @@
-import { Shape } from "../Shape"
+import type { Shape } from "../Shape"
 import { BOUNCE_CLIENT_RECT } from "../symbols"
 
 export function haveIntersection(

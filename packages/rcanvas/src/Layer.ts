@@ -7,6 +7,7 @@ import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
+import { getMousePos } from "./methods/getMousePos"
 import {
   BOUNCE_CLIENT_RECT,
   CANVAS_ELEMENT,
@@ -21,10 +22,9 @@ import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
 import type { ReactiveType } from "./type/fn/ReactiveType"
-import { extendTarget } from "./utils/extendTarget"
-import { _setEvent } from "./useApi/useEvent"
 import { _setClientActivated } from "./useApi/useClientActivated"
-import { getMousePos } from "./methods/getMousePos"
+import { _setEvent } from "./useApi/useEvent"
+import { extendTarget } from "./utils/extendTarget"
 
 type PersonalAttrs = Partial<Offset> &
   DrawLayerAttrs & {
@@ -197,13 +197,13 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
             // eslint-disable-next-line functional/no-let
             let mousePos: ReturnType<typeof getMousePos>
             listenersGroup.forEach((listeners, node) => {
-              if (!mousePos) {
+              if (!mousePos)
                 mousePos = getMousePos(canvas, event as MouseEvent | TouchEvent)
-              }
 
               if (
                 !mousePos ||
                 !node.isPressedPoint ||
+                // eslint-disable-next-line array-callback-return
                 mousePos.some((client) => {
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   if (node.isPressedPoint!(client.x, client.y)) {

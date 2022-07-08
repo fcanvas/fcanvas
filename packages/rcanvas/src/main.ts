@@ -1,11 +1,11 @@
 import { ref } from "@vue/reactivity"
+import { watchEffect } from "vue"
 
 import { Layer } from "./Layer"
 import { Stage } from "./Stage"
 import { Circle } from "./shapes/Circle"
-import { useMousePos } from "./useApi/useMousePos"
 import { useMouseIsPressed } from "./useApi/useMouseIsPressed"
-import { watchEffect } from "vue"
+import { useMousePos } from "./useApi/useMousePos"
 
 const stage = new Stage({
   container: "app"
@@ -35,11 +35,15 @@ const mousePos = useMousePos(layer)
 const mouseIsPressed = useMouseIsPressed(layer)
 watchEffect(() => {
   if (mouseIsPressed.value) {
+    // eslint-disable-next-line functional/immutable-data
     circle.attrs.x = mousePos.mouseX
+    // eslint-disable-next-line functional/immutable-data
     circle.attrs.y = mousePos.mouseY
 
+    // eslint-disable-next-line functional/immutable-data
     circle.attrs.fill = "red"
   } else {
+    // eslint-disable-next-line functional/immutable-data
     circle.attrs.fill = "transparent"
   }
 })
@@ -50,6 +54,7 @@ layer.batchDraw()
 
 circle.on("mouseover", () => {
   console.log("click")
-})
-window.circle = circle
-window.radius = radius
+}) // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
+;(window as any).circle = circle
+;// eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
+(window as any).radius = radius

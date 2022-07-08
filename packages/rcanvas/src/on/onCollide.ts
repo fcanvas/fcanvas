@@ -1,7 +1,8 @@
 import { watchPostEffect } from "vue"
+
+import type { Shape } from "../Shape"
 import { haveIntersection } from "../methods/haveIntersection"
-import { Shape } from "../Shape"
-import { BOUNCE_CLIENT_RECT } from "../symbols"
+import type { BOUNCE_CLIENT_RECT } from "../symbols"
 
 export function onCollide<T extends Pick<Shape, typeof BOUNCE_CLIENT_RECT>>(
   target: Shape,

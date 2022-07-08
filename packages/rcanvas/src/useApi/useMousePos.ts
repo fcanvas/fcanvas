@@ -1,6 +1,7 @@
-import { reactive, ref } from "@vue/reactivity"
+import { reactive } from "@vue/reactivity"
+
+import type { Layer } from "../Layer"
 import { addEvents } from "../helpers/addEvents"
-import { Layer } from "../Layer"
 import { getMousePos } from "../methods/getMousePos"
 import { CANVAS_ELEMENT } from "../symbols"
 
@@ -19,6 +20,7 @@ export function useMousePos(el: HTMLElement | Layer) {
     ["mousedown", "mousemove", "touchstart", "touchmove"],
     (event) => {
       // is touch
+      // eslint-disable-next-line functional/immutable-data
       mousePos.isTouch = event.type.startsWith("touch")
       // get offset
       const { x, y, winX, winY } = getMousePos(
@@ -27,10 +29,14 @@ export function useMousePos(el: HTMLElement | Layer) {
         1
       )[0]
 
+      // eslint-disable-next-line functional/immutable-data
       mousePos.mouseX = x
+      // eslint-disable-next-line functional/immutable-data
       mousePos.mouseY = y
 
+      // eslint-disable-next-line functional/immutable-data
       mousePos.winMouseX = winX
+      // eslint-disable-next-line functional/immutable-data
       mousePos.winMouseY = winY
     }
   )
