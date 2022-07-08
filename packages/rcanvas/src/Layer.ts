@@ -7,7 +7,7 @@ import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
-import { getMousePos } from "./methods/getMousePos"
+import { handleCustomEventDefault, hookEvent } from "./hookEvent"
 import {
   BOUNCE_CLIENT_RECT,
   CANVAS_ELEMENT,
@@ -197,9 +197,12 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     // sync event on child node
     {
       const handlersChildrenMap = new Map<
-        // eslint-disable-next-line func-call-spacing
         keyof CommonShapeEvents,
-        (event: Event) => void
+        {
+          name: string
+          // eslint-disable-next-line func-call-spacing
+          handle: (event: Event) => void
+        }
       >()
       watchEffect(() => {
         console.log("[event::layer]: scan deep listeners")
@@ -209,9 +212,17 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
           const oldHandler = handlersChildrenMap.get(
             name as keyof CommonShapeEvents
           )
-          if (oldHandler) canvas.removeEventListener(name, oldHandler)
 
-          const handler = listenersGroup.root
+          // custom
+          const customer = hookEvent.get(name) || {
+            name,
+            handle: handleCustomEventDefault
+          }
+
+          if (oldHandler)
+            canvas.removeEventListener(oldHandler.name, oldHandler.handle)
+
+          const handle = listenersGroup.root
             ? (event: Event) => {
                 console.log("[event::root:layer] emit event %s", event.type)
                 listenersGroup.all.forEach((listeners) => {
@@ -224,42 +235,21 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
                 // ================================================
 
                 console.log("[event:layer] emit event %s", event.type)
-                // eslint-disable-next-line functional/no-let
-                let mousePos: ReturnType<typeof getMousePos>
-                listenersGroup.all.forEach((listeners, node) => {
-                  if (!mousePos) {
-                    mousePos = getMousePos(
-                      event as MouseEvent | TouchEvent,
-                      canvas
-                    )
-                  }
-
-                  if (
-                    !mousePos ||
-                    !node.isPressedPoint ||
-                    // eslint-disable-next-line array-callback-return
-                    mousePos.some((client) => {
-                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                      if (node.isPressedPoint!(client.x, client.y)) {
-                        _setClientActivated(client)
-                        return true
-                      }
-                    })
-                  ) {
-                    listeners.forEach((listener) => listener(event))
-                    _setClientActivated(null)
-                  }
-                })
+                customer.handle(listenersGroup.all, event, canvas)
                 // =================== free memory ================
                 _setEvent(null)
                 _setClientActivated(null)
                 // ================================================
               }
-          handlersChildrenMap.set(name as keyof CommonShapeEvents, handler)
-          canvas.addEventListener(name, handler)
+          handlersChildrenMap.set(name as keyof CommonShapeEvents, {
+            name: customer.name,
+            handle
+          })
+          canvas.addEventListener(customer.name, handle)
         })
-        handlersChildrenMap.forEach((handler, name) => {
-          if (!allListeners.has(name)) canvas.removeEventListener(name, handler)
+        handlersChildrenMap.forEach((customer, name) => {
+          if (!allListeners.has(name))
+            canvas.removeEventListener(customer.name, customer.handle)
         })
       })
     }
