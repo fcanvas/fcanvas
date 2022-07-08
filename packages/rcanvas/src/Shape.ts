@@ -30,6 +30,7 @@ import type { GetClientRectOptions } from "./type/GetClientRectOptions"
 import type { Rect } from "./type/Rect"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
+import { convertToDegrees } from "./helpers/convertToDegrees"
 
 function getFillPriority(
   attrs: Partial<
@@ -384,9 +385,23 @@ export class Shape<
     const applyTransform =
       !config.skipTransform && existsTransform(this.attrs, false)
     if (applyTransform) {
+      const isCache = !!this[CONTEXT_CACHE]
+      const x = width / 2
+      const y = height / 2
+
       return transformedRect(
         rect,
-        createTransform(this.attrs, !this[CONTEXT_CACHE])
+        new DOMMatrix()
+          .scale(this.attrs.scale?.x, this.attrs.scale?.y)
+          .translate(x, y)
+          .rotate(convertToDegrees(this.attrs.rotation ?? 0))
+          .translate(-x, -y)
+          .translate(
+            (this.attrs.offset?.x ?? 0) + (isCache ? 0 : this.attrs.x),
+            (this.attrs.offset?.y ?? 0) + (isCache ? 0 : this.attrs.y)
+          )
+          .skewX(this.attrs.skewX)
+          .skewY(this.attrs.skewY)
       )
     }
 
@@ -414,7 +429,7 @@ export class Shape<
     const [transX, transY] = [clientRect.x - adjust, clientRect.y - adjust]
     context.translate(-transX, -transY)
 
-    const needUseTransform = existsTransform(this.attrs, !isCache) && !isCache
+    const needUseTransform = existsTransform(this.attrs, !isCache)
     const needSetAlpha = this.attrs.opacity !== undefined
     const useFilter = this.attrs.filter !== undefined
     // eslint-disable-next-line functional/no-let
@@ -427,8 +442,22 @@ export class Shape<
     }
     if (needUseTransform) {
       backupTransform = context.getTransform()
+      const x = this[CONTEXT_CACHE_SIZE].value.width / 2
+      const y = this[CONTEXT_CACHE_SIZE].value.height / 2
 
-      context.setTransform(createTransform(this.attrs, !isCache))
+      context.setTransform(
+        new DOMMatrix(backupTransform.toString())
+          .scale(this.attrs.scale?.x, this.attrs.scale?.y)
+          .translate(x, y)
+          .rotate(convertToDegrees(this.attrs.rotation ?? 0))
+          .translate(-x, -y)
+          .translate(
+            (this.attrs.offset?.x ?? 0) + (isCache ? 0 : this.attrs.x),
+            (this.attrs.offset?.y ?? 0) + (isCache ? 0 : this.attrs.y)
+          )
+          .skewX(this.attrs.skewX)
+          .skewY(this.attrs.skewY)
+      )
     }
     if (useFilter) {
       backupFilter = context.filter
