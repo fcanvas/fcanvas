@@ -80,7 +80,10 @@ layer.add(circle)
 layer.batchDraw()
 
 circle.on("mouseover", () => {
-  console.log("click")
+  circle.attrs.fill = "green"
+})
+circle.on("mouseout", () => {
+  circle.attrs.fill = "transparent"
 }) // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
 ;(window as any).circle = circle // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
 ;(window as any).radius = radius

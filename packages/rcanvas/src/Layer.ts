@@ -199,7 +199,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       const handlersChildrenMap = new Map<
         keyof CommonShapeEvents,
         {
-          name: string
+          name: string[]
           // eslint-disable-next-line func-call-spacing
           handle: (event: Event) => void
         }
@@ -215,12 +215,15 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
           // custom
           const customer = hookEvent.get(name) || {
-            name,
+            name: [name],
             handle: handleCustomEventDefault
           }
 
-          if (oldHandler)
-            canvas.removeEventListener(oldHandler.name, oldHandler.handle)
+          if (oldHandler) {
+            oldHandler.name.forEach((name) =>
+              canvas.removeEventListener(name, oldHandler.handle)
+            )
+          }
 
           const handle = listenersGroup.root
             ? (event: Event) => {
@@ -245,11 +248,14 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
             name: customer.name,
             handle
           })
-          canvas.addEventListener(customer.name, handle)
+          customer.name.forEach((name) => canvas.addEventListener(name, handle))
         })
         handlersChildrenMap.forEach((customer, name) => {
-          if (!allListeners.has(name))
-            canvas.removeEventListener(customer.name, customer.handle)
+          if (!allListeners.has(name)) {
+            customer.name.forEach((name) =>
+              canvas.removeEventListener(name, customer.handle)
+            )
+          }
         })
       })
     }
