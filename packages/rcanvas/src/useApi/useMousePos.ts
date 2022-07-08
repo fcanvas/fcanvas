@@ -1,12 +1,19 @@
 import { reactive } from "@vue/reactivity"
 
 import type { Layer } from "../Layer"
+import { getCurrentShape } from "../currentShape"
+import type { ElAddEventListener } from "../helpers/addEvents"
 import { addEvents } from "../helpers/addEvents"
 import { getMousePos } from "../methods/getMousePos"
 import { CANVAS_ELEMENT } from "../symbols"
 
-export function useMousePos(el: HTMLElement | Layer) {
-  el = (el as Layer)[CANVAS_ELEMENT] ?? el
+const mousePosMap = new WeakMap()
+export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
+  instance = (instance as Layer)[CANVAS_ELEMENT] ?? instance
+
+  const onStore = mousePosMap.get(instance)
+  if (onStore) return onStore
+
   const mousePos = reactive({
     mouseX: 0,
     mouseY: 0,
@@ -14,9 +21,9 @@ export function useMousePos(el: HTMLElement | Layer) {
     winMouseY: 0,
     isTouch: false
   })
-
+  // warning
   addEvents(
-    el,
+    instance,
     ["mousedown", "mousemove", "touchstart", "touchmove"],
     (event) => {
       // is touch
@@ -24,8 +31,8 @@ export function useMousePos(el: HTMLElement | Layer) {
       mousePos.isTouch = event.type.startsWith("touch")
       // get offset
       const { x, y, winX, winY } = getMousePos(
-        el as HTMLElement,
         event as TouchEvent | MouseEvent,
+        undefined,
         1
       )[0]
 
@@ -40,6 +47,8 @@ export function useMousePos(el: HTMLElement | Layer) {
       mousePos.winMouseY = winY
     }
   )
+
+  mousePosMap.set(instance, mousePos)
 
   return mousePos
 }
