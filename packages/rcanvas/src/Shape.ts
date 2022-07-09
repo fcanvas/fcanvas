@@ -1,8 +1,8 @@
 /* eslint-disable functional/immutable-data */
+import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 import gsap from "gsap"
-import { watchEffect } from "vue"
 
 import { Animation } from "./Animation"
 import { APIEvent } from "./apis/APIEvent"

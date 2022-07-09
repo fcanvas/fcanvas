@@ -1,6 +1,6 @@
+import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
-import { watchPostEffect } from "vue"
 
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
@@ -95,19 +95,24 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     })
 
     // try watchEffect
-    watchPostEffect(() => {
-      // reactive
-      const ctx = this[CONTEXT_CACHE]
-      const { width, height } = this[CONTEXT_CACHE_SIZE].value
-      ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
+    watchEffect(
+      () => {
+        // reactive
+        const ctx = this[CONTEXT_CACHE]
+        const { width, height } = this[CONTEXT_CACHE_SIZE].value
+        ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
-      this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-      console.log(
-        "[cache::group]: size changed %sx%s",
-        ctx.canvas.width,
-        ctx.canvas.height
-      )
-    })
+        this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
+        console.log(
+          "[cache::group]: size changed %sx%s",
+          ctx.canvas.width,
+          ctx.canvas.height
+        )
+      },
+      {
+        flush: "post"
+      }
+    )
 
     this[SCOPE].off()
   }

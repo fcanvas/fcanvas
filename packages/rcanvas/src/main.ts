@@ -1,12 +1,11 @@
+import { watchEffect } from "@vue-reactivity/watch"
 import { ref } from "@vue/reactivity"
-import { watchEffect } from "vue"
 
 import { Layer } from "./Layer"
 import { Stage } from "./Stage"
-import { Circle } from "./shapes/Circle"
+import { Rect } from "./shapes/Rect"
 import { useMouseIsPressed } from "./useApi/useMouseIsPressed"
 import { useMousePos } from "./useApi/useMousePos"
-import { Rect } from "./shapes/Rect"
 
 const stage = new Stage({
   container: "app"

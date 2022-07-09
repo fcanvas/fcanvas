@@ -1,6 +1,6 @@
+import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
-import { watchEffect, watchPostEffect } from "vue"
 
 import type { Group } from "./Group"
 import type { Shape } from "./Shape"
@@ -150,23 +150,28 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
 
     // try watchEffect
-    watchPostEffect(() => {
-      const { width, height } = this.attrs
-      const useConfig = width !== undefined && height !== undefined
+    watchEffect(
+      () => {
+        const { width, height } = this.attrs
+        const useConfig = width !== undefined && height !== undefined
 
-      if (!useConfig) return
+        if (!useConfig) return
 
-      // reactive
-      const ctx = this[CONTEXT_CACHE]
-      ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
+        // reactive
+        const ctx = this[CONTEXT_CACHE]
+        ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
-      this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-      console.log(
-        "[cache::layer]: size changed %sx%s",
-        ctx.canvas.width,
-        ctx.canvas.height
-      )
-    })
+        this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
+        console.log(
+          "[cache::layer]: size changed %sx%s",
+          ctx.canvas.width,
+          ctx.canvas.height
+        )
+      },
+      {
+        flush: "post"
+      }
+    )
 
     // event binding
     {

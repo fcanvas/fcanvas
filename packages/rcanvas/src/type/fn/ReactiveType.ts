@@ -1,4 +1,4 @@
-import type { ComputedRef, Ref } from "vue"
+import type { ComputedRef, Ref } from "@vue/reactivity"
 
 export type ReactiveType<T extends object> = {
   [name in keyof T]: T[name] extends object

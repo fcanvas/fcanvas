@@ -1,5 +1,5 @@
+import { watchEffect } from "@vue-reactivity/watch"
 import type { reactive } from "@vue/reactivity"
-import { watchEffect } from "vue"
 
 import { Shape } from "../Shape"
 import { SCOPE } from "../symbols"

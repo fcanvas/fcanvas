@@ -1,5 +1,5 @@
+import { watchEffect } from "@vue-reactivity/watch"
 import { EffectScope, reactive } from "@vue/reactivity"
-import { watchEffect } from "vue"
 
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"

@@ -53,10 +53,10 @@
     "node": ">=10"
   },
   "dependencies": {
+    "@vue-reactivity/watch": "^0.2.0",
     "@vue/reactivity": "^3.2.37",
     "gsap": "^3.10.4",
     "mitt": "^3.0.0",
-    "plist": "^3.0.5",
-    "vue": "^3.2.37"
+    "plist": "^3.0.5"
   }
 }

@@ -1,4 +1,4 @@
-import { watchPostEffect } from "vue"
+import { watchEffect } from "@vue-reactivity/watch"
 
 import type { Shape } from "../Shape"
 import { getCurrentShape } from "../currentShape"
@@ -37,14 +37,19 @@ function onCollide<T extends Pick<Shape, typeof BOUNCE_CLIENT_RECT>>(
     ]
   }
 
-  return watchPostEffect(() => {
-    ;(checks as Checks<T>).forEach((el, index) => {
-      if (haveIntersection(target as Shape, el)) {
-        // ok
-        ;(cb as Cb<T>)(el, index)
-      }
-    })
-  })
+  return watchEffect(
+    () => {
+      ;(checks as Checks<T>).forEach((el, index) => {
+        if (haveIntersection(target as Shape, el)) {
+          // ok
+          ;(cb as Cb<T>)(el, index)
+        }
+      })
+    },
+    {
+      flush: "post"
+    }
+  )
 }
 
 export { onCollide }

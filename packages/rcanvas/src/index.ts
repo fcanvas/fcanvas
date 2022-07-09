@@ -37,6 +37,8 @@ import { useMouseIsPressed } from "./useApi/useMouseIsPressed"
 import { useMousePos } from "./useApi/useMousePos"
 
 export * from "@vue/reactivity"
+export * from "@vue-reactivity/watch"
+
 export { Group, Layer, Shape, Stage }
 
 export {
