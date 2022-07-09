@@ -182,6 +182,10 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
         (event: Event) => void
       >()
       watchEffect(() => {
+        handlersMap.forEach((handler, name) => {
+          if (!this[LISTENERS].has(name))
+            canvas.removeEventListener(name, handler)
+        })
         this[LISTENERS].forEach((listeners, name) => {
           // if exists on handlersMap => first removeEventListener
           const oldHandler = handlersMap.get(name)
@@ -192,10 +196,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
           }
           handlersMap.set(name, handler)
           canvas.addEventListener(name, handler)
-        })
-        handlersMap.forEach((handler, name) => {
-          if (!this[LISTENERS].has(name))
-            canvas.removeEventListener(name, handler)
         })
       })
     }
@@ -213,6 +213,14 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
         console.log("[event::layer]: scan deep listeners")
         // scan all events in children
         const allListeners = getListenersOnDeep(this)
+        // remove handler remove
+        handlersChildrenMap.forEach((customer, name) => {
+          if (!allListeners.has(name)) {
+            customer.name.forEach((name) =>
+              canvas.removeEventListener(name, customer.handle)
+            )
+          }
+        })
         allListeners.forEach((listenersGroup, name) => {
           const oldHandler = handlersChildrenMap.get(
             name as keyof CommonShapeEvents
@@ -254,13 +262,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
             handle
           })
           customer.name.forEach((name) => canvas.addEventListener(name, handle))
-        })
-        handlersChildrenMap.forEach((customer, name) => {
-          if (!allListeners.has(name)) {
-            customer.name.forEach((name) =>
-              canvas.removeEventListener(name, customer.handle)
-            )
-          }
         })
       })
     }
