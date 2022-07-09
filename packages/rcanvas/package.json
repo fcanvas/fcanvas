@@ -4,7 +4,7 @@
   "description": "a monorepo for packages",
   "scripts": {
     "build": "tsup",
-    "dev": "tsx ./src/index.ts",
+    "dev": "vite dev",
     "prepublishOnly": "pnpm test && pnpm build",
     "test": "vitest --config ./vitest.config.ts run",
     "test:watch": "vitest",

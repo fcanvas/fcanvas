@@ -80,3 +80,5 @@ export * from "./symbols"
 export { useClientActivated, useEvent, useMouseIsPressed, useMousePos }
 
 export { getCurrentShape }
+
+export { onCollide } from "./on/onCollide"
