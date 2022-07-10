@@ -102,8 +102,7 @@ function isCentroid(obj: any): boolean {
 }
 
 export class Shape<
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  PersonalAttrs extends Record<string, unknown> = {}
+  PersonalAttrs extends Record<string, unknown> = Record<string, unknown>
 > extends APIEvent<CommonShapeEvents> {
   static readonly type: string = "Shape"
   static readonly _centroid: boolean = false
