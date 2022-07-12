@@ -5,6 +5,7 @@ import { computed, EffectScope, reactive } from "@vue/reactivity"
 import type { Group } from "./Group"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
+import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
 import { handleCustomEventDefault, hookEvent } from "./hookEvent"
@@ -162,11 +163,13 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
         this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-        console.log(
-          "[cache::layer]: size changed %sx%s",
-          ctx.canvas.width,
-          ctx.canvas.height
-        )
+        if (isDev) {
+          console.log(
+            "[cache::layer]: size changed %sx%s",
+            ctx.canvas.width,
+            ctx.canvas.height
+          )
+        }
       },
       {
         flush: "post"
@@ -210,7 +213,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
         }
       >()
       watchEffect(() => {
-        console.log("[event::layer]: scan deep listeners")
+        if (isDev) console.log("[event::layer]: scan deep listeners")
         // scan all events in children
         const allListeners = getListenersOnDeep(this)
         // remove handler remove
@@ -240,7 +243,8 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
           const handle = listenersGroup.root
             ? (event: Event) => {
-                console.log("[event::root:layer] emit event %s", event.type)
+                if (isDev)
+                  console.log("[event::root:layer] emit event %s", event.type)
                 listenersGroup.all.forEach((listeners) => {
                   listeners.forEach((listener) => listener(event))
                 })
@@ -250,7 +254,8 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
                 _setEvent(event)
                 // ================================================
 
-                console.log("[event:layer] emit event %s", event.type)
+                if (isDev)
+                  console.log("[event:layer] emit event %s", event.type)
                 customer.handle(listenersGroup.all, event, canvas)
                 // =================== free memory ================
                 _setEvent(null)
