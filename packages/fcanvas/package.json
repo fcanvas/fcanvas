@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "a monorepo for packages",
   "scripts": {
-    "build": "tsup",
+    "build": "pnpm auto-export && tsup",
+    "auto-export": "tsx scripts/auto-export.ts",
     "dev": "vite dev",
     "prepublishOnly": "pnpm test && pnpm build",
     "test": "vitest --config ./vitest.config.ts run",
@@ -28,6 +29,7 @@
     "jsdom": "^20.0.0",
     "plist": "^3.0.5",
     "tsup": "^6.1.3",
+    "tsx": "^3.7.1",
     "vite": "^2.9.13",
     "vitest": "^0.17.0"
   },
