@@ -2,7 +2,7 @@ import type { ComputedRef } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
 import gsap from "gsap"
 
-import { ANIMATION_STORE } from "./symbols"
+import { ANIMATION_STORE } from "../symbols"
 
 type Keyframes<Props extends Record<string, unknown>> = Partial<
   Record<"from" | "to" | `${number}%`, Partial<Props>>

@@ -2,7 +2,10 @@ import { Group } from "./Group"
 import { Layer } from "./Layer"
 import { Shape } from "./Shape"
 import { Stage } from "./Stage"
+import { Tiles } from "./Tiles"
+import { Vector } from "./Vector"
 import { getCurrentShape } from "./currentShape"
+import { hookEvent } from "./hookEvent"
 import { constrain } from "./methods/constrain"
 import { cropImage } from "./methods/cropImage"
 import { getMousePos } from "./methods/getMousePos"
@@ -39,7 +42,7 @@ import { useMousePos } from "./useApi/useMousePos"
 export * from "@vue/reactivity"
 export * from "@vue-reactivity/watch"
 
-export { Group, Layer, Shape, Stage }
+export { Group, hookEvent, Layer, Shape, Stage, Tiles, Vector }
 
 export {
   Arc,

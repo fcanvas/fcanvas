@@ -1,13 +1,9 @@
 import { parse } from "plist"
-import { tmx } from "tmx-tiledmap"
 
-import map from "./map.tmx?raw"
 import { cropImage } from "./methods/cropImage"
 import { loadImage } from "./methods/loadImage"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
-
-const map = await tmx(map)
 
 type Size = Pick<Rect, "width" | "height">
 

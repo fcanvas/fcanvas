@@ -1,4 +1,4 @@
-import type { AnimationP } from "../Animation"
+import type { AnimationP } from "../apis/Animation"
 import type { OptionFilter } from "../helpers/createFilter"
 import type { OptionTransform } from "../helpers/createTransform"
 
