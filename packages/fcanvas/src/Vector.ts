@@ -2,6 +2,8 @@
 /* eslint-disable functional/functional-parameters */
 /* eslint-disable functional/immutable-data */
 
+import { isDev } from "./env"
+
 function calculateRemainder2D(
   this: Vector,
   xComponent: number,
@@ -194,7 +196,7 @@ export class Vector {
 
   div(n: number): this {
     if (n === 0) {
-      console.warn("div:", "divide by 0")
+      if (isDev) console.warn("div:", "divide by 0")
       return this
     }
 

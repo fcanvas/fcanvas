@@ -4,6 +4,7 @@ import { computed, EffectScope, reactive } from "@vue/reactivity"
 
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
+import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
 import {
@@ -103,11 +104,13 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
         this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-        console.log(
-          "[cache::group]: size changed %sx%s",
-          ctx.canvas.width,
-          ctx.canvas.height
-        )
+        if (isDev) {
+          console.log(
+            "[cache::group]: size changed %sx%s",
+            ctx.canvas.width,
+            ctx.canvas.height
+          )
+        }
       },
       {
         flush: "post"
@@ -118,7 +121,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
   }
 
   private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
-    console.log("[sandbox::group]: draw context on sandbox")
+    if (isDev) console.log("[sandbox::group]: draw context on sandbox")
 
     const clientRect = this[BOUNCE_CLIENT_RECT].value
     const useTranslate = clientRect.x !== 0 || clientRect.y !== 0
