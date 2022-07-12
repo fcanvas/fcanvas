@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a monorepo for packages",
   "scripts": {
     "build": "pnpm auto-export && tsup",
