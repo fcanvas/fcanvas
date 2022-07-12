@@ -10,7 +10,7 @@ const configNormal: Options = {
   format: ["cjs", "esm", "iife"],
   target: "es2015",
   env: {
-    IS_BROWSER: false
+    IS_BROWSER: "false"
   }
 }
 const configBrowser: Options = {
@@ -24,7 +24,7 @@ const configBrowser: Options = {
   target: "es2015",
   env: {
     NODE_ENV: "production",
-    IS_BROWSER: true
+    IS_BROWSER: "true"
   },
   noExternal: [
     "@vue/reactivity",
@@ -37,7 +37,7 @@ const configBrowser: Options = {
 const configBrowserMinify: Options = {
   ...configBrowser,
   env: {
-    IS_BROWSER: false
+    IS_BROWSER: "false"
   },
   entry: {
     "index.browser.min": "src/index.ts"
