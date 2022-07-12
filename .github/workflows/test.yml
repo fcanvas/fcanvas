@@ -1,4 +1,4 @@
-name: Build docs to gh-page
+name: pnpm test
 on: [push]
 jobs:
   build-and-deploy:
