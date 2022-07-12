@@ -7,37 +7,39 @@ import type { Rect } from "./type/Rect"
 
 type Size = Pick<Rect, "width" | "height">
 
-type CanvasImageResource = HTMLCanvasElement & {
-  readonly sourceSize: Readonly<Size>
-  readonly sourceColorRect: Readonly<Size> & Readonly<Offset>
-  readonly offset: Readonly<Offset>
-}
+interface CanvasImageResource
+  extends HTMLCanvasElement,
+    Readonly<{
+      sourceSize: Size
+      sourceColorRect: Rect
+      offset: Offset
+    }> {}
 interface Plist<TileNames extends string> {
-  readonly frames: Readonly<
+  frames: Readonly<
     Record<
       TileNames,
       {
-        readonly frame: string
-        readonly offset: string
-        readonly rotated: boolean
-        readonly sourceColorRect: string
-        readonly sourceSize: string
+        frame: string
+        offset: string
+        rotated: boolean
+        sourceColorRect: string
+        sourceSize: string
       }
     >
   >
-  readonly metadata: {
-    readonly format: number
-    readonly realTextureFileName: string
-    readonly size: string
-    readonly smartupdate: string
-    readonly textureFileName: string
+  metadata: {
+    format: number
+    realTextureFileName: string
+    size: string
+    smartupdate: string
+    textureFileName: string
   }
 }
 
 const rCurlyBrackets = /^{[^]*}$/
 const rOpenBracket = /%7b/gi
 const rCloseBracket = /%7d/gi
-function parsePlistValueToArray<T>(value: string): readonly T[] {
+function parsePlistValueToArray<T>(value: string): T[] {
   if (rCurlyBrackets.test(value.trim())) {
     value = decodeURIComponent(
       encodeURIComponent(value)
@@ -54,9 +56,9 @@ function parsePlistValueToArray<T>(value: string): readonly T[] {
 }
 
 export class Tiles<TileNames extends string> {
-  readonly #plist: Plist<TileNames>
-  readonly #tile: HTMLImageElement
-  readonly #cache = new Map<TileNames, CanvasImageResource>()
+  #plist: Plist<TileNames>
+  #tile: HTMLImageElement
+  #cache = new Map<TileNames, CanvasImageResource>()
 
   constructor(plist: Plist<TileNames>, tile: HTMLImageElement) {
     this.#plist = plist

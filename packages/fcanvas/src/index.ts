@@ -2,7 +2,7 @@ import { Group } from "./Group"
 import { Layer } from "./Layer"
 import { Shape } from "./Shape"
 import { Stage } from "./Stage"
-import { Tiles } from "./Tiles"
+import { loadTiles, Tiles } from "./Tiles"
 import { Vector } from "./Vector"
 import { getCurrentShape } from "./currentShape"
 import { hookEvent } from "./hookEvent"
@@ -42,7 +42,7 @@ import { useMousePos } from "./useApi/useMousePos"
 export * from "@vue/reactivity"
 export * from "@vue-reactivity/watch"
 
-export { Group, hookEvent, Layer, Shape, Stage, Tiles, Vector }
+export { Group, hookEvent, Layer, Shape, Stage, Tiles, loadTiles, Vector }
 
 export {
   Arc,
