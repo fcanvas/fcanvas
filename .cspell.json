@@ -17,6 +17,8 @@
     "execa",
     "exponentiate",
     "globby",
+    "gsap",
+    "lerp",
     "libauth",
     "mkdir",
     "nextlayerid",
