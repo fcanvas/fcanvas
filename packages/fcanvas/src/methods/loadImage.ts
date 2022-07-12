@@ -1,4 +1,4 @@
-import { normalize } from "path/posix"
+import normalize from "path-normalize"
 
 // cache
 const imageMap = new Map<string, HTMLImageElement>()
