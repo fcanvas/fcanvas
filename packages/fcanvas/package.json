@@ -1,6 +1,6 @@
 {
-  "name": "rcanvas",
-  "version": "0.0.1",
+  "name": "fcanvas",
+  "version": "1.0.0",
   "description": "a monorepo for packages",
   "scripts": {
     "build": "tsup",
@@ -33,11 +33,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/tachibana-shin/rcanvas.git"
+    "url": "git://github.com/tachibana-shin/fcanvas.git"
   },
-  "homepage": "https://tachibana-shin.github.io/rcanvas",
+  "homepage": "https://fcanvas.js.org",
   "keywords": [
-    "rcanvas",
+    "fcanvas",
+    "konva",
+    "reactivity",
+    "2d",
+    "canvas",
     "Tachibana Shin",
     "tachibana-shin"
   ],
@@ -57,7 +61,6 @@
     "@vue/reactivity": "^3.2.37",
     "@vue/shared": "^3.2.37",
     "gsap": "^3.10.4",
-    "mitt": "^3.0.0",
     "plist": "^3.0.5",
     "tmx-tiledmap": "^1.2.1"
   }

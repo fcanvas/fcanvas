@@ -28,7 +28,7 @@ importers:
       typescript: 4.7.4
       vitest: 0.13.1
 
-  packages/rcanvas:
+  packages/fcanvas:
     specifiers:
       '@types/plist': ^3.0.2
       '@vue-reactivity/watch': ^0.2.0
@@ -37,7 +37,6 @@ importers:
       canvas: 2.9.2
       gsap: ^3.10.4
       jsdom: ^20.0.0
-      mitt: ^3.0.0
       plist: ^3.0.5
       tmx-tiledmap: ^1.2.1
       tsup: ^6.1.3
@@ -48,7 +47,6 @@ importers:
       '@vue/reactivity': 3.2.37
       '@vue/shared': 3.2.37
       gsap: 3.10.4
-      mitt: 3.0.0
       plist: 3.0.5
       tmx-tiledmap: 1.2.1
     devDependencies:
@@ -58,14 +56,6 @@ importers:
       tsup: 6.1.3
       vite: 2.9.13
       vitest: 0.17.0_jsdom@20.0.0
-
-  packages/vector:
-    specifiers:
-      tsup: ^6.1.3
-      vitest: ^0.17.0
-    devDependencies:
-      tsup: 6.1.3
-      vitest: 0.17.0
 
 packages:
 
@@ -3060,10 +3050,6 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /mitt/3.0.0:
-    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
-    dev: false
-
   /mkdirp/1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
@@ -3727,6 +3713,7 @@ packages:
   /source-map/0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dev: true
 
   /source-map/0.8.0-beta.0:
@@ -4271,44 +4258,6 @@ packages:
       debug: 4.3.4
       local-pkg: 0.4.1
       tinypool: 0.1.3
-      tinyspy: 0.3.3
-      vite: 2.9.13
-    transitivePeerDependencies:
-      - less
-      - sass
-      - stylus
-      - supports-color
-    dev: true
-
-  /vitest/0.17.0:
-    resolution: {integrity: sha512-5YO9ubHo0Zg35mea3+zZAr4sCku32C3usvIH5COeJB48TZV/R0J9aGNtGOOqEWZYfOKP0pGZUvTokne3x/QEFg==}
-    engines: {node: '>=v14.16.0'}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@vitest/ui': '*'
-      c8: '*'
-      happy-dom: '*'
-      jsdom: '*'
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      c8:
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
-        optional: true
-    dependencies:
-      '@types/chai': 4.3.1
-      '@types/chai-subset': 1.3.3
-      '@types/node': 18.0.1
-      chai: 4.3.6
-      debug: 4.3.4
-      local-pkg: 0.4.1
-      tinypool: 0.2.1
       tinyspy: 0.3.3
       vite: 2.9.13
     transitivePeerDependencies:
