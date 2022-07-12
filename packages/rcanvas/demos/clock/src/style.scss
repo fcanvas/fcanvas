@@ -1,0 +1,14 @@
+
+#face {
+  $size: (300px + 7);
+  width: $size;
+  height: $size;
+  border: 7px solid #282828;
+  box-shadow: -4px -4px 10px rgba(67, 67, 67, 0.5),
+    inset 4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset -4px -4px 10px rgba(67, 67, 67, 0.5), 4px 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
