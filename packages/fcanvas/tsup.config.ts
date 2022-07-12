@@ -15,8 +15,12 @@ const configBrowser: Options = {
   },
   dts: false,
   splitting: true,
+  treeshake: true,
   format: ["esm"],
   target: "es2015",
+  env: {
+    NODE_ENV: "production"
+  },
   noExternal: ["@vue/reactivity", "@vue/shared", "@vue-reactivity/watch", "gsap", "path-normalize"]
 }
 const configBrowserMinify: Options = {
