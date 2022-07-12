@@ -1,7 +1,7 @@
 {
   "name": "fcanvas",
   "version": "1.0.1",
-  "description": "a monorepo for packages",
+  "description": "This is a simple canvas library for drawing on the fly.",
   "scripts": {
     "build": "pnpm auto-export && tsup",
     "auto-export": "tsx scripts/auto-export.ts",
@@ -14,7 +14,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "unpkg": "./dist/index.mjs",
+  "unpkg": "./dist/index.browser.mjs",
   "jsdelivr": "dist/index.global.js",
   "exports": {
     ".": {
