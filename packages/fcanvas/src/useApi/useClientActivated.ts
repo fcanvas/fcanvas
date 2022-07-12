@@ -1,3 +1,4 @@
+import { isDev } from "../env"
 import type { getMousePos } from "../methods/getMousePos"
 
 // eslint-disable-next-line functional/no-let
@@ -11,9 +12,11 @@ export function _setClientActivated(
 
 export function useClientActivated(): ReturnType<typeof getMousePos>[0] {
   if (!clientActivated) {
-    console.warn(
-      "[useClientActivated]: call this function on stack event handler."
-    )
+    if (isDev) {
+      console.warn(
+        "[useClientActivated]: call this function on stack event handler."
+      )
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

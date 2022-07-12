@@ -3,6 +3,7 @@ import { EffectScope, reactive } from "@vue/reactivity"
 
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
+import { isDev } from "./env"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import {
@@ -115,8 +116,12 @@ export class Stage extends APIChildNode<
       const { container: id } = this.attrs
       if (id !== undefined) {
         const el = document.getElementById(id)
-        if (!el) console.warn(`#${id} not exists.`)
-        else el.appendChild(container)
+        if (!el) {
+          if (isDev)
+            console.warn(`#${id} not exists.`)
+        } else {
+          el.appendChild(container)
+        }
       }
     })
 
