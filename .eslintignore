@@ -1,0 +1,5 @@
+/packages/*/dist
+node_modules
+/packages/*/coverage
+demos/
+/packages/*/code-cache

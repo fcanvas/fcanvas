@@ -1,0 +1,64 @@
+{
+  "name": "rcanvas",
+  "version": "0.0.1",
+  "description": "a monorepo for packages",
+  "scripts": {
+    "build": "tsup",
+    "dev": "vite dev",
+    "prepublishOnly": "pnpm test && pnpm build",
+    "test": "vitest --config ./vitest.config.ts run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.mjs",
+  "jsdelivr": "dist/index.global.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "devDependencies": {
+    "@types/plist": "^3.0.2",
+    "canvas": "2.9.2",
+    "jsdom": "^20.0.0",
+    "tsup": "^6.1.3",
+    "vite": "^2.9.13",
+    "vitest": "^0.17.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tachibana-shin/rcanvas.git"
+  },
+  "homepage": "https://tachibana-shin.github.io/rcanvas",
+  "keywords": [
+    "rcanvas",
+    "Tachibana Shin",
+    "tachibana-shin"
+  ],
+  "files": [
+    "dist"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "pnpm format"
+    }
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "dependencies": {
+    "@vue-reactivity/watch": "^0.2.0",
+    "@vue/reactivity": "^3.2.37",
+    "@vue/shared": "^3.2.37",
+    "gsap": "^3.10.4",
+    "mitt": "^3.0.0",
+    "plist": "^3.0.5",
+    "tmx-tiledmap": "^1.2.1"
+  }
+}
