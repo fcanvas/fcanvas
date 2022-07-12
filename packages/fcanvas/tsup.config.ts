@@ -1,4 +1,5 @@
-import { defineConfig, Options } from "tsup"
+import type { Options } from "tsup"
+import { defineConfig } from "tsup"
 
 const configNormal: Options = {
   entry: ["src/index.ts"],
@@ -23,7 +24,7 @@ const configBrowserMinify: Options = {
   entry: {
     "index.browser.min": "src/index.ts"
   },
-  minify: true,
+  minify: true
 }
 
 export default defineConfig([configNormal, configBrowser, configBrowserMinify])
