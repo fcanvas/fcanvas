@@ -1,5 +1,6 @@
 import type { APIGroup } from "./apis/APIGroup"
 import { getMousePos } from "./methods/getMousePos"
+import { LOCALS } from "./symbols"
 import { _setClientActivated } from "./useApi/useClientActivated"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,19 +69,17 @@ function createHandleMouseHover(isOver: boolean) {
         })
       ) {
         if (isOver) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          if (!(node as any)._hover) {
-            // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
-            ;(node as any)._hover = true
+          if (!node[LOCALS].hover) {
+            // eslint-disable-next-line functional/immutable-data
+            node[LOCALS].hover = true
             listeners.forEach((listener) => listener(event))
           }
           _setClientActivated(null)
         }
       } else if (!isOver) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((node as any)._hover) {
-          // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-explicit-any
-          ;(node as any)._hover = false
+        if (node[LOCALS].hover) {
+          // eslint-disable-next-line functional/immutable-data
+          node[LOCALS].hover = false
 
           listeners.forEach((listener) => listener(event))
         }

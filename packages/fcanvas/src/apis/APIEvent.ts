@@ -1,9 +1,11 @@
 import type { ShallowReactive } from "@vue/reactivity"
 import { shallowReactive } from "@vue/reactivity"
 
-import { LISTENERS, LISTENERS_ROOT } from "../symbols"
+import { LISTENERS, LISTENERS_ROOT, LOCALS } from "../symbols"
 
 export class APIEvent<Events extends Record<string, unknown>> {
+  public [LOCALS]: Record<string, unknown> = {}
+
   public readonly [LISTENERS]: ShallowReactive<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Map<keyof Events, Set<(event: any) => void>>
