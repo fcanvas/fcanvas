@@ -20,7 +20,7 @@ export class RegularPolygon extends Shape<{
   }
 
   private getPoints() {
-    const { sides, radius } = this.attrs
+    const { sides, radius } = this.$
     const points = []
     // eslint-disable-next-line functional/no-let
     for (let n = 0; n < sides; n++) {

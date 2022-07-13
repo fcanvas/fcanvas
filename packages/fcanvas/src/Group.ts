@@ -36,7 +36,10 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
 > {
   static readonly type: string = "Group"
 
-  public readonly attrs: ReturnType<typeof reactive<PersonalAttrs>>
+  public readonly $: ReturnType<typeof reactive<PersonalAttrs>>
+  public get attrs() {
+    return this.$
+  }
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
 
@@ -61,7 +64,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     super()
     this[SCOPE].on()
 
-    this.attrs = reactive(attrs)
+    this.$ = reactive(attrs)
 
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
@@ -76,14 +79,14 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[CONTEXT_CACHE_SIZE] = computed(() => {
       const useConfig =
-        this.attrs.width !== undefined && this.attrs.height !== undefined
+        this.$.width !== undefined && this.$.height !== undefined
 
       if (useConfig) {
         return {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          width: this.attrs.width!,
+          width: this.$.width!,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          height: this.attrs.height!
+          height: this.$.height!
         }
       }
 
@@ -128,13 +131,13 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
 
     if (useTranslate) context.translate(-clientRect.x, -clientRect.y)
 
-    drawLayer(context, this.attrs, this[CHILD_NODE], this)
+    drawLayer(context, this.$, this[CHILD_NODE], this)
 
     if (useTranslate) context.translate(clientRect.x, clientRect.y)
   }
 
   public draw(context: CanvasRenderingContext2D) {
-    if (this.attrs.visible === false) return
+    if (this.$.visible === false) return
 
     const { x, y } = this[BOUNCE_CLIENT_RECT].value
     // eslint-disable-next-line no-unused-expressions
@@ -142,8 +145,8 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
 
     context.drawImage(
       this[CONTEXT_CACHE].canvas,
-      (this.attrs.x ?? 0) + x,
-      (this.attrs.y ?? 0) + y
+      (this.$.x ?? 0) + x,
+      (this.$.y ?? 0) + y
     )
   }
 

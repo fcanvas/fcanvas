@@ -31,7 +31,7 @@ export function getClientRectGroup(
     const clientRect = config
       ? node.getClientRect()
       : node[BOUNCE_CLIENT_RECT].value
-    const { x: attrX = 0, y: attrY = 0 } = node.attrs
+    const { x: attrX = 0, y: attrY = 0 } = node.$
 
     x = Math.min(x, clientRect.x + attrX)
     y = Math.min(y, clientRect.y + attrY)

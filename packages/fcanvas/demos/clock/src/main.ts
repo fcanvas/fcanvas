@@ -44,9 +44,9 @@ for (const num of range(0, 12)) {
     fill: num! % 3 ? "#4d4b63" : "#1df52f"
   })
   // eslint-disable-next-line functional/immutable-data
-  text.attrs.x -= text.getClientRect().width / 2
+  text.$.x -= text.getClientRect().width / 2
   // eslint-disable-next-line functional/immutable-data
-  text.attrs.y -= text.getClientRect().height / 2
+  text.$.y -= text.getClientRect().height / 2
 
   face.add(text)
 }
@@ -161,21 +161,21 @@ setInterval(() => {
     now.getSeconds()
   ]
 
-  ;[wiseHour.attrs.points[2], wiseHour.attrs.points[3]] = getOffsetWise(
+  ;[wiseHour.$.points[2], wiseHour.$.points[3]] = getOffsetWise(
     hours,
     12,
     150 * 0.6,
     CENTER_X,
     CENTER_Y
   )
-  ;[wiseMinus.attrs.points[2], wiseMinus.attrs.points[3]] = getOffsetWise(
+  ;[wiseMinus.$.points[2], wiseMinus.$.points[3]] = getOffsetWise(
     minutes,
     60,
     150 * 0.8,
     CENTER_X,
     CENTER_Y
   )
-  ;[wiseSecond.attrs.points[2], wiseSecond.attrs.points[3]] = getOffsetWise(
+  ;[wiseSecond.$.points[2], wiseSecond.$.points[3]] = getOffsetWise(
     seconds,
     60,
     150 * 0.9,
@@ -184,11 +184,11 @@ setInterval(() => {
   )
 
   // eslint-disable-next-line functional/immutable-data
-  date.attrs.text = `${DAYS[now.getDay()]}
+  date.$.text = `${DAYS[now.getDay()]}
 ${fixedTwoLength(now.getDate())} / ${fixedTwoLength(now.getMonth() + 1)}`
   const clientRect = date.getClientRect()
   // eslint-disable-next-line functional/immutable-data
-  date.attrs.x = CENTER_X + 150 / 2 - clientRect.width / 2
+  date.$.x = CENTER_X + 150 / 2 - clientRect.width / 2
   // eslint-disable-next-line functional/immutable-data
-  date.attrs.y = CENTER_Y - clientRect.height / 2
+  date.$.y = CENTER_Y - clientRect.height / 2
 }, 1000)

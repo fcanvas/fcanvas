@@ -22,31 +22,22 @@ export class Image extends Shape<PersonalAttrs> {
   static readonly fromURL = loadImage
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    if (this.attrs.crop) {
+    if (this.$.crop) {
       context.drawImage(
-        this.attrs.image,
-        this.attrs.crop.x,
-        this.attrs.crop.y,
-        this.attrs.crop.width,
-        this.attrs.crop.height,
+        this.$.image,
+        this.$.crop.x,
+        this.$.crop.y,
+        this.$.crop.width,
+        this.$.crop.height,
         0,
         0,
-        this.attrs.width ?? this.attrs.crop.width,
-        this.attrs.height ?? this.attrs.crop.height
+        this.$.width ?? this.$.crop.width,
+        this.$.height ?? this.$.crop.height
       )
-    } else if (
-      this.attrs.width !== undefined &&
-      this.attrs.height !== undefined
-    ) {
-      context.drawImage(
-        this.attrs.image,
-        0,
-        0,
-        this.attrs.width,
-        this.attrs.height
-      )
+    } else if (this.$.width !== undefined && this.$.height !== undefined) {
+      context.drawImage(this.$.image, 0, 0, this.$.width, this.$.height)
     } else {
-      context.drawImage(this.attrs.image, 0, 0)
+      context.drawImage(this.$.image, 0, 0)
     }
     this.fillStrokeScene(context)
   }
@@ -54,13 +45,13 @@ export class Image extends Shape<PersonalAttrs> {
   protected getSize() {
     return {
       width:
-        this.attrs.width ??
-        this.attrs.crop?.width ??
-        getValFromSource(this.attrs.image.width),
+        this.$.width ??
+        this.$.crop?.width ??
+        getValFromSource(this.$.image.width),
       height:
-        this.attrs.height ??
-        this.attrs.crop?.height ??
-        getValFromSource(this.attrs.image.height)
+        this.$.height ??
+        this.$.crop?.height ??
+        getValFromSource(this.$.image.height)
     }
   }
 }

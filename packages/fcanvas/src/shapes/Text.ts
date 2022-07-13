@@ -85,19 +85,19 @@ export class Text extends Shape<PersonalAttrs> {
   }
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    if (!this.attrs.text) return
+    if (!this.$.text) return
 
     const textArr = this.textArr
     const textArrLen = textArr.length
 
-    const { padding = 0, fontSize = 12 } = this.attrs
-    const lineHeightPx = (this.attrs.lineHeight ?? 1) * fontSize
-    const verticalAlign = this.attrs.verticalAlign
-    const align = this.attrs.align
+    const { padding = 0, fontSize = 12 } = this.$
+    const lineHeightPx = (this.$.lineHeight ?? 1) * fontSize
+    const verticalAlign = this.$.verticalAlign
+    const align = this.$.align
     const totalWidth = this.getWidth()
-    const { letterSpacing } = this.attrs
+    const { letterSpacing } = this.$
     const fill = this.getFill(context)
-    const textDecoration = this.attrs.textDecoration
+    const textDecoration = this.$.textDecoration
     const shouldUnderline = textDecoration === "underline"
     const shouldLineThrough = textDecoration === "line-through"
     // eslint-disable-next-line functional/no-let
@@ -239,20 +239,20 @@ export class Text extends Shape<PersonalAttrs> {
   private getWidth() {
     if (this.textWidth === undefined) this.setTextData()
 
-    return this.attrs.width === "auto" || this.attrs.width === undefined
-      ? this.textWidth + (this.attrs.padding ?? 0) * 2
-      : this.attrs.width
+    return this.$.width === "auto" || this.$.width === undefined
+      ? this.textWidth + (this.$.padding ?? 0) * 2
+      : this.$.width
   }
 
   private getHeight() {
     if (!this.textArr) this.setTextData()
 
-    return this.attrs.height === "auto" || this.attrs.height === undefined
-      ? (this.attrs.fontSize ?? 12) *
+    return this.$.height === "auto" || this.$.height === undefined
+      ? (this.$.fontSize ?? 12) *
           this.textArr.length *
-          (this.attrs.lineHeight ?? 1) +
-          (this.attrs.padding ?? 0) * 2
-      : (this.attrs.height as number)
+          (this.$.lineHeight ?? 1) +
+          (this.$.padding ?? 0) * 2
+      : (this.$.height as number)
   }
 
   private measureSize(text: string): {
@@ -260,7 +260,7 @@ export class Text extends Shape<PersonalAttrs> {
     height: number
   } {
     const _context = getDummyContext()
-    const fontSize = this.attrs.fontSize ?? 12
+    const fontSize = this.$.fontSize ?? 12
 
     _context.save()
     // eslint-disable-next-line functional/immutable-data
@@ -276,18 +276,18 @@ export class Text extends Shape<PersonalAttrs> {
 
   public getContextFont() {
     return (
-      (this.attrs.fontStyle ?? "normal") +
+      (this.$.fontStyle ?? "normal") +
       " " +
-      (this.attrs.fontVariant ?? "normal") +
+      (this.$.fontVariant ?? "normal") +
       " " +
-      ((this.attrs.fontSize ?? 12) + "px ") +
+      ((this.$.fontSize ?? 12) + "px ") +
       // wrap font family into " so font families with spaces works ok
-      normalizeFontFamily(this.attrs.fontFamily ?? "Arial")
+      normalizeFontFamily(this.$.fontFamily ?? "Arial")
     )
   }
 
   private addTextLine(line: string) {
-    if (this.attrs.align === "justify") line = line.trim()
+    if (this.$.align === "justify") line = line.trim()
 
     const width = this.getTextWidth(line)
 
@@ -299,7 +299,7 @@ export class Text extends Shape<PersonalAttrs> {
   }
 
   private getTextWidth(text: string) {
-    const letterSpacing = this.attrs.letterSpacing ?? 0
+    const letterSpacing = this.$.letterSpacing ?? 0
     const length = text.length
     return (
       getDummyContext().measureText(text).width +
@@ -308,21 +308,21 @@ export class Text extends Shape<PersonalAttrs> {
   }
 
   private setTextData() {
-    const lines = this.attrs.text.split("\n")
-    const fontSize = this.attrs.fontSize ?? 12
-    const lineHeightPx = (this.attrs.lineHeight ?? 1) * fontSize
-    const width = this.attrs.width
-    const height = this.attrs.height
+    const lines = this.$.text.split("\n")
+    const fontSize = this.$.fontSize ?? 12
+    const lineHeightPx = (this.$.lineHeight ?? 1) * fontSize
+    const width = this.$.width
+    const height = this.$.height
     const fixedWidth = width !== "auto" && width !== undefined
     const fixedHeight = height !== "auto" && height !== undefined
-    const padding = this.attrs.padding ?? 0
+    const padding = this.$.padding ?? 0
     const maxWidth = typeof width === "number" ? width - padding * 2 : NaN
     const maxHeightPx = typeof height === "number" ? height - padding * 2 : NaN
-    const wrap = this.attrs.wrap
+    const wrap = this.$.wrap
     // align = this.align(),
     const shouldWrap = wrap !== "none"
     const wrapAtWord = wrap !== "char" && shouldWrap
-    const shouldAddEllipsis = this.attrs.ellipsis
+    const shouldAddEllipsis = this.$.ellipsis
     // eslint-disable-next-line functional/no-let
     let textWidth = 0
     // eslint-disable-next-line functional/no-let

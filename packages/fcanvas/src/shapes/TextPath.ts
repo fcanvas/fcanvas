@@ -68,10 +68,10 @@ export class TextPath extends Shape<PersonalAttrs> {
     super(attrs)
 
     this[SCOPE].on()
-    this.dataArray = parsePathData(this.attrs.data)
+    this.dataArray = parsePathData(this.$.data)
 
     effect(() => {
-      this.dataArray = parsePathData(this.attrs.data)
+      this.dataArray = parsePathData(this.$.data)
     })
     effect(() => {
       this.setTextData()
@@ -94,17 +94,17 @@ export class TextPath extends Shape<PersonalAttrs> {
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     // eslint-disable-next-line functional/immutable-data
     context.font = this.getContextFont()
-    if (this.attrs.textBaseline) {
+    if (this.$.textBaseline) {
       // eslint-disable-next-line functional/immutable-data
-      context.textBaseline = this.attrs.textBaseline
+      context.textBaseline = this.$.textBaseline
     }
     // eslint-disable-next-line functional/immutable-data
     context.textAlign = "left"
     context.save()
 
-    const textDecoration = this.attrs.textDecoration
+    const textDecoration = this.$.textDecoration
     const fill = this.getFill(context)
-    const fontSize = this.attrs.fontSize ?? 12
+    const fontSize = this.$.fontSize ?? 12
 
     const glyphInfo = this.glyphInfo
     if (textDecoration === "underline") context.beginPath()
@@ -164,21 +164,21 @@ export class TextPath extends Shape<PersonalAttrs> {
 
     return {
       width: metrics.width,
-      height: parseInt((this.attrs.fontSize ?? 12) + "", 10)
+      height: parseInt((this.$.fontSize ?? 12) + "", 10)
     }
   }
 
   private setTextData() {
-    const size = this.getTextSize(this.attrs.text)
-    const letterSpacing = this.attrs.letterSpacing ?? 0
-    const align = this.attrs.align
+    const size = this.getTextSize(this.$.text)
+    const letterSpacing = this.$.letterSpacing ?? 0
+    const align = this.$.align
     // const kerningFunc = null
 
     this.textWidth = size.width
     // this.textHeight = size.height;
 
     const textFullWidth = Math.max(
-      this.textWidth + ((this.attrs.text || "").length - 1) * letterSpacing,
+      this.textWidth + ((this.$.text || "").length - 1) * letterSpacing,
       0
     )
 
@@ -199,7 +199,7 @@ export class TextPath extends Shape<PersonalAttrs> {
 
     if (align === "right") offset = Math.max(0, fullPathWidth - textFullWidth)
 
-    const charArr = this.attrs.text
+    const charArr = this.$.text
     const spacesNumber = charArr.split(" ").length - 1
 
     // eslint-disable-next-line functional/no-let
@@ -502,7 +502,7 @@ export class TextPath extends Shape<PersonalAttrs> {
       minY = Math.min(minY, y)
       maxY = Math.max(maxY, y)
     }
-    const fontSize = this.attrs.fontSize || 12
+    const fontSize = this.$.fontSize || 12
     return {
       x: minX - fontSize / 2,
       y: minY - fontSize / 2,

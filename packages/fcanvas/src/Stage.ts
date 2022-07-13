@@ -31,7 +31,11 @@ export class Stage extends APIChildNode<
 > {
   static readonly type: string = "Stage"
 
-  public readonly attrs: ReturnType<typeof reactive<PersonalAttrs>>
+  public readonly $: ReturnType<typeof reactive<PersonalAttrs>>
+  public get attrs() {
+    return this.$
+  }
+
   public readonly size: ReturnType<
     typeof reactive<Pick<Rect, "width" | "height">>
   > = reactive({ width: 300, height: 300 })
@@ -50,16 +54,16 @@ export class Stage extends APIChildNode<
 
     this[SCOPE].on()
 
-    this.attrs = reactive(attrs as PersonalAttrs)
+    this.$ = reactive(attrs as PersonalAttrs)
     watchEffect(() => {
-      this.size.width = this.attrs.width ?? 300
-      this.size.height = this.attrs.height ?? 300
+      this.size.width = this.$.width ?? 300
+      this.size.height = this.$.height ?? 300
     })
 
     const container = this[DIV_CONTAINER]
     container.style.cssText = "position: relative;"
     watchEffect(() => {
-      container.style.transform = createTransform(this.attrs).toString()
+      container.style.transform = createTransform(this.$).toString()
     })
     watchEffect(() => {
       const { width, height } = this.size
@@ -72,7 +76,7 @@ export class Stage extends APIChildNode<
       displayBp = container.style.display
       const display = getComputedStyle(container).getPropertyValue("display")
 
-      if (this.attrs.visible !== false) {
+      if (this.$.visible !== false) {
         if (display === "none") container.style.display = "block"
         else container.style.display = displayBp === "none" ? "" : displayBp
 
@@ -84,7 +88,7 @@ export class Stage extends APIChildNode<
       container.style.display = "none"
     })
     watchEffect(() => {
-      container.style.opacity = (this.attrs.opacity ?? 1) + ""
+      container.style.opacity = (this.$.opacity ?? 1) + ""
     })
     // event binding
     // eslint-disable-next-line func-call-spacing
@@ -113,12 +117,11 @@ export class Stage extends APIChildNode<
     })
 
     watchEffect(() => {
-      const { container: id } = this.attrs
+      const { container: id } = this.$
       if (id !== undefined) {
         const el = document.getElementById(id)
         if (!el) {
-          if (isDev)
-            console.warn(`#${id} not exists.`)
+          if (isDev) console.warn(`#${id} not exists.`)
         } else {
           el.appendChild(container)
         }

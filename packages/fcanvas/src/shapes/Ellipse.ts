@@ -18,9 +18,9 @@ export class Ellipse extends Shape<PersonalAttrs> {
     context.ellipse(
       0,
       0,
-      this.attrs.radius.x,
-      this.attrs.radius.y,
-      this.attrs.rotate ?? 0,
+      this.$.radius.x,
+      this.$.radius.y,
+      this.$.rotate ?? 0,
       0,
       Math.PI * 2
     )
@@ -29,8 +29,8 @@ export class Ellipse extends Shape<PersonalAttrs> {
 
   protected getSize() {
     return {
-      width: this.attrs.radius.x * 2,
-      height: this.attrs.radius.y * 2
+      width: this.$.radius.x * 2,
+      height: this.$.radius.y * 2
     }
   }
 
@@ -38,10 +38,10 @@ export class Ellipse extends Shape<PersonalAttrs> {
     return pointInEllipse(
       x,
       y,
-      this.attrs.x,
-      this.attrs.y,
-      this.attrs.radius.x + this.getHitStroke(),
-      this.attrs.radius.y + this.getHitStroke()
+      this.$.x,
+      this.$.y,
+      this.$.radius.x + this.getHitStroke(),
+      this.$.radius.y + this.getHitStroke()
     )
   }
 }

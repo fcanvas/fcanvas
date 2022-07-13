@@ -17,14 +17,14 @@ export class Arrow extends Line<PersonalAttrs> {
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     super._sceneFunc(context)
     const PI2 = Math.PI * 2
-    const points = this.attrs.points
+    const points = this.$.points
 
     // eslint-disable-next-line functional/no-let
     let tp = points
-    const fromTension = (this.attrs.tension ?? 0) !== 0 && points.length > 4
+    const fromTension = (this.$.tension ?? 0) !== 0 && points.length > 4
     if (fromTension) tp = this.getTensionPoints()
 
-    const length = this.attrs.pointerLength ?? 10
+    const length = this.$.pointerLength ?? 10
 
     const n = points.length
 
@@ -64,9 +64,9 @@ export class Arrow extends Line<PersonalAttrs> {
 
     const radians = (Math.atan2(dy, dx) + PI2) % PI2
 
-    const width = this.attrs.pointerWidth ?? 10
+    const width = this.$.pointerWidth ?? 10
 
-    if (this.attrs.pointerAtEnding !== false) {
+    if (this.$.pointerAtEnding !== false) {
       context.save()
       context.beginPath()
       context.translate(points[n - 2], points[n - 1])
@@ -79,7 +79,7 @@ export class Arrow extends Line<PersonalAttrs> {
       context.restore()
     }
 
-    if (this.attrs.pointerAtBeginning) {
+    if (this.$.pointerAtBeginning) {
       context.save()
       context.beginPath()
       context.translate(points[0], points[1])
@@ -103,7 +103,7 @@ export class Arrow extends Line<PersonalAttrs> {
 
   public getRect() {
     const lineRect = super.getRect()
-    const offset = (this.attrs.pointerWidth ?? 10) / 2
+    const offset = (this.$.pointerWidth ?? 10) / 2
     return {
       x: lineRect.x - offset,
       y: lineRect.y - offset,
