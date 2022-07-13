@@ -4,7 +4,7 @@ A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's
 [https://fcanvas.js.org](https://fcanvas.js.org)
 
 
-[![Build](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/build-docs.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/docs.yml)
+[![Build](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/test-docs.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/test-docs.yml)
 [![NPM](https://badge.fury.io/js/fcanvas.svg)](http://badge.fury.io/js/fcanvas)
 [![Size](https://img.shields.io/bundlephobia/minzip/fcanvas/latest)](https://npmjs.org/package/fcanvas)
 [![Languages](https://img.shields.io/github/languages/top/tachibana-shin/fcanvas-next)](https://npmjs.org/package/fcanvas)
