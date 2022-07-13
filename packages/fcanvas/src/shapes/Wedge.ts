@@ -13,10 +13,10 @@ export class Wedge extends Shape<{
     context.arc(
       0,
       0,
-      this.attrs.radius,
+      this.$.radius,
       0,
-      convertToDegrees(this.attrs.angle),
-      this.attrs.clockwise
+      convertToDegrees(this.$.angle),
+      this.$.clockwise
     )
     context.lineTo(0, 0)
     this.fillStrokeScene(context)
@@ -24,8 +24,8 @@ export class Wedge extends Shape<{
 
   protected getSize() {
     return {
-      width: this.attrs.radius * 2,
-      height: this.attrs.radius * 2
+      width: this.$.radius * 2,
+      height: this.$.radius * 2
     }
   }
 
@@ -33,9 +33,9 @@ export class Wedge extends Shape<{
     return pointInCircle(
       x,
       y,
-      this.attrs.x,
-      this.attrs.y,
-      this.attrs.radius + this.getHitStroke()
+      this.$.x,
+      this.$.y,
+      this.$.radius + this.getHitStroke()
     )
   }
 }

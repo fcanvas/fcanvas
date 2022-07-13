@@ -14,10 +14,10 @@ export class Tag extends Shape<PersonalAttrs> {
   static readonly type = "Tag"
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    const width = this.attrs.width ?? 0
-    const height = this.attrs.height ?? 0
-    const pointerDirection = this.attrs.pointerDirection
-    const { pointerWidth = 20, pointerHeight = 20, cornerRadius } = this.attrs
+    const width = this.$.width ?? 0
+    const height = this.$.height ?? 0
+    const pointerDirection = this.$.pointerDirection
+    const { pointerWidth = 20, pointerHeight = 20, cornerRadius } = this.$
 
     // eslint-disable-next-line functional/no-let
     let topLeft = 0
@@ -27,8 +27,8 @@ export class Tag extends Shape<PersonalAttrs> {
     let bottomRight = 0
     // eslint-disable-next-line functional/no-let
     let bottomLeft = 0
-    const ws2 = (this.attrs.width ?? 0) / 2
-    const hs2 = (this.attrs.height ?? 0) / 2
+    const ws2 = (this.$.width ?? 0) / 2
+    const hs2 = (this.$.height ?? 0) / 2
     if (typeof cornerRadius === "number") {
       topLeft = Math.min(cornerRadius, ws2, hs2)
       topRight = topLeft
@@ -120,14 +120,14 @@ export class Tag extends Shape<PersonalAttrs> {
     // eslint-disable-next-line functional/no-let
     let y = 0
     // eslint-disable-next-line functional/no-let
-    let width = this.attrs.width ?? 0
+    let width = this.$.width ?? 0
     // eslint-disable-next-line functional/no-let
-    let height = this.attrs.height ?? 0
+    let height = this.$.height ?? 0
     const {
       pointerWidth = 20,
       pointerHeight = 20,
       pointerDirection: direction
-    } = this.attrs
+    } = this.$
 
     switch (direction) {
       case "up":

@@ -87,7 +87,10 @@ function getListenersOnDeep(
 export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   static readonly type: string = "Layer"
 
-  public readonly attrs: ReturnType<typeof reactive<PersonalAttrs>>
+  public readonly $: ReturnType<typeof reactive<PersonalAttrs>>
+  public get attrs() {
+    return this.$
+  }
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
 
@@ -112,13 +115,13 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     super()
     this[SCOPE].on()
 
-    this.attrs = reactive(attrs)
+    this.$ = reactive(attrs)
 
     const { canvas } = this[CONTEXT_CACHE]
     canvas.style.cssText = "position: absolute; margin: 0; padding: 0"
     watchEffect(() => {
-      canvas.style.left = (this.attrs.x ?? 0) + "px"
-      canvas.style.top = (this.attrs.y ?? 0) + "px"
+      canvas.style.left = (this.$.x ?? 0) + "px"
+      canvas.style.top = (this.$.y ?? 0) + "px"
     })
     // eslint-disable-next-line functional/no-let
     let displayBp = ""
@@ -126,7 +129,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       displayBp = canvas.style.display
       const display = getComputedStyle(canvas).getPropertyValue("display")
 
-      if (this.attrs.visible !== false) {
+      if (this.$.visible !== false) {
         if (display === "none") canvas.style.display = "block"
         else canvas.style.display = displayBp === "none" ? "" : displayBp
 
@@ -141,7 +144,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       const ctx = this[CONTEXT_CACHE]
 
-      if (this.attrs.clearBeforeDraw !== false)
+      if (this.$.clearBeforeDraw !== false)
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       this[DRAW_CONTEXT_ON_SANDBOX](ctx)
 
@@ -153,7 +156,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     // try watchEffect
     watchEffect(
       () => {
-        const { width, height } = this.attrs
+        const { width, height } = this.$
         const useConfig = width !== undefined && height !== undefined
 
         if (!useConfig) return
@@ -279,11 +282,11 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   }
 
   private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
-    drawLayer(context, this.attrs, this[CHILD_NODE], this)
+    drawLayer(context, this.$, this[CHILD_NODE], this)
   }
 
   public draw() {
-    if (this.attrs.visible === false) return
+    if (this.$.visible === false) return
 
     // eslint-disable-next-line no-unused-expressions
     this[COMPUTED_CACHE].value

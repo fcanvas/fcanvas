@@ -1,5 +1,4 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import { ref } from "@vue/reactivity"
 
 import { Layer } from "./Layer"
 import { Stage } from "./Stage"
@@ -15,28 +14,27 @@ stage.add(layer)
 
 class CircleCustom extends Rect {
   setup() {
-    const { attrs } = this
+    const { $ } = this
     const mousePos = useMousePos()
     const mouseIsPressed = useMouseIsPressed()
 
     watchEffect(() => {
       if (mouseIsPressed.value) {
         // eslint-disable-next-line functional/immutable-data
-        attrs.x = mousePos.mouseX
+        $.x = mousePos.mouseX
         // eslint-disable-next-line functional/immutable-data
-        attrs.y = mousePos.mouseY
+        $.y = mousePos.mouseY
 
         // eslint-disable-next-line functional/immutable-data
-        attrs.fill = "red"
+        $.fill = "red"
       } else {
         // eslint-disable-next-line functional/immutable-data
-        attrs.fill = "transparent"
+        $.fill = "transparent"
       }
     })
   }
 }
 
-const radius = ref(10)
 const circle = new CircleCustom({
   x: 100,
   y: 100,

@@ -108,10 +108,14 @@ export class Shape<
   static readonly type: string = "Shape"
   static readonly _centroid: boolean = false
 
-  public readonly attrs: ReturnType<
+  public readonly $: ReturnType<
     // eslint-disable-next-line no-use-before-define
     typeof reactive<CommonShapeAttrs<PersonalAttrs> & ThisType<Shape>>
   >
+
+  public get attrs() {
+    return this.$
+  }
 
   public get type(): string {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -161,11 +165,11 @@ export class Shape<
     const { setup: setupFn } = attrs
     delete attrs.setup
 
-    this.attrs = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
+    this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
 
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
-      if (this.attrs.perfectDrawEnabled !== false) {
+      if (this.$.perfectDrawEnabled !== false) {
         const ctx = this[CONTEXT_CACHE]
 
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -178,19 +182,19 @@ export class Shape<
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[CONTEXT_CACHE_SIZE] = computed(() => {
       const { width, height } = this[BOUNCE_CLIENT_RECT].value
-      const adjust = (this.attrs.strokeWidth ?? 1) * 2
+      const adjust = (this.$.strokeWidth ?? 1) * 2
       return {
         width: width + adjust,
         height: height + adjust
       }
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.animate = new Animation(this.attrs as unknown as any)
+    this.animate = new Animation(this.$ as unknown as any)
 
     // try watchEffect
     watchEffect(() => {
       // reactive
-      if (this.attrs.perfectDrawEnabled !== false) {
+      if (this.$.perfectDrawEnabled !== false) {
         const ctx = this[CONTEXT_CACHE]
         const { width, height } = this[CONTEXT_CACHE_SIZE].value
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
@@ -208,8 +212,8 @@ export class Shape<
     // =========== current shape ===========
     _setCurrentShape(this)
     // =====================================
-    ;(setupFn as typeof this.setup)?.(this.attrs)
-    this.setup?.(this.attrs)
+    ;(setupFn as typeof this.setup)?.(this.$)
+    this.setup?.(this.$)
     // =========== current shape ===========
     _setCurrentShape(null)
     // =====================================
@@ -220,7 +224,7 @@ export class Shape<
   public to(
     attrs: gsap.TweenVars & Partial<CommonShapeAttrs & PersonalAttrs>
   ): gsap.core.Tween {
-    return gsap.to(this.attrs, attrs)
+    return gsap.to(this.$, attrs)
   }
 
   protected getFill(context: CanvasRenderingContext2D) {
@@ -229,27 +233,24 @@ export class Shape<
     // "color" | "linear-gradient" | "radial-gradient" | "pattern"
     // fill pattern is preferred
     // các tổ hợp của nó dunce ưu tied
-    switch (this.attrs.fillEnabled !== false && getFillPriority(this.attrs)) {
+    switch (this.$.fillEnabled !== false && getFillPriority(this.$)) {
       case "color":
-        style = this.attrs.fill
+        style = this.$.fill
         break
       case "pattern":
-        if (this.attrs.fillPatternImage !== undefined) {
+        if (this.$.fillPatternImage !== undefined) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           style = context.createPattern(
-            this.attrs.fillPatternImage,
-            this.attrs.fillPattern?.repeat ?? "repeat"
+            this.$.fillPatternImage,
+            this.$.fillPattern?.repeat ?? "repeat"
           )!
-          if (
-            this.attrs.fillPattern &&
-            existsTransform(this.attrs.fillPattern, true)
-          )
-            style.setTransform(createTransform(this.attrs.fillPattern, true))
+          if (this.$.fillPattern && existsTransform(this.$.fillPattern, true))
+            style.setTransform(createTransform(this.$.fillPattern, true))
         }
         break
       case "linear-gradient":
-        if (this.attrs.fillLinearGradient !== undefined) {
-          const { fillLinearGradient } = this.attrs
+        if (this.$.fillLinearGradient !== undefined) {
+          const { fillLinearGradient } = this.$
           style = context.createLinearGradient(
             fillLinearGradient.start.x,
             fillLinearGradient.start.y,
@@ -262,8 +263,8 @@ export class Shape<
         }
         break
       case "radial-gradient":
-        if (this.attrs.fillRadialGradient !== undefined) {
-          const { fillRadialGradient } = this.attrs
+        if (this.$.fillRadialGradient !== undefined) {
+          const { fillRadialGradient } = this.$
           style = context.createRadialGradient(
             fillRadialGradient.start.x,
             fillRadialGradient.start.y,
@@ -293,7 +294,7 @@ export class Shape<
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getStroke(_context: CanvasRenderingContext2D) {
-    return this.attrs.strokeEnabled !== false ? this.attrs.stroke : undefined
+    return this.$.strokeEnabled !== false ? this.$.stroke : undefined
   }
 
   protected strokeScene(context: CanvasRenderingContext2D) {
@@ -304,18 +305,18 @@ export class Shape<
   }
 
   protected fillStrokeScene(context: CanvasRenderingContext2D) {
-    const shadowForStrokeEnabled = this.attrs.shadowForStrokeEnabled ?? true
-    if (this.attrs.fillAfterStrokeEnabled) {
+    const shadowForStrokeEnabled = this.$.shadowForStrokeEnabled ?? true
+    if (this.$.fillAfterStrokeEnabled) {
       if (shadowForStrokeEnabled) {
-        drawShadow(context, this.attrs)
+        drawShadow(context, this.$)
         this.strokeScene(context)
       } else {
         this.strokeScene(context)
-        drawShadow(context, this.attrs)
+        drawShadow(context, this.$)
       }
       this.fillScene(context)
     } else {
-      drawShadow(context, this.attrs)
+      drawShadow(context, this.$)
       this.fillScene(context)
       if (!shadowForStrokeEnabled) {
         context.shadowBlur = 0
@@ -327,8 +328,8 @@ export class Shape<
 
   protected getSize() {
     return {
-      width: this.attrs.width as number,
-      height: this.attrs.height as number
+      width: this.$.width as number,
+      height: this.$.height as number
     }
   }
 
@@ -349,24 +350,24 @@ export class Shape<
 
     const applyStroke =
       !config.skipStroke &&
-      (this.attrs.strokeEnabled ?? true) &&
-      this.attrs.stroke !== undefined
-    const strokeWidth = (applyStroke && (this.attrs.strokeWidth ?? 1)) || 0
+      (this.$.strokeEnabled ?? true) &&
+      this.$.stroke !== undefined
+    const strokeWidth = (applyStroke && (this.$.strokeWidth ?? 1)) || 0
 
     const fillAndStrokeWidth = fillRect.width + strokeWidth
     const fillAndStrokeHeight = fillRect.height + strokeWidth
 
     const applyShadow =
       !config.skipShadow &&
-      this.attrs.shadowEnabled !== false &&
-      this.attrs.shadow !== undefined
-    const shadowOffsetX = applyShadow ? this.attrs.shadow?.x ?? 0 : 0
-    const shadowOffsetY = applyShadow ? this.attrs.shadow?.y ?? 0 : 0
+      this.$.shadowEnabled !== false &&
+      this.$.shadow !== undefined
+    const shadowOffsetX = applyShadow ? this.$.shadow?.x ?? 0 : 0
+    const shadowOffsetY = applyShadow ? this.$.shadow?.y ?? 0 : 0
 
     const preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX)
     const preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY)
 
-    const blurRadius = (applyShadow && (this.attrs.shadow?.blur ?? 0)) || 0
+    const blurRadius = (applyShadow && (this.$.shadow?.blur ?? 0)) || 0
 
     const width = preWidth + blurRadius * 2
     const height = preHeight + blurRadius * 2
@@ -385,7 +386,7 @@ export class Shape<
     }
 
     const applyTransform =
-      !config.skipTransform && existsTransform(this.attrs, false)
+      !config.skipTransform && existsTransform(this.$, false)
     if (applyTransform) {
       const isCache = !!this[CONTEXT_CACHE]
       const x = width / 2
@@ -394,16 +395,16 @@ export class Shape<
       return transformedRect(
         rect,
         new DOMMatrix()
-          .scale(this.attrs.scale?.x, this.attrs.scale?.y)
+          .scale(this.$.scale?.x, this.$.scale?.y)
           .translate(x, y)
-          .rotate(convertToDegrees(this.attrs.rotation ?? 0))
+          .rotate(convertToDegrees(this.$.rotation ?? 0))
           .translate(-x, -y)
           .translate(
-            (this.attrs.offset?.x ?? 0) + (isCache ? 0 : this.attrs.x),
-            (this.attrs.offset?.y ?? 0) + (isCache ? 0 : this.attrs.y)
+            (this.$.offset?.x ?? 0) + (isCache ? 0 : this.$.x),
+            (this.$.offset?.y ?? 0) + (isCache ? 0 : this.$.y)
           )
-          .skewX(this.attrs.skewX)
-          .skewY(this.attrs.skewY)
+          .skewX(this.$.skewX)
+          .skewY(this.$.skewY)
       )
     }
 
@@ -415,7 +416,7 @@ export class Shape<
   private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
     if (isDev) console.log("[sandbox::shape]: draw context on sandbox")
     const isCache = !!this[CONTEXT_CACHE]
-    const scene = this.attrs.sceneFunc || this._sceneFunc
+    const scene = this.$.sceneFunc || this._sceneFunc
 
     if (!scene) return
 
@@ -427,20 +428,20 @@ export class Shape<
     //   context.translate(-x, -y);
     // }\
     const clientRect = this[BOUNCE_CLIENT_RECT].value
-    const adjust = isCache ? this.attrs.strokeWidth ?? 1 : 0
+    const adjust = isCache ? this.$.strokeWidth ?? 1 : 0
     const [transX, transY] = [clientRect.x - adjust, clientRect.y - adjust]
     context.translate(-transX, -transY)
 
-    const needUseTransform = existsTransform(this.attrs, !isCache)
-    const needSetAlpha = this.attrs.opacity !== undefined
-    const useFilter = this.attrs.filter !== undefined
+    const needUseTransform = existsTransform(this.$, !isCache)
+    const needSetAlpha = this.$.opacity !== undefined
+    const useFilter = this.$.filter !== undefined
     // eslint-disable-next-line functional/no-let
     let backupTransform, backupAlpha: number, backupFilter: string
 
     if (needSetAlpha) {
       backupAlpha = context.globalAlpha
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      context.globalAlpha = this.attrs.opacity!
+      context.globalAlpha = this.$.opacity!
     }
     if (needUseTransform) {
       backupTransform = context.getTransform()
@@ -449,28 +450,28 @@ export class Shape<
 
       context.setTransform(
         new DOMMatrix(backupTransform.toString())
-          .scale(this.attrs.scale?.x, this.attrs.scale?.y)
+          .scale(this.$.scale?.x, this.$.scale?.y)
           .translate(x, y)
-          .rotate(convertToDegrees(this.attrs.rotation ?? 0))
+          .rotate(convertToDegrees(this.$.rotation ?? 0))
           .translate(-x, -y)
           .translate(
-            (this.attrs.offset?.x ?? 0) + (isCache ? 0 : this.attrs.x),
-            (this.attrs.offset?.y ?? 0) + (isCache ? 0 : this.attrs.y)
+            (this.$.offset?.x ?? 0) + (isCache ? 0 : this.$.x),
+            (this.$.offset?.y ?? 0) + (isCache ? 0 : this.$.y)
           )
-          .skewX(this.attrs.skewX)
-          .skewY(this.attrs.skewY)
+          .skewX(this.$.skewX)
+          .skewY(this.$.skewY)
       )
     }
     if (useFilter) {
       backupFilter = context.filter
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      context.filter = createFilter(this.attrs.filter!)
+      context.filter = createFilter(this.$.filter!)
     }
 
     context.beginPath()
 
-    setLineStyle(context, this.attrs)
+    setLineStyle(context, this.$)
     scene?.call(this, context)
     // this.fillStrokeScene(context);
 
@@ -494,20 +495,20 @@ export class Shape<
   }
 
   public draw(context: CanvasRenderingContext2D) {
-    if (this.attrs.visible === false) return
+    if (this.$.visible === false) return
 
-    if (this.attrs.perfectDrawEnabled !== false) {
+    if (this.$.perfectDrawEnabled !== false) {
       // eslint-disable-next-line no-unused-expressions
       this[COMPUTED_CACHE].value // get by draw cache
       // finished drawing in the cache
       // draw to main context
       const { x, y } = this[BOUNCE_CLIENT_RECT].value
 
-      const adjust = this.attrs.strokeWidth ?? 1
+      const adjust = this.$.strokeWidth ?? 1
       context.drawImage(
         this[CONTEXT_CACHE].canvas,
-        this.attrs.x - adjust + x,
-        this.attrs.y - adjust + y
+        this.$.x - adjust + x,
+        this.$.y - adjust + y
       )
     } else {
       // キャッシュさせないでください
@@ -517,9 +518,9 @@ export class Shape<
 
   protected getHitStroke() {
     return (
-      ((this.attrs.strokeHitEnabled !== false
-        ? this.attrs.hitStrokeWidth ?? this.attrs.strokeWidth
-        : this.attrs.strokeWidth) ?? 1) - 1
+      ((this.$.strokeHitEnabled !== false
+        ? this.$.hitStrokeWidth ?? this.$.strokeWidth
+        : this.$.strokeWidth) ?? 1) - 1
     )
   }
 
@@ -532,8 +533,8 @@ export class Shape<
     return pointInBox(
       x,
       y,
-      this.attrs.x + selfRect.x - hitStroke,
-      this.attrs.y + selfRect.y - hitStroke,
+      this.$.x + selfRect.x - hitStroke,
+      this.$.y + selfRect.y - hitStroke,
       selfRect.width + hitStroke,
       selfRect.height + hitStroke
     )

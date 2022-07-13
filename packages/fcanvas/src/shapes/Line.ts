@@ -63,17 +63,15 @@ function expandPoints(p: number[], tension: number) {
   return allPoints
 }
 
-export class Line<
-  P extends PersonalAttrs = PersonalAttrs
-> extends Shape<P> {
+export class Line<P extends PersonalAttrs = PersonalAttrs> extends Shape<P> {
   static readonly type: string = "Line"
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    const points = this.attrs.points
+    const points = this.$.points
     const length = points.length
-    const tension = this.attrs.tension ?? 0
-    const closed = this.attrs.closed
-    const bezier = this.attrs.bezier
+    const tension = this.$.tension ?? 0
+    const closed = this.$.closed
+    const bezier = this.$.bezier
 
     // eslint-disable-next-line functional/no-let
     let tp, len, n
@@ -135,15 +133,15 @@ export class Line<
   }
 
   protected getTensionPoints() {
-    if (this.attrs.closed) return this.getTensionPointsClosed()
+    if (this.$.closed) return this.getTensionPointsClosed()
 
-    return expandPoints(this.attrs.points, this.attrs.tension ?? 0)
+    return expandPoints(this.$.points, this.$.tension ?? 0)
   }
 
   protected getTensionPointsClosed() {
-    const p = this.attrs.points
+    const p = this.$.points
     const len = p.length
-    const tension = this.attrs.tension ?? 0
+    const tension = this.$.tension ?? 0
     const firstControlPoints = getControlPoints(
       p[len - 2],
       p[len - 1],
@@ -184,7 +182,7 @@ export class Line<
 
   public getRect() {
     // eslint-disable-next-line functional/no-let
-    let points = this.attrs.points
+    let points = this.$.points
     if (points.length < 4) {
       return {
         x: points[0] || 0,
@@ -193,7 +191,7 @@ export class Line<
         height: 0
       }
     }
-    if ((this.attrs.tension ?? 0) !== 0) {
+    if ((this.$.tension ?? 0) !== 0) {
       points = [
         points[0],
         points[1],

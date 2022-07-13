@@ -39,8 +39,8 @@ export class Sprite extends Shape<PersonalAttrs> {
 
   private _isRunning = false
 
-  private get _anim(): typeof this.attrs.animations["*"] {
-    return this.attrs.animations[this.attrs.animation]
+  private get _anim(): typeof this.$.animations["*"] {
+    return this.$.animations[this.$.animation]
   }
 
   private get _frames(): readonly number[] {
@@ -48,7 +48,7 @@ export class Sprite extends Shape<PersonalAttrs> {
   }
 
   private get frameIndex(): number {
-    const _frameIndex = this.attrs.frameIndex ?? 0
+    const _frameIndex = this.$.frameIndex ?? 0
 
     const frameLength = ~~this._frames.length / 4
     const frameIndex =
@@ -64,30 +64,27 @@ export class Sprite extends Shape<PersonalAttrs> {
   private createCropImage(): HTMLCanvasElement {
     const indexStart = this.frameIndex * 4
     const cropImageInCache = this.cropImageCache
-      .get(this.attrs.animation)
+      .get(this.$.animation)
       ?.get(indexStart)
 
     if (cropImageInCache) return cropImageInCache
 
-    if (!this.cropImageCache.has(this.attrs.animation))
-      this.cropImageCache.set(this.attrs.animation, new Map())
+    if (!this.cropImageCache.has(this.$.animation))
+      this.cropImageCache.set(this.$.animation, new Map())
 
     const cropImageNow = cropImage(
-      this.attrs.image,
+      this.$.image,
       ...this._frames.slice(indexStart, indexStart + 4)
     )
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.cropImageCache.get(this.attrs.animation)!.set(indexStart, cropImageNow)
+    this.cropImageCache.get(this.$.animation)!.set(indexStart, cropImageNow)
 
     return cropImageNow
   }
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    if (
-      this.attrs.fillEnabled !== false ||
-      this.attrs.strokeEnabled !== false
-    ) {
+    if (this.$.fillEnabled !== false || this.$.strokeEnabled !== false) {
       context.beginPath()
       const { width, height } = this.getSize()
       context.rect(0, 0, width, height)
@@ -101,7 +98,7 @@ export class Sprite extends Shape<PersonalAttrs> {
 
   public animation(name: string) {
     // eslint-disable-next-line functional/immutable-data
-    this.attrs.animation = name
+    this.$.animation = name
   }
 
   public start(): void {
@@ -112,24 +109,21 @@ export class Sprite extends Shape<PersonalAttrs> {
       const { frameIndex } = this
       const countFrame = ~~this._frames.length / 4
 
-      if (
-        this.attrs.infinite !== false &&
-        this.attrs.frameIndex === countFrame - 1
-      ) {
+      if (this.$.infinite !== false && this.$.frameIndex === countFrame - 1) {
         // last frame repeat -> reset;
         // eslint-disable-next-line functional/immutable-data
-        this.attrs.frameIndex = 0
+        this.$.frameIndex = 0
         return
       }
-      if (this.attrs.infinite === false && frameIndex === countFrame - 2) {
+      if (this.$.infinite === false && frameIndex === countFrame - 2) {
         // this frame last
         this.stop()
       }
 
       // eslint-disable-next-line functional/immutable-data
-      this.attrs.frameIndex = frameIndex + 1
+      this.$.frameIndex = frameIndex + 1
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }, 1000 / ((this._anim as any).frameRate ?? this.attrs.frameRate ?? 17)) as unknown as number
+    }, 1000 / ((this._anim as any).frameRate ?? this.$.frameRate ?? 17)) as unknown as number
   }
 
   public stop(): void {
@@ -138,8 +132,8 @@ export class Sprite extends Shape<PersonalAttrs> {
       this.interval = undefined
     }
     /// / eslint-disable-next-line functional/immutable-data
-    // this.attrs.frameIndex =
-    //   ~~this.attrs.animations[this.attrs.animation].length / 4;
+    // this.$.frameIndex =
+    //   ~~this.$.animations[this.$.animation].length / 4;
     this._isRunning = false
   }
 

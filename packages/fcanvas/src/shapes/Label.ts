@@ -33,11 +33,7 @@ export class Label extends Group<Tag | Text> {
 
     if (text && tag) {
       const { width, height } = text[BOUNCE_CLIENT_RECT].value
-      const {
-        pointerDirection,
-        pointerWidth = 20,
-        pointerHeight = 20
-      } = tag.attrs
+      const { pointerDirection, pointerWidth = 20, pointerHeight = 20 } = tag.$
 
       // eslint-disable-next-line functional/no-let
       let x = 0
@@ -64,18 +60,18 @@ export class Label extends Group<Tag | Text> {
       }
 
       // eslint-disable-next-line functional/immutable-data
-      tag.attrs.x = -x
+      tag.$.x = -x
       // eslint-disable-next-line functional/immutable-data
-      tag.attrs.y = -y
+      tag.$.y = -y
       // eslint-disable-next-line functional/immutable-data
-      tag.attrs.width = width
+      tag.$.width = width
       // eslint-disable-next-line functional/immutable-data
-      tag.attrs.height = height
+      tag.$.height = height
 
       // eslint-disable-next-line functional/immutable-data
-      text.attrs.x = -x
+      text.$.x = -x
       // eslint-disable-next-line functional/immutable-data
-      text.attrs.y = -y
+      text.$.y = -y
     }
   }
 }
