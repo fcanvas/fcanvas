@@ -1,1 +1,1 @@
-export const isDev = process.env.IS_BROWSER
+export const isDev = import.meta.env.IS_BROWSER
