@@ -1,4 +1,4 @@
-import type { Offset } from "../../types/Offset"
+import type { Offset } from "../../type/Offset"
 import { convertEndpointToCenterParameterization } from "../convertEndpointToCenterParameterization"
 
 import { calcLength } from "./calcLength"
