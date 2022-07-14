@@ -156,8 +156,8 @@ export async function loadTiles<TileNames extends string>(
   const promiseLoadTile = tileSrc
     ? loadImage(tileSrc)
     : loadImage(
-        join(plistSrc, getTextureFileName((await promiseLoadPlist).metadata))
-      )
+      join(plistSrc, getTextureFileName((await promiseLoadPlist).metadata))
+    )
 
   const [plist, tile] = await Promise.all([promiseLoadPlist, promiseLoadTile])
 
