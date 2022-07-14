@@ -22,6 +22,7 @@ type PersonalAttrs = DrawLayerAttrs & {
   container?: string
   visible?: boolean
   opacity?: number
+  autoDraw?: boolean
 }
 
 export class Stage extends APIChildNode<
@@ -136,7 +137,7 @@ export class Stage extends APIChildNode<
     super.add(...nodes)
     nodes.forEach((node) => {
       this[DIV_CONTAINER].appendChild(node[CANVAS_ELEMENT])
-      node.batchDraw()
+      if (this.$.autoDraw !== false) node.batchDraw()
     })
   }
 
