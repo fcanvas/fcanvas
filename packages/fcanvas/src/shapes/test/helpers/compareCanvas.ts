@@ -1,7 +1,8 @@
-export function compareCanvas(
-  cv1: HTMLCanvasElement,
-  cv2: HTMLCanvasElement
-): boolean {
+import type { Layer } from "../../../Layer"
+import { CANVAS_ELEMENT } from "../../../symbols"
+
+export function compareCanvas(layer: Layer, cv2: HTMLCanvasElement): boolean {
+  const cv1 = layer[CANVAS_ELEMENT]
   const ctx1 = cv1.getContext("2d")
   const ctx2 = cv2.getContext("2d")
   if (!ctx1 || !ctx2) return false
