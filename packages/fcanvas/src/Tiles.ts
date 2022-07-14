@@ -1,7 +1,9 @@
+import normalize from "path-normalize"
 import { parse } from "plist"
 
 import { cropImage } from "./methods/cropImage"
-import { loadImage } from "./methods/loadImage"
+import { getFetch, loadFetch } from "./methods/loadFetch"
+import { getImage, loadImage } from "./methods/loadImage"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
 
@@ -60,9 +62,20 @@ export class Tiles<TileNames extends string> {
   #tile: HTMLImageElement
   #cache = new Map<TileNames, CanvasImageResource>()
 
-  constructor(plist: Plist<TileNames>, tile: HTMLImageElement) {
-    this.#plist = plist
-    this.#tile = tile
+  constructor(
+    plist: Plist<TileNames> | string,
+    tile?: HTMLImageElement | string
+  ) {
+    this.#plist =
+      typeof plist === "string"
+        ? (parse(getFetch(plist)) as unknown as Plist<TileNames>)
+        : plist
+
+    tile ??=
+      this.#plist.metadata.realTextureFileName ||
+      this.#plist.metadata.textureFileName
+
+    this.#tile = typeof tile === "string" ? getImage(tile) : tile
   }
 
   public get(name: TileNames): CanvasImageResource {
@@ -122,33 +135,31 @@ export class Tiles<TileNames extends string> {
   }
 }
 
+function join(p1: string, p2: string): string {
+  if (p2.includes("://")) return p2
+
+  // const
+
+  return normalize(p1 + "/../" + p2)
+}
+function getTextureFileName(metadata: Plist<string>["metadata"]): string {
+  return metadata.realTextureFileName ?? metadata.textureFileName
+}
+
 export async function loadTiles<TileNames extends string>(
   plistSrc: string,
   tileSrc?: string
 ): Promise<Tiles<TileNames>> {
-  // eslint-disable-next-line functional/no-let
-  let plist: Plist<TileNames>, tile: HTMLImageElement
-  if (tileSrc) {
-    ;[plist, tile] = await Promise.all([
-      fetch(plistSrc)
-        .then((res) => res.text())
-        .then(parse) as Promise<Plist<TileNames>>,
-      loadImage(tileSrc)
-    ])
-  } else {
-    plist = (await fetch(plistSrc)
-      .then((res) => res.text())
-      .then(parse)) as Plist<TileNames>
-    tile = await loadImage(
-      plistSrc
-        .split("/")
-        .filter((item) => /[^\s]/.test(item))
-        .slice(0, -1)
-        .join("/") +
-        "/" +
-        plist.metadata.realTextureFileName || plist.metadata.textureFileName
-    )
-  }
+  const promiseLoadPlist = loadFetch(plistSrc).then(parse) as Promise<
+    Plist<TileNames>
+  >
+  const promiseLoadTile = tileSrc
+    ? loadImage(tileSrc)
+    : loadImage(
+        join(plistSrc, getTextureFileName((await promiseLoadPlist).metadata))
+      )
+
+  const [plist, tile] = await Promise.all([promiseLoadPlist, promiseLoadTile])
 
   return new Tiles(plist, tile)
 }
