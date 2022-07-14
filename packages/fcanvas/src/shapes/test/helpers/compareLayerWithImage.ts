@@ -1,7 +1,6 @@
 import type { Image } from "canvas"
 
 import type { Layer } from "../../../Layer"
-import { CANVAS_ELEMENT } from "../../../symbols"
 
 import { compareCanvas } from "./compareCanvas"
 import { loadImageFromSystem } from "./loadImageFromSystem"
@@ -22,7 +21,7 @@ function createCanvasDrawImage(image: Image) {
 
 export async function compareLayerWithImage(layer: Layer, path: string) {
   return compareCanvas(
-    createCanvasDrawImage(await loadImageFromSystem(path)),
-    layer[CANVAS_ELEMENT]
+    layer,
+    createCanvasDrawImage(await loadImageFromSystem(path))
   )
 }

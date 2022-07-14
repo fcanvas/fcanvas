@@ -414,6 +414,10 @@ export class Shape<
     return rect
   }
 
+  public getBoundingClientRect() {
+    return this[BOUNCE_CLIENT_RECT].value
+  }
+
   // or context cache or context draw
 
   private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
