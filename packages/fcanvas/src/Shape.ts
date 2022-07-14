@@ -14,6 +14,7 @@ import { createTransform } from "./helpers/createTransform"
 import { existsTransform } from "./helpers/existsTransform"
 import { pointInBox } from "./helpers/pointInBox"
 import { transformedRect } from "./helpers/transformerRect"
+import { getImage } from "./methods/loadImage"
 import {
   BOUNCE_CLIENT_RECT,
   COMPUTED_CACHE,
@@ -38,7 +39,7 @@ function getFillPriority(
     Pick<
       CommonShapeAttrs,
       | "fillPriority"
-      | "fillPatternImage"
+      | "fillPattern"
       | "fillLinearGradient"
       | "fillRadialGradient"
     >
@@ -47,7 +48,7 @@ function getFillPriority(
   if (attrs.fillPriority)
     return attrs.fillPriority as FillModeMixture["fillPriority"]
 
-  if (attrs.fillPatternImage !== undefined) return "pattern"
+  if (attrs.fillPattern) return "pattern"
 
   if (attrs.fillLinearGradient !== undefined) return "linear-gradient"
 
@@ -103,7 +104,8 @@ function isCentroid(obj: any): boolean {
 }
 
 export class Shape<
-  PersonalAttrs extends Record<string, unknown> = Record<string, unknown>
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  PersonalAttrs extends Record<string, unknown> = {}
 > extends APIEvent<CommonShapeEvents> {
   static readonly type: string = "Shape"
   static readonly _centroid: boolean = false
@@ -238,11 +240,12 @@ export class Shape<
         style = this.$.fill
         break
       case "pattern":
-        if (this.$.fillPatternImage !== undefined) {
+        if (this.$.fillPattern) {
+          const { image } = this.$.fillPattern
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           style = context.createPattern(
-            this.$.fillPatternImage,
-            this.$.fillPattern?.repeat ?? "repeat"
+            typeof image === "string" ? getImage(image) : image,
+            this.$.fillPattern?.repeat ?? null
           )!
           if (this.$.fillPattern && existsTransform(this.$.fillPattern, true))
             style.setTransform(createTransform(this.$.fillPattern, true))
