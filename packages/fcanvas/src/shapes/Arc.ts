@@ -18,11 +18,9 @@ export class Arc extends Shape<PersonalAttrs> {
     const angle = convertToRadial(this.$.angle ?? 360)
 
     context.arc(0, 0, this.$.outerRadius, 0, angle, this.$.clockwise)
-    this.fillStrokeScene(context)
+    context.arc(0, 0, this.$.innerRadius, angle, 0, !this.$.clockwise)
     context.closePath()
 
-    context.beginPath()
-    context.arc(0, 0, this.$.innerRadius, angle, 0, !this.$.clockwise)
     this.fillStrokeScene(context)
   }
 
