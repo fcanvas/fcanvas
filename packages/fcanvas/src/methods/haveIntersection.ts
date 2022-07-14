@@ -1,10 +1,12 @@
-import type { Shape } from "../Shape"
 import { BOUNCE_CLIENT_RECT } from "../symbols"
+import type { Rect } from "../type/Rect"
 
-export function haveIntersection(
-  el1: Pick<Shape, typeof BOUNCE_CLIENT_RECT>,
-  el2: Pick<Shape, typeof BOUNCE_CLIENT_RECT>
-): boolean {
+interface Box {
+  [BOUNCE_CLIENT_RECT]: {
+    value: Rect
+  }
+}
+export function haveIntersection(el1: Box, el2: Box): boolean {
   const r1 = el1[BOUNCE_CLIENT_RECT].value
   const r2 = el2[BOUNCE_CLIENT_RECT].value
 
