@@ -8,7 +8,18 @@ function loadFetch(url: string, get: false): string
 function loadFetch(url: string, get = false): Promise<string> | string {
   if (get) return getFetch(url)
 
-  return fetch(url).then((res) => res.text())
+  const key = normalize(url)
+  const inCache = fetchMap.get(key)
+
+  if (inCache) return Promise.resolve(inCache)
+
+  return fetch(url)
+    .then((res) => res.text())
+    .then((text) => {
+      fetchMap.set(key, text)
+
+      return text
+    })
 }
 
 export { loadFetch }

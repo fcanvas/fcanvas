@@ -11,11 +11,16 @@ function loadImage(
 ): Promise<HTMLImageElement> | HTMLImageElement {
   if (get) return getImage(url)
 
+  const key = normalize(url)
+  const inCache = imageMap.get(key)
+
+  if (inCache) return Promise.resolve(inCache)
+
   const img = new Image()
 
   return new Promise((resolve, reject) => {
     function done() {
-      imageMap.set(normalize(url), img)
+      imageMap.set(key, img)
       resolve(img)
       img.removeEventListener("load", done)
       img.removeEventListener("error", fail)
