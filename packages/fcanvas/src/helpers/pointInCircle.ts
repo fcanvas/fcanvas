@@ -5,6 +5,6 @@ export function pointInCircle(
   y: number,
   r: number
 ): boolean {
-  const distancesquared = (x0 - x) ** 2 + (y0 - y) ** 2
-  return distancesquared <= r ** 2
+  const distance = (x0 - x) ** 2 + (y0 - y) ** 2
+  return distance <= r ** 2
 }
