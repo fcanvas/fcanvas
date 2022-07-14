@@ -3,8 +3,10 @@ import normalize from "path-normalize"
 // cache
 const fetchMap = new Map<string, string>()
 function loadFetch(url: string, get?: true): Promise<string>
+// eslint-disable-next-line no-redeclare
 function loadFetch(url: string, get: false): string
 
+// eslint-disable-next-line no-redeclare
 function loadFetch(url: string, get = false): Promise<string> | string {
   if (get) return getFetch(url)
 
