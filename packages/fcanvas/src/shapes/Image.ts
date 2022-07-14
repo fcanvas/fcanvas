@@ -1,10 +1,14 @@
 import { Shape } from "../Shape"
-import { loadImage } from "../methods/loadImage"
+import { getImage, loadImage } from "../methods/loadImage"
 import type { Rect } from "../type/Rect"
+import { ComputedRef, reactive, computed } from "@vue/reactivity"
+import { SCOPE } from "../symbols"
+import { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import { ReactiveType } from "../type/fn/ReactiveType"
 
 type PersonalAttrs = {
   // eslint-disable-next-line no-undef
-  image: CanvasImageSource
+  image: CanvasImageSource | string
   crop?: Rect
 } & Partial<{
   width: number
@@ -21,10 +25,12 @@ export class Image extends Shape<PersonalAttrs> {
   static readonly type = "Image"
   static readonly fromURL = loadImage
 
+  private readonly _image: ComputedRef<CanvasImageSource>
+
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     if (this.$.crop) {
       context.drawImage(
-        this.$.image,
+        this._image.value,
         this.$.crop.x,
         this.$.crop.y,
         this.$.crop.width,
@@ -35,11 +41,37 @@ export class Image extends Shape<PersonalAttrs> {
         this.$.height ?? this.$.crop.height
       )
     } else if (this.$.width !== undefined && this.$.height !== undefined) {
-      context.drawImage(this.$.image, 0, 0, this.$.width, this.$.height)
+      context.drawImage(this._image.value, 0, 0, this.$.width, this.$.height)
     } else {
-      context.drawImage(this.$.image, 0, 0)
+      context.drawImage(this._image.value, 0, 0)
     }
     this.fillStrokeScene(context)
+  }
+
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+        ) => void
+      } & ThisType<Text>
+    >
+  ) {
+    super(attrs)
+
+    this[SCOPE].on()
+
+    this._image = computed<CanvasImageSource>(() => {
+      const { image } = this.$
+
+      if (typeof image === "string") {
+        return getImage(image)
+      }
+
+      return image
+    })
+
+    this[SCOPE].off()
   }
 
   protected getSize() {
@@ -47,11 +79,11 @@ export class Image extends Shape<PersonalAttrs> {
       width:
         this.$.width ??
         this.$.crop?.width ??
-        getValFromSource(this.$.image.width),
+        getValFromSource(this._image.value.width),
       height:
         this.$.height ??
         this.$.crop?.height ??
-        getValFromSource(this.$.image.height)
+        getValFromSource(this._image.value.height)
     }
   }
 }

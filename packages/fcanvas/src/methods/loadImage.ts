@@ -2,8 +2,15 @@ import normalize from "path-normalize"
 
 // cache
 const imageMap = new Map<string, HTMLImageElement>()
+function loadImage(url: string, get?: true): Promise<HTMLImageElement>
+function loadImage(url: string, get: false): HTMLImageElement
 
-export function loadImage(url: string): Promise<HTMLImageElement> {
+function loadImage(
+  url: string,
+  get = false
+): Promise<HTMLImageElement> | HTMLImageElement {
+  if (get) return getImage(url)
+
   const img = new Image()
 
   return new Promise((resolve, reject) => {
@@ -27,6 +34,8 @@ export function loadImage(url: string): Promise<HTMLImageElement> {
     img.src = url
   })
 }
+
+export { loadImage }
 export function getImage(url: string): HTMLImageElement {
   if (!imageMap.has(normalize(url)))
     // eslint-disable-next-line functional/no-throw-statement
