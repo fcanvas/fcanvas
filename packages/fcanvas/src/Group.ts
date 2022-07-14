@@ -66,6 +66,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
 
     this.$ = reactive(attrs)
 
+    this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
       const ctx = this[CONTEXT_CACHE]
@@ -76,7 +77,6 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
       return false
     })
 
-    this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[CONTEXT_CACHE_SIZE] = computed(() => {
       const useConfig =
         this.$.width !== undefined && this.$.height !== undefined

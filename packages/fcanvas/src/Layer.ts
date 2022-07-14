@@ -141,6 +141,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       canvas.style.display = "none"
     })
 
+    this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       const ctx = this[CONTEXT_CACHE]
 
@@ -150,8 +151,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
       return false
     })
-
-    this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
 
     // try watchEffect
     watchEffect(

@@ -169,6 +169,7 @@ export class Shape<
 
     this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
 
+    this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
       if (this.$.perfectDrawEnabled !== false) {
@@ -181,7 +182,6 @@ export class Shape<
       return false
     })
 
-    this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[CONTEXT_CACHE_SIZE] = computed(() => {
       const { width, height } = this[BOUNCE_CLIENT_RECT].value
       const adjust = (this.$.strokeWidth ?? 1) * 2
@@ -260,8 +260,8 @@ export class Shape<
             fillLinearGradient.end.x,
             fillLinearGradient.end.y
           )
-          fillLinearGradient.colorStops.forEach(([color, point]) => {
-            ;(style as CanvasGradient).addColorStop(color, point)
+          fillLinearGradient.colorStops.forEach(([point, color]) => {
+            ;(style as CanvasGradient).addColorStop(point, color)
           })
         }
         break
