@@ -1,26 +1,28 @@
 import { Shape } from "../Shape"
 import { cropImage } from "../methods/cropImage"
+import { computed, ComputedRef, reactive, Ref, ref } from "@vue/reactivity"
+import { SCOPE } from "../symbols"
+import { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import { ReactiveType } from "../type/fn/ReactiveType"
+import { watch } from "@vue-reactivity/watch"
 
+type AnimationFrames = {
+  frames: number[]
+  /**
+   * @default: 0
+   * */
+
+  frameIndex?: number
+  /**
+   * @default: 17
+   * */
+
+  frameRate?: number
+}
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PersonalAttrs = {
   image: HTMLImageElement
-  animations: Record<
-    string,
-    | number[]
-    | {
-        frames: number[]
-        /**
-         * @default: 0
-         * */
-
-        frameIndex?: number
-        /**
-         * @default: 17
-         * */
-
-        frameRate?: number
-      }
-  >
+  animations: Record<string, number[] | AnimationFrames>
   animation: string
   frameIndex?: number // 0
   frameRate?: number // 17
@@ -30,55 +32,93 @@ type PersonalAttrs = {
 export class Sprite extends Shape<PersonalAttrs> {
   static readonly type = "Sprite"
 
-  private readonly cropImageCache = new Map<
-    string,
-    Map<number, HTMLCanvasElement>
-  >()
+  private readonly cropImageCache: Map<string, HTMLCanvasElement> = new Map()
+  private readonly currentFrames: ComputedRef<
+    Exclude<AnimationFrames, string[]>
+  >
+  private readonly frames: ComputedRef<HTMLCanvasElement[]>
+  private readonly currentFrameIndex: Ref<number>
+  private readonly currentFrame: ComputedRef<HTMLCanvasElement>
 
-  private interval?: number
+  private _running: boolean = false
+  private _interval?: ReturnType<typeof setInterval>
 
-  private _isRunning = false
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+        ) => void
+      } & ThisType<Text>
+    >
+  ) {
+    super(attrs)
 
-  private get _anim(): typeof this.$.animations["*"] {
-    return this.$.animations[this.$.animation]
+    this[SCOPE].on()
+
+    this.currentFrames = computed<Exclude<AnimationFrames, string[]>>(() => {
+      const frames = this.$.animations[this.$.animation]
+
+      if (Array.isArray(frames))
+        return {
+          frames,
+          frameIndex: this.$.frameIndex,
+          frameRate: this.$.frameRate
+        }
+
+      return {
+        frameIndex: this.$.frameIndex,
+        frameRate: this.$.frameRate,
+        ...frames
+      }
+    })
+    this.frames = computed<HTMLCanvasElement[]>(() => {
+      const groups = []
+      const { frames } = this.currentFrames.value
+      for (let i = 0; i < frames.length; i += 4) {
+        groups.push(
+          this.getFrame(frames[i], frames[i + 1], frames[i + 2], frames[i + 3])
+        )
+      }
+
+      return groups
+    })
+    this.currentFrameIndex = ref(this.currentFrames.value.frameIndex ?? 0)
+    watch(
+      () => this.currentFrames.value.frameIndex ?? 0,
+      (value) => {
+        this.currentFrameIndex.value = value
+      }
+    )
+    this.currentFrame = computed<HTMLCanvasElement>(() => {
+      return this.frames.value[this.currentFrameIndex.value]
+    })
+
+    this[SCOPE].off()
   }
 
-  private get _frames(): readonly number[] {
-    return "frames" in this._anim ? this._anim.frames : this._anim
+  get animation() {
+    return this.$.animation
+  }
+  set animation(value: string) {
+    this.$.animation = value
   }
 
-  private get frameIndex(): number {
-    const _frameIndex = this.$.frameIndex ?? 0
+  private getFrame(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): HTMLCanvasElement {
+    const key = `${x}.${y}.${width}.${height}`
 
-    const frameLength = ~~this._frames.length / 4
-    const frameIndex =
-      _frameIndex > frameLength
-        ? (_frameIndex % frameLength) - 1
-        : _frameIndex < 0
-          ? frameLength + _frameIndex + 1
-          : _frameIndex
-
-    return frameIndex
-  }
-
-  private createCropImage(): HTMLCanvasElement {
-    const indexStart = this.frameIndex * 4
-    const cropImageInCache = this.cropImageCache
-      .get(this.$.animation)
-      ?.get(indexStart)
+    const cropImageInCache = this.cropImageCache.get(key)
 
     if (cropImageInCache) return cropImageInCache
 
-    if (!this.cropImageCache.has(this.$.animation))
-      this.cropImageCache.set(this.$.animation, new Map())
+    const cropImageNow = cropImage(this.$.image, x, y, width, height)
 
-    const cropImageNow = cropImage(
-      this.$.image,
-      ...this._frames.slice(indexStart, indexStart + 4)
-    )
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.cropImageCache.get(this.$.animation)!.set(indexStart, cropImageNow)
+    this.cropImageCache.set(key, cropImageNow)
 
     return cropImageNow
   }
@@ -92,58 +132,43 @@ export class Sprite extends Shape<PersonalAttrs> {
       this.fillStrokeScene(context)
     }
 
-    const crop = this.createCropImage()
-    context.drawImage(crop, 0, 0)
-  }
-
-  public animation(name: string) {
-    // eslint-disable-next-line functional/immutable-data
-    this.$.animation = name
+    context.drawImage(this.currentFrame.value, 0, 0)
   }
 
   public start(): void {
-    if (this._isRunning) return
+    if (this._running) return
 
-    this._isRunning = true
-    this.interval = setInterval(() => {
-      const { frameIndex } = this
-      const countFrame = ~~this._frames.length / 4
+    this._running = true
 
-      if (this.$.infinite !== false && this.$.frameIndex === countFrame - 1) {
-        // last frame repeat -> reset;
-        // eslint-disable-next-line functional/immutable-data
-        this.$.frameIndex = 0
+    this._interval = setInterval(() => {
+      const frameEnd =
+        this.currentFrameIndex.value >= this.frames.value.length - 1
+
+      if (frameEnd) {
+        if (this.$.infinite !== false) {
+          this.currentFrameIndex.value = 0
+        } else {
+          this.stop()
+        }
+
         return
       }
-      if (this.$.infinite === false && frameIndex === countFrame - 2) {
-        // this frame last
-        this.stop()
-      }
 
-      // eslint-disable-next-line functional/immutable-data
-      this.$.frameIndex = frameIndex + 1
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }, 1000 / ((this._anim as any).frameRate ?? this.$.frameRate ?? 17)) as unknown as number
+      this.currentFrameIndex.value++
+    }, 1000 / (this.currentFrames.value.frameRate ?? 17))
   }
 
   public stop(): void {
-    if (this.interval) {
-      clearInterval(this.interval)
-      this.interval = undefined
+    if (this._interval) {
+      clearInterval(this._interval)
+      this._interval = undefined
     }
-    /// / eslint-disable-next-line functional/immutable-data
-    // this.$.frameIndex =
-    //   ~~this.$.animations[this.$.animation].length / 4;
-    this._isRunning = false
-  }
 
-  public isRunning() {
-    return this._isRunning
+    this._running = false
   }
 
   protected getSize() {
-    const indexStart = this.frameIndex * 4
-    const [width, height] = this._frames.slice(indexStart + 2, indexStart + 4)
+    const { width, height } = this.currentFrame.value
 
     return {
       width,
