@@ -5,6 +5,7 @@ import { SCOPE } from "../symbols"
 import { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import { ReactiveType } from "../type/fn/ReactiveType"
 import { watch } from "@vue-reactivity/watch"
+import { getImage } from "../auto-export"
 
 type AnimationFrames = {
   frames: number[]
@@ -21,7 +22,7 @@ type AnimationFrames = {
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PersonalAttrs = {
-  image: HTMLImageElement
+  image: CanvasImageSource | string
   animations: Record<string, number[] | AnimationFrames>
   animation: string
   frameIndex?: number // 0
@@ -32,6 +33,7 @@ type PersonalAttrs = {
 export class Sprite extends Shape<PersonalAttrs> {
   static readonly type = "Sprite"
 
+  private readonly _image: ComputedRef<CanvasImageSource>
   private readonly cropImageCache: Map<string, HTMLCanvasElement> = new Map()
   private readonly currentFrames: ComputedRef<
     Exclude<AnimationFrames, string[]>
@@ -56,6 +58,15 @@ export class Sprite extends Shape<PersonalAttrs> {
 
     this[SCOPE].on()
 
+    this._image = computed<CanvasImageSource>(() => {
+      const { image } = this.$
+
+      if (typeof image === "string") {
+        return getImage(image)
+      }
+
+      return image
+    })
     this.currentFrames = computed<Exclude<AnimationFrames, string[]>>(() => {
       const frames = this.$.animations[this.$.animation]
 
@@ -116,7 +127,7 @@ export class Sprite extends Shape<PersonalAttrs> {
 
     if (cropImageInCache) return cropImageInCache
 
-    const cropImageNow = cropImage(this.$.image, x, y, width, height)
+    const cropImageNow = cropImage(this._image.value, x, y, width, height)
 
     this.cropImageCache.set(key, cropImageNow)
 
