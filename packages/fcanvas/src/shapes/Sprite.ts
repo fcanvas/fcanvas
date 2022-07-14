@@ -1,13 +1,15 @@
-import { Shape } from "../Shape"
-import { cropImage } from "../methods/cropImage"
-import { computed, ComputedRef, reactive, Ref, ref } from "@vue/reactivity"
-import { SCOPE } from "../symbols"
-import { CommonShapeAttrs } from "../type/CommonShapeAttrs"
-import { ReactiveType } from "../type/fn/ReactiveType"
 import { watch } from "@vue-reactivity/watch"
-import { getImage } from "../auto-export"
+import type { ComputedRef, reactive, Ref } from "@vue/reactivity"
+import { computed, ref } from "@vue/reactivity"
 
-type AnimationFrames = {
+import { Shape } from "../Shape"
+import { getImage } from "../auto-export"
+import { cropImage } from "../methods/cropImage"
+import { SCOPE } from "../symbols"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { ReactiveType } from "../type/fn/ReactiveType"
+
+interface AnimationFrames {
   frames: number[]
   /**
    * @default: 0
@@ -22,6 +24,7 @@ type AnimationFrames = {
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PersonalAttrs = {
+  // eslint-disable-next-line no-undef
   image: CanvasImageSource | string
   animations: Record<string, number[] | AnimationFrames>
   animation: string
@@ -33,16 +36,18 @@ type PersonalAttrs = {
 export class Sprite extends Shape<PersonalAttrs> {
   static readonly type = "Sprite"
 
+  // eslint-disable-next-line no-undef
   private readonly _image: ComputedRef<CanvasImageSource>
   private readonly cropImageCache: Map<string, HTMLCanvasElement> = new Map()
   private readonly currentFrames: ComputedRef<
     Exclude<AnimationFrames, string[]>
   >
+
   private readonly frames: ComputedRef<HTMLCanvasElement[]>
   private readonly currentFrameIndex: Ref<number>
   private readonly currentFrame: ComputedRef<HTMLCanvasElement>
 
-  private _running: boolean = false
+  private _running = false
   private _interval?: ReturnType<typeof setInterval>
 
   constructor(
@@ -58,24 +63,25 @@ export class Sprite extends Shape<PersonalAttrs> {
 
     this[SCOPE].on()
 
+    // eslint-disable-next-line no-undef
     this._image = computed<CanvasImageSource>(() => {
       const { image } = this.$
 
-      if (typeof image === "string") {
+      if (typeof image === "string")
         return getImage(image)
-      }
 
       return image
     })
     this.currentFrames = computed<Exclude<AnimationFrames, string[]>>(() => {
       const frames = this.$.animations[this.$.animation]
 
-      if (Array.isArray(frames))
+      if (Array.isArray(frames)) {
         return {
           frames,
           frameIndex: this.$.frameIndex,
           frameRate: this.$.frameRate
         }
+      }
 
       return {
         frameIndex: this.$.frameIndex,
@@ -86,6 +92,7 @@ export class Sprite extends Shape<PersonalAttrs> {
     this.frames = computed<HTMLCanvasElement[]>(() => {
       const groups = []
       const { frames } = this.currentFrames.value
+      // eslint-disable-next-line functional/no-let
       for (let i = 0; i < frames.length; i += 4) {
         groups.push(
           this.getFrame(frames[i], frames[i + 1], frames[i + 2], frames[i + 3])
@@ -111,7 +118,9 @@ export class Sprite extends Shape<PersonalAttrs> {
   get animation() {
     return this.$.animation
   }
+
   set animation(value: string) {
+    // eslint-disable-next-line functional/immutable-data
     this.$.animation = value
   }
 
@@ -156,15 +165,16 @@ export class Sprite extends Shape<PersonalAttrs> {
         this.currentFrameIndex.value >= this.frames.value.length - 1
 
       if (frameEnd) {
-        if (this.$.infinite !== false) {
+        if (this.$.infinite !== false)
+          // eslint-disable-next-line functional/immutable-data
           this.currentFrameIndex.value = 0
-        } else {
+        else
           this.stop()
-        }
 
         return
       }
 
+      // eslint-disable-next-line functional/immutable-data
       this.currentFrameIndex.value++
     }, 1000 / (this.currentFrames.value.frameRate ?? 17))
   }
