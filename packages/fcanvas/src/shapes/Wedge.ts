@@ -1,12 +1,18 @@
+import type { reactive } from "@vue/reactivity"
+
 import { Shape } from "../Shape"
 import { convertToDegrees } from "../helpers/convertToDegrees"
 import { pointInCircle } from "../helpers/pointInCircle"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { ReactiveType } from "../type/fn/ReactiveType"
 
-export class Wedge extends Shape<{
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type PersonalAttrs = {
   angle: number
   radius: number
   clockwise?: boolean
-}> {
+}
+export class Wedge extends Shape<PersonalAttrs> {
   static readonly type = "Wedge"
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
@@ -20,6 +26,19 @@ export class Wedge extends Shape<{
     )
     context.lineTo(0, 0)
     this.fillStrokeScene(context)
+  }
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+        ) => void
+      } & ThisType<Wedge>
+    >
+  ) {
+    super(attrs)
   }
 
   protected getSize() {

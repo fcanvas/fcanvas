@@ -57,7 +57,7 @@ export class Image extends Shape<PersonalAttrs> {
         setup?: (
           attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
         ) => void
-      } & ThisType<Text>
+      } & ThisType<Image>
     >
   ) {
     super(attrs)

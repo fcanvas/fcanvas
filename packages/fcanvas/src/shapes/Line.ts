@@ -1,4 +1,8 @@
+import type { reactive } from "@vue/reactivity"
+
 import { Shape } from "../Shape"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { ReactiveType } from "../type/fn/ReactiveType"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type PersonalAttrs = {
@@ -130,6 +134,19 @@ export class Line<P extends PersonalAttrs = PersonalAttrs> extends Shape<P> {
     // closed e.g. polygons and blobs
     if (closed) this.strokeScene(context)
     else this.fillStrokeScene(context)
+  }
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<P> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<P>>>
+        ) => void
+      } & ThisType<Line<P>>
+    >
+  ) {
+    super(attrs)
   }
 
   protected getTensionPoints() {

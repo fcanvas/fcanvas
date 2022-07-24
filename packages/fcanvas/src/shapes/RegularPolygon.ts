@@ -1,10 +1,16 @@
+import type { reactive } from "@vue/reactivity"
+
 import { Shape } from "../Shape"
 import { pointInPolygon } from "../helpers/pointInPolygon"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { ReactiveType } from "../type/fn/ReactiveType"
 
-export class RegularPolygon extends Shape<{
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type PersonalAttrs = {
   sides: number
   radius: number
-}> {
+}
+export class RegularPolygon extends Shape<PersonalAttrs> {
   static readonly type = "RegularPolygon"
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
@@ -17,6 +23,19 @@ export class RegularPolygon extends Shape<{
       context.lineTo(points[n].x, points[n].y)
 
     this.fillStrokeScene(context)
+  }
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+        ) => void
+      } & ThisType<RegularPolygon>
+    >
+  ) {
+    super(attrs)
   }
 
   private getPoints() {

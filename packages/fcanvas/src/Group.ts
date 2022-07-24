@@ -16,6 +16,7 @@ import {
   DRAW_CONTEXT_ON_SANDBOX,
   SCOPE
 } from "./symbols"
+import type { CommonShapeAttrs } from "./type/CommonShapeAttrs"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
 import type { ReactiveType } from "./type/fn/ReactiveType"
@@ -60,7 +61,13 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     stop: () => void
   }
 
-  constructor(attrs: ReactiveType<PersonalAttrs> = {}) {
+  constructor(
+    attrs: ReactiveType<PersonalAttrs> & {
+      setup?: (
+        attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+      ) => void
+    } & ThisType<Group> = {}
+  ) {
     super()
     this[SCOPE].on()
 
