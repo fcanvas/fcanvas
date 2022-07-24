@@ -18,7 +18,10 @@ function onMouseDown(
   cb?: (event: MouseEvent | TouchEvent) => void
 ) {
   if (cb === undefined) {
-    ;[target, cb] = [getCurrentShape(), target as (event: MouseEvent | TouchEvent) => void]
+    ;[target, cb] = [
+      getCurrentShape(),
+      target as (event: MouseEvent | TouchEvent) => void
+    ]
   }
 
   addEvents(
