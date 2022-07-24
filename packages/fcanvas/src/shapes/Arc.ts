@@ -1,6 +1,10 @@
+import type { reactive } from "@vue/reactivity"
+
 import { Shape } from "../Shape"
 import { convertToRadial } from "../helpers/convertToRadial"
 import { pointInCircle } from "../helpers/pointInCircle"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { ReactiveType } from "../type/fn/ReactiveType"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type PersonalAttrs = {
@@ -22,6 +26,19 @@ export class Arc extends Shape<PersonalAttrs> {
     context.closePath()
 
     this.fillStrokeScene(context)
+  }
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+        ) => void
+      } & ThisType<Arc>
+    >
+  ) {
+    super(attrs)
   }
 
   protected getSize() {

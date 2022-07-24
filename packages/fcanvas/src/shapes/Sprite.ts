@@ -56,7 +56,7 @@ export class Sprite extends Shape<PersonalAttrs> {
         setup?: (
           attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
         ) => void
-      } & ThisType<Text>
+      } & ThisType<Sprite>
     >
   ) {
     super(attrs)
