@@ -68,8 +68,7 @@ export class Image extends Shape<PersonalAttrs> {
     this._image = computed<CanvasImageSource>(() => {
       const { image } = this.$
 
-      if (typeof image === "string")
-        return getImage(image)
+      if (typeof image === "string") return getImage(image)
 
       return image
     })

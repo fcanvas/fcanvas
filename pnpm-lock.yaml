@@ -69,12 +69,6 @@ importers:
       vite: 2.9.14
       vitest: 0.18.0_7ib2qpzthhgorh4c3acuauklcq
 
-  packages/fcanvas/src/shapes:
-    specifiers:
-      jsdom: ^20.0.0
-    devDependencies:
-      jsdom: 20.0.0
-
 packages:
 
   /@babel/code-frame/7.18.6:
@@ -3119,48 +3113,6 @@ packages:
     hasBin: true
     dependencies:
       argparse: 2.0.1
-    dev: true
-
-  /jsdom/20.0.0:
-    resolution: {integrity: sha512-x4a6CKCgx00uCmP+QakBDFXwjAJ69IkkIWHmtmjd3wvXPcdOS44hfX2vqkOQrVrq8l9DhNNADZRXaCEWvgXtVA==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      canvas: ^2.5.0
-    peerDependenciesMeta:
-      canvas:
-        optional: true
-    dependencies:
-      abab: 2.0.6
-      acorn: 8.7.1
-      acorn-globals: 6.0.0
-      cssom: 0.5.0
-      cssstyle: 2.3.0
-      data-urls: 3.0.2
-      decimal.js: 10.3.1
-      domexception: 4.0.0
-      escodegen: 2.0.0
-      form-data: 4.0.0
-      html-encoding-sniffer: 3.0.0
-      http-proxy-agent: 5.0.0
-      https-proxy-agent: 5.0.1
-      is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.1
-      parse5: 7.0.0
-      saxes: 6.0.0
-      symbol-tree: 3.2.4
-      tough-cookie: 4.0.0
-      w3c-hr-time: 1.0.2
-      w3c-xmlserializer: 3.0.0
-      webidl-conversions: 7.0.0
-      whatwg-encoding: 2.0.0
-      whatwg-mimetype: 3.0.0
-      whatwg-url: 11.0.0
-      ws: 8.8.0
-      xml-name-validator: 4.0.0
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
     dev: true
 
   /jsdom/20.0.0_canvas@2.9.3:

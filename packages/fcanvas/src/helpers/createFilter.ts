@@ -48,9 +48,7 @@ export function createFilter(options: OptionFilter): string {
 
   if (options.dropShadow !== undefined) {
     filter += ` drop-shadow(${options.dropShadow.x ?? 0}px ${
-
       options.dropShadow.y ?? 0
-
     }px ${options.dropShadow.blur ?? 0}px ${options.dropShadow.color})`
   }
   if (options.greyscale !== undefined)

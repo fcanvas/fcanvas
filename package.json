@@ -3,7 +3,7 @@
   "version": "1.0.5",
   "private": true,
   "scripts": {
-    "format": "prettier -w src packages",
+    "format": "prettier -w packages/*/src",
     "build": "pnpm -r --stream run build",
     "lint": "eslint packages --ext=.ts",
     "lint:fix": "pnpm lint --fix",

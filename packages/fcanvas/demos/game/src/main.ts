@@ -21,12 +21,9 @@ class Loader {
 
       const src = objSrc[key]
 
-      if (src.match(/\.mp3|\.ogg|\.wav/))
-        loads.push(loadAudio(src))
-      else if (src.match(/\.png|\.jpg|\.jpeg/))
-        loads.push(loadImage(src))
-      else if (src.match(/\.json/))
-        loads.push(loadJSON(src))
+      if (src.match(/\.mp3|\.ogg|\.wav/)) loads.push(loadAudio(src))
+      else if (src.match(/\.png|\.jpg|\.jpeg/)) loads.push(loadImage(src))
+      else if (src.match(/\.json/)) loads.push(loadJSON(src))
     }
 
     return Promise.all(loads).then((items) => {
@@ -254,15 +251,13 @@ class Mover extends Sprite {
       if (tilemap.getTileProperty(minX, y, "collide")) {
         left = true
 
-        if (this.vel.x < 0)
-          this.pos.x = minX * tw + tw - this.p1[0]
+        if (this.vel.x < 0) this.pos.x = minX * tw + tw - this.p1[0]
 
         break
       } else if (tilemap.getTileProperty(maxX, y, "collide")) {
         right = true
 
-        if (this.vel.x > 0)
-          this.pos.x = maxX * tw - this.p2[0]
+        if (this.vel.x > 0) this.pos.x = maxX * tw - this.p2[0]
 
         break
       }
@@ -290,8 +285,7 @@ class Mover extends Sprite {
         ) {
           top = true
 
-          if (this.vel.y < 0)
-            this.pos.y = minY * th + th - this.p1[1]
+          if (this.vel.y < 0) this.pos.y = minY * th + th - this.p1[1]
         }
       } else if (tilemap.getTileProperty(x, maxY, "collide")) {
         if (
@@ -301,8 +295,7 @@ class Mover extends Sprite {
         ) {
           bottom = true
 
-          if (this.vel.y > 0)
-            this.pos.y = maxY * th - this.p2[1]
+          if (this.vel.y > 0) this.pos.y = maxY * th - this.p2[1]
         }
       } else if (tilemap.getTileProperty(x, maxY, "lava")) {
         this.dead = true
@@ -312,8 +305,7 @@ class Mover extends Sprite {
     let [left2, right2] = [false, false]
 
     if (bottom) {
-      if (tilemap.getTileProperty(minX, maxY, "collide") == false)
-        left2 = true
+      if (tilemap.getTileProperty(minX, maxY, "collide") == false) left2 = true
       else if (tilemap.getTileProperty(maxX, maxY, "collide") == false)
         right2 = true
     }
@@ -326,23 +318,16 @@ class Mover extends Sprite {
 
     const [left, right] = this.collideX()
 
-    if (this.state[0] == -1 && left == false)
-      this.vel.x = -this.speed
-    else if (this.state[0] == 1 && right == false)
-      this.vel.x = this.speed
-    else
-      this.vel.x = 0
+    if (this.state[0] == -1 && left == false) this.vel.x = -this.speed
+    else if (this.state[0] == 1 && right == false) this.vel.x = this.speed
+    else this.vel.x = 0
 
-    if (this.state[1] && bottom)
-      this.vel.y = -this.jump
+    if (this.state[1] && bottom) this.vel.y = -this.jump
 
-    if (bottom == false)
-      this.vel.y += this.g * dt
-    else if (this.vel.y > 0)
-      this.vel.y = 0
+    if (bottom == false) this.vel.y += this.g * dt
+    else if (this.vel.y > 0) this.vel.y = 0
 
-    if (top && this.vel.y < 0)
-      this.vel.y = 0
+    if (top && this.vel.y < 0) this.vel.y = 0
 
     switch (this.state[0]) {
       case -1:
@@ -381,8 +366,7 @@ class Player extends Mover {
     if (bottom == false && this.getAnim() != "jump") {
       this.playAnim("jump", 10)
     } else if (bottom) {
-      if (this.state[0] && this.getAnim() != "run")
-        this.playAnim("run", 10)
+      if (this.state[0] && this.getAnim() != "run") this.playAnim("run", 10)
       else if (this.state[0] == 0 && this.getAnim() != "idle")
         this.playAnim("idle", 10)
     }
@@ -450,13 +434,10 @@ class Slime extends Mover {
   update(dt) {
     const collide = this.updateMovement(dt)
 
-    if (collide[0] || collide[4])
-      this.state[0] = 1
-    else if (collide[1] || collide[5])
-      this.state[0] = -1
+    if (collide[0] || collide[4]) this.state[0] = 1
+    else if (collide[1] || collide[5]) this.state[0] = -1
 
-    if (this.collide(player))
-      player.dead = true
+    if (this.collide(player)) player.dead = true
   }
 }
 
@@ -478,13 +459,10 @@ class Bat extends Mover {
   update(dt) {
     const collide = this.updateMovement(dt)
 
-    if (collide[0])
-      this.state[0] = 1
-    else if (collide[1])
-      this.state[0] = -1
+    if (collide[0]) this.state[0] = 1
+    else if (collide[1]) this.state[0] = -1
 
-    if (this.collide(player))
-      player.dead = true
+    if (this.collide(player)) player.dead = true
   }
 }
 
@@ -506,8 +484,7 @@ class Dragon extends Mover {
   }
 
   update(dt) {
-    if (this.anim.paused)
-      this.playAnim("dragon", 10)
+    if (this.anim.paused) this.playAnim("dragon", 10)
 
     if ((this.counter += dt) >= this.rate) {
       this.counter = 0
@@ -559,8 +536,7 @@ class Fireball extends Mover {
 
       this.playAnim("fireball2", 10, false)
 
-      if (this.collide(player))
-        player.dead = true
+      if (this.collide(player)) player.dead = true
     }
   }
 }
@@ -592,8 +568,7 @@ class Tilemap {
     if (tile.properties != undefined) {
       const property = tile.properties.find((prop) => prop.name == propName)
 
-      if (property != null)
-        return property.value
+      if (property != null) return property.value
     }
 
     return null
@@ -682,8 +657,7 @@ class Tilemap {
       if (tile.animation != undefined) {
         // if not exists -> init
 
-        if (this.anims[i] == undefined)
-          this.anims[i] = { frame: 0, counter: 0 }
+        if (this.anims[i] == undefined) this.anims[i] = { frame: 0, counter: 0 }
 
         // handle
 
@@ -777,13 +751,11 @@ const data = {
 function animate() {
   const current = performance.now()
 
-  if (!window.last)
-    last = current
+  if (!window.last) last = current
 
   let dt = (current - last) / (1000 / 60)
 
-  if (dt > 50)
-    dt = 0
+  if (dt > 50) dt = 0
 
   update(dt)
 
@@ -798,14 +770,12 @@ function update(dt) {
   for (let i = 0; i < fireballs.length; i++) {
     fireballs[i].update(dt)
 
-    if (fireballs[i].anim.paused)
-      fireballs.splice(i--, 1)
+    if (fireballs[i].anim.paused) fireballs.splice(i--, 1)
   }
 
   player.update(dt)
 
-  for (let i = 0; i < enemies.length; i++)
-    enemies[i].update(dt)
+  for (let i = 0; i < enemies.length; i++) enemies[i].update(dt)
 }
 
 function render(camera) {
@@ -815,13 +785,11 @@ function render(camera) {
 
   tilemap.display(camera)
 
-  for (let i = 0; i < fireballs.length; i++)
-    fireballs[i].display(camera)
+  for (let i = 0; i < fireballs.length; i++) fireballs[i].display(camera)
 
   player.display(camera)
 
-  for (let i = 0; i < enemies.length; i++)
-    enemies[i].display(camera)
+  for (let i = 0; i < enemies.length; i++) enemies[i].display(camera)
 }
 
 // main func

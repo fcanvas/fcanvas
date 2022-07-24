@@ -67,8 +67,7 @@ export class Sprite extends Shape<PersonalAttrs> {
     this._image = computed<CanvasImageSource>(() => {
       const { image } = this.$
 
-      if (typeof image === "string")
-        return getImage(image)
+      if (typeof image === "string") return getImage(image)
 
       return image
     })
@@ -168,8 +167,7 @@ export class Sprite extends Shape<PersonalAttrs> {
         if (this.$.infinite !== false)
           // eslint-disable-next-line functional/immutable-data
           this.currentFrameIndex.value = 0
-        else
-          this.stop()
+        else this.stop()
 
         return
       }
