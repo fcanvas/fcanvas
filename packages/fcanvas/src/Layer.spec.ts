@@ -1,4 +1,5 @@
-import { describe, test, expect } from "vitest"
+import { describe, expect, test } from "vitest"
+
 import { Layer } from "./Layer"
 import { Stage } from "./Stage"
 import { CANVAS_ELEMENT } from "./symbols"
