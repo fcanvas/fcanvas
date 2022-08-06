@@ -41,9 +41,9 @@ export class Stage extends APIChildNode<
   public readonly size: ReturnType<
     typeof reactive<Pick<Rect, "width" | "height">>
   > = reactive({
-    width: globalConfigs.defaultWidth,
-    height: globalConfigs.defaultHeight
-  })
+      width: globalConfigs.defaultWidth,
+      height: globalConfigs.defaultHeight
+    })
 
   private readonly [DIV_CONTAINER] = document.createElement("div")
 
