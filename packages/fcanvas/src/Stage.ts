@@ -41,9 +41,9 @@ export class Stage extends APIChildNode<
   public readonly size: ReturnType<
     typeof reactive<Pick<Rect, "width" | "height">>
   > = reactive({
-      width: globalConfigs.defaultWidth,
-      height: globalConfigs.defaultHeight
-    })
+    width: globalConfigs.defaultWidth,
+    height: globalConfigs.defaultHeight
+  })
 
   private readonly [DIV_CONTAINER] = document.createElement("div")
 
@@ -116,8 +116,10 @@ export class Stage extends APIChildNode<
     watchEffect(() => {
       const { width, height } = this.size
       this[CHILD_NODE].forEach((node) => {
-        node[CANVAS_ELEMENT].width = width
-        node[CANVAS_ELEMENT].height = height
+        const { width: oWidth, height: oHeight } = node[CANVAS_ELEMENT]
+
+        if (oWidth !== width) node[CANVAS_ELEMENT].width = width
+        if (oHeight !== height) node[CANVAS_ELEMENT].height = height
       })
     })
 
