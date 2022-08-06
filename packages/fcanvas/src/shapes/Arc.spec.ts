@@ -7,12 +7,9 @@ import { Stage } from "../Stage"
 
 import { Arc } from "./Arc"
 import { compareLayerWithImage } from "./test/helpers/compareLayerWithImage"
+import { CANVAS_ELEMENT } from "../symbols"
 
 describe("Arc", () => {
-  test("auto resize by stage", () => {
-    
-  })
-
   test("add arc", async () => {
     const stage = new Stage({ autoDraw: false })
     const layer = new Layer()
