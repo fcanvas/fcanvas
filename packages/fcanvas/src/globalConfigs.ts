@@ -1,3 +1,5 @@
 export const globalConfigs = {
-  angleMode: "degrees"
+  angleMode: "degrees",
+  defaultWidth: 300,
+  defaultHeight: 150
 }

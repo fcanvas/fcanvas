@@ -4,6 +4,7 @@ import { EffectScope, reactive } from "@vue/reactivity"
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
 import { isDev } from "./env"
+import { globalConfigs } from "./globalConfigs"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import {
@@ -39,7 +40,10 @@ export class Stage extends APIChildNode<
 
   public readonly size: ReturnType<
     typeof reactive<Pick<Rect, "width" | "height">>
-  > = reactive({ width: 300, height: 300 })
+  > = reactive({
+      width: globalConfigs.defaultWidth,
+      height: globalConfigs.defaultHeight
+    })
 
   private readonly [DIV_CONTAINER] = document.createElement("div")
 
@@ -57,8 +61,8 @@ export class Stage extends APIChildNode<
 
     this.$ = reactive(attrs as PersonalAttrs)
     watchEffect(() => {
-      this.size.width = this.$.width ?? 300
-      this.size.height = this.$.height ?? 300
+      this.size.width = this.$.width ?? globalConfigs.defaultWidth
+      this.size.height = this.$.height ?? globalConfigs.defaultHeight
     })
 
     const container = this[DIV_CONTAINER]
