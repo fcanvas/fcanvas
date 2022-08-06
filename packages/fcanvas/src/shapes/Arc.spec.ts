@@ -7,7 +7,6 @@ import { Stage } from "../Stage"
 
 import { Arc } from "./Arc"
 import { compareLayerWithImage } from "./test/helpers/compareLayerWithImage"
-import { CANVAS_ELEMENT } from "../symbols"
 
 describe("Arc", () => {
   test("add arc", async () => {
