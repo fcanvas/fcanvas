@@ -1,5 +1,3 @@
-// @vitest-environment jsdom
-
 import "./test/setup-environment"
 
 import { createCanvas } from "canvas"
