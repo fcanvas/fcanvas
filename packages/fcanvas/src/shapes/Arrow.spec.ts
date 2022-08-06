@@ -1,5 +1,3 @@
-// @vitest-environment jsdom
-
 import "./test/setup-environment"
 
 import { describe, expect, test } from "vitest"
@@ -65,7 +63,10 @@ describe("Arrow", () => {
   test("dash checks", async () => {
     const stage = new Stage({ autoDraw: false })
 
-    const layer = new Layer()
+    const layer = new Layer({
+      width: 300,
+      height: 300
+    })
     stage.add(layer)
 
     const width = stage.size.width

@@ -1,5 +1,3 @@
-// @vitest-environment jsdom
-
 import "./test/setup-environment"
 
 import { describe, expect, test } from "vitest"
@@ -11,6 +9,10 @@ import { Arc } from "./Arc"
 import { compareLayerWithImage } from "./test/helpers/compareLayerWithImage"
 
 describe("Arc", () => {
+  test("auto resize by stage", () => {
+    
+  })
+
   test("add arc", async () => {
     const stage = new Stage({ autoDraw: false })
     const layer = new Layer()
