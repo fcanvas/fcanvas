@@ -1,10 +1,9 @@
-import { Layer } from "./Layer"
-import { Stage } from "./Stage"
-
-import { Circle } from "./"
+import { Circle, Layer, Stage } from "./"
 
 const stage = new Stage({
-  container: "app"
+  container: "app",
+  width: 300,
+  height: 300
 })
 const layer = new Layer()
 stage.add(layer)

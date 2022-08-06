@@ -141,8 +141,16 @@ export class Stage extends APIChildNode<
   // eslint-disable-next-line functional/functional-parameters
   public add(...nodes: Layer[]): void {
     super.add(...nodes)
+    const { width, height } = this.size
     nodes.forEach((node) => {
       this[DIV_CONTAINER].appendChild(node[CANVAS_ELEMENT])
+      // fix https://github.com/tachibana-shin/fcanvas-next/issues/5
+      const { width: oWidth, height: oHeight } = node[CANVAS_ELEMENT]
+
+      // eslint-disable-next-line functional/immutable-data
+      if (oWidth !== width) node[CANVAS_ELEMENT].width = width
+      // eslint-disable-next-line functional/immutable-data
+      if (oHeight !== height) node[CANVAS_ELEMENT].height = height
       if (this.$.autoDraw !== false) node.batchDraw()
     })
   }
