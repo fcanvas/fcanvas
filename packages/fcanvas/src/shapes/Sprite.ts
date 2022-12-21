@@ -23,24 +23,29 @@ interface AnimationFrames {
   frameRate?: number
 }
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-type PersonalAttrs = {
+type PersonalAttrs<
+  Animations extends Record<string, AnimationFrames | number[]>
+> = {
   // eslint-disable-next-line no-undef
   image: CanvasImageSource | string
-  animations: Record<string, number[] | AnimationFrames>
+  animations: Animations
   animation: string
   frameIndex?: number // 0
   frameRate?: number // 17
   infinite?: boolean // true
 }
 
-export class Sprite extends Shape<PersonalAttrs> {
+export class Sprite<
+  Animations extends Record<string, AnimationFrames | number[]>,
+  LocalPersonalAttrs extends PersonalAttrs<Animations>
+> extends Shape<LocalPersonalAttrs> {
   static readonly type = "Sprite"
 
   // eslint-disable-next-line no-undef
   private readonly _image: ComputedRef<CanvasImageSource>
   private readonly cropImageCache: Map<string, HTMLCanvasElement> = new Map()
   private readonly currentFrames: ComputedRef<
-    Exclude<AnimationFrames, string[]>
+    Required<Exclude<AnimationFrames, string[]>>
   >
 
   private readonly frames: ComputedRef<HTMLCanvasElement[]>
@@ -48,18 +53,24 @@ export class Sprite extends Shape<PersonalAttrs> {
   private readonly currentFrame: ComputedRef<HTMLCanvasElement>
 
   private _running = false
-  private _interval?: ReturnType<typeof setInterval>
+  private _timeout?: ReturnType<typeof setInterval>
 
   constructor(
     attrs: ReactiveType<
-      CommonShapeAttrs<PersonalAttrs> & {
+      CommonShapeAttrs<LocalPersonalAttrs> & {
+        animation: keyof LocalPersonalAttrs["animations"]
+      } & {
         setup?: (
-          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+          attrs: ReturnType<
+            typeof reactive<CommonShapeAttrs<LocalPersonalAttrs>>
+          >
         ) => void
-      } & ThisType<Sprite>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } & ThisType<Sprite<any, any>>
     >
   ) {
-    super(attrs)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
 
     this[SCOPE].on()
 
@@ -71,28 +82,31 @@ export class Sprite extends Shape<PersonalAttrs> {
 
       return image
     })
-    this.currentFrames = computed<Exclude<AnimationFrames, string[]>>(() => {
-      const frames = this.$.animations[this.$.animation]
+    this.currentFrames = computed<Required<Exclude<AnimationFrames, string[]>>>(
+      () => {
+        const frames = this.$.animations[this.$.animation]
 
-      if (Array.isArray(frames)) {
+        if (Array.isArray(frames)) {
+          return {
+            frames,
+            frameIndex: this.$.frameIndex ?? 0,
+            frameRate: this.$.frameRate ?? 17
+          }
+        }
+
         return {
-          frames,
-          frameIndex: this.$.frameIndex,
-          frameRate: this.$.frameRate
+          frameIndex: this.$.frameIndex ?? 0,
+          frameRate: this.$.frameRate ?? 17,
+          ...frames
         }
       }
-
-      return {
-        frameIndex: this.$.frameIndex,
-        frameRate: this.$.frameRate,
-        ...frames
-      }
-    })
+    )
     this.frames = computed<HTMLCanvasElement[]>(() => {
       const groups = []
       const { frames } = this.currentFrames.value
       // eslint-disable-next-line functional/no-let
       for (let i = 0; i < frames.length; i += 4) {
+        // eslint-disable-next-line functional/immutable-data
         groups.push(
           this.getFrame(frames[i], frames[i + 1], frames[i + 2], frames[i + 3])
         )
@@ -100,9 +114,9 @@ export class Sprite extends Shape<PersonalAttrs> {
 
       return groups
     })
-    this.currentFrameIndex = ref(this.currentFrames.value.frameIndex ?? 0)
+    this.currentFrameIndex = ref(this.currentFrames.value.frameIndex)
     watch(
-      () => this.currentFrames.value.frameIndex ?? 0,
+      () => this.currentFrames.value.frameIndex,
       (value) => {
         this.currentFrameIndex.value = value
       }
@@ -115,12 +129,12 @@ export class Sprite extends Shape<PersonalAttrs> {
   }
 
   get animation() {
-    return this.$.animation
+    return this.$.animation as keyof LocalPersonalAttrs["animations"]
   }
 
-  set animation(value: string) {
+  set animation(value: keyof LocalPersonalAttrs["animations"]) {
     // eslint-disable-next-line functional/immutable-data
-    this.$.animation = value
+    this.$.animation = value as string
   }
 
   private getFrame(
@@ -154,12 +168,15 @@ export class Sprite extends Shape<PersonalAttrs> {
     context.drawImage(this.currentFrame.value, 0, 0)
   }
 
-  public start(): void {
+  public start(anim?: keyof LocalPersonalAttrs["animations"]): void {
     if (this._running) return
 
-    this._running = true
+    if (anim) this.animation = anim
 
-    this._interval = setInterval(() => {
+    this._running = true
+    clearTimeout(this._timeout)
+
+    const looper = () => {
       const frameEnd =
         this.currentFrameIndex.value >= this.frames.value.length - 1
 
@@ -174,13 +191,20 @@ export class Sprite extends Shape<PersonalAttrs> {
 
       // eslint-disable-next-line functional/immutable-data
       this.currentFrameIndex.value++
-    }, 1000 / (this.currentFrames.value.frameRate ?? 17))
+
+      this._timeout = setTimeout(
+        looper,
+        1000 / this.currentFrames.value.frameRate
+      )
+    }
+
+    looper()
   }
 
   public stop(): void {
-    if (this._interval) {
-      clearInterval(this._interval)
-      this._interval = undefined
+    if (this._timeout) {
+      clearTimeout(this._timeout)
+      this._timeout = undefined
     }
 
     this._running = false
