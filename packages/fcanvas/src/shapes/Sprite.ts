@@ -207,7 +207,7 @@ export class Sprite<
   }
 
   protected getSize() {
-    if (!this.currentFrame.value) {
+    if (!this.currentFrame) {
       const anim = this.$.animations[this.$.animation]
 
       if (Array.isArray(anim)) {
