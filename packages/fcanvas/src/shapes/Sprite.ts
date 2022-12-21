@@ -193,7 +193,8 @@ export class Sprite<
       )
     }
 
-    looper()
+    // eslint-disable-next-line promise/catch-or-return
+    Promise.resolve().then(looper)
   }
 
   public stop(): void {
@@ -206,6 +207,28 @@ export class Sprite<
   }
 
   protected getSize() {
+    if (!this.currentFrame.value) {
+      const anim = this.$.animations[this.$.animation]
+
+      if (Array.isArray(anim)) {
+        // default
+        const frames = anim
+        const { frameIndex = 0 } = this.$
+
+        return {
+          width: frames[frameIndex * 4 + 2],
+          height: frames[frameIndex * 4 + 2]
+        }
+      } else {
+        const { frames, frameIndex = this.$.frameIndex ?? 0 } = anim
+
+        return {
+          width: frames[frameIndex * 4 + 2],
+          height: frames[frameIndex * 4 + 2]
+        }
+      }
+    }
+
     const { width, height } = this.currentFrame.value
 
     return {
