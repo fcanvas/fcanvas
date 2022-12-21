@@ -161,11 +161,9 @@ describe("Circle", () => {
     layer.add(group)
     stage.add(layer)
 
-    // eslint-disable-next-line functional/immutable-data
     circle.$.opacity = 0.5
     layer.draw()
 
-    // eslint-disable-next-line functional/immutable-data
     circle.$.opacity = 1
     layer.draw()
 
@@ -189,7 +187,6 @@ describe("Circle", () => {
     })
     layer.add(circle)
 
-    // eslint-disable-next-line functional/immutable-data
     circle.$.fill = "blue"
 
     stage.add(layer)
@@ -250,10 +247,10 @@ describe("Circle", () => {
     context.beginPath()
     context.arc(100, 100, 50, 0, Math.PI * 2, false)
     context.closePath()
-    // eslint-disable-next-line functional/immutable-data
+
     context.fillStyle = "green"
     context.fill()
-    // eslint-disable-next-line functional/immutable-data
+
     context.lineWidth = 4
     context.stroke()
 

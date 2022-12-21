@@ -53,7 +53,7 @@ export function drawLayer(
 
   if (needSetAlpha) {
     backupAlpha = context.globalAlpha
-    // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     context.globalAlpha = attrs.opacity!
   }
   if (useTransform) {
@@ -64,7 +64,7 @@ export function drawLayer(
   if (useFilter) {
     backupFilter = context.filter
 
-    // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     context.filter = createFilter(attrs.filter!)
   }
 
@@ -73,13 +73,13 @@ export function drawLayer(
   })
 
   if (useFilter) {
-    // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     context.filter = backupFilter!
   }
   if (useTransform) context.setTransform(backupTransform)
 
   if (needSetAlpha) {
-    // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     context.globalAlpha = backupAlpha!
   }
   if (useClip) context.restore()

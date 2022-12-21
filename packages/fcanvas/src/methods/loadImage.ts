@@ -37,7 +37,6 @@ function loadImage(
     img.addEventListener("load", done)
     img.addEventListener("error", fail)
 
-    // eslint-disable-next-line functional/immutable-data
     img.src = url
   })
 }

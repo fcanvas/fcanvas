@@ -80,25 +80,21 @@ export class TextPath extends Shape<PersonalAttrs> {
   }
 
   protected fillStrokeScene(context: CanvasRenderingContext2D) {
-    // eslint-disable-next-line functional/immutable-data
     context.fillStyle = this.getFill(context) ?? "black"
     context.fillText(this.partialText, 0, 0)
     const _stroke = this.getStroke(context)
     if (_stroke !== undefined) {
-      // eslint-disable-next-line functional/immutable-data
       context.strokeStyle = _stroke
       context.strokeText(this.partialText, 0, 0)
     }
   }
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    // eslint-disable-next-line functional/immutable-data
     context.font = this.getContextFont()
-    if (this.$.textBaseline) {
-      // eslint-disable-next-line functional/immutable-data
+    if (this.$.textBaseline)
+
       context.textBaseline = this.$.textBaseline
-    }
-    // eslint-disable-next-line functional/immutable-data
+
     context.textAlign = "left"
     context.save()
 
@@ -137,9 +133,8 @@ export class TextPath extends Shape<PersonalAttrs> {
       // context.stroke();
     }
     if (textDecoration === "underline") {
-      // eslint-disable-next-line functional/immutable-data
       context.strokeStyle = fill ?? "transparent"
-      // eslint-disable-next-line functional/immutable-data
+
       context.lineWidth = fontSize / 20
       context.stroke()
     }
@@ -156,7 +151,7 @@ export class TextPath extends Shape<PersonalAttrs> {
 
     _context.save()
 
-    // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     _context.font = this.getContextFont()!
     const metrics = _context.measureText(text)
 
@@ -434,9 +429,8 @@ export class TextPath extends Shape<PersonalAttrs> {
       //     }
       //   }
 
-      // eslint-disable-next-line functional/immutable-data
       p0.x += kern
-      // eslint-disable-next-line functional/immutable-data
+
       p1.x += kern
       this.textWidth += kern
 

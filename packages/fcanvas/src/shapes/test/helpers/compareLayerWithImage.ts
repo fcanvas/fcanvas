@@ -7,9 +7,9 @@ import { loadImageFromSystem } from "./loadImageFromSystem"
 
 function createCanvasDrawImage(image: Image) {
   const canvas = document.createElement("canvas")
-  // eslint-disable-next-line functional/immutable-data
+
   canvas.width = image.width
-  // eslint-disable-next-line functional/immutable-data
+
   canvas.height = image.height
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

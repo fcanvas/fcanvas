@@ -107,11 +107,10 @@ export class Text extends Shape<PersonalAttrs> {
     // eslint-disable-next-line functional/no-let
     let alignY = 0
 
-    // eslint-disable-next-line functional/immutable-data
     context.font = this.getContextFont()
-    // eslint-disable-next-line functional/immutable-data
+
     context.textBaseline = "middle"
-    // eslint-disable-next-line functional/immutable-data
+
     context.textAlign = "left"
 
     // handle vertical alignment
@@ -163,9 +162,9 @@ export class Text extends Shape<PersonalAttrs> {
 
         // I have no idea what is real ratio
         // just /15 looks good enough
-        // eslint-disable-next-line functional/immutable-data
+
         context.lineWidth = fontSize / 15
-        // eslint-disable-next-line functional/immutable-data
+
         context.strokeStyle = fill ?? "transparent"
         context.stroke()
         context.restore()
@@ -184,9 +183,9 @@ export class Text extends Shape<PersonalAttrs> {
           lineTranslateX + Math.round(lineWidth),
           translateY + lineTranslateY
         )
-        // eslint-disable-next-line functional/immutable-data
+
         context.lineWidth = fontSize / 15
-        // eslint-disable-next-line functional/immutable-data
+
         context.strokeStyle = fill ?? "transparent"
         context.stroke()
         context.restore()
@@ -225,12 +224,10 @@ export class Text extends Shape<PersonalAttrs> {
   }
 
   protected fillStrokeScene(context: CanvasRenderingContext2D) {
-    // eslint-disable-next-line functional/immutable-data
     context.fillStyle = this.getFill(context) ?? "black"
     context.fillText(this.partialText, this.partialTextX, this.partialTextY)
     const _stroke = this.getStroke(context)
     if (_stroke !== undefined) {
-      // eslint-disable-next-line functional/immutable-data
       context.strokeStyle = _stroke
       context.strokeText(this.partialText, this.partialTextX, this.partialTextY)
     }
@@ -263,7 +260,7 @@ export class Text extends Shape<PersonalAttrs> {
     const fontSize = this.$.fontSize ?? 12
 
     _context.save()
-    // eslint-disable-next-line functional/immutable-data
+
     _context.font = this.getContextFont()
 
     const metrics = _context.measureText(text)
@@ -329,7 +326,7 @@ export class Text extends Shape<PersonalAttrs> {
     let currentHeightPx = 0
     this.textArr = []
     this.textWidth = 0
-    // eslint-disable-next-line functional/immutable-data
+
     getDummyContext().font = this.getContextFont()
     const additionalWidth = shouldAddEllipsis ? this.getTextWidth("…") : 0
     // eslint-disable-next-line functional/no-let
@@ -413,7 +410,6 @@ export class Text extends Shape<PersonalAttrs> {
                   const haveSpace =
                     this.getTextWidth(lastLine.text + "…") < maxWidth
                   if (!haveSpace) {
-                    // eslint-disable-next-line functional/immutable-data
                     lastLine.text = lastLine.text.slice(
                       0,
                       lastLine.text.length - 3
@@ -458,10 +454,9 @@ export class Text extends Shape<PersonalAttrs> {
       // if element height is fixed, abort if adding one more line would overflow
       if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) break
 
-      if (this.textArr[this.textArr.length - 1]) {
-        // eslint-disable-next-line functional/immutable-data
+      if (this.textArr[this.textArr.length - 1])
+
         this.textArr[this.textArr.length - 1].lastInParagraph = true
-      }
     }
     // var maxTextWidth = 0;
     // for(var j = 0; j < this.textArr.length; j++) {

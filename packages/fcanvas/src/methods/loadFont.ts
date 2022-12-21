@@ -57,7 +57,6 @@ export function loadFont(
 
     if (onProgress) request.addEventListener("progress", onProgress)
 
-    // eslint-disable-next-line functional/immutable-data
     request.responseType = "arraybuffer"
 
     // Downloading a font from the path

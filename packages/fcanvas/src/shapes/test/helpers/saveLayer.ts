@@ -13,7 +13,7 @@ function dataURItoBlob(dataURI: string) {
   const ia = new Uint8Array(ab)
 
   // set the bytes of the buffer to the correct values
-  // eslint-disable-next-line functional/no-let, functional/immutable-data
+  // eslint-disable-next-line functional/no-let
   for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i)
 
   return ab

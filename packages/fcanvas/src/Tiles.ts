@@ -103,7 +103,6 @@ export class Tiles<TileNames extends string> {
         this.#cache.set(
           name,
 
-          // eslint-disable-next-line functional/immutable-data
           Object.assign(imageNotResource, {
             sourceSize: {
               width,
