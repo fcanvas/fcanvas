@@ -15,7 +15,8 @@
   },
   "include": [
     "packages/*/src/**/*.ts",
-    "*.config.ts"
+    "*.config.ts",
+    "*.d.ts"
   ],
   "exclude": ["node_modules", "test"]
 }
