@@ -455,7 +455,6 @@ export class Text extends Shape<PersonalAttrs> {
       if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) break
 
       if (this.textArr[this.textArr.length - 1])
-
         this.textArr[this.textArr.length - 1].lastInParagraph = true
     }
     // var maxTextWidth = 0;

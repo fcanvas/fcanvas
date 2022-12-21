@@ -179,9 +179,7 @@ export class Sprite<
         this.currentFrameIndex.value >= this.frames.value.length - 1
 
       if (frameEnd) {
-        if (this.$.infinite !== false)
-
-          this.currentFrameIndex.value = 0
+        if (this.$.infinite !== false) this.currentFrameIndex.value = 0
         else this.stop()
 
         return
