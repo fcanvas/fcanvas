@@ -91,9 +91,7 @@ export class TextPath extends Shape<PersonalAttrs> {
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     context.font = this.getContextFont()
-    if (this.$.textBaseline)
-
-      context.textBaseline = this.$.textBaseline
+    if (this.$.textBaseline) context.textBaseline = this.$.textBaseline
 
     context.textAlign = "left"
     context.save()
