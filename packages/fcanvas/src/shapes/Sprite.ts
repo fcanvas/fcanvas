@@ -174,23 +174,24 @@ export class Sprite<
     this._running = true
     clearTimeout(this._timeout)
 
+    const delay = 1000 / this.currentFrames.value.frameRate
+
     const looper = () => {
       const frameEnd =
         this.currentFrameIndex.value >= this.frames.value.length - 1
 
       if (frameEnd) {
-        if (this.$.infinite !== false) this.currentFrameIndex.value = 0
-        else this.stop()
-
-        return
+        if (this.$.infinite !== false) {
+          this.currentFrameIndex.value = 0
+        } else {
+          this.stop()
+          return
+        }
+      } else {
+        this.currentFrameIndex.value++
       }
 
-      this.currentFrameIndex.value++
-
-      this._timeout = setTimeout(
-        looper,
-        1000 / this.currentFrames.value.frameRate
-      )
+      this._timeout = setTimeout(looper, delay)
     }
 
     // eslint-disable-next-line promise/catch-or-return
