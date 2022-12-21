@@ -51,6 +51,7 @@ export class Sprite<
   private readonly frames: ComputedRef<HTMLCanvasElement[]>
   private readonly currentFrameIndex: Ref<number>
   private readonly currentFrame: ComputedRef<HTMLCanvasElement>
+  private readonly currentDelay: ComputedRef<number>
 
   private _running = false
   private _timeout?: ReturnType<typeof setInterval>
@@ -123,6 +124,9 @@ export class Sprite<
     this.currentFrame = computed<HTMLCanvasElement>(() => {
       return this.frames.value[this.currentFrameIndex.value]
     })
+    this.currentDelay = computed(
+      () => 1000 / this.currentFrames.value.frameRate
+    )
 
     this[SCOPE].off()
   }
@@ -174,8 +178,6 @@ export class Sprite<
     this._running = true
     clearTimeout(this._timeout)
 
-    const delay = 1000 / this.currentFrames.value.frameRate
-
     const looper = () => {
       const frameEnd =
         this.currentFrameIndex.value >= this.frames.value.length - 1
@@ -191,7 +193,7 @@ export class Sprite<
         this.currentFrameIndex.value++
       }
 
-      this._timeout = setTimeout(looper, delay)
+      this._timeout = setTimeout(looper, this.currentDelay.value)
     }
 
     // eslint-disable-next-line promise/catch-or-return
