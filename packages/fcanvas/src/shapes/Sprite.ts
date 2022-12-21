@@ -106,7 +106,6 @@ export class Sprite<
       const { frames } = this.currentFrames.value
       // eslint-disable-next-line functional/no-let
       for (let i = 0; i < frames.length; i += 4) {
-        // eslint-disable-next-line functional/immutable-data
         groups.push(
           this.getFrame(frames[i], frames[i + 1], frames[i + 2], frames[i + 3])
         )
@@ -133,7 +132,6 @@ export class Sprite<
   }
 
   set animation(value: keyof LocalPersonalAttrs["animations"]) {
-    // eslint-disable-next-line functional/immutable-data
     this.$.animation = value as string
   }
 
@@ -182,14 +180,13 @@ export class Sprite<
 
       if (frameEnd) {
         if (this.$.infinite !== false)
-          // eslint-disable-next-line functional/immutable-data
+
           this.currentFrameIndex.value = 0
         else this.stop()
 
         return
       }
 
-      // eslint-disable-next-line functional/immutable-data
       this.currentFrameIndex.value++
 
       this._timeout = setTimeout(

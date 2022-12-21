@@ -36,7 +36,7 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
     ["mousedown", "mousemove", "touchstart", "touchmove"],
     (event) => {
       // is touch
-      // eslint-disable-next-line functional/immutable-data
+
       mousePos.isTouch = event.type.startsWith("touch")
       // get offset
       const { x, y, winX, winY } = getMousePos(
@@ -45,14 +45,12 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
         1
       )[0]
 
-      // eslint-disable-next-line functional/immutable-data
       mousePos.mouseX = x
-      // eslint-disable-next-line functional/immutable-data
+
       mousePos.mouseY = y
 
-      // eslint-disable-next-line functional/immutable-data
       mousePos.winMouseX = winX
-      // eslint-disable-next-line functional/immutable-data
+
       mousePos.winMouseY = winY
     }
   )

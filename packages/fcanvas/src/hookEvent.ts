@@ -70,7 +70,6 @@ function createHandleMouseHover(isOver: boolean) {
       ) {
         if (isOver) {
           if (!node[LOCALS].hover) {
-            // eslint-disable-next-line functional/immutable-data
             node[LOCALS].hover = true
             listeners.forEach((listener) => listener(event))
           }
@@ -78,7 +77,6 @@ function createHandleMouseHover(isOver: boolean) {
         }
       } else if (!isOver) {
         if (node[LOCALS].hover) {
-          // eslint-disable-next-line functional/immutable-data
           node[LOCALS].hover = false
 
           listeners.forEach((listener) => listener(event))

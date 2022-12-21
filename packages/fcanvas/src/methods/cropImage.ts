@@ -33,9 +33,8 @@ export function cropImage(
     rad
   )
 
-  // eslint-disable-next-line functional/immutable-data
   virualContext.canvas.width = width
-  // eslint-disable-next-line functional/immutable-data
+
   virualContext.canvas.height = height
 
   if (rotate !== 0) {

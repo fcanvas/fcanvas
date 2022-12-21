@@ -59,18 +59,16 @@ export class Label extends Group<Tag | Text> {
           break
       }
 
-      // eslint-disable-next-line functional/immutable-data
       tag.$.x = -x
-      // eslint-disable-next-line functional/immutable-data
+
       tag.$.y = -y
-      // eslint-disable-next-line functional/immutable-data
+
       tag.$.width = width
-      // eslint-disable-next-line functional/immutable-data
+
       tag.$.height = height
 
-      // eslint-disable-next-line functional/immutable-data
       text.$.x = -x
-      // eslint-disable-next-line functional/immutable-data
+
       text.$.y = -y
     }
   }

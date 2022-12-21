@@ -20,11 +20,9 @@ export function useMouseIsPressed(
   const mouseIsPressed = ref(false)
 
   addEvents(instance, ["mousedown", "touchstart"], () => {
-    // eslint-disable-next-line functional/immutable-data
     mouseIsPressed.value = true
   })
   addEvents(instance, ["mouseup", "touchend"], () => {
-    // eslint-disable-next-line functional/immutable-data
     mouseIsPressed.value = false
   })
 
