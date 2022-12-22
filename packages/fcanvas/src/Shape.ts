@@ -223,7 +223,7 @@ export class Shape<
   }
 
   public to(
-    attrs: gsap.TweenVars & Partial<CommonShapeAttrs & PersonalAttrs>
+    attrs: gsap.TweenVars & Partial<CommonShapeAttrs<PersonalAttrs>>
   ): gsap.core.Tween {
     return gsap.to(this.$, attrs)
   }
