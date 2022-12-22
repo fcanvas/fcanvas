@@ -122,7 +122,12 @@ export class Sprite<
       }
     )
     this.currentFrame = computed<HTMLCanvasElement>(() => {
-      return this.frames.value[this.currentFrameIndex.value]
+      return (
+        this.frames.value[this.currentFrameIndex.value] ??
+        this.frames.value[
+          this.$.infinite !== true ? 0 : this.frames.value.length - 1
+        ]
+      )
     })
     this.currentDelay = computed(
       () => 1000 / this.currentFrames.value.frameRate
