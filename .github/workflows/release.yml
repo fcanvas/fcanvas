@@ -67,10 +67,10 @@ jobs:
           pnpm auto-export
 
       - name: Test & Build
-        run: pnpm test && pnpm publish
+        run: pnpm test && pnpm build
 
       - name: Publish to NPM
-        run: pnpm build
+        run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
