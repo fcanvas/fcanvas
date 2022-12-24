@@ -66,11 +66,11 @@ jobs:
           cd packages/fcanvas
           pnpm auto-export
 
-      - name: Test
-        run: pnpm test
+      - name: Test & Build
+        run: pnpm test && pnpm publish
 
       - name: Publish to NPM
-        run: pnpm publish
+        run: pnpm build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
