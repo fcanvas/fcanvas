@@ -21,7 +21,13 @@ jobs:
         with:
           version: 7.18.2
           run_install: false
-      - name: Test
+
+      - name: Install depends and run `auto-export`
         run: |
           pnpm i
+          cd packages/fcanvas
+          pnpm auto-export
+
+      - name: Test
+        run: |
           pnpm test
