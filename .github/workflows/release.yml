@@ -74,6 +74,10 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+  changelog-release:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
       - name: Generate changelog
         id: changelog
         uses: metcalfc/changelog-generator@v4.0.1
