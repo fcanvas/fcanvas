@@ -4,7 +4,17 @@ A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's
 [https://fcanvas.js.org](https://fcanvas.js.org)
 
 
-[![Build](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/test-docs.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/test-docs.yml)
+
+[![GitHub license](https://img.shields.io/github/license/tachibana-shin/fcanvas-next)](https://github.com/tachibana-shin/fcanvas-next/blob/main/LICENSE) <img alt="GitHub Issues" src="https://img.shields.io/github/issues/tachibana-shin/fcanvas-next" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/score/svg" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/status/svg" />
+
+[![Test](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/test.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/test.yml)
+[![CodeQL](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/codeql.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/codeql.yml)
+[![ESLint](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/eslint.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/eslint.yml)
+[![Prettier](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/prettier.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/pretter.yml)
+[![TypeScript Checker Declaration](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/typing.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/typing.yml)
+[![Try build](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/try-build.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas-next/actions/workflows/try-build.yml)
+
+
 [![NPM](https://badge.fury.io/js/fcanvas.svg)](http://badge.fury.io/js/fcanvas)
 [![Size](https://img.shields.io/bundlephobia/minzip/fcanvas/latest)](https://npmjs.org/package/fcanvas)
 [![Languages](https://img.shields.io/github/languages/top/tachibana-shin/fcanvas-next)](https://npmjs.org/package/fcanvas)
