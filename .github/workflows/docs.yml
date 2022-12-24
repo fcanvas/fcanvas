@@ -1,4 +1,4 @@
-name: pnpm build
+name: Docs
 on: [push]
 jobs:
   build-and-deploy:
@@ -21,7 +21,7 @@ jobs:
       - name: Build docs🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
         run: |
           pnpm i
-          pnpm build:docs
+          pnpm run docs
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.3.3
