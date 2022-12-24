@@ -17,7 +17,7 @@ type PersonalAttrs = {
   height: number
 }>
 
-function getValFromSource(val: SVGAnimatedLength | number) {
+export function getValFromSource(val: SVGAnimatedLength | number) {
   if (typeof val === "number") return val
 
   return val.baseVal.value
@@ -81,11 +81,11 @@ export class Image extends Shape<PersonalAttrs> {
       width:
         this.$.width ??
         this.$.crop?.width ??
-        getValFromSource(this._image.value.width),
+        getValFromSource(typeof this.$.image === "object" ? this.$.image.width : this._image?.value.width ?? 0),
       height:
         this.$.height ??
         this.$.crop?.height ??
-        getValFromSource(this._image.value.height)
+        getValFromSource(typeof this.$.image === "object" ? this.$.image.height : this._image?.value.height ?? 0)
     }
   }
 }
