@@ -34,6 +34,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
+          registry-url: 'https://npm.pkg.github.com'
           node-version: 18
 
       - uses: pnpm/action-setup@v2.0.1
@@ -52,7 +53,7 @@ jobs:
       - name: Publish to NPM
         run: pnpm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate changelog
         id: changelog
