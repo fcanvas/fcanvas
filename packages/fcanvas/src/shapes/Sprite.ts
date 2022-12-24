@@ -26,7 +26,7 @@ interface AnimationFrames {
 type PersonalAttrs<
   Animations extends Record<string, AnimationFrames | number[]>
 > = {
-  // eslint-disable-next-line no-undef
+
   image: CanvasImageSource | string
   animations: Animations
   animation: string
@@ -41,7 +41,6 @@ export class Sprite<
 > extends Shape<LocalPersonalAttrs> {
   static readonly type = "Sprite"
 
-  // eslint-disable-next-line no-undef
   private readonly _image: ComputedRef<CanvasImageSource>
   private readonly cropImageCache: Map<string, HTMLCanvasElement> = new Map()
   private readonly currentFrames: ComputedRef<
@@ -75,7 +74,6 @@ export class Sprite<
 
     this[SCOPE].on()
 
-    // eslint-disable-next-line no-undef
     this._image = computed<CanvasImageSource>(() => {
       const { image } = this.$
 

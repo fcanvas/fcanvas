@@ -28,7 +28,7 @@ type PersonalAttrs = DrawLayerAttrs & {
 
 export class Stage extends APIChildNode<
   Layer,
-  // eslint-disable-next-line no-undef
+
   Pick<GlobalEventHandlersEventMap, keyof GlobalEventHandlersEventMap>
 > {
   static readonly type: string = "Stage"

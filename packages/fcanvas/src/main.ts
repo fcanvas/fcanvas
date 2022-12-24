@@ -1,4 +1,4 @@
-import { Circle, Layer, Stage, loadImage, ImageRepeat, Image } from "./"
+import { ImageRepeat, Layer, loadImage, Stage } from "./"
 
 const stage = new Stage({
   container: "app",

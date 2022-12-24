@@ -33,7 +33,7 @@ type PersonalAttrs = {
   ellipsis?: boolean
   width?: number | "auto"
   height?: number | "auto"
-  // eslint-disable-next-line no-undef
+
   textBaseline?: CanvasTextBaseline
 }
 

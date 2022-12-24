@@ -12,7 +12,7 @@ interface FillModeColor {
 interface FillModePattern {
   /* fill pattern */
   fillPattern?: {
-    // eslint-disable-next-line no-undef
+
     image: CanvasImageSource | string
     repeat?: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
   } & OptionTransform
