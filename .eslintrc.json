@@ -4,6 +4,7 @@
   },
   "extends": "@tachibana-shin/eslint-config",
   "rules": {
-    "functional/immutable-data": "off"
+    "functional/immutable-data": "off",
+    "no-undef": "off"
   }
 }

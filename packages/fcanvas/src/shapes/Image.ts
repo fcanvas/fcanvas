@@ -9,7 +9,7 @@ import type { Rect } from "../type/Rect"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
 type PersonalAttrs = {
-  // eslint-disable-next-line no-undef
+
   image: CanvasImageSource | string
   crop?: Rect
 } & Partial<{
@@ -27,7 +27,6 @@ export class Image extends Shape<PersonalAttrs> {
   static readonly type = "Image"
   static readonly fromURL = loadImage
 
-  // eslint-disable-next-line no-undef
   private readonly _image: ComputedRef<CanvasImageSource>
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
@@ -64,7 +63,6 @@ export class Image extends Shape<PersonalAttrs> {
 
     this[SCOPE].on()
 
-    // eslint-disable-next-line no-undef
     this._image = computed<CanvasImageSource>(() => {
       const { image } = this.$
 
