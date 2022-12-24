@@ -1,7 +1,7 @@
-name: pnpm test
+name: Test
 on: [push]
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -18,7 +18,7 @@ jobs:
         with:
           version: 7
           run_install: false
-      - name: Test # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+      - name: Test
         run: |
           pnpm i
           pnpm test
