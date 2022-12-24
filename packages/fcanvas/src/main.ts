@@ -1,4 +1,4 @@
-import { Circle, Layer, Stage } from "./"
+import { Circle, Layer, Stage, loadImage, ImageRepeat, Image } from "./"
 
 const stage = new Stage({
   container: "app",
@@ -8,26 +8,17 @@ const stage = new Stage({
 const layer = new Layer()
 stage.add(layer)
 
-layer.add(
-  new Circle({
-    x: stage.size.width / 2,
-    y: stage.size.height / 2,
-    radius: 70,
-    stroke: "black",
-    fillRadialGradient: {
-      start: { x: -20, y: -20 },
-      end: { x: -60, y: -60 },
-      startRadius: 0,
-      endRadius: 130,
-      colorStops: [
-        [0, "red"],
-        [0.2, "yellow"],
-        [1, "blue"]
-      ]
-    },
-    scale: {
-      x: 0.5,
-      y: 0.5
-    }
-  })
-)
+const img = new ImageRepeat({
+  x: 0,
+  y: 0,
+  image: await loadImage(
+    "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png"
+  ),
+  scrollWidth: stage.size.width,
+  scrollHeight: stage.size.height,
+  scrollLeft: -100
+  // whileDraw:true
+})
+layer.add(img)
+
+window.img = img
