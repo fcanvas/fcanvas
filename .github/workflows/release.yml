@@ -47,7 +47,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          registry-url: 'https://npm.pkg.github.com'
+          registry-url: 'https://registry.npmjs.org'
           node-version: 18
 
       - name: Install Depends for pkg canvas
@@ -69,7 +69,7 @@ jobs:
       - name: Publish to NPM
         run: pnpm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Generate changelog
         id: changelog
