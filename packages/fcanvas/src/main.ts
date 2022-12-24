@@ -20,5 +20,6 @@ const img = new ImageRepeat({
   // whileDraw:true
 })
 layer.add(img)
-
-window.img = img
+;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as unknown as any).img = img
