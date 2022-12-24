@@ -47,7 +47,6 @@ importers:
       tmx-tiledmap: ^1.2.1
       tsup: ^6.2.1
       tsx: ^3.8.0
-      typedoc: ^0.23.23
       vite: ^3.0.4
       vitest: ^0.21.0
     dependencies:
@@ -67,7 +66,6 @@ importers:
       plist: 3.0.6
       tsup: 6.2.1
       tsx: 3.8.0
-      typedoc: 0.23.23
       vite: 3.0.4
       vitest: 0.21.0_e3y3tk5wocdgktiwrgnxpnd3nq
 
@@ -4396,19 +4394,6 @@ packages:
 
   /typedarray/0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
-    dev: true
-
-  /typedoc/0.23.23:
-    resolution: {integrity: sha512-cg1YQWj+/BU6wq74iott513U16fbrPCbyYs04PHZgvoKJIc6EY4xNobyDZh4KMfRGW8Yjv6wwIzQyoqopKOUGw==}
-    engines: {node: '>= 14.14'}
-    hasBin: true
-    peerDependencies:
-      typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x
-    dependencies:
-      lunr: 2.3.9
-      marked: 4.2.5
-      minimatch: 5.1.2
-      shiki: 0.11.1
     dev: true
 
   /typedoc/0.23.23_typescript@4.7.4:
