@@ -12,7 +12,6 @@ interface FillModeColor {
 interface FillModePattern {
   /* fill pattern */
   fillPattern?: {
-
     image: CanvasImageSource | string
     repeat?: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
   } & OptionTransform
