@@ -26,7 +26,6 @@ interface AnimationFrames {
 type PersonalAttrs<
   Animations extends Record<string, AnimationFrames | number[]>
 > = {
-
   image: CanvasImageSource | string
   animations: Animations
   animation: string

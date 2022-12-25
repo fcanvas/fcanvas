@@ -13,7 +13,6 @@ function calcProjectedRectSizeOfRotatedRect(
 }
 
 export function cropImage(
-
   image: CanvasImageSource,
   x = 0,
   y = 0,

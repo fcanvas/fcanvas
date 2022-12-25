@@ -28,7 +28,6 @@ type PersonalAttrs = DrawLayerAttrs & {
 
 export class Stage extends APIChildNode<
   Layer,
-
   Pick<GlobalEventHandlersEventMap, keyof GlobalEventHandlersEventMap>
 > {
   static readonly type: string = "Stage"
