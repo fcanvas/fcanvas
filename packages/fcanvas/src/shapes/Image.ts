@@ -2,6 +2,7 @@ import type { ComputedRef, reactive } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
+import { getSizeApplyRatio } from "../logic/getSizeApplyRatio"
 import { getImage, loadImage } from "../methods/loadImage"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
@@ -9,7 +10,6 @@ import type { Rect } from "../type/Rect"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
 type PersonalAttrs = {
-
   image: CanvasImageSource | string
   crop?: Rect
 } & Partial<{
@@ -22,6 +22,48 @@ export function getValFromSource(val: SVGAnimatedLength | number) {
 
   return val.baseVal.value
 }
+export function getSizeImageApplyRatio(
+  width: number | undefined,
+  height: number | undefined,
+  _image: CanvasImageSource
+): {
+  width: number
+  height: number
+} {
+  const wIsUndef = width === undefined
+  const hIsUndef = height === undefined
+
+  if (wIsUndef && hIsUndef) {
+    return {
+      width: getValFromSource(_image.width),
+      height: getValFromSource(_image.height)
+    }
+  }
+  if (!wIsUndef && !hIsUndef) return { width, height }
+
+  if (!hIsUndef) {
+    // height is ready, width is undefined
+    return {
+      width: getSizeApplyRatio(
+        height,
+        false,
+        getValFromSource(_image.width) / getValFromSource(_image.height)
+      ),
+      height
+    }
+  }
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    width: width!,
+    height: getSizeApplyRatio(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      width!,
+      true,
+      getValFromSource(_image.width) / getValFromSource(_image.height)
+    )
+  }
+}
 
 export class Image extends Shape<PersonalAttrs> {
   static readonly type = "Image"
@@ -30,20 +72,23 @@ export class Image extends Shape<PersonalAttrs> {
   private readonly _image: ComputedRef<CanvasImageSource>
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    if (this.$.crop) {
+    const { crop } = this.$
+    const { width, height } = this.getSize()
+
+    if (crop) {
       context.drawImage(
         this._image.value,
-        this.$.crop.x,
-        this.$.crop.y,
-        this.$.crop.width,
-        this.$.crop.height,
+        crop.x,
+        crop.y,
+        crop.width,
+        crop.height,
         0,
         0,
-        this.$.width ?? this.$.crop.width,
-        this.$.height ?? this.$.crop.height
+        width,
+        height
       )
-    } else if (this.$.width !== undefined && this.$.height !== undefined) {
-      context.drawImage(this._image.value, 0, 0, this.$.width, this.$.height)
+    } else if (width !== undefined || height !== undefined) {
+      context.drawImage(this._image.value, 0, 0, width, height)
     } else {
       context.drawImage(this._image.value, 0, 0)
     }
@@ -75,15 +120,12 @@ export class Image extends Shape<PersonalAttrs> {
   }
 
   protected getSize() {
-    return {
-      width:
-        this.$.width ??
-        this.$.crop?.width ??
-        getValFromSource(typeof this.$.image === "object" ? this.$.image.width : this._image?.value.width ?? 0),
-      height:
-        this.$.height ??
-        this.$.crop?.height ??
-        getValFromSource(typeof this.$.image === "object" ? this.$.image.height : this._image?.value.height ?? 0)
-    }
+    const { image, width, height, crop } = this.$
+
+    return getSizeImageApplyRatio(
+      width ?? crop?.width,
+      height ?? crop?.height,
+      typeof image === "string" ? getImage(image) : image
+    )
   }
 }

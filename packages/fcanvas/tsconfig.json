@@ -4,6 +4,6 @@
     "paths": {
       "tests/*": ["./tests/*"]
     },
-    "types": ["vite/client"]
+    "types": ["vitest/globals"]
   }
 }
