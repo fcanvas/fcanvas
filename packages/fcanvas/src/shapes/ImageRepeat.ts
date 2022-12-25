@@ -10,7 +10,7 @@ import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { Rect } from "../type/Rect"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
-import { getValFromSource } from "./Image"
+import { getSizeImageApplyRatio, getValFromSource } from "./Image"
 
 type PersonalAttrs = {
   image: CanvasImageSource | string
@@ -161,7 +161,6 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     }
 
     if (cache) {
-      console.warn("sscae")
       const inCache = {
         r: ctx.canvas,
         t: scrollTop ?? 0,
@@ -285,13 +284,18 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
             width ?? crop.width,
             height ?? crop.height
           )
-      } else if (width !== undefined && height !== undefined) {
+      } else if (width !== undefined || height !== undefined) {
         image = document.createElement("canvas")
-        ;[image.width, image.height] = [width, height]
+
+        const { width: rW, height: rH } = getSizeImageApplyRatio(
+          width,
+          height,
+          _image
+        )
+
+        ;[image.width, image.height] = [rW, rH]
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        image
-          .getContext("2d")!
-          .drawImage(this._image.value, 0, 0, width, height)
+        image.getContext("2d")!.drawImage(this._image.value, 0, 0, rW, rH)
       } else {
         image = _image
         // image.drawImage(this._image.value, 0, 0);
@@ -305,25 +309,12 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
   }
 
   protected getSize() {
-    return {
-      width:
-        this.$.scrollWidth ??
-        this.$.width ??
-        this.$.crop?.width ??
-        getValFromSource(
-          typeof this.$.image === "object"
-            ? this.$.image.width
-            : this._image?.value.width ?? 0
-        ),
-      height:
-        this.$.scrollHeight ??
-        this.$.height ??
-        this.$.crop?.height ??
-        getValFromSource(
-          typeof this.$.image === "object"
-            ? this.$.image.height
-            : this._image?.value.height ?? 0
-        )
-    }
+    const { image, width, height, crop, scrollWidth, scrollHeight } = this.$
+
+    return getSizeImageApplyRatio(
+      scrollWidth ?? width ?? crop?.width,
+      scrollHeight ?? height ?? crop?.height,
+      typeof image === "string" ? getImage(image) : image
+    )
   }
 }
