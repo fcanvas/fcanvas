@@ -1,5 +1,5 @@
-import type { ComputedRef } from "@vue/reactivity"
-import { computed } from "@vue/reactivity"
+import type { ComputedRef } from "fcanvas"
+import { computed } from "fcanvas"
 import gsap from "gsap"
 
 import { ANIMATION_STORE } from "./symbols"
