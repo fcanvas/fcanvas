@@ -15,14 +15,12 @@ export abstract class APIChildNode<
   public readonly [CHILD_NODE]: ShallowReactive<Set<ChildNode>> =
     shallowReactive(new Set())
 
-  // eslint-disable-next-line functional/functional-parameters
-  public add(...nodes: ChildNode[]) {
-    nodes.forEach((node) => this[CHILD_NODE].add(node))
+  public add(node: ChildNode) {
+    this[CHILD_NODE].add(node)
   }
 
-  // eslint-disable-next-line functional/functional-parameters
-  public delete(...nodes: ChildNode[]) {
-    nodes.forEach((node) => this[CHILD_NODE].delete(node))
+  public delete(node: ChildNode) {
+    this[CHILD_NODE].delete(node)
   }
 }
 
@@ -32,5 +30,34 @@ export abstract class APIGroup<
 > extends APIChildNode<ChildNode, Events> {
   public getClientRect(config?: GetClientRectOptions) {
     return getClientRectGroup(this[CHILD_NODE], config)
+  }
+
+  public childEach(
+    fn: (
+      child: ChildNode,
+      childKey: ChildNode,
+      set: ShallowReactive<Set<ChildNode>>,
+      add: (node: ChildNode) => void
+    ) => void
+  ) {
+    if (fn.length >= 4) {
+      // add exists
+      const valesAdd = new Set<ChildNode>()
+      const fnAdd = (val: ChildNode) => valesAdd.add(val)
+
+      this[CHILD_NODE].forEach((child) => {
+        fn(child, child, this[CHILD_NODE], fnAdd)
+      })
+
+      valesAdd.forEach((item) => this.add(item))
+    } else {
+      this[CHILD_NODE].forEach(
+        fn as (
+          child: ChildNode,
+          childKey: ChildNode,
+          set: ShallowReactive<Set<ChildNode>>
+        ) => void
+      )
+    }
   }
 }
