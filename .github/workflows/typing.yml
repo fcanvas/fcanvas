@@ -38,6 +38,8 @@ jobs:
           pnpm i
           cd packages/fcanvas
           pnpm auto-export
+          cd ../..
+          pnpm build
 
       - name: Typing
         run: pnpm typing
