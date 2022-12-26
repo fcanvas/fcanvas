@@ -10,7 +10,6 @@ import { hookEvent } from "./hookEvent"
 
 export * from "@vue/reactivity"
 export * from "@vue-reactivity/watch"
-export { default as gsap } from "gsap"
 
 // global
 export {

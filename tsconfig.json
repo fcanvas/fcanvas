@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "types": ["vitest/globals"],
     "resolveJsonModule": true,
+    "preserveSymlinks": true
   },
   "include": [
     "packages/*/src/**/*.ts",
