@@ -32,6 +32,7 @@ importers:
 
   packages/fcanvas:
     specifiers:
+      '@types/lodash.delay': ^4.1.7
       '@types/plist': ^3.0.2
       '@vue-reactivity/watch': ^0.2.0
       '@vue/reactivity': ^3.2.37
@@ -42,6 +43,7 @@ importers:
       gsap: ^3.10.4
       happy-dom: ^6.0.4
       jsdom: ^20.0.0
+      lodash.delay: ^4.1.1
       path-normalize: ^6.0.6
       plist: ^3.0.6
       tmx-tiledmap: ^1.2.1
@@ -57,12 +59,14 @@ importers:
       path-normalize: 6.0.6
       tmx-tiledmap: 1.2.1
     devDependencies:
+      '@types/lodash.delay': 4.1.7
       '@types/plist': 3.0.2
       canvas: 2.9.3
       dommatrix: 1.0.3
       fetch-polyfill: 0.8.2
       happy-dom: 6.0.4
       jsdom: 20.0.0_canvas@2.9.3
+      lodash.delay: 4.1.1
       plist: 3.0.6
       tsup: 6.2.1
       tsx: 3.8.0
@@ -498,6 +502,16 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash.delay/4.1.7:
+    resolution: {integrity: sha512-x0lVYLGhDAOWxjtRcEwB7PSijnwBoFBTLzfY1mfzShxKvsFM8YaXaAvPH32eg8EBlCuyRmtRmfWAC3esW4y5Kg==}
+    dependencies:
+      '@types/lodash': 4.14.191
+    dev: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: true
 
   /@types/minimist/1.2.2:
@@ -3066,6 +3080,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: true
+
+  /lodash.delay/4.1.1:
+    resolution: {integrity: sha512-HDMACn/aGuz6PNBbzf2V9FKL/Rb2Vv+hSEvicdZA4JAT5o5m0rbQn4Xw62VdTzG2HRu74PInzku98fz8GQlNJg==}
     dev: true
 
   /lodash.ismatch/4.4.0:
