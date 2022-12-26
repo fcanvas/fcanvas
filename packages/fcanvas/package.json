@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "This is a simple canvas library for drawing on the fly.",
   "scripts": {
     "build": "pnpm auto-export && tsup",
