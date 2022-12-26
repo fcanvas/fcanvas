@@ -60,6 +60,7 @@ importers:
       canvas: ^2.11.0
       dommatrix: ^1.0.3
       fetch-polyfill: ^0.8.2
+      gsap: ^3.11.4
       happy-dom: ^8.1.1
       jsdom: ^20.0.3
       path-normalize: ^6.0.9
@@ -80,6 +81,7 @@ importers:
       canvas: 2.11.0
       dommatrix: 1.0.3
       fetch-polyfill: 0.8.2
+      gsap: 3.11.4
       happy-dom: 8.1.1
       jsdom: 20.0.3_canvas@2.11.0
       plist: 3.0.6
@@ -2984,7 +2986,6 @@ packages:
 
   /gsap/3.11.4:
     resolution: {integrity: sha512-McHhEguHyExMMnjqKA8G+7TvxmlKQGMbjgwAilnFe1e4id7V/tFveRQ2YMZhTYu0oxHGWvbPltdVYQOu3z1SCA==}
-    dev: false
 
   /handlebars/4.7.7:
     resolution: {integrity: sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==}

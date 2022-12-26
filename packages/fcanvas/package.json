@@ -28,6 +28,7 @@
     "canvas": "^2.11.0",
     "dommatrix": "^1.0.3",
     "fetch-polyfill": "^0.8.2",
+    "gsap": "^3.11.4",
     "happy-dom": "^8.1.1",
     "jsdom": "^20.0.3",
     "plist": "^3.0.6",

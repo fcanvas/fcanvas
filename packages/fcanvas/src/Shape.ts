@@ -1,6 +1,7 @@
 import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
+import type gsap from "gsap"
 
 import { APIEvent } from "./apis/APIEvent"
 import { _setCurrentShape } from "./currentShape"
@@ -402,6 +403,20 @@ export class Shape<
 
   public getBoundingClientRect() {
     return this[BOUNCE_CLIENT_RECT].value
+  }
+
+  public to(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    attrs: gsap.TweenVars &
+      Partial<CommonShapeAttrs<PersonalAttrs>> & {
+        keyframes: (gsap.TweenVars & Partial<CommonShapeAttrs<PersonalAttrs>>)[]
+      }
+  ): gsap.core.Tween {
+    // eslint-disable-next-line functional/no-throw-statement
+    throw new Error(
+      // eslint-disable-next-line quotes
+      'You need to install the "@fcanvas/animate"  plugin to use this function.'
+    )
   }
 
   // or context cache or context draw
