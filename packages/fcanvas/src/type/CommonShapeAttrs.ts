@@ -1,4 +1,3 @@
-import type { AnimationP } from "../apis/Animation"
 import type { OptionFilter } from "../helpers/createFilter"
 import type { OptionTransform } from "../helpers/createTransform"
 
@@ -75,6 +74,4 @@ export type CommonShapeAttrs<
     opacity?: number
   } & OptionTransform & {
     filter?: OptionFilter
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    animate?: AnimationP<CommonShapeAttrs<any> & PersonalAttrs>
   } & PersonalAttrs

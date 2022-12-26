@@ -1,10 +1,8 @@
 import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
-import gsap from "gsap"
 
 import { APIEvent } from "./apis/APIEvent"
-import { Animation } from "./apis/Animation"
 import { _setCurrentShape } from "./currentShape"
 import { isDev } from "./env"
 import { convertToDegrees } from "./helpers/convertToDegrees"
@@ -124,9 +122,6 @@ export class Shape<
   }
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
-  public readonly animate: Animation<
-    ReturnType<typeof reactive<CommonShapeAttrs & PersonalAttrs>>
-  >
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private readonly [CONTEXT_CACHE] = document
@@ -189,8 +184,6 @@ export class Shape<
         height: height + adjust
       }
     })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.animate = new Animation(this.$ as unknown as any)
 
     // try watchEffect
     watchEffect(() => {
@@ -220,15 +213,6 @@ export class Shape<
     // =====================================
 
     this[SCOPE].off()
-  }
-
-  public to(
-    attrs: gsap.TweenVars &
-      Partial<CommonShapeAttrs<PersonalAttrs>> & {
-        keyframes: (gsap.TweenVars & Partial<CommonShapeAttrs<PersonalAttrs>>)[]
-      }
-  ): gsap.core.Tween {
-    return gsap.to(this.$, attrs)
   }
 
   protected getFill(context: CanvasRenderingContext2D) {

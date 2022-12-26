@@ -27,10 +27,8 @@ const configBrowser: Options = {
     IS_BROWSER: "true"
   },
   noExternal: [
-    "@vue/reactivity",
-    "@vue/shared",
-    "@vue-reactivity/watch",
-    "path-normalize"
+    "fcanvas",
+    "gsap"
   ]
 }
 const configBrowserMinify: Options = {
