@@ -3,7 +3,7 @@
 A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's Proxy response system and minimizes redrawing.
 [https://fcanvas.js.org](https://fcanvas.js.org)
 
-
+> `.to()` has been migrated to the plugin [@fcanvas/animate](./packages/animate) to optimize the treeshake
 
 [![GitHub license](https://img.shields.io/github/license/tachibana-shin/fcanvas-next)](https://github.com/tachibana-shin/fcanvas-next/blob/main/LICENSE) <img alt="GitHub Issues" src="https://img.shields.io/github/issues/tachibana-shin/fcanvas-next" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/score/svg" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/status/svg" />
 
@@ -39,7 +39,10 @@ CDN:
 ## Example
 
 ```ts
-import { Stage, Layer, Circle, gsap } from "fcanvas"
+import { Stage, Layer, Circle } from "fcanvas"
+import { installAnimate } from "@fcanvas/animate"
+
+installAnimate(Shape)
 
 const stage = new Stage({
   container: "app",
@@ -58,6 +61,19 @@ const cỉrcle = new Circle({
 })
 
 layer.add(circle)
+
+circle.to({
+    x: stage.$.width,
+    duration: 1
+})
+```
+
+> If you don't like using [@fcanvas/animate](https://npmjs.com/package/@fcanvas/animate) you can always use [gsap](https://npmjs.com/package/gsap) by:
+
+
+```ts
+import gsap from "gsap"
+...
 
 gsap(circle.$).to({
     x: stage.$.width,
