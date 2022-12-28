@@ -117,3 +117,4 @@ function onCollide<T extends Shape | Group | Offset | Ref<Offset>>(
 }
 
 export { onCollide }
+export { onCollide as onIntersection }
