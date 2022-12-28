@@ -1,5 +1,5 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
+import type { ComputedRef, ShallowReactive, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 
 import type { Group } from "./Group"
@@ -310,7 +310,31 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     this[WAIT_DRAWING] = false
   }
 
+  public add(node: Shape | Group) {
+    // eslint-disable-next-line functional/no-let
+    let results: ShallowReactive<Set<Shape | Group<Shape>>>
+    if (this[CHILD_NODE].size < (results = super.add(node)).size) {
+      // success
+      node._parents++
+    }
+
+    return results
+  }
+
+  public delete(node: Shape | Group) {
+    if (super.delete(node)) {
+      // success
+      node._parents--
+      if (node._parents <= 0) node.destroy()
+
+      return true
+    }
+
+    return false
+  }
+
   public destroy(): void {
+    super.destroy()
     this.stopDraw()
     this[SCOPE].stop()
     this[CONTEXT_CACHE].canvas.remove()

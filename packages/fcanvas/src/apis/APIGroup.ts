@@ -16,11 +16,16 @@ export abstract class APIChildNode<
     shallowReactive(new Set())
 
   public add(node: ChildNode) {
-    this[CHILD_NODE].add(node)
+    return this[CHILD_NODE].add(node)
   }
 
   public delete(node: ChildNode) {
-    this[CHILD_NODE].delete(node)
+    return this[CHILD_NODE].delete(node)
+  }
+
+  public destroy() {
+    super.destroy()
+    this[CHILD_NODE].clear()
   }
 }
 

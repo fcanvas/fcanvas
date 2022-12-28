@@ -1,12 +1,10 @@
+import type { BoxClientRect } from "../logic/isBoxClientRect"
 import { BOUNCE_CLIENT_RECT } from "../symbols"
-import type { Rect } from "../type/Rect"
 
-interface Box {
-  [BOUNCE_CLIENT_RECT]: {
-    value: Rect
-  }
-}
-export function haveIntersection(el1: Box, el2: Box): boolean {
+export function haveIntersection(
+  el1: BoxClientRect,
+  el2: BoxClientRect
+): boolean {
   const r1 = el1[BOUNCE_CLIENT_RECT].value
   const r2 = el2[BOUNCE_CLIENT_RECT].value
 

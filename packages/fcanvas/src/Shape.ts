@@ -1,7 +1,6 @@
 import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
-import type gsap from "gsap"
 
 import { APIEvent } from "./apis/APIEvent"
 import { _setCurrentShape } from "./currentShape"
@@ -122,6 +121,9 @@ export class Shape<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (this.constructor as any).type
   }
+
+  // How many fathers does this shape have?
+  public _parents = 0
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
 
@@ -407,8 +409,9 @@ export class Shape<
   public to(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     attrs: gsap.TweenVars &
-      Partial<CommonShapeAttrs<PersonalAttrs>> & {
-        keyframes: (gsap.TweenVars & Partial<CommonShapeAttrs<PersonalAttrs>>)[]
+      Partial<ReactiveType<CommonShapeAttrs<PersonalAttrs>>> & {
+        keyframes?: (gsap.TweenVars &
+          Partial<ReactiveType<CommonShapeAttrs<PersonalAttrs>>>)[]
       }
   ): gsap.core.Tween {
     // eslint-disable-next-line functional/no-throw-statement
@@ -533,21 +536,20 @@ export class Shape<
 
   // @overwrite
   public isPressedPoint(x: number, y: number): boolean {
-    const hitStroke = this.getHitStroke()
-
-    const selfRect = this.getRect()
+    const selfRect = this[BOUNCE_CLIENT_RECT].value
 
     return pointInBox(
       x,
       y,
-      this.$.x + selfRect.x - hitStroke,
-      this.$.y + selfRect.y - hitStroke,
-      selfRect.width + hitStroke,
-      selfRect.height + hitStroke
+      this.$.x + selfRect.x,
+      this.$.y + selfRect.y,
+      selfRect.width,
+      selfRect.height
     )
   }
 
   public destroy() {
+    super.destroy()
     this[SCOPE].stop()
   }
 }
