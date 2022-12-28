@@ -1,5 +1,3 @@
-import type { reactive } from "@vue/reactivity"
-
 import { Shape } from "../Shape"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { ReactiveType } from "../type/fn/ReactiveType"
@@ -20,7 +18,7 @@ export class Path extends Shape<PersonalAttrs> {
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
-          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<Path>
     >

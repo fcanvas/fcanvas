@@ -1,4 +1,4 @@
-import type { reactive } from "@vue/reactivity"
+import type { UnwrapNestedRefs } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
 import { convertToRadial } from "../helpers/convertToRadial"
@@ -33,7 +33,7 @@ export class Arc extends Shape<PersonalAttrs> {
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
-          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<Arc>
     >

@@ -1,4 +1,4 @@
-import type { reactive } from "@vue/reactivity"
+import type { UnwrapNestedRefs } from "@vue/reactivity"
 import { effect } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
@@ -60,7 +60,7 @@ export class TextPath extends Shape<PersonalAttrs> {
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
-          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<TextPath>
     >
