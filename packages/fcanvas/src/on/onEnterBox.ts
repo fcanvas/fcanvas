@@ -14,7 +14,7 @@ import type { BoxClientRect } from "../logic/isBoxClientRect"
  * @returns callback stop watch
  * @description here is a simple function of `onCollide`
  */
-export function onLeaveBox(
+export function onEnterBox(
   target: Shape | Group,
   box: BoxClientRect,
   cb: () => void,
