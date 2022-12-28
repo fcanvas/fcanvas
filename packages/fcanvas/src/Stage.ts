@@ -1,4 +1,5 @@
 import { watchEffect } from "@vue-reactivity/watch"
+import type { UnwrapNestedRefs } from "@vue/reactivity"
 import { EffectScope, reactive } from "@vue/reactivity"
 
 import type { Layer } from "./Layer"
@@ -14,7 +15,7 @@ import {
   LISTENERS,
   SCOPE
 } from "./symbols"
-import type { Rect } from "./type/Rect"
+import type { Size } from "./type/Size"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 
 type PersonalAttrs = DrawLayerAttrs & {
@@ -37,12 +38,10 @@ export class Stage extends APIChildNode<
     return this.$
   }
 
-  public readonly size: ReturnType<
-    typeof reactive<Pick<Rect, "width" | "height">>
-  > = reactive({
-      width: globalConfigs.defaultWidth,
-      height: globalConfigs.defaultHeight
-    })
+  public readonly size: UnwrapNestedRefs<Size> = reactive({
+    width: globalConfigs.defaultWidth,
+    height: globalConfigs.defaultHeight
+  })
 
   private readonly [DIV_CONTAINER] = document.createElement("div")
 

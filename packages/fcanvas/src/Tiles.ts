@@ -6,8 +6,7 @@ import { getFetch, loadFetch } from "./methods/loadFetch"
 import { getImage, loadImage } from "./methods/loadImage"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
-
-type Size = Pick<Rect, "width" | "height">
+import type { Size } from "./type/Size"
 
 interface CanvasImageResource
   extends HTMLCanvasElement,

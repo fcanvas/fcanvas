@@ -1,5 +1,5 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import type { ComputedRef } from "@vue/reactivity"
+import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 
 import type { Shape } from "./Shape"
@@ -19,6 +19,7 @@ import {
 import type { CommonShapeAttrs } from "./type/CommonShapeAttrs"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
+import type { Size } from "./type/Size"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
@@ -37,7 +38,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
 > {
   static readonly type: string = "Group"
 
-  public readonly $: ReturnType<typeof reactive<PersonalAttrs>>
+  public readonly $: UnwrapNestedRefs<PersonalAttrs>
   public get attrs() {
     return this.$
   }
@@ -50,9 +51,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     .getContext("2d")!
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
-  private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<
-    Pick<Rect, "width" | "height">
-  >
+  private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
 
   private readonly [SCOPE] = new EffectScope(true) as unknown as {
     active: boolean
@@ -63,9 +62,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
 
   constructor(
     attrs: ReactiveType<PersonalAttrs> & {
-      setup?: (
-        attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
-      ) => void
+      setup?: (attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>) => void
     } & ThisType<Group> = {}
   ) {
     super()

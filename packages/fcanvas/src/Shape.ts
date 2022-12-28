@@ -1,5 +1,5 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import type { ComputedRef } from "@vue/reactivity"
+import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 import type gsap from "gsap"
 
@@ -29,6 +29,7 @@ import type {
 import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { GetClientRectOptions } from "./type/GetClientRectOptions"
 import type { Rect } from "./type/Rect"
+import type { Size } from "./type/Size"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
@@ -130,9 +131,7 @@ export class Shape<
     .getContext("2d")!
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
-  private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<
-    Pick<Rect, "width" | "height">
-  >
+  private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
 
   protected readonly [SCOPE] = new EffectScope(true) as unknown as {
     active: boolean
@@ -143,14 +142,14 @@ export class Shape<
 
   protected _sceneFunc?(context: CanvasRenderingContext2D): void
   protected setup?(
-    attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+    attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
   ): void
 
   constructor(
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
-          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<Shape>
     >

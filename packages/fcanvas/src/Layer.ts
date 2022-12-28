@@ -1,5 +1,5 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import type { ComputedRef } from "@vue/reactivity"
+import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 
 import type { Group } from "./Group"
@@ -87,7 +87,7 @@ function getListenersOnDeep(
 export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   static readonly type: string = "Layer"
 
-  public readonly $: ReturnType<typeof reactive<PersonalAttrs>>
+  public readonly $: UnwrapNestedRefs<PersonalAttrs>
   public get attrs() {
     return this.$
   }

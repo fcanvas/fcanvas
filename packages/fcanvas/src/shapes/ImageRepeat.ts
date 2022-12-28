@@ -1,5 +1,5 @@
 import { watch } from "@vue-reactivity/watch"
-import type { ComputedRef, reactive } from "@vue/reactivity"
+import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
@@ -247,7 +247,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
-          attrs: ReturnType<typeof reactive<CommonShapeAttrs<PersonalAttrs>>>
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<ImageRepeat>
     >
