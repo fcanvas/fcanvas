@@ -218,19 +218,19 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
           handle: (event: Event) => void
         }
       >()
+      // scan all events in children
+      const allListeners = computed(() => getListenersOnDeep(this))
       watchEffect(() => {
         if (isDev) console.log("[event::layer]: scan deep listeners")
-        // scan all events in children
-        const allListeners = getListenersOnDeep(this)
         // remove handler remove
         handlersChildrenMap.forEach((customer, name) => {
-          if (!allListeners.has(name)) {
+          if (!allListeners.value.has(name)) {
             customer.name.forEach((name) =>
               canvas.removeEventListener(name, customer.handle)
             )
           }
         })
-        allListeners.forEach((listenersGroup, name) => {
+        allListeners.value.forEach((listenersGroup, name) => {
           const oldHandler = handlersChildrenMap.get(
             name as keyof CommonShapeEvents
           )
