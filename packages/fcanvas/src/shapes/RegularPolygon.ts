@@ -25,17 +25,18 @@ export class RegularPolygon extends Shape<PersonalAttrs> {
     this.fillStrokeScene(context)
   }
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
+          this: RegularPolygon,
           attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<RegularPolygon>
     >
   ) {
-    super(attrs)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
   }
 
   private getPoints() {

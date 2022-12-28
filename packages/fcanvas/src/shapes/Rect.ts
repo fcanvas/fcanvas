@@ -64,16 +64,17 @@ export class Rect extends Shape<PersonalAttrs> {
     }
   }
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
+          this: Rect,
           attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<Rect>
     >
   ) {
-    super(attrs)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
   }
 }

@@ -1,5 +1,9 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import type { ComputedRef, ShallowReactive, UnwrapNestedRefs } from "@vue/reactivity"
+import type {
+  ComputedRef,
+  ShallowReactive,
+  UnwrapNestedRefs
+} from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 
 import type { Shape } from "./Shape"
@@ -23,7 +27,7 @@ import type { Size } from "./type/Size"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
-type PersonalAttrs = Partial<Offset> &
+export type PersonalAttrs = Partial<Offset> &
   DrawLayerAttrs & {
     width?: number
     height?: number

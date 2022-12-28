@@ -56,16 +56,19 @@ export class TextPath extends Shape<PersonalAttrs> {
   private partialText = ""
 
   private textWidth = 0
+
   constructor(
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
+          this: TextPath,
           attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<TextPath>
     >
   ) {
-    super(attrs)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
 
     this[SCOPE].on()
     this.dataArray = parsePathData(this.$.data)

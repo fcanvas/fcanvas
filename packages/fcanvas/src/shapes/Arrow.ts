@@ -1,5 +1,9 @@
+import type { UnwrapNestedRefs } from "@vue/reactivity"
+
 import { calcLength } from "../helpers/Path/calcLength"
 import { getPointOnQuadraticBezier } from "../helpers/Path/getPointOnQuadraticBezier"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { ReactiveType } from "../type/fn/ReactiveType"
 
 import type { PersonalAttrs as PersonalAttrsOfLine } from "./Line"
 import { Line } from "./Line"
@@ -99,6 +103,20 @@ export class Arrow extends Line<PersonalAttrs> {
       this.fillStrokeScene(context)
       context.restore()
     }
+  }
+
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          this: Arrow,
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
+        ) => void
+      } & ThisType<Arrow>
+    >
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
   }
 
   public getRect() {

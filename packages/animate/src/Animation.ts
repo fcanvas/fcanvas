@@ -1,5 +1,5 @@
 import type { ComputedRef } from "fcanvas"
-import { computed } from "fcanvas"
+import { computed, EffectScope, SCOPE } from "fcanvas"
 import gsap from "gsap"
 
 import { ANIMATION_STORE } from "./symbols"
@@ -25,11 +25,19 @@ export class Animation<Props extends Record<string, unknown>> {
     Readonly<Map<string, gsap.core.Tween>>
   >
 
+  private readonly [SCOPE] = new EffectScope(true) as unknown as {
+    active: boolean
+    on: () => void
+    off: () => void
+    stop: () => void
+  }
+
   constructor(
     attrs: Props & {
       animate: AnimationP<Omit<Props, "animation">>
     }
   ) {
+    this[SCOPE].on()
     // create gsap to ANIMATION_STORE
     this[ANIMATION_STORE] = computed<Readonly<Map<string, gsap.core.Tween>>>(
       () => {
@@ -56,6 +64,7 @@ export class Animation<Props extends Record<string, unknown>> {
         return store
       }
     )
+    this[SCOPE].off()
   }
 
   public start(name: string): gsap.core.Tween {
@@ -74,5 +83,9 @@ export class Animation<Props extends Record<string, unknown>> {
     tween.pause()
 
     return tween
+  }
+
+  public destroy() {
+    this[SCOPE].stop()
   }
 }

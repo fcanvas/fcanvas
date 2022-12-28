@@ -15,16 +15,17 @@ export class Path extends Shape<PersonalAttrs> {
     this.fillScene(context, new Path2D(this.$.data))
   }
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
+          this: Path,
           attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<Path>
     >
   ) {
-    super(attrs)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
   }
 }

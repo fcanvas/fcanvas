@@ -1,4 +1,4 @@
-import type { reactive } from "@vue/reactivity"
+import type { UnwrapNestedRefs } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
@@ -136,17 +136,18 @@ export class Line<P extends PersonalAttrs = PersonalAttrs> extends Shape<P> {
     else this.fillStrokeScene(context)
   }
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     attrs: ReactiveType<
-      CommonShapeAttrs<P> & {
+      CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
-          attrs: ReturnType<typeof reactive<CommonShapeAttrs<P>>>
+          this: Line,
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
-      } & ThisType<Line<P>>
+      } & ThisType<Line>
     >
   ) {
-    super(attrs)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
   }
 
   protected getTensionPoints() {
