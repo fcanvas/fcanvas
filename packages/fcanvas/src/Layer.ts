@@ -1,5 +1,9 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import type { ComputedRef, ShallowReactive, UnwrapNestedRefs } from "@vue/reactivity"
+import type {
+  ComputedRef,
+  ShallowReactive,
+  UnwrapNestedRefs
+} from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 
 import type { Group } from "./Group"

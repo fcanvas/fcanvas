@@ -1,5 +1,5 @@
 import { watch } from "@vue-reactivity/watch"
-import type { ComputedRef, reactive, Ref } from "@vue/reactivity"
+import type { ComputedRef, Ref, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, ref } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
@@ -60,9 +60,9 @@ export class Sprite<
         animation: keyof LocalPersonalAttrs["animations"]
       } & {
         setup?: (
-          attrs: ReturnType<
-            typeof reactive<CommonShapeAttrs<LocalPersonalAttrs>>
-          >
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          this: Sprite<any, any>,
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<LocalPersonalAttrs>>
         ) => void
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } & ThisType<Sprite<any, any>>

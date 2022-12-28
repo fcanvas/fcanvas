@@ -36,10 +36,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     return this.$
   }
 
-  public readonly size: UnwrapNestedRefs<Size> = reactive({
-    width: globalConfigs.defaultWidth,
-    height: globalConfigs.defaultHeight
-  })
+  public readonly size: UnwrapNestedRefs<Size>
 
   private readonly [DIV_CONTAINER] = document.createElement("div")
 
@@ -56,6 +53,11 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     this[SCOPE].on()
 
     this.$ = reactive(attrs as PersonalAttrs)
+    this.size = reactive({
+      width: globalConfigs.defaultWidth,
+      height: globalConfigs.defaultHeight
+    })
+
     watchEffect(() => {
       this.size.width = this.$.width ?? globalConfigs.defaultWidth
       this.size.height = this.$.height ?? globalConfigs.defaultHeight

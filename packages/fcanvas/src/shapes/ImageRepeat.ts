@@ -247,12 +247,14 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     attrs: ReactiveType<
       CommonShapeAttrs<PersonalAttrs> & {
         setup?: (
+          this: ImageRepeat,
           attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
         ) => void
       } & ThisType<ImageRepeat>
     >
   ) {
-    super(attrs)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
 
     this[SCOPE].on()
 

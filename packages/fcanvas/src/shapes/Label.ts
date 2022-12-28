@@ -1,32 +1,45 @@
+import { watchEffect } from "@vue-reactivity/watch"
+import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
 
+import type { PersonalAttrs } from "../Group"
 import { Group } from "../Group"
-import { BOUNCE_CLIENT_RECT, CHILD_NODE } from "../symbols"
+import { BOUNCE_CLIENT_RECT, CHILD_NODE, SCOPE } from "../symbols"
+import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { ReactiveType } from "../type/fn/ReactiveType"
 
 import { Tag } from "./Tag"
 import { Text } from "./Text"
 
 export class Label extends Group<Tag | Text> {
-  private readonly text = computed<Text | void>(() => {
-    for (const node of this[CHILD_NODE]) if (node instanceof Text) return node
-  })
+  private readonly text: ComputedRef<Text | void>
 
-  private readonly tag = computed<Tag | void>(() => {
-    for (const node of this[CHILD_NODE]) if (node instanceof Tag) return node
-  })
+  private readonly tag: ComputedRef<Tag | void>
 
-  public add(node: Tag | Text) {
-    const result = this[CHILD_NODE].add(node)
-    this.sync()
+  constructor(
+    attrs: ReactiveType<
+      CommonShapeAttrs<PersonalAttrs> & {
+        setup?: (
+          this: Label,
+          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
+        ) => void
+      } & ThisType<Label>
+    >
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    super(attrs as unknown as any)
 
-    return result
-  }
+    this[SCOPE].on()
 
-  public delete(node: Tag | Text) {
-    const result = this[CHILD_NODE].delete(node)
-    this.sync()
+    this.text = computed<Text | void>(() => {
+      for (const node of this[CHILD_NODE]) if (node instanceof Text) return node
+    })
+    this.tag = computed<Tag | void>(() => {
+      for (const node of this[CHILD_NODE]) if (node instanceof Tag) return node
+    })
+    watchEffect(this.sync.bind(this))
 
-    return result
+    this[SCOPE].off()
   }
 
   private sync() {
