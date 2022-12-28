@@ -15,6 +15,7 @@ import {
   LISTENERS,
   SCOPE
 } from "./symbols"
+import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { Size } from "./type/Size"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 
@@ -27,10 +28,7 @@ type PersonalAttrs = DrawLayerAttrs & {
   autoDraw?: boolean
 }
 
-export class Stage extends APIChildNode<
-  Layer,
-  Pick<GlobalEventHandlersEventMap, keyof GlobalEventHandlersEventMap>
-> {
+export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
   static readonly type: string = "Stage"
 
   public readonly $: ReturnType<typeof reactive<PersonalAttrs>>
@@ -136,8 +134,8 @@ export class Stage extends APIChildNode<
     this[SCOPE].off()
   }
 
-  public add(node: Layer): void {
-    super.add(node)
+  public add(node: Layer) {
+    const results = super.add(node)
     const { width, height } = this.size
 
     this[DIV_CONTAINER].appendChild(node[CANVAS_ELEMENT])
@@ -148,9 +146,12 @@ export class Stage extends APIChildNode<
 
     if (oHeight !== height) node[CANVAS_ELEMENT].height = height
     if (this.$.autoDraw !== false) node.batchDraw()
+
+    return results
   }
 
   public destroy(): void {
+    super.destroy()
     this[SCOPE].stop()
     this[DIV_CONTAINER].remove()
   }

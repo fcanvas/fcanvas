@@ -52,6 +52,8 @@ writeFileSync(
     "// export shapes",
     exportAllFiles("shapes"),
     "// export useApi",
-    exportAllFiles("useApi")
+    exportAllFiles("useApi"),
+    "// export logic",
+    exportAllFiles("logic")
   ].join("\n")
 )

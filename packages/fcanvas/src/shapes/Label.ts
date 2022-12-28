@@ -15,16 +15,18 @@ export class Label extends Group<Tag | Text> {
     for (const node of this[CHILD_NODE]) if (node instanceof Tag) return node
   })
 
-  // eslint-disable-next-line functional/functional-parameters
-  public add(...nodes: (Tag | Text)[]): void {
-    nodes.forEach((node) => this[CHILD_NODE].add(node))
+  public add(node: Tag | Text) {
+    const result = this[CHILD_NODE].add(node)
     this.sync()
+
+    return result
   }
 
-  // eslint-disable-next-line functional/functional-parameters
-  public delete(...nodes: readonly (Tag | Text)[]): void {
-    nodes.forEach((node) => this[CHILD_NODE].delete(node))
+  public delete(node: Tag | Text) {
+    const result = this[CHILD_NODE].delete(node)
     this.sync()
+
+    return result
   }
 
   private sync() {

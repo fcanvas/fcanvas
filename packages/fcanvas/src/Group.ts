@@ -1,5 +1,5 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
+import type { ComputedRef, ShallowReactive, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
 
 import type { Shape } from "./Shape"
@@ -37,6 +37,9 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
   }
 > {
   static readonly type: string = "Group"
+
+  // How many fathers does this shape have?
+  public _parents = 0
 
   public readonly $: UnwrapNestedRefs<PersonalAttrs>
   public get attrs() {
@@ -161,7 +164,31 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     return false
   }
 
+  public add(node: ChildNode) {
+    // eslint-disable-next-line functional/no-let
+    let results: ShallowReactive<Set<ChildNode>>
+    if (this[CHILD_NODE].size < (results = super.add(node)).size) {
+      // success
+      node._parents++
+    }
+
+    return results
+  }
+
+  public delete(node: ChildNode) {
+    if (super.delete(node)) {
+      // success
+      node._parents--
+      if (node._parents <= 0) node.destroy()
+
+      return true
+    }
+
+    return false
+  }
+
   public destroy() {
+    super.destroy()
     this[SCOPE].stop()
   }
 }

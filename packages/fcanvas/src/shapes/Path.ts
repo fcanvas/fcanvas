@@ -1,3 +1,5 @@
+import type { UnwrapNestedRefs } from "@vue/reactivity"
+
 import { Shape } from "../Shape"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { ReactiveType } from "../type/fn/ReactiveType"
