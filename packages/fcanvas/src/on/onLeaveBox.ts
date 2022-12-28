@@ -14,9 +14,14 @@ import type { BoxClientRect } from "../logic/isBoxClientRect"
  * @returns callback stop watch
  * @description here is a simple function of `onCollide`
  */
-export function onLeaveBox(target: Shape | Group, box: BoxClientRect, cb: () => void, options?: {
-  immediate?: boolean
-}) {
+export function onLeaveBox(
+  target: Shape | Group,
+  box: BoxClientRect,
+  cb: () => void,
+  options?: {
+    immediate?: boolean
+  }
+) {
   // eslint-disable-next-line functional/no-let
   let inited = options?.immediate
   return watchEffect(() => {
