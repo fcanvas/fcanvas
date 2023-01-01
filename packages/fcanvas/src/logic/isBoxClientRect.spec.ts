@@ -2,7 +2,7 @@ import { ref } from "@vue/reactivity"
 
 import { Group } from "../Group"
 import { Shape } from "../Shape"
-import { BOUNCE_CLIENT_RECT } from "../symbols"
+import { BOUNDING_CLIENT_RECT } from "../symbols"
 
 import { isBoxClientRect } from "./isBoxClientRect"
 
@@ -10,7 +10,7 @@ describe("isBoxClientRect", () => {
   test("should is box", () => {
     expect(
       isBoxClientRect({
-        [BOUNCE_CLIENT_RECT]: ref({})
+        [BOUNDING_CLIENT_RECT]: ref({})
       })
     ).toEqual(true)
   })

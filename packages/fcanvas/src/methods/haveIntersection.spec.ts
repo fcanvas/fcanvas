@@ -1,18 +1,11 @@
-import { describe, expect, test } from "vitest"
-
-import { BOUNCE_CLIENT_RECT } from "../symbols"
-import type { Rect } from "../type/Rect"
+import type { BoxClientRect } from "../logic/isBoxClientRect"
+import { BOUNDING_CLIENT_RECT } from "../symbols"
 
 import { haveIntersection } from "./haveIntersection"
 
-interface Box {
-  [BOUNCE_CLIENT_RECT]: {
-    value: Rect
-  }
-}
-function createBox(x: number, y: number, width: number, height: number): Box {
+function createBox(x: number, y: number, width: number, height: number): BoxClientRect {
   return {
-    [BOUNCE_CLIENT_RECT]: {
+    [BOUNDING_CLIENT_RECT]: {
       value: {
         x,
         y,
