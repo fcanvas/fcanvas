@@ -31,10 +31,26 @@ export function haveIntersection(
 
     return (rd1 + rd2) ** 2 >= (x1 - y1) ** 2 + (x2 - y2) ** 2
   }
-  return !(
-    r2.x > r1.x + r1.width ||
-    r2.x + r2.width < r1.x ||
-    r2.y > r1.y + r1.height ||
-    r2.y + r2.height < r1.y
-  )
+
+  const { x: x1, y: y1 } = r1
+  const maxX1 = r1.width + x1
+  const maxY1 = r1.height + y1
+
+  const { x: x2, y: y2 } = r2
+  const maxX2 = r2.width + x2
+  const maxY2 = r2.height + y2
+
+  const eq1 = y1 >= y2 && y1 <= maxY2
+  const eq2 = x1 <= x2 && x1 <= maxX2
+
+  if (eq1 && eq2) return false
+  const eq3 = maxX1 <= x2 && maxX1 <= maxX2
+
+  if (eq1 && eq3) return false
+  const eq4 = maxY1 >= y2 && maxY1 <= maxY2
+
+  if (eq4 && eq3) return false
+  if (eq4 && eq2) return false
+
+  return true
 }
