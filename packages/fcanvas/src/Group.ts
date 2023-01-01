@@ -178,6 +178,10 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     return this[BOUNDING_CLIENT_RECT].value
   }
 
+  public getBounceClientRect() {
+    return this[BOUNCE_CLIENT_RECT].value
+  }
+
   public isPressedPoint(x: number, y: number): boolean {
     for (const node of this[CHILD_NODE].values())
       if (node.isPressedPoint(x, y)) return true
