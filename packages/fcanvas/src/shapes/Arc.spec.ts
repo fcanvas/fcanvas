@@ -50,7 +50,7 @@ describe("Arc", () => {
     layer.add(arc)
     stage.add(layer)
 
-    expect(arc.getBoundingClientRect()).toEqual({
+    expect(arc.getBounceClientRect()).toEqual({
       width: 164,
       height: 164,
       x: -82,
@@ -76,7 +76,7 @@ describe("Arc", () => {
     layer.add(arc)
     stage.add(layer)
 
-    expect(arc.getBoundingClientRect()).toEqual({
+    expect(arc.getBounceClientRect()).toEqual({
       width: 164,
       height: 164,
       x: -82,

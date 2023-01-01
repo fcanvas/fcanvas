@@ -1,11 +1,12 @@
 import type { BoxClientRect } from "../logic/isBoxClientRect"
+import { BOUNDING_CLIENT_RECT } from "../symbols"
 
 export function haveIntersection(
   el1: BoxClientRect,
   el2: BoxClientRect
 ): boolean {
-  const r1 = el1.getBoundingClientRect()
-  const r2 = el2.getBoundingClientRect()
+  const r1 = el1[BOUNDING_CLIENT_RECT].value
+  const r2 = el2[BOUNDING_CLIENT_RECT].value
 
   if (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

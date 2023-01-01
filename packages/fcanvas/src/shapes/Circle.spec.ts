@@ -215,8 +215,8 @@ describe("Circle", () => {
     layer.add(circle)
     stage.add(layer)
 
-    expect(circle.getClientRect()).toEqual(circle.getBoundingClientRect())
-    expect(circle.getBoundingClientRect()).toEqual({
+    expect(circle.getClientRect()).toEqual(circle.getBounceClientRect())
+    expect(circle.getBounceClientRect()).toEqual({
       width: 104,
       height: 104,
       x: -52,
