@@ -1,9 +1,10 @@
-import { watchEffect } from "@vue-reactivity/watch"
+import { watch } from "@vue-reactivity/watch"
 
 import type { Group } from "../Group"
 import type { Shape } from "../Shape"
 import { haveIntersection } from "../auto-export"
 import type { BoxClientRect } from "../logic/isBoxClientRect"
+import { BOUNDING_CLIENT_RECT } from "../symbols"
 
 /**
  *
@@ -22,13 +23,11 @@ export function onEnterBox(
     immediate?: boolean
   }
 ) {
-  // eslint-disable-next-line functional/no-let
-  let inited = options?.immediate
-  return watchEffect(() => {
-    if (!inited) {
-      inited = true
-      return
-    }
-    if (haveIntersection(target, box)) cb()
-  })
+  return watch(
+    [target[BOUNDING_CLIENT_RECT], box[BOUNDING_CLIENT_RECT]],
+    () => {
+      if (haveIntersection(target, box)) cb()
+    },
+    options
+  )
 }
