@@ -15,6 +15,7 @@ import { transformedRect } from "./helpers/transformerRect"
 import { getImage } from "./methods/loadImage"
 import {
   BOUNCE_CLIENT_RECT,
+  BOUNDING_CLIENT_RECT,
   COMPUTED_CACHE,
   CONTEXT_CACHE,
   CONTEXT_CACHE_SIZE,
@@ -127,6 +128,7 @@ export class Shape<
   public _parents = 0
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
+  public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private readonly [CONTEXT_CACHE] = document
@@ -168,6 +170,17 @@ export class Shape<
     this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
+    this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
+      const { x, y, strokeWidth = 1 } = this.$
+      const { x: offX, y: offY, width, height } = this[BOUNCE_CLIENT_RECT].value
+
+      return {
+        x: x - strokeWidth + offX,
+        y: y - strokeWidth + offY,
+        width,
+        height
+      }
+    })
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
       if (this.$.perfectDrawEnabled !== false) {
@@ -405,7 +418,7 @@ export class Shape<
   }
 
   public getBoundingClientRect() {
-    return this[BOUNCE_CLIENT_RECT].value
+    return this[BOUNDING_CLIENT_RECT].value
   }
 
   public to(
@@ -538,16 +551,9 @@ export class Shape<
 
   // @overwrite
   public isPressedPoint(x: number, y: number): boolean {
-    const selfRect = this[BOUNCE_CLIENT_RECT].value
+    const { x: xd, y: yd, width, height } = this.getBoundingClientRect()
 
-    return pointInBox(
-      x,
-      y,
-      this.$.x + selfRect.x,
-      this.$.y + selfRect.y,
-      selfRect.width,
-      selfRect.height
-    )
+    return pointInBox(x, y, xd, yd, width, height)
   }
 
   public destroy() {

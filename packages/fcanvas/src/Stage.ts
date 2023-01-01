@@ -1,6 +1,6 @@
 import { watchEffect } from "@vue-reactivity/watch"
-import type { UnwrapNestedRefs } from "@vue/reactivity"
-import { EffectScope, reactive } from "@vue/reactivity"
+import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
+import { computed, EffectScope, reactive } from "@vue/reactivity"
 
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
@@ -9,6 +9,7 @@ import { globalConfigs } from "./globalConfigs"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import {
+  BOUNDING_CLIENT_RECT,
   CANVAS_ELEMENT,
   CHILD_NODE,
   DIV_CONTAINER,
@@ -16,6 +17,7 @@ import {
   SCOPE
 } from "./symbols"
 import type { CommonShapeEvents } from "./type/CommonShapeEvents"
+import type { Rect } from "./type/Rect"
 import type { Size } from "./type/Size"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 
@@ -37,6 +39,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
   }
 
   public readonly size: UnwrapNestedRefs<Size>
+  public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
   private readonly [DIV_CONTAINER] = document.createElement("div")
 
@@ -57,10 +60,21 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
       width: globalConfigs.defaultWidth,
       height: globalConfigs.defaultHeight
     })
-
     watchEffect(() => {
       this.size.width = this.$.width ?? globalConfigs.defaultWidth
       this.size.height = this.$.height ?? globalConfigs.defaultHeight
+    })
+
+    this[BOUNDING_CLIENT_RECT] = computed(() => {
+      const { x = 0, y = 0 } = this.$
+      const { width, height } = this.size
+
+      return {
+        x,
+        y,
+        width,
+        height
+      }
     })
 
     const container = this[DIV_CONTAINER]
@@ -134,6 +148,10 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     })
 
     this[SCOPE].off()
+  }
+
+  public getBoundingClientRect() {
+    return this[BOUNDING_CLIENT_RECT].value
   }
 
   public add(node: Layer) {
