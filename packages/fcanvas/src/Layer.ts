@@ -15,6 +15,7 @@ import { drawLayer } from "./helpers/drawLayer"
 import { handleCustomEventDefault, hookEvent } from "./hookEvent"
 import {
   BOUNCE_CLIENT_RECT,
+  BOUNDING_CLIENT_RECT,
   CANVAS_ELEMENT,
   CHILD_NODE,
   COMPUTED_CACHE,
@@ -97,6 +98,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   }
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
+  public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private readonly [CONTEXT_CACHE] = document
@@ -146,6 +148,17 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     })
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
+    this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
+      const { x = 0, y = 0 } = this.$
+      const { x: offX, y: offY, width, height } = this[BOUNCE_CLIENT_RECT].value
+
+      return {
+        x: x + offX,
+        y: y + offY,
+        width,
+        height
+      }
+    })
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       const ctx = this[CONTEXT_CACHE]
 
@@ -286,6 +299,10 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
   private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
     drawLayer(context, this.$, this[CHILD_NODE], this)
+  }
+
+  public getBoundingClientRect() {
+    return this[BOUNDING_CLIENT_RECT].value
   }
 
   public draw() {

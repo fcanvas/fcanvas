@@ -13,6 +13,7 @@ import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
 import {
   BOUNCE_CLIENT_RECT,
+  BOUNDING_CLIENT_RECT,
   CHILD_NODE,
   COMPUTED_CACHE,
   CONTEXT_CACHE,
@@ -51,6 +52,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
   }
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
+  public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private readonly [CONTEXT_CACHE] = document
@@ -78,6 +80,17 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     this.$ = reactive(attrs)
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
+    this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
+      const { x = 0, y = 0 } = this.$
+      const { x: offX, y: offY, width, height } = this[BOUNCE_CLIENT_RECT].value
+
+      return {
+        x: x + offX,
+        y: y + offY,
+        width,
+        height
+      }
+    })
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
       const ctx = this[CONTEXT_CACHE]
@@ -159,6 +172,10 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
       (this.$.x ?? 0) + x,
       (this.$.y ?? 0) + y
     )
+  }
+
+  public getBoundingClientRect() {
+    return this[BOUNDING_CLIENT_RECT].value
   }
 
   public isPressedPoint(x: number, y: number): boolean {
