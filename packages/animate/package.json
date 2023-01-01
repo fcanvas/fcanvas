@@ -1,6 +1,6 @@
 {
   "name": "@fcanvas/animate",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "Plugin that provides the ability to use animation for fcanvas",
   "scripts": {
     "build": "tsup",
