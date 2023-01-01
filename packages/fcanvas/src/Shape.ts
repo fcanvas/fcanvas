@@ -171,12 +171,12 @@ export class Shape<
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
-      const { x, y, strokeWidth = 1 } = this.$
+      const { x, y } = this.$
       const { x: offX, y: offY, width, height } = this[BOUNCE_CLIENT_RECT].value
 
       return {
-        x: x - strokeWidth + offX,
-        y: y - strokeWidth + offY,
+        x: x + offX,
+        y: y + offY,
         width,
         height
       }

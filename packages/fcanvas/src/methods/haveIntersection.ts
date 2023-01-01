@@ -1,5 +1,6 @@
 import type { BoxClientRect } from "../logic/isBoxClientRect"
 import { BOUNDING_CLIENT_RECT } from "../symbols"
+import type { Rect } from "../type/Rect"
 
 export function haveIntersection(
   el1: BoxClientRect,
@@ -32,6 +33,10 @@ export function haveIntersection(
     return (rd1 + rd2) ** 2 >= (x1 - y1) ** 2 + (x2 - y2) ** 2
   }
 
+  return checkRect(r1, r2) || checkRect(r2, r1)
+}
+
+function checkRect(r1: Rect, r2: Rect): boolean {
   const { x: x1, y: y1 } = r1
   const maxX1 = r1.width + x1
   const maxY1 = r1.height + y1
@@ -41,16 +46,16 @@ export function haveIntersection(
   const maxY2 = r2.height + y2
 
   const eq1 = y1 >= y2 && y1 <= maxY2
-  const eq2 = x1 <= x2 && x1 <= maxX2
+  const eq2 = x1 >= x2 && x1 <= maxX2
 
-  if (eq1 && eq2) return false
-  const eq3 = maxX1 <= x2 && maxX1 <= maxX2
+  if (eq1 && eq2) return true
+  const eq3 = maxX1 >= x2 && maxX1 <= maxX2
 
-  if (eq1 && eq3) return false
+  if (eq1 && eq3) return true
   const eq4 = maxY1 >= y2 && maxY1 <= maxY2
 
-  if (eq4 && eq3) return false
-  if (eq4 && eq2) return false
+  if (eq4 && eq3) return true
+  if (eq4 && eq2) return true
 
-  return true
+  return false
 }
