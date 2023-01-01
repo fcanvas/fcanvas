@@ -305,10 +305,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     return this[BOUNDING_CLIENT_RECT].value
   }
 
-  public getBounceClientRect() {
-    return this[BOUNCE_CLIENT_RECT].value
-  }
-
   public draw() {
     if (this.$.visible === false) return
 

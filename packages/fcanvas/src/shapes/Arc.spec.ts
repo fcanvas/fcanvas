@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest"
 
 import { Layer } from "../Layer"
 import { Stage } from "../Stage"
+import { getBounceClientRect } from "../methods/getBounceClientRect"
 
 import { Arc } from "./Arc"
 import { compareLayerWithImage } from "./test/helpers/compareLayerWithImage"
@@ -50,7 +51,7 @@ describe("Arc", () => {
     layer.add(arc)
     stage.add(layer)
 
-    expect(arc.getBounceClientRect()).toEqual({
+    expect(getBounceClientRect(arc)).toEqual({
       width: 164,
       height: 164,
       x: -82,
@@ -76,7 +77,7 @@ describe("Arc", () => {
     layer.add(arc)
     stage.add(layer)
 
-    expect(arc.getBounceClientRect()).toEqual({
+    expect(getBounceClientRect(arc)).toEqual({
       width: 164,
       height: 164,
       x: -82,

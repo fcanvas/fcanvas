@@ -4,6 +4,7 @@ import { createCanvas } from "canvas"
 import { describe, expect, test } from "vitest"
 
 import { Circle, Group, Layer, Stage } from ".."
+import { getBounceClientRect } from "../methods/getBounceClientRect"
 
 import { compareCanvas } from "./test/helpers/compareCanvas"
 import { compareLayerWithImage } from "./test/helpers/compareLayerWithImage"
@@ -215,8 +216,8 @@ describe("Circle", () => {
     layer.add(circle)
     stage.add(layer)
 
-    expect(circle.getClientRect()).toEqual(circle.getBounceClientRect())
-    expect(circle.getBounceClientRect()).toEqual({
+    expect(circle.getClientRect()).toEqual(getBounceClientRect(circle))
+    expect(getBounceClientRect(circle)).toEqual({
       width: 104,
       height: 104,
       x: -52,
