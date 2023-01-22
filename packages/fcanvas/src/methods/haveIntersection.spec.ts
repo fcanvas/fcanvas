@@ -3,7 +3,12 @@ import { BOUNDING_CLIENT_RECT } from "../symbols"
 
 import { haveIntersection } from "./haveIntersection"
 
-function createBox(x: number, y: number, width: number, height: number): BoxClientRect {
+function createBox(
+  x: number,
+  y: number,
+  width: number,
+  height: number
+): BoxClientRect {
   return {
     [BOUNDING_CLIENT_RECT]: {
       value: {

@@ -7,15 +7,28 @@ import type { Group } from "../Group"
 import type { Shape } from "../Shape"
 import { getCurrentShape } from "../currentShape"
 import { isBoxClientRect } from "../logic/isBoxClientRect"
-import { haveIntersection } from "../methods/haveIntersection"
+import { checkRect, haveIntersection } from "../methods/haveIntersection"
 import type { Offset } from "../type/Offset"
+import { Size } from "../type/Size"
+import { Rect } from "../type/Rect"
+import { isRectRaw } from "../logic/isRectRaw"
+import { isCircleRaw } from "../logic/isCircleRaw"
+import { BOUNDING_CLIENT_RECT } from "../symbols"
+import { Circle } from "../shapes/Circle"
+import { isCircle } from "../logic/isCircle"
+import { isArc } from "../logic/isArc"
+import { Arc } from "../shapes/Arc"
 
-function onCollide<T extends Shape | Group | Offset | Ref<Offset>>(
+function onCollide<
+  T extends Shape | Group | Offset | Rect | Ref<Offset | Rect>
+>(
   targets: T | Array<T> | Ref<UnwrapRef<T> | Array<UnwrapRef<T>>>,
   cb: (target: UnwrapRef<T>) => void
 ): WatchStopHandle
 // eslint-disable-next-line no-redeclare
-function onCollide<T extends Shape | Group | Offset | Ref<Offset>>(
+function onCollide<
+  T extends Shape | Group | Offset | Rect | Ref<Offset | Rect>
+>(
   $this: Shape | Group,
   targets: T | Array<T> | Ref<UnwrapRef<T> | Array<UnwrapRef<T>>>,
   cb: (target: UnwrapRef<T>) => void
@@ -28,7 +41,9 @@ function onCollide<T extends Shape | Group | Offset | Ref<Offset>>(
  * @description collide test
  */
 // eslint-disable-next-line no-redeclare
-function onCollide<T extends Shape | Group | Offset | Ref<Offset>>(
+function onCollide<
+  T extends Shape | Group | Offset | Rect | Ref<Offset | Rect>
+>(
   $this:
     | Shape
     | Group
@@ -47,6 +62,8 @@ function onCollide<T extends Shape | Group | Offset | Ref<Offset>>(
       targets as (target: UnwrapRef<T>) => void
     ]
   }
+
+  const checker = $this as Shape | Group
 
   const watchers = new Map<UnwrapRef<T>, WatchStopHandle>()
 
@@ -71,29 +88,40 @@ function onCollide<T extends Shape | Group | Offset | Ref<Offset>>(
         if (exists.has(target)) return
 
         // eslint-disable-next-line functional/no-let
-        let watcher: WatchStopHandle
+        let effect: () => void
         if (isBoxClientRect(target)) {
-          watcher = watchEffect(
-            () => {
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              if (haveIntersection($this as Shape, target)) cb!(target)
-            },
-            {
-              flush: "post"
-            }
-          )
+          effect = () => {
+            if (haveIntersection(checker, target)) cb!(target)
+          }
+        } else if (isRectRaw(target)) {
+          effect = () => {
+            if (checkRect(checker[BOUNDING_CLIENT_RECT].value, target))
+              cb!(target)
+          }
+        } else if (
+          (isArc(checker) || isCircle(checker)) &&
+          isCircleRaw(target)
+        ) {
+          effect = () => {
+            const rd1 =
+              (checker as Arc).$.outerRadius ?? (checker as Circle).$.radius
+            const { x: x1, y: y1 } = checker.$
+            const { radius: rd2, x: x2, y: y2 } = target
+
+            if ((rd1 + rd2) ** 2 >= (x1 - y1) ** 2 + (x2 - y2) ** 2) cb!(target)
+          }
         } else {
-          watcher = watchEffect(
-            () => {
-              if (($this as Shape).isPressedPoint(target.x, target.y))
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                cb!(target)
-            },
-            {
-              flush: "post"
-            }
-          )
+          effect = () => {
+            if (checker.isPressedPoint(target.x, target.y))
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              cb!(target)
+          }
         }
+
+        const watcher = watchEffect(effect, {
+          flush: "post"
+        })
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(target as unknown as any)?.on("destroy", () => {
           watcher()

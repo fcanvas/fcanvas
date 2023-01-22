@@ -36,7 +36,7 @@ export function haveIntersection(
   return checkRect(r1, r2) || checkRect(r2, r1)
 }
 
-function checkRect(r1: Rect, r2: Rect): boolean {
+export function checkRect(r1: Rect, r2: Rect): boolean {
   const { x: x1, y: y1 } = r1
   const maxX1 = r1.width + x1
   const maxY1 = r1.height + y1
