@@ -1,5 +1,5 @@
-import type { UnwrapNestedRefs } from "@vue/reactivity"
 import { watchEffect } from "@vue-reactivity/watch"
+import type { UnwrapNestedRefs } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
 import { SCOPE } from "../symbols"
