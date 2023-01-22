@@ -1,23 +1,23 @@
-import type { WatchStopHandle } from "@vue-reactivity/watch"
-import { watch, watchEffect } from "@vue-reactivity/watch"
 import type { Ref, UnwrapRef } from "@vue/reactivity"
 import { isReactive, isRef, shallowRef } from "@vue/reactivity"
+import type { WatchStopHandle } from "@vue-reactivity/watch"
+import { watch, watchEffect } from "@vue-reactivity/watch"
 
 import type { Group } from "../Group"
 import type { Shape } from "../Shape"
 import { getCurrentShape } from "../currentShape"
-import { isBoxClientRect } from "../logic/isBoxClientRect"
-import { checkRect, haveIntersection } from "../methods/haveIntersection"
-import type { Offset } from "../type/Offset"
-import { Size } from "../type/Size"
-import { Rect } from "../type/Rect"
-import { isRectRaw } from "../logic/isRectRaw"
-import { isCircleRaw } from "../logic/isCircleRaw"
-import { BOUNDING_CLIENT_RECT } from "../symbols"
-import { Circle } from "../shapes/Circle"
-import { isCircle } from "../logic/isCircle"
 import { isArc } from "../logic/isArc"
-import { Arc } from "../shapes/Arc"
+import { isBoxClientRect } from "../logic/isBoxClientRect"
+import { isCircle } from "../logic/isCircle"
+import { isCircleRaw } from "../logic/isCircleRaw"
+import { isRectRaw } from "../logic/isRectRaw"
+import { checkRect, haveIntersection } from "../methods/haveIntersection"
+import type { Arc } from "../shapes/Arc"
+import type { Circle } from "../shapes/Circle"
+import { BOUNDING_CLIENT_RECT } from "../symbols"
+import type { Offset } from "../type/Offset"
+import type { Rect } from "../type/Rect"
+import { Size } from "../type/Size"
 
 function onCollide<
   T extends Shape | Group | Offset | Rect | Ref<Offset | Rect>
@@ -70,6 +70,12 @@ function onCollide<
   if (!isReactive(targets) && !isRef(targets))
     targets = shallowRef(targets) as Ref<UnwrapRef<T>>
 
+  const storeCheckCallOnce = new WeakMap<UnwrapRef<T>, boolean>()
+  const setCalled = (target: UnwrapRef<T>) =>
+    storeCheckCallOnce.set(target, true)
+  const setReseed = (target: UnwrapRef<T>) => storeCheckCallOnce.delete(target)
+  const hasCalled = (target: UnwrapRef<T>) => storeCheckCallOnce.has(target)
+
   const watcherTargets = watch(
     targets as UnwrapRef<T>[] | UnwrapRef<T>,
     (targets) => {
@@ -91,12 +97,21 @@ function onCollide<
         let effect: () => void
         if (isBoxClientRect(target)) {
           effect = () => {
-            if (haveIntersection(checker, target)) cb!(target)
+            if (haveIntersection(checker, target)) {
+              if (!hasCalled(target)) {
+ cb!(target)
+ setCalled(target)
+              }
+            } else { setReseed(target) }
           }
         } else if (isRectRaw(target)) {
           effect = () => {
-            if (checkRect(checker[BOUNDING_CLIENT_RECT].value, target))
-              cb!(target)
+            if (checkRect(checker[BOUNDING_CLIENT_RECT].value, target)) {
+              if (!hasCalled(target)) {
+ cb!(target)
+ setCalled(target)
+              }
+            } else { setReseed(target) }
           }
         } else if (
           (isArc(checker) || isCircle(checker)) &&
@@ -108,13 +123,22 @@ function onCollide<
             const { x: x1, y: y1 } = checker.$
             const { radius: rd2, x: x2, y: y2 } = target
 
-            if ((rd1 + rd2) ** 2 >= (x1 - y1) ** 2 + (x2 - y2) ** 2) cb!(target)
+            if ((rd1 + rd2) ** 2 >= (x1 - y1) ** 2 + (x2 - y2) ** 2) {
+              if (!hasCalled(target)) {
+ cb!(target)
+ setCalled(target)
+              }
+            } else { setReseed(target) }
           }
         } else {
           effect = () => {
-            if (checker.isPressedPoint(target.x, target.y))
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              cb!(target)
+            if (checker.isPressedPoint(target.x, target.y)) {
+              if (!hasCalled(target)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                cb!(target)
+                setCalled(target)
+              }
+            } else { setReseed(target) }
           }
         }
 
@@ -123,14 +147,15 @@ function onCollide<
         })
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(target as unknown as any)?.on("destroy", () => {
+        ;(target as unknown as any).on?.("destroy", () => {
           watcher()
           watchers.delete(target)
         })
 
         watchers.set(target, watcher)
       })
-    }
+    },
+    { immediate: true }
   )
 
   const stop = () => {
