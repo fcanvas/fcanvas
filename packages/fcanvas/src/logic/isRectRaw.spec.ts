@@ -1,4 +1,5 @@
 import { Rect } from "../shapes/Rect"
+
 import { isRectRaw } from "./isRectRaw"
 
 describe("isRectRaw", () => {
