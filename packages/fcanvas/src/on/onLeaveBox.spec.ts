@@ -110,11 +110,7 @@ describe("onLeaveBox", () => {
       layer.add(rect)
 
       const fn = vi.fn()
-      onLeaveBox(
-        rect,
-        stage,fn,
-        { immediate: true }
-      )
+      onLeaveBox(rect, stage, fn, { immediate: true })
       rect.$.x--
       await Promise.resolve()
       rect.$.x--

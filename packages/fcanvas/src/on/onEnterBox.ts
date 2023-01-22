@@ -23,15 +23,16 @@ export function onEnterBox(
     immediate?: boolean
   }
 ) {
+  // eslint-disable-next-line functional/no-let
   let inBoxed = false
   return watch(
     [target[BOUNDING_CLIENT_RECT], box[BOUNDING_CLIENT_RECT]],
     () => {
       if (haveIntersection(target, box)) {
         if (!inBoxed) {
-        cb()
-      inBoxed =true   
-      }
+          cb()
+          inBoxed = true
+        }
       } else {
         inBoxed = false
       }

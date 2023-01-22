@@ -1,5 +1,3 @@
-import { NOOP } from "@vue/shared"
-
 import { Circle } from "../shapes/Circle"
 import { Rect } from "../shapes/Rect"
 
@@ -43,6 +41,7 @@ describe("onCollide", () => {
     expect(fn.mock.calls[0][0]).toBe(rect2)
   })
 
+  // eslint-disable-next-line functional/no-let
   let fn: ReturnType<typeof vi.fn>
   beforeEach(() => (fn = vi.fn()))
 
@@ -203,7 +202,7 @@ describe("onCollide", () => {
     rect2.$.x -= 1
     rect2.$.y -= 1
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     rect2.$.x--
     rect2.$.y--
@@ -212,33 +211,32 @@ describe("onCollide", () => {
     expect(fn.mock.calls[0][0]).toBe(rect2)
   }, 2_000)
   test("call mutiple if targets", async () => {
-   const rect2 = new Rect({ x: 11, y: 11, ...sizeRect })
-   const rect3 = new Rect({ x: 11, y: 11, ...sizeRect })
-   const fn = vi.fn()
+    const rect2 = new Rect({ x: 11, y: 11, ...sizeRect })
+    const rect3 = new Rect({ x: 11, y: 11, ...sizeRect })
+    const fn = vi.fn()
 
-   onCollide(rect, [rect2, rect3], fn)
+    onCollide(rect, [rect2, rect3], fn)
 
-   expect(fn.mock.calls.length).toBe(0)
+    expect(fn.mock.calls.length).toBe(0)
 
-   rect2.$.x--
-   rect2.$.y--
-   await new Promise(resolve => setTimeout(resolve, 1000))
-   rect2.$.x--
-   rect2.$.y--
+    rect2.$.x--
+    rect2.$.y--
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    rect2.$.x--
+    rect2.$.y--
 
-   expect(fn.mock.calls.length).toBe(1)
-   expect(fn.mock.calls[0][0]).toBe(rect2)
+    expect(fn.mock.calls.length).toBe(1)
+    expect(fn.mock.calls[0][0]).toBe(rect2)
 
-   
-   rect3.$.x--
-   rect3.$.y--
-   await new Promise(resolve => setTimeout(resolve, 1000))
-   rect3.$.x--
-   rect3.$.y--
+    rect3.$.x--
+    rect3.$.y--
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    rect3.$.x--
+    rect3.$.y--
 
-   expect(fn.mock.calls.length).toBe(2)
-   expect(fn.mock.calls[0][0]).toBe(rect2)
-   expect(fn.mock.calls[1][0]).toBe(rect3)
+    expect(fn.mock.calls.length).toBe(2)
+    expect(fn.mock.calls[0][0]).toBe(rect2)
+    expect(fn.mock.calls[1][0]).toBe(rect3)
   }, 5_000)
   // mutil call if targets
 })
