@@ -1,6 +1,6 @@
+import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
-import { watchEffect } from "@vue-reactivity/watch"
 
 import type { PersonalAttrs } from "../Group"
 import { Group } from "../Group"
