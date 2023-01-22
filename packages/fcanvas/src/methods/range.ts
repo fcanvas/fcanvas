@@ -97,7 +97,7 @@ export class Range {
     return this.toString()
   }
 
-  public * [Symbol.iterator]() {
+  public *[Symbol.iterator]() {
     // eslint-disable-next-line functional/no-let
     for (let i = 0; i < this.length; i += 1) yield this.get(i)
   }
