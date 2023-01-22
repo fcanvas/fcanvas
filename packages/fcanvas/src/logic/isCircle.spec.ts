@@ -5,10 +5,10 @@ import { isCircleRaw } from "./isCircleRaw"
 
 describe("isCircleRaw", () => {
   test("should is Circle", () => {
-    expect(isCircleRaw(new Circle({ x: 0, y: 0, radius: 20 }))).toBe(true)
+    expect(isCircleRaw(new Circle({ x: 0, y: 0, radius: 20 }))).toBe(false)
   })
   test("should is circle raw", () => {
-    expect(isCircleRaw({ x: 0, y: 0, radius: 20 })).toBe(false)
+    expect(isCircleRaw({ x: 0, y: 0, radius: 20 })).toBe(true)
   })
   test("should is point", () => {
     expect(isCircleRaw({ x: 0, y: 0 })).toBe(false)

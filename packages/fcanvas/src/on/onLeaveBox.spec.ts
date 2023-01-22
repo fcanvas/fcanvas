@@ -100,5 +100,27 @@ describe("onLeaveBox", () => {
       rect.$.x--
       expect(entered).toEqual(true)
     })
+    test("call once only", async () => {
+      const stage = new Stage({ width: 200, height: 200 })
+
+      const layer = new Layer()
+      stage.add(layer)
+
+      const rect = new Rect({ x: 201, y: 200 - 30, width: 30, height: 30 })
+      layer.add(rect)
+
+      const fn = vi.fn()
+      onLeaveBox(
+        rect,
+        stage,fn,
+        { immediate: true }
+      )
+      rect.$.x--
+      await Promise.resolve()
+      rect.$.x--
+      await Promise.resolve()
+
+      expect(fn.mock.calls.length).toBe(1)
+    })
   })
 })
