@@ -110,15 +110,11 @@ describe("onEnterBox", () => {
       layer.add(rect)
 
       const fn = vi.fn()
-      onEnterBox(
-        rect,
-        stage,fn,
-        { immediate: true }
-      )
+      onEnterBox(rect, stage, fn, { immediate: true })
       rect.$.x--
       await Promise.resolve()
-rect.$.x--
-await Promise.resolve()
+      rect.$.x--
+      await Promise.resolve()
 
       expect(fn.mock.calls.length).toBe(1)
     })

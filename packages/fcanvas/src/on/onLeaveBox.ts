@@ -23,16 +23,19 @@ export function onLeaveBox(
     immediate?: boolean
   }
 ) {
+  // eslint-disable-next-line functional/no-let
   let inBoxed = true
   return watch(
     [target[BOUNDING_CLIENT_RECT], box[BOUNDING_CLIENT_RECT]],
     () => {
       if (!haveIntersection(target, box)) {
-        if (inBoxed) {cb()
-          
-          inBoxed = false }
+        if (inBoxed) {
+          cb()
+
+          inBoxed = false
+        }
       } else {
-        inBoxed = true 
+        inBoxed = true
       }
     },
     options

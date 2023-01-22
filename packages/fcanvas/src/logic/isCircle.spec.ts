@@ -1,5 +1,4 @@
 import { Circle } from "../shapes/Circle"
-import { Rect } from "../shapes/Rect"
 
 import { isCircleRaw } from "./isCircleRaw"
 

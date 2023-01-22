@@ -17,7 +17,6 @@ import type { Circle } from "../shapes/Circle"
 import { BOUNDING_CLIENT_RECT } from "../symbols"
 import type { Offset } from "../type/Offset"
 import type { Rect } from "../type/Rect"
-import { Size } from "../type/Size"
 
 function onCollide<
   T extends Shape | Group | Offset | Rect | Ref<Offset | Rect>
@@ -99,19 +98,25 @@ function onCollide<
           effect = () => {
             if (haveIntersection(checker, target)) {
               if (!hasCalled(target)) {
- cb!(target)
- setCalled(target)
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                cb!(target)
+                setCalled(target)
               }
-            } else { setReseed(target) }
+            } else {
+              setReseed(target)
+            }
           }
         } else if (isRectRaw(target)) {
           effect = () => {
             if (checkRect(checker[BOUNDING_CLIENT_RECT].value, target)) {
               if (!hasCalled(target)) {
- cb!(target)
- setCalled(target)
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                cb!(target)
+                setCalled(target)
               }
-            } else { setReseed(target) }
+            } else {
+              setReseed(target)
+            }
           }
         } else if (
           (isArc(checker) || isCircle(checker)) &&
@@ -125,10 +130,13 @@ function onCollide<
 
             if ((rd1 + rd2) ** 2 >= (x1 - y1) ** 2 + (x2 - y2) ** 2) {
               if (!hasCalled(target)) {
- cb!(target)
- setCalled(target)
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                cb!(target)
+                setCalled(target)
               }
-            } else { setReseed(target) }
+            } else {
+              setReseed(target)
+            }
           }
         } else {
           effect = () => {
@@ -138,7 +146,9 @@ function onCollide<
                 cb!(target)
                 setCalled(target)
               }
-            } else { setReseed(target) }
+            } else {
+              setReseed(target)
+            }
           }
         }
 

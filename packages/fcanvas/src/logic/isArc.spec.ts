@@ -1,6 +1,6 @@
 import { Arc } from "../shapes/Arc"
-import { isArc } from "./isArc"
 
+import { isArc } from "./isArc"
 
 describe("isCircleRaw", () => {
   test("should is Arc", () => {
