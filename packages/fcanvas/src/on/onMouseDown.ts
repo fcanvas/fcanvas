@@ -4,6 +4,14 @@ import type { Shape } from "../Shape"
 import { getCurrentShape } from "../currentShape"
 import { addEvents } from "../helpers/addEvents"
 import { rmEvents } from "../helpers/rmEvents"
+/**
+ * `onMouseDown` is a function that takes a `Shape` and a callback, and returns a function that removes
+ * the event listener
+ * @param {Shape | ((event: MouseEvent | TouchEvent) => void)} target - Shape | ((event: MouseEvent |
+ * TouchEvent) => void)
+ * @param [cb] - (event: MouseEvent | TouchEvent) => void
+ * @returns A function that removes the event listener.
+ */
 
 function onMouseDown(
   target: Shape,
