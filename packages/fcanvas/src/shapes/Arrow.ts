@@ -15,6 +15,8 @@ type PersonalAttrs = PersonalAttrsOfLine & {
   pointerAtEnding?: boolean // true
 }
 
+/* `Arrow` is a `Line` with a `pointerLength` and `pointerWidth` attributes that draw an arrow at the
+end of the line */
 export class Arrow extends Line<PersonalAttrs> {
   static readonly type = "Arrow"
 

@@ -14,6 +14,7 @@ export type PersonalAttrs = {
   clockwise?: boolean
 }
 
+/* `Arc` is a `Shape` that draws an arc */
 export class Arc extends Shape<PersonalAttrs> {
   static readonly type: string = "Arc"
   static readonly _centroid = true
