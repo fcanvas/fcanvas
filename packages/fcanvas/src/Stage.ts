@@ -1,6 +1,6 @@
+import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
-import { watchEffect } from "@vue-reactivity/watch"
 
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
