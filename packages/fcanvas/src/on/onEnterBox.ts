@@ -30,8 +30,8 @@ export function onEnterBox(
     () => {
       if (haveIntersection(target, box)) {
         if (!inBoxed) {
-          cb()
           inBoxed = true
+          cb()
         }
       } else {
         inBoxed = false

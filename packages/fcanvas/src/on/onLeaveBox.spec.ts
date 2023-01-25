@@ -112,7 +112,9 @@ describe("onLeaveBox", () => {
       const fn = vi.fn()
       onLeaveBox(rect, stage, fn, { immediate: true })
       rect.$.x--
+      rect.$.x--
       await Promise.resolve()
+      rect.$.x--
       rect.$.x--
       await Promise.resolve()
 

@@ -98,9 +98,9 @@ function onCollide<
           effect = () => {
             if (haveIntersection(checker, target)) {
               if (!hasCalled(target)) {
+                setCalled(target)
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 cb!(target)
-                setCalled(target)
               }
             } else {
               setReseed(target)
@@ -110,9 +110,9 @@ function onCollide<
           effect = () => {
             if (checkRect(checker[BOUNDING_CLIENT_RECT].value, target)) {
               if (!hasCalled(target)) {
+                setCalled(target)
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 cb!(target)
-                setCalled(target)
               }
             } else {
               setReseed(target)
@@ -130,9 +130,9 @@ function onCollide<
 
             if ((rd1 + rd2) ** 2 >= (x1 - y1) ** 2 + (x2 - y2) ** 2) {
               if (!hasCalled(target)) {
+                setCalled(target)
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 cb!(target)
-                setCalled(target)
               }
             } else {
               setReseed(target)
@@ -142,9 +142,9 @@ function onCollide<
           effect = () => {
             if (checker.isPressedPoint(target.x, target.y)) {
               if (!hasCalled(target)) {
+                setCalled(target)
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 cb!(target)
-                setCalled(target)
               }
             } else {
               setReseed(target)
