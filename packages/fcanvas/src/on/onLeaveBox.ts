@@ -30,9 +30,8 @@ export function onLeaveBox(
     () => {
       if (!haveIntersection(target, box)) {
         if (inBoxed) {
-          cb()
-
           inBoxed = false
+          cb()
         }
       } else {
         inBoxed = true
