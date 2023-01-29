@@ -1,6 +1,6 @@
+import { watch } from "@vue-reactivity/watch"
 import type { ComputedRef } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
-import { watch } from "@vue-reactivity/watch"
 
 import { Shape } from "../Shape"
 import { isDev } from "../env"
