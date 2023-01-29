@@ -71,9 +71,21 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     stop: () => void
   }
 
-  constructor(attrs?: TorFnT<ReactiveType<PersonalAttrs>, Group<ChildNode>>) {
+  constructor(attrs: TorFnT<ReactiveType<PersonalAttrs>, Group<ChildNode>> = {}) {
     super()
     this[SCOPE].on()
+
+    if (typeof attrs === "function") {
+      // =========== current shape ===========
+      _setCurrentShape(this)
+      // =====================================
+      this.$ = reactive(attrs(this) as CommonShapeAttrs<PersonalAttrs>)
+      // =========== current shape ===========
+      _setCurrentShape(null)
+      // =====================================
+    } else {
+      this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
+    }
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
@@ -117,18 +129,6 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
         height
       }
     })
-
-    if (typeof attrs === "function") {
-      // =========== current shape ===========
-      _setCurrentShape(this)
-      // =====================================
-      this.$ = reactive(attrs(this) as CommonShapeAttrs<PersonalAttrs>)
-      // =========== current shape ===========
-      _setCurrentShape(null)
-      // =====================================
-    } else {
-      this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
-    }
 
     // try watchEffect
     watchEffect(
