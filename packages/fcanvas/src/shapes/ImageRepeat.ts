@@ -1,4 +1,4 @@
-import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
+import type { ComputedRef } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
 import { watch } from "@vue-reactivity/watch"
 
@@ -8,6 +8,7 @@ import { getImage, loadImage } from "../methods/loadImage"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { Rect } from "../type/Rect"
+import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
 import { getSizeImageApplyRatio, getValFromSource } from "./Image"
@@ -244,14 +245,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
   }
 
   constructor(
-    attrs: ReactiveType<
-      CommonShapeAttrs<PersonalAttrs> & {
-        setup?: (
-          this: ImageRepeat,
-          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
-        ) => void
-      } & ThisType<ImageRepeat>
-    >
+    attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, ImageRepeat>
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)

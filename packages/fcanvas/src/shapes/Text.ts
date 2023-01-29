@@ -1,9 +1,9 @@
-import type { UnwrapNestedRefs } from "@vue/reactivity"
 import { watchEffect } from "@vue-reactivity/watch"
 
 import { Shape } from "../Shape"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -68,14 +68,7 @@ export class Text extends Shape<PersonalAttrs> {
   private textWidth = 0
 
   constructor(
-    attrs: ReactiveType<
-      CommonShapeAttrs<PersonalAttrs> & {
-        setup?: (
-          this: Text,
-          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
-        ) => void
-      } & ThisType<Text>
-    >
+    attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Text>
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)

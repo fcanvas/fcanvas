@@ -1,4 +1,4 @@
-import type { ComputedRef, Ref, UnwrapNestedRefs } from "@vue/reactivity"
+import type { ComputedRef, Ref } from "@vue/reactivity"
 import { computed, ref } from "@vue/reactivity"
 import { watch } from "@vue-reactivity/watch"
 
@@ -7,6 +7,7 @@ import { getImage } from "../auto-export"
 import { cropImage } from "../methods/cropImage"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
 interface AnimationFrames {
@@ -55,17 +56,13 @@ export class Sprite<
   private _timeout?: ReturnType<typeof setInterval>
 
   constructor(
-    attrs: ReactiveType<
-      CommonShapeAttrs<LocalPersonalAttrs> & {
-        animation: keyof LocalPersonalAttrs["animations"]
-      } & {
-        setup?: (
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          this: Sprite<any, any>,
-          attrs: UnwrapNestedRefs<CommonShapeAttrs<LocalPersonalAttrs>>
-        ) => void
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } & ThisType<Sprite<any, any>>
+    attrs: TorFnT<
+      ReactiveType<
+        CommonShapeAttrs<LocalPersonalAttrs> & {
+          animation: keyof LocalPersonalAttrs["animations"]
+        }
+      >,
+      Sprite<Animations, LocalPersonalAttrs>
     >
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

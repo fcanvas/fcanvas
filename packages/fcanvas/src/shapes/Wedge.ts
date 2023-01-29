@@ -1,9 +1,8 @@
-import type { UnwrapNestedRefs } from "@vue/reactivity"
-
 import { Shape } from "../Shape"
 import { convertToDegrees } from "../helpers/convertToDegrees"
 import { pointInCircle } from "../helpers/pointInCircle"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -29,14 +28,7 @@ export class Wedge extends Shape<PersonalAttrs> {
   }
 
   constructor(
-    attrs: ReactiveType<
-      CommonShapeAttrs<PersonalAttrs> & {
-        setup?: (
-          this: Wedge,
-          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
-        ) => void
-      } & ThisType<Wedge>
-    >
+    attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Wedge>
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
