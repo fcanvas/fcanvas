@@ -1,8 +1,7 @@
-import type { UnwrapNestedRefs } from "@vue/reactivity"
-
 import { Shape } from "../Shape"
 import { pointInEllipse } from "../helpers/pointInEllipse"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
+import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -32,14 +31,7 @@ export class Ellipse extends Shape<PersonalAttrs> {
   }
 
   constructor(
-    attrs: ReactiveType<
-      CommonShapeAttrs<PersonalAttrs> & {
-        setup?: (
-          this: Ellipse,
-          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
-        ) => void
-      } & ThisType<Ellipse>
-    >
+    attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Ellipse>
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)

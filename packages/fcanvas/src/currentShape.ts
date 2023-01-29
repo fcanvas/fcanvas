@@ -1,10 +1,12 @@
+import type { Group } from "./Group"
 import type { Shape } from "./Shape"
 import { isDev } from "./env"
 
-// eslint-disable-next-line functional/no-let
-let currentShape: Shape | null
+// eslint-disable-next-line functional/no-let, @typescript-eslint/no-explicit-any
+let currentShape: Shape | Group<any> | null
 
-export function _setCurrentShape(instance: Shape | null) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function _setCurrentShape(instance: Shape | Group<any> | null) {
   currentShape = instance
 }
 export function getCurrentShape() {

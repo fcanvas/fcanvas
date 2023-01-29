@@ -31,6 +31,7 @@ import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { GetClientRectOptions } from "./type/GetClientRectOptions"
 import type { Rect } from "./type/Rect"
 import type { Size } from "./type/Size"
+import type { TorFnT } from "./type/TorFnT"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
@@ -151,23 +152,11 @@ export class Shape<
   ): void
 
   constructor(
-    attrs: ReactiveType<
-      CommonShapeAttrs<PersonalAttrs> & {
-        setup?: (
-          this: Shape,
-          attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
-        ) => void
-      } & ThisType<Shape>
-    >
+    attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Shape>
   ) {
     super()
 
     this[SCOPE].on()
-
-    const { setup: setupFn } = attrs
-    delete attrs.setup
-
-    this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
@@ -202,6 +191,18 @@ export class Shape<
       }
     })
 
+    if (typeof attrs === "function") {
+      // =========== current shape ===========
+      _setCurrentShape(this)
+      // =====================================
+      this.$ = reactive(attrs(this) as CommonShapeAttrs<PersonalAttrs>)
+      // =========== current shape ===========
+      _setCurrentShape(null)
+      // =====================================
+    } else {
+      this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
+    }
+
     // try watchEffect
     watchEffect(() => {
       // reactive
@@ -220,14 +221,6 @@ export class Shape<
         }
       }
     })
-    // =========== current shape ===========
-    _setCurrentShape(this)
-    // =====================================
-    ;(setupFn as typeof this.setup)?.(this.$)
-    this.setup?.(this.$)
-    // =========== current shape ===========
-    _setCurrentShape(null)
-    // =====================================
 
     this[SCOPE].off()
   }

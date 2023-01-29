@@ -8,6 +8,7 @@ import { watchEffect } from "@vue-reactivity/watch"
 
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
+import { _setCurrentShape } from "./currentShape"
 import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
@@ -25,6 +26,7 @@ import type { CommonShapeAttrs } from "./type/CommonShapeAttrs"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
 import type { Size } from "./type/Size"
+import type { TorFnT } from "./type/TorFnT"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
@@ -69,15 +71,9 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     stop: () => void
   }
 
-  constructor(
-    attrs: ReactiveType<PersonalAttrs> & {
-      setup?: (attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>) => void
-    } & ThisType<Group> = {}
-  ) {
+  constructor(attrs?: TorFnT<ReactiveType<PersonalAttrs>, Group<ChildNode>>) {
     super()
     this[SCOPE].on()
-
-    this.$ = reactive(attrs)
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
@@ -121,6 +117,18 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
         height
       }
     })
+
+    if (typeof attrs === "function") {
+      // =========== current shape ===========
+      _setCurrentShape(this)
+      // =====================================
+      this.$ = reactive(attrs(this) as CommonShapeAttrs<PersonalAttrs>)
+      // =========== current shape ===========
+      _setCurrentShape(null)
+      // =====================================
+    } else {
+      this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
+    }
 
     // try watchEffect
     watchEffect(
