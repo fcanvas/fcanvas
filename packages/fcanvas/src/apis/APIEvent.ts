@@ -11,7 +11,7 @@ type SetUnwantedTypeToNever<T, ValueType> = {
   [Key in keyof T]-?: T[Key] extends ValueType ? Key : never
 }
 
-export class APIEvent<Events extends Record<string, unknown>> {
+export abstract class APIEvent<Events extends Record<string, unknown>> {
   public [LOCALS]: Record<string, unknown> = {}
 
   public readonly [LISTENERS]: ShallowReactive<
