@@ -158,6 +158,18 @@ export class Shape<
 
     this[SCOPE].on()
 
+    if (typeof attrs === "function") {
+      // =========== current shape ===========
+      _setCurrentShape(this)
+      // =====================================
+      this.$ = reactive(attrs(this) as CommonShapeAttrs<PersonalAttrs>)
+      // =========== current shape ===========
+      _setCurrentShape(null)
+      // =====================================
+    } else {
+      this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
+    }
+
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
       const { x, y } = this.$
@@ -190,18 +202,6 @@ export class Shape<
         height: height + adjust
       }
     })
-
-    if (typeof attrs === "function") {
-      // =========== current shape ===========
-      _setCurrentShape(this)
-      // =====================================
-      this.$ = reactive(attrs(this) as CommonShapeAttrs<PersonalAttrs>)
-      // =========== current shape ===========
-      _setCurrentShape(null)
-      // =====================================
-    } else {
-      this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
-    }
 
     // try watchEffect
     watchEffect(() => {
