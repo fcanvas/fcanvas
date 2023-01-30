@@ -1,10 +1,10 @@
-import { watchEffect } from "@vue-reactivity/watch"
 import type {
   ComputedRef,
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
 import { computed, EffectScope, reactive } from "@vue/reactivity"
+import { watchEffect } from "@vue-reactivity/watch"
 
 import type { Group } from "./Group"
 import type { Shape } from "./Shape"
@@ -312,12 +312,29 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     this[COMPUTED_CACHE].value
   }
 
+  private _resolveTick: (() => void) | void | undefined
+  private _rejectTick: (() => void) | void | undefined
+  private _promiseTick: Promise<void> | void | undefined
+
+  public nextTick(): Promise<void> {
+    if (this._promiseTick) return this._promiseTick
+
+    return (this._promiseTick = new Promise<void>((resolve, reject) => {
+      ;[this._resolveTick, this._rejectTick] = [resolve, reject]
+    }).finally(() => {
+      ;[this._resolveTick, this._rejectTick] = [undefined, undefined]
+    }))
+  }
+
   public batchDraw() {
     if (!this[WAIT_DRAWING]) {
       this[WAIT_DRAWING] = true
       this[ID_REQUEST_FRAME] = requestAnimationFrame(() => {
+        if (!this[WAIT_DRAWING]) return
+
         this.draw()
         this[WAIT_DRAWING] = false
+        this._resolveTick?.()
         this.batchDraw()
       })
     }
@@ -326,9 +343,13 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   public stopDraw() {
     if (!this[ID_REQUEST_FRAME]) return
 
-    this[WAIT_DRAWING] = true
-    cancelAnimationFrame(this[ID_REQUEST_FRAME])
+    const success = !this[WAIT_DRAWING]
+
     this[WAIT_DRAWING] = false
+    cancelAnimationFrame(this[ID_REQUEST_FRAME])
+
+    if (success) this._resolveTick?.()
+    else this._rejectTick?.()
   }
 
   public add(node: Shape | Group) {
