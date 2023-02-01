@@ -15,6 +15,10 @@ export abstract class APIChildNode<
   public readonly [CHILD_NODE]: ShallowReactive<Set<ChildNode>> =
     shallowReactive(new Set())
 
+  public get children() {
+    return this[CHILD_NODE]
+  }
+
   public add(node: ChildNode) {
     return this[CHILD_NODE].add(node)
   }

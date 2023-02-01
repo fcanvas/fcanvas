@@ -150,11 +150,11 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
       const { x = 0, y = 0 } = this.$
-      const { x: offX, y: offY, width, height } = this[BOUNCE_CLIENT_RECT].value
+      const { width, height } = this[BOUNCE_CLIENT_RECT].value
 
       return {
-        x: x + offX,
-        y: y + offY,
+        x,
+        y,
         width,
         height
       }

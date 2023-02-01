@@ -71,7 +71,9 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     stop: () => void
   }
 
-  constructor(attrs: TorFnT<ReactiveType<PersonalAttrs>, Group<ChildNode>> = {}) {
+  constructor(
+    attrs: TorFnT<ReactiveType<PersonalAttrs>, Group<ChildNode>> = {}
+  ) {
     super()
     this[SCOPE].on()
 
@@ -90,11 +92,11 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
       const { x = 0, y = 0 } = this.$
-      const { x: offX, y: offY, width, height } = this[BOUNCE_CLIENT_RECT].value
+      const { width, height } = this[BOUNCE_CLIENT_RECT].value
 
       return {
-        x: x + offX,
-        y: y + offY,
+        x,
+        y,
         width,
         height
       }

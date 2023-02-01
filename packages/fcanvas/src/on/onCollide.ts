@@ -18,18 +18,22 @@ import { BOUNDING_CLIENT_RECT } from "../symbols"
 import type { Offset } from "../type/Offset"
 import type { Rect } from "../type/Rect"
 
+type Targets<T> =
+  | T
+  | T[]
+  | Set<T>
+  | Map<unknown, T>
+  | Ref<UnwrapRef<T> | Set<UnwrapRef<T>> | Map<unknown, UnwrapRef<T>>>
+
 function onCollide<
   T extends Shape | Group | Offset | Rect | Ref<Offset | Rect>
->(
-  targets: T | Array<T> | Ref<UnwrapRef<T> | Array<UnwrapRef<T>>>,
-  cb: (target: UnwrapRef<T>) => void
-): WatchStopHandle
+>(targets: Targets<T>, cb: (target: UnwrapRef<T>) => void): WatchStopHandle
 // eslint-disable-next-line no-redeclare
 function onCollide<
   T extends Shape | Group | Offset | Rect | Ref<Offset | Rect>
 >(
   $this: Shape | Group,
-  targets: T | Array<T> | Ref<UnwrapRef<T> | Array<UnwrapRef<T>>>,
+  targets: Targets<T>,
   cb: (target: UnwrapRef<T>) => void
 ): WatchStopHandle
 
@@ -43,21 +47,14 @@ function onCollide<
 function onCollide<
   T extends Shape | Group | Offset | Rect | Ref<Offset | Rect>
 >(
-  $this:
-    | Shape
-    | Group
-    | (T | Array<T> | Ref<UnwrapRef<T> | Array<UnwrapRef<T>>>),
-  targets:
-    | T
-    | Array<T>
-    | Ref<UnwrapRef<T> | Array<UnwrapRef<T>>>
-    | ((target: UnwrapRef<T>) => void),
+  $this: Shape | Group | Targets<T>,
+  targets: Targets<T> | ((target: UnwrapRef<T>) => void),
   cb?: (target: UnwrapRef<T>) => void
 ): WatchStopHandle {
   if (cb === undefined) {
     ;[$this, targets, cb] = [
       getCurrentShape(),
-      $this as T | Array<T> | Ref<UnwrapRef<T> | Array<UnwrapRef<T>>>,
+      $this as Targets<T>,
       targets as (target: UnwrapRef<T>) => void
     ]
   }
@@ -76,18 +73,27 @@ function onCollide<
   const hasCalled = (target: UnwrapRef<T>) => storeCheckCallOnce.has(target)
 
   const watcherTargets = watch(
-    targets as UnwrapRef<T>[] | UnwrapRef<T>,
-    (targets) => {
-      if (!Array.isArray(targets)) targets = [targets]
+    targets,
+    (t) => {
+      // eslint-disable-next-line functional/no-let
+      let targets = t as
+        | UnwrapRef<T>[]
+        | Set<UnwrapRef<T>>
+        | Map<unknown, UnwrapRef<T>>
+
+      if (!("forEach" in targets)) targets = [targets as UnwrapRef<T>]
 
       const exists = new WeakSet<UnwrapRef<T>>()
       watchers.forEach((watcher, key) => {
-        if (!(targets as UnwrapRef<T>[]).includes(key as UnwrapRef<T>)) {
-          watcher()
-          watchers.delete(key)
-        } else {
-          exists.add(key)
+        for (const target of targets) {
+          if (key === target) {
+            watcher()
+            watchers.delete(key)
+            return
+          }
         }
+
+        exists.add(key)
       })
       targets.forEach((target) => {
         if (exists.has(target)) return

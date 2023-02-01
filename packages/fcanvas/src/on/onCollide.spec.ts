@@ -95,6 +95,14 @@ describe("onCollide", () => {
         testInside(circleRawInRect)
       })
     })
+    test("2 is set", () => {
+      onCollide(rect, new Set([pointInRect]), fn)
+      testInside(pointInRect)
+    })
+    test("2 is map", () => {
+      onCollide(rect, new Map([["1", pointInRect]]), fn)
+      testInside(pointInRect)
+    })
   })
 
   describe("1 is circle", () => {
