@@ -23,6 +23,7 @@ import {
   SCOPE
 } from "./symbols"
 import type { CommonShapeAttrs } from "./type/CommonShapeAttrs"
+import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
 import type { Size } from "./type/Size"
@@ -39,7 +40,7 @@ export type PersonalAttrs = Partial<Offset> &
 
 export class Group<ChildNode extends Shape = Shape> extends APIGroup<
   ChildNode,
-  {
+  CommonShapeEvents & {
     resize: Event
   }
 > {
