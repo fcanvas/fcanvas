@@ -1,7 +1,6 @@
 import type { APIGroup } from "./apis/APIGroup"
 import { getMousePos } from "./methods/getMousePos"
 import { LOCALS } from "./symbols"
-import { _setClientActivated } from "./useApi/useClientActivated"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AllLayer = APIGroup<any, Record<string, string>> & {
@@ -32,15 +31,10 @@ export function handleCustomEventDefault(
       // eslint-disable-next-line array-callback-return
       mousePos.some((client) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        if (node.isPressedPoint!(client.x, client.y)) {
-          _setClientActivated(client)
-          return true
-        }
+        if (node.isPressedPoint!(client.x, client.y)) return true
       })
-    ) {
+    )
       listeners.forEach((listener) => listener(event))
-      _setClientActivated(null)
-    }
   })
 }
 
@@ -62,10 +56,7 @@ function createHandleMouseHover(isOver: boolean) {
         // eslint-disable-next-line array-callback-return
         mousePos.some((client) => {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          if (node.isPressedPoint!(client.x, client.y)) {
-            _setClientActivated(client)
-            return true
-          }
+          node.isPressedPoint!(client.x, client.y)
         })
       ) {
         if (isOver) {
@@ -73,7 +64,6 @@ function createHandleMouseHover(isOver: boolean) {
             node[LOCALS].hover = true
             listeners.forEach((listener) => listener(event))
           }
-          _setClientActivated(null)
         }
       } else if (!isOver) {
         if (node[LOCALS].hover) {

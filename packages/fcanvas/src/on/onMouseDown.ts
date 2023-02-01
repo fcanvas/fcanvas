@@ -4,7 +4,6 @@ import type { Group } from "../Group"
 import type { Shape } from "../Shape"
 import { getCurrentShape } from "../currentShape"
 import { addEvents } from "../helpers/addEvents"
-import { rmEvents } from "../helpers/rmEvents"
 import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 /**
  * `onMouseDown` is a function that takes a `Shape` and a callback, and returns a function that removes
@@ -34,7 +33,7 @@ function onMouseDown(
     ]
   }
 
- const stop=  addEvents(
+  const stop = addEvents(
     target as Shape,
     ["mousedown", "touchstart"],
     cb as (event: Event) => void

@@ -4,7 +4,6 @@ import type { Group } from "../Group"
 import type { Shape } from "../Shape"
 import { getCurrentShape } from "../currentShape"
 import { addEvents } from "../helpers/addEvents"
-import { rmEvents } from "../helpers/rmEvents"
 import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 
 /**
@@ -34,7 +33,7 @@ function onMouseUp(
     ]
   }
 
- const stop = addEvents(
+  const stop = addEvents(
     target as Shape,
     ["Mouseup", "touchstart"],
     cb as (event: Event) => void
