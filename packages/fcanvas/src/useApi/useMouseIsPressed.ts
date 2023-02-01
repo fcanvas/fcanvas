@@ -5,6 +5,7 @@ import type { Layer } from "../Layer"
 import { getCurrentShape } from "../currentShape"
 import type { ElAddEventListener } from "../helpers/addEvents"
 import { addEvents } from "../helpers/addEvents"
+import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 import { CANVAS_ELEMENT } from "../symbols"
 
 const mouseIsPressedMap = new WeakMap<object, Ref<boolean>>()
@@ -19,14 +20,21 @@ export function useMouseIsPressed(
 
   const mouseIsPressed = ref(false)
 
-  addEvents(instance, ["mousedown", "touchstart"], () => {
+  const cancelDown = addEvents(instance, ["mousedown", "touchstart"], () => {
     mouseIsPressed.value = true
   })
-  addEvents(instance, ["mouseup", "touchend"], () => {
+  const cancelUp = addEvents(instance, ["mouseup", "touchend"], () => {
     mouseIsPressed.value = false
   })
 
   mouseIsPressedMap.set(instance, mouseIsPressed)
+
+  tryOnScopeDispose(() => {
+    mouseIsPressedMap.delete(instance)
+
+    cancelDown()
+    cancelUp()
+  })
 
   return mouseIsPressed
 }

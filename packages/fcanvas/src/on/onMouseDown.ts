@@ -5,6 +5,7 @@ import type { Shape } from "../Shape"
 import { getCurrentShape } from "../currentShape"
 import { addEvents } from "../helpers/addEvents"
 import { rmEvents } from "../helpers/rmEvents"
+import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 /**
  * `onMouseDown` is a function that takes a `Shape` and a callback, and returns a function that removes
  * the event listener
@@ -33,18 +34,15 @@ function onMouseDown(
     ]
   }
 
-  addEvents(
+ const stop=  addEvents(
     target as Shape,
     ["mousedown", "touchstart"],
     cb as (event: Event) => void
   )
 
-  return () =>
-    rmEvents(
-      target as Shape,
-      ["mousedown", "touchstart"],
-      cb as (event: Event) => void
-    )
+  tryOnScopeDispose(stop)
+
+  return stop
 }
 
 export { onMouseDown }

@@ -4,6 +4,7 @@ import type { Layer } from "../Layer"
 import { getCurrentShape } from "../currentShape"
 import type { ElAddEventListener } from "../helpers/addEvents"
 import { addEvents } from "../helpers/addEvents"
+import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 import { getMousePos } from "../methods/getMousePos"
 import { CANVAS_ELEMENT } from "../symbols"
 
@@ -31,7 +32,7 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
     isTouch: false
   })
   // warning
-  addEvents(
+  const stop = addEvents(
     instance,
     ["mousedown", "mousemove", "touchstart", "touchmove"],
     (event) => {
@@ -56,6 +57,12 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
   )
 
   mousePosMap.set(instance, mousePos)
+
+  tryOnScopeDispose(() => {
+    mousePosMap.delete(instance)
+
+    stop()
+  })
 
   return mousePos
 }

@@ -5,6 +5,7 @@ import type { Shape } from "../Shape"
 import { getCurrentShape } from "../currentShape"
 import { addEvents } from "../helpers/addEvents"
 import { rmEvents } from "../helpers/rmEvents"
+import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 
 /**
  * `onMouseUp` is a function that takes a `Shape` and a callback function, and returns a function that
@@ -33,18 +34,15 @@ function onMouseUp(
     ]
   }
 
-  addEvents(
+ const stop = addEvents(
     target as Shape,
     ["Mouseup", "touchstart"],
     cb as (event: Event) => void
   )
 
-  return () =>
-    rmEvents(
-      target as Shape,
-      ["mouseup", "touchend"],
-      cb as (event: Event) => void
-    )
+  tryOnScopeDispose(stop)
+
+  return stop
 }
 
 export { onMouseUp }

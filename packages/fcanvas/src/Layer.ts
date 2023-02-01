@@ -30,7 +30,6 @@ import type { Offset } from "./type/Offset"
 import type { Rect } from "./type/Rect"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { _setClientActivated } from "./useApi/useClientActivated"
-import { _setEvent } from "./useApi/useEvent"
 import { extendTarget } from "./utils/extendTarget"
 
 type PersonalAttrs = Partial<Offset> &
@@ -243,6 +242,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
             )
           }
         })
+        
         allListeners.value.forEach((listenersGroup, name) => {
           const oldHandler = handlersChildrenMap.get(
             name as keyof CommonShapeEvents
@@ -269,15 +269,9 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
                 })
               }
             : (event: Event) => {
-                // ================== set use api =================
-                _setEvent(event)
-                // ================================================
-
                 if (isDev)
                   console.log("[event:layer] emit event %s", event.type)
                 customer.handle(listenersGroup.all, event, canvas)
-                // =================== free memory ================
-                _setEvent(null)
                 _setClientActivated(null)
                 // ================================================
               }
