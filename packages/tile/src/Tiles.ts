@@ -1,12 +1,10 @@
+import { cropImage, getFetch, getImage, loadFetch, loadImage } from "fcanvas"
 import normalize from "path-normalize"
 import { parse } from "plist"
 
-import { cropImage } from "./methods/cropImage"
-import { getFetch, loadFetch } from "./methods/loadFetch"
-import { getImage, loadImage } from "./methods/loadImage"
-import type { Offset } from "./type/Offset"
-import type { Rect } from "./type/Rect"
-import type { Size } from "./type/Size"
+import type { Offset } from "../../fcanvas/src/type/Offset"
+import type { Rect } from "../../fcanvas/src/type/Rect"
+import type { Size } from "../../fcanvas/src/type/Size"
 
 interface CanvasImageResource
   extends HTMLCanvasElement,

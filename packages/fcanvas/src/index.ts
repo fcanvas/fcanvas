@@ -2,7 +2,6 @@ import { Group } from "./Group"
 import { Layer } from "./Layer"
 import { Shape } from "./Shape"
 import { Stage } from "./Stage"
-import { loadTiles, Tiles } from "./Tiles"
 import { Vector } from "./Vector"
 import { getCurrentShape } from "./currentShape"
 import { globalConfigs } from "./globalConfigs"
@@ -20,8 +19,6 @@ export {
   Layer,
   Shape,
   Stage,
-  Tiles,
-  loadTiles,
   Vector
 }
 
