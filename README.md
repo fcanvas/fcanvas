@@ -22,6 +22,13 @@ A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's
 [![Star](https://img.shields.io/github/stars/tachibana-shin/fcanvas-next)](https://github.com/tachibana-shin/fcanvas-next/stargazers)
 [![Download](https://img.shields.io/npm/dm/fcanvas)](https://npmjs.org/package/fcanvas-next)
 
+## Packages
+| Name | Description |
+| ---- | ----------- |
+| [fcanvas](./packages/fcanvas/) | The main package provides classes and methods for drawing canvas and manipulating events |
+| [@fcanvas/animate](./packages/animate/) | plugin that allows connecting `gsap` to `fcanvas` to create powerful animations |
+| [@fcanvas/tile](./packages/tile/) | plugin that allows creating tiles from file |
+
 ## Installation
 
 NPM / Yarn / Pnpm:
