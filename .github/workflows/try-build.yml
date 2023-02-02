@@ -1,14 +1,13 @@
-
 name: Try build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches: ["main"]
   schedule:
-    - cron: '15 10 * * 5'
+    - cron: "15 10 * * 5"
 
 jobs:
   build:
@@ -30,7 +29,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7.18.2
+          version: 7.25.1
           run_install: false
 
       - name: Install depends and run `auto-export`

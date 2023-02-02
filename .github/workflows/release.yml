@@ -26,7 +26,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7.18.2
+          version: 7.25.1
           run_install: false
 
       - name: Install depends and run `auto-export`
@@ -49,7 +49,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
           node-version: 18
 
       - name: Install Depends for pkg canvas
@@ -59,7 +59,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7.18.2
+          version: 7.25.1
           run_install: false
 
       - name: Install depends and run `auto-export`
