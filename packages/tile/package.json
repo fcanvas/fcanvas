@@ -1,13 +1,12 @@
 {
-  "name": "fcanvas",
+  "name": "@fcanvas/tile",
   "version": "1.1.0-rc.2",
-  "description": "This is a simple canvas library for drawing on the fly.",
+  "description": "Plugin that load tile for fcanvas",
   "scripts": {
-    "build": "pnpm auto-export && tsup",
-    "auto-export": "tsx scripts/auto-export.ts",
+    "build": "tsup",
     "dev": "vite dev",
     "prepublishOnly": "pnpm test && pnpm build",
-    "test": "vitest run",
+    "test": "echo 'No test'",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
@@ -25,11 +24,7 @@
   },
   "devDependencies": {
     "@types/plist": "^3.0.2",
-    "canvas": "^2.11.0",
-    "dommatrix": "^1.0.3",
-    "fetch-polyfill": "^0.8.2",
-    "gsap": "^3.11.4",
-    "happy-dom": "^8.1.1",
+    "@vue/reactivity": "^3.2.45",
     "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
@@ -48,8 +43,8 @@
     "reactivity",
     "2d",
     "canvas",
-    "Tachibana Shin",
-    "tachibana-shin"
+    "tile",
+    "tiles"
   ],
   "files": [
     "dist"
@@ -63,16 +58,8 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@vue-reactivity/watch": "^0.2.0",
-    "@vue/reactivity": "^3.2.45",
-    "@vue/shared": "^3.2.45",
+    "fcanvas": "workspace:*",
     "path-normalize": "^6.0.9",
-    "tmx-tiledmap": "^1.2.1"
-  },
-  "peerDependencies": {
-    "@vue-reactivity/watch": "^0.2.0",
-    "@vue/reactivity": "^3.2.37",
-    "@vue/shared": "^3.2.37",
-    "path-normalize": "^6.0.6"
+    "plist": "^3.0.6"
   }
 }
