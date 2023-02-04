@@ -1,7 +1,9 @@
+import { Group } from "../Group"
 import { Circle } from "../shapes/Circle"
 import { Rect } from "../shapes/Rect"
 
 import { onCollide } from "./onCollide"
+import { withChild } from "./withChild"
 
 const sizeRect = { width: 10, height: 10 }
 const sizeCircle = { radius: 10 }
@@ -197,6 +199,32 @@ describe("onCollide", () => {
 
         expect(fn.mock.calls.length).toBe(0)
       })
+    })
+  })
+  test("use withChildren", async () => {
+    const group = new Group({ x: 11, y: 11 })
+    group.add(new Rect({ x: 0, y: 0, width: 1, height: 1 }))
+    group.add(new Rect({ x: 1, y: 1, width: 1, height: 1 }))
+    group.add(new Rect({ x: 2, y: 2, width: 1, height: 1 }))
+
+    const fn = vi.fn()
+
+    expect(fn.mock.calls.length).toBe(0)
+
+    group.$.x--
+    group.$.y--
+
+    await Promise.resolve()
+
+    onCollide(rect, withChild(group), fn)
+
+    // console.log(fn.mock.calls)
+    expect(fn.mock.calls.length).toBe(1)
+    expect(fn.mock.calls[0][0]).toEqual({
+      x: 10,
+      y: 10,
+      width: 1,
+      height: 1
     })
   })
   test("call only once", async () => {
