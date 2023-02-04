@@ -79,7 +79,11 @@ export class Group<
   }
 
   constructor(
-    attrs: TorFnT<ReactiveType<PersonalAttrs>, Group<ChildNode, PersonalAttrs>>
+    attrs: TorFnT<
+      ReactiveType<PersonalAttrs>,
+      Group<ChildNode, PersonalAttrs>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    > = {} as unknown as any
   ) {
     super()
     this[SCOPE].on()
