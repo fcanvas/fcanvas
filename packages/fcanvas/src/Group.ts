@@ -31,14 +31,17 @@ import type { TorFnT } from "./type/TorFnT"
 import type { ReactiveType } from "./type/fn/ReactiveType"
 import { extendTarget } from "./utils/extendTarget"
 
-export type PersonalAttrs = Partial<Offset> &
+export type CommonGroupAttrs = Partial<Offset> &
   DrawLayerAttrs & {
     width?: number
     height?: number
     visible?: boolean
   }
 
-export class Group<ChildNode extends Shape = Shape> extends APIGroup<
+export class Group<
+  ChildNode extends Shape = Shape,
+  PersonalAttrs extends CommonGroupAttrs = CommonGroupAttrs
+> extends APIGroup<
   ChildNode,
   CommonShapeEvents & {
     resize: Event
@@ -49,7 +52,10 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
   // How many fathers does this shape have?
   public _parents = 0
 
-  public readonly $: UnwrapNestedRefs<PersonalAttrs>
+  public readonly $: UnwrapNestedRefs<PersonalAttrs> &
+    // eslint-disable-next-line no-use-before-define
+    ThisType<Group<ChildNode, PersonalAttrs>>
+
   public get attrs() {
     return this.$
   }
@@ -73,7 +79,7 @@ export class Group<ChildNode extends Shape = Shape> extends APIGroup<
   }
 
   constructor(
-    attrs: TorFnT<ReactiveType<PersonalAttrs>, Group<ChildNode>> = {}
+    attrs: TorFnT<ReactiveType<PersonalAttrs>, Group<ChildNode, PersonalAttrs>>
   ) {
     super()
     this[SCOPE].on()
