@@ -2,7 +2,7 @@ import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
 
-import type { PersonalAttrs } from "../Group"
+import type { CommonGroupAttrs } from "../Group"
 import { Group } from "../Group"
 import { BOUNCE_CLIENT_RECT, CHILD_NODE, SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
@@ -18,7 +18,7 @@ export class Label extends Group<Tag | Text> {
   private readonly tag: ComputedRef<Tag | void>
 
   constructor(
-    attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Label>
+    attrs: TorFnT<ReactiveType<CommonShapeAttrs<CommonGroupAttrs>>, Label>
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
