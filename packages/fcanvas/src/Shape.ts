@@ -111,10 +111,8 @@ export class Shape<
   static readonly type: string = "Shape"
   static readonly _centroid: boolean = false
 
-  public readonly $: ReturnType<
-    // eslint-disable-next-line no-use-before-define
-    typeof reactive<CommonShapeAttrs<PersonalAttrs> & ThisType<Shape>>
-  >
+  public readonly $: // eslint-disable-next-line no-use-before-define
+  UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs> & ThisType<Shape>>
 
   public get attrs() {
     return this.$
@@ -147,9 +145,6 @@ export class Shape<
   }
 
   protected _sceneFunc?(context: CanvasRenderingContext2D): void
-  protected setup?(
-    attrs: UnwrapNestedRefs<CommonShapeAttrs<PersonalAttrs>>
-  ): void
 
   constructor(
     attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Shape>

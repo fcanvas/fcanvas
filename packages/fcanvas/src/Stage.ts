@@ -33,8 +33,8 @@ type PersonalAttrs = DrawLayerAttrs & {
 export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
   static readonly type: string = "Stage"
 
-  public readonly $: ReturnType<typeof reactive<PersonalAttrs>>
-  public get attrs() {
+  public readonly $: UnwrapNestedRefs<PersonalAttrs>
+  public get attrs(): UnwrapNestedRefs<PersonalAttrs> {
     return this.$
   }
 
@@ -55,7 +55,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
 
     this[SCOPE].on()
 
-    this.$ = reactive(attrs as PersonalAttrs)
+    this.$ = reactive(attrs)
+
     this.size = reactive({
       width: globalConfigs.defaultWidth,
       height: globalConfigs.defaultHeight
@@ -138,7 +139,10 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     watchEffect(() => {
       const { container: id } = this.$
       if (id) {
-        const el = typeof id === "string" ? document.getElementById(id) ?? document.querySelector(id) : id
+        const el =
+          typeof id === "string"
+            ? document.getElementById(id) ?? document.querySelector(id)
+            : id
         if (!el) {
           if (isDev) console.warn(`#${id} not exists.`)
         } else {
