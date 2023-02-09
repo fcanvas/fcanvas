@@ -58,8 +58,10 @@
     "node": ">=10"
   },
   "dependencies": {
-    "fcanvas": "workspace:*",
     "path-normalize": "^6.0.9",
     "plist": "^3.0.6"
+  },
+  "peerDependencies": {
+    "fcanvas": "workspace:*"
   }
 }

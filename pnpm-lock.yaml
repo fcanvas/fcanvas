@@ -40,11 +40,10 @@ importers:
       tsx: ^3.12.1
       vite: ^4.0.3
       vitest: ^0.26.2
-    dependencies:
-      fcanvas: link:../fcanvas
-      gsap: 3.11.4
     devDependencies:
       '@vue/reactivity': 3.2.45
+      fcanvas: link:../fcanvas
+      gsap: 3.11.4
       jsdom: 20.0.3
       tsup: 6.5.0
       tsx: 3.12.1
@@ -3009,6 +3008,7 @@ packages:
 
   /gsap/3.11.4:
     resolution: {integrity: sha512-McHhEguHyExMMnjqKA8G+7TvxmlKQGMbjgwAilnFe1e4id7V/tFveRQ2YMZhTYu0oxHGWvbPltdVYQOu3z1SCA==}
+    dev: true
 
   /handlebars/4.7.7:
     resolution: {integrity: sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==}

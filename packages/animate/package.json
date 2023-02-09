@@ -6,7 +6,7 @@
     "build": "tsup",
     "dev": "vite dev",
     "prepublishOnly": "pnpm test && pnpm build",
-    "test": "echo 'No test'",
+    "test": "vitest --run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
@@ -24,10 +24,12 @@
   },
   "devDependencies": {
     "@vue/reactivity": "^3.2.45",
+    "gsap": "^3.11.4",
     "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
     "vite": "^4.0.3",
+    "fcanvas": "workspace:*",
     "vitest": "^0.26.2"
   },
   "license": "MIT",
@@ -57,11 +59,8 @@
   "engines": {
     "node": ">=10"
   },
-  "dependencies": {
-    "fcanvas": "workspace:*",
-    "gsap": "^3.11.4"
-  },
   "peerDependencies": {
-    "gsap": "^3.10.4"
+    "gsap": "^3.10.4",
+    "fcanvas": "workspace:*"
   }
 }

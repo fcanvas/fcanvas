@@ -9,3 +9,4 @@ export function installAnimate(shape: typeof Shape) {
 
 export { Animation } from "./Animation"
 export * from "./symbols"
+export * from "./getDuration"
