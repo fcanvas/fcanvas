@@ -25,6 +25,7 @@
   "devDependencies": {
     "@types/plist": "^3.0.2",
     "@vue/reactivity": "^3.2.45",
+    "fcanvas": "workspace:1.1.0-rc.9",
     "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
