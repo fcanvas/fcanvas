@@ -37,6 +37,7 @@ jobs:
           pnpm i
           cd packages/fcanvas
           pnpm auto-export
+          pnpm build
 
       - name: Build
         run: pnpm build
