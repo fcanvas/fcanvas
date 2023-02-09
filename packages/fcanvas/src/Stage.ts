@@ -24,7 +24,7 @@ import type { ReactiveType } from "./type/fn/ReactiveType"
 type PersonalAttrs = DrawLayerAttrs & {
   width?: number
   height?: number
-  container?: string
+  container?: string | HTMLElement
   visible?: boolean
   opacity?: number
   autoDraw?: boolean
@@ -137,8 +137,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
 
     watchEffect(() => {
       const { container: id } = this.$
-      if (id !== undefined) {
-        const el = document.getElementById(id)
+      if (id) {
+        const el = typeof id === "string" ? document.getElementById(id) : id
         if (!el) {
           if (isDev) console.warn(`#${id} not exists.`)
         } else {
@@ -148,6 +148,10 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     })
 
     this[SCOPE].off()
+  }
+
+  public mount(query: string | HTMLElement): void {
+    this.$.container = query
   }
 
   public getBoundingClientRect() {
