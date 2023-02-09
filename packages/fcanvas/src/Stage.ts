@@ -138,7 +138,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     watchEffect(() => {
       const { container: id } = this.$
       if (id) {
-        const el = typeof id === "string" ? document.getElementById(id) : id
+        const el = typeof id === "string" ? document.getElementById(id) ?? document.querySelector(id) : id
         if (!el) {
           if (isDev) console.warn(`#${id} not exists.`)
         } else {
