@@ -11,7 +11,8 @@ const configNormal: Options = {
   target: "es2015",
   env: {
     IS_BROWSER: "false"
-  }
+  },
+  external: ["fcanvas"]
 }
 const configBrowser: Options = {
   entry: {
@@ -26,10 +27,7 @@ const configBrowser: Options = {
     NODE_ENV: "production",
     IS_BROWSER: "true"
   },
-  noExternal: [
-    "fcanvas",
-    "gsap"
-  ]
+  external: ["fcanvas"]
 }
 const configBrowserMinify: Options = {
   ...configBrowser,
@@ -39,7 +37,8 @@ const configBrowserMinify: Options = {
   entry: {
     "index.browser.min": "src/index.ts"
   },
-  minify: true
+  minify: true,
+  external: ["fcanvas"]
 }
 
 export default defineConfig([configNormal, configBrowser, configBrowserMinify])
