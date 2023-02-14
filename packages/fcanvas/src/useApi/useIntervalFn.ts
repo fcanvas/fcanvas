@@ -1,3 +1,7 @@
+/**
+ * Code from: https://raw.githubusercontent.com/vueuse/vueuse/main/packages/shared/useIntervalFn
+ */
+
 import { watch } from "@vue-reactivity/watch"
 import type { Ref } from "@vue/reactivity"
 import { isRef, ref } from "@vue/reactivity"
@@ -8,13 +12,18 @@ import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 export type CbUseIntervalFn = () => void
 export type IntervalUseIntervalFn = number | Ref<number>
 export interface OptionsUseIntervalFn {
-  immediate ? : boolean
-  immediateCallback ? : boolean
+  immediate?: boolean
+  immediateCallback?: boolean
+}
+export interface Pausable {
+  isActive: Ref<boolean>
+  pause: () => void
+  resume: () => void
 }
 export function useIntervalFn(
   cb: CbUseIntervalFn,
   interval: IntervalUseIntervalFn = 1000,
-  options:OptionsUseIntervalFn = {}
+  options: OptionsUseIntervalFn = {}
 ) {
   const { immediate = true, immediateCallback = false } = options
 
