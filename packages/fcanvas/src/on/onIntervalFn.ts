@@ -5,13 +5,16 @@ import { isFunction } from "@vue/shared"
 
 import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 
+export type CbUseIntervalFn = () => void
+export type IntervalUseIntervalFn = number | Ref<number>
+export interface OptionsUseIntervalFn {
+  immediate ? : boolean
+  immediateCallback ? : boolean
+}
 export function useIntervalFn(
-  cb: () => void,
-  interval: number | Ref<number> = 1000,
-  options: {
-    immediate?: boolean
-    immediateCallback?: boolean
-  } = {}
+  cb: CbUseIntervalFn,
+  interval: IntervalUseIntervalFn = 1000,
+  options:OptionsUseIntervalFn = {}
 ) {
   const { immediate = true, immediateCallback = false } = options
 
