@@ -91,7 +91,7 @@ importers:
     specifiers:
       '@types/plist': ^3.0.2
       '@vue/reactivity': ^3.2.45
-      fcanvas: workspace:1.1.0-rc.9
+      fcanvas: workspace:*
       jsdom: ^20.0.3
       path-normalize: ^6.0.9
       plist: ^3.0.6
