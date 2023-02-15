@@ -39,7 +39,7 @@ function exportFile(path: string) {
     })
     .filter((name) => !name.startsWith("_"))
 
-  return `export { ${exports.join(", ")} } from "${path.replace(".ts", "")}"`
+  return `export { ${[...new Set(exports)].join(", ")} } from "${path.replace(".ts", "")}"`
 }
 
 writeFileSync(
