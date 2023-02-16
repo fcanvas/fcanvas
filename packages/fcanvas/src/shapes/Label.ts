@@ -23,7 +23,7 @@ export class Label extends Group<Tag | Text> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
 
-    this[SCOPE].on()
+    this[SCOPE].fOn()
 
     this.text = computed<Text | void>(() => {
       for (const node of this[CHILD_NODE]) if (node instanceof Text) return node
@@ -33,7 +33,7 @@ export class Label extends Group<Tag | Text> {
     })
     watchEffect(this.sync.bind(this))
 
-    this[SCOPE].off()
+    this[SCOPE].fOff()
   }
 
   private sync() {

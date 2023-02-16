@@ -4,11 +4,12 @@ import type {
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
-import { computed, EffectScope, reactive } from "@vue/reactivity"
+import { computed, reactive } from "@vue/reactivity"
 
 import type { Group } from "./Group"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
+import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
@@ -83,19 +84,14 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
 
-  private readonly [SCOPE] = new EffectScope(true) as unknown as {
-    active: boolean
-    on: () => void
-    off: () => void
-    stop: () => void
-  }
+  private readonly [SCOPE] = effectScopeFlat()
 
   private [WAIT_DRAWING] = false
   private [ID_REQUEST_FRAME]: number | null = null
 
   constructor(attrs: ReactiveType<PersonalAttrs> = {}) {
     super()
-    this[SCOPE].on()
+    this[SCOPE].fOn()
 
     this.$ = reactive(attrs)
 
@@ -251,7 +247,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       })
     }
 
-    this[SCOPE].off()
+    this[SCOPE].fOff()
   }
 
   public get [CANVAS_ELEMENT]() {

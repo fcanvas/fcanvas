@@ -63,7 +63,7 @@ export class TextPath extends Shape<PersonalAttrs> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
 
-    this[SCOPE].on()
+    this[SCOPE].fOn()
     this.dataArray = parsePathData(this.$.data)
 
     effect(() => {
@@ -72,7 +72,7 @@ export class TextPath extends Shape<PersonalAttrs> {
     effect(() => {
       this.setTextData()
     })
-    this[SCOPE].off()
+    this[SCOPE].fOff()
   }
 
   protected fillStrokeScene(context: CanvasRenderingContext2D) {

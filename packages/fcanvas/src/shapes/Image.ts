@@ -102,7 +102,7 @@ export class Image extends Shape<PersonalAttrs> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
 
-    this[SCOPE].on()
+    this[SCOPE].fOn()
 
     this._image = computed<CanvasImageSource>(() => {
       const { image } = this.$
@@ -112,7 +112,7 @@ export class Image extends Shape<PersonalAttrs> {
       return image
     })
 
-    this[SCOPE].off()
+    this[SCOPE].fOff()
   }
 
   protected getSize() {

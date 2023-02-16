@@ -1,9 +1,10 @@
 import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
-import { computed, EffectScope, reactive } from "@vue/reactivity"
+import { computed, reactive } from "@vue/reactivity"
 import type gsap from "gsap"
 
 import { APIEvent } from "./apis/APIEvent"
+import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { _setCurrentShape } from "./currentShape"
 import { isDev } from "./env"
 import { convertToDegrees } from "./helpers/convertToDegrees"
@@ -137,12 +138,7 @@ export class Shape<
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
 
-  protected readonly [SCOPE] = new EffectScope(true) as unknown as {
-    active: boolean
-    on: () => void
-    off: () => void
-    stop: () => void
-  }
+  protected readonly [SCOPE] = effectScopeFlat()
 
   protected _sceneFunc?(context: CanvasRenderingContext2D): void
 
@@ -151,7 +147,7 @@ export class Shape<
   ) {
     super()
 
-    this[SCOPE].on()
+    this[SCOPE].fOn()
 
     if (typeof attrs === "function") {
       // =========== current shape ===========
@@ -217,7 +213,7 @@ export class Shape<
       }
     })
 
-    this[SCOPE].off()
+    this[SCOPE].fOff()
   }
 
   protected getFill(context: CanvasRenderingContext2D) {

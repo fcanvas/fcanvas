@@ -4,10 +4,11 @@ import type {
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
-import { computed, EffectScope, reactive } from "@vue/reactivity"
+import { computed, reactive } from "@vue/reactivity"
 
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
+import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { _setCurrentShape } from "./currentShape"
 import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -71,12 +72,7 @@ export class Group<
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
 
-  private readonly [SCOPE] = new EffectScope(true) as unknown as {
-    active: boolean
-    on: () => void
-    off: () => void
-    stop: () => void
-  }
+  private readonly [SCOPE] = effectScopeFlat()
 
   constructor(
     attrs: TorFnT<
@@ -86,7 +82,7 @@ export class Group<
     > = {} as unknown as any
   ) {
     super()
-    this[SCOPE].on()
+    this[SCOPE].fOn()
 
     if (typeof attrs === "function") {
       // =========== current shape ===========
@@ -165,7 +161,7 @@ export class Group<
       }
     )
 
-    this[SCOPE].off()
+    this[SCOPE].fOff()
   }
 
   private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
