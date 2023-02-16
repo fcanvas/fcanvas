@@ -1,9 +1,10 @@
 import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
-import { computed, EffectScope, reactive } from "@vue/reactivity"
+import { computed, reactive } from "@vue/reactivity"
 
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
+import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { isDev } from "./env"
 import { globalConfigs } from "./globalConfigs"
 import { createTransform } from "./helpers/createTransform"
@@ -43,17 +44,12 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
 
   private readonly [DIV_CONTAINER] = document.createElement("div")
 
-  private readonly [SCOPE] = new EffectScope(true) as unknown as {
-    active: boolean
-    on: () => void
-    off: () => void
-    stop: () => void
-  }
+  private readonly [SCOPE] = effectScopeFlat()
 
   constructor(attrs: ReactiveType<PersonalAttrs> = {}) {
     super()
 
-    this[SCOPE].on()
+    this[SCOPE].fOn()
 
     this.$ = reactive(attrs)
 
@@ -151,7 +147,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
       }
     })
 
-    this[SCOPE].off()
+    this[SCOPE].fOff()
   }
 
   public mount(query: string | HTMLElement): void {

@@ -73,11 +73,11 @@ export class Text extends Shape<PersonalAttrs> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
 
-    this[SCOPE].on()
+    this[SCOPE].fOn()
     watchEffect(() => {
       this.setTextData()
     })
-    this[SCOPE].off()
+    this[SCOPE].fOff()
   }
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
