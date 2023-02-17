@@ -1,10 +1,12 @@
+import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
+
 // eslint-disable-next-line functional/no-mixed-type
 interface Looper {
   (): void
   stopped: boolean
 }
 
-export function loop(fn: (stop: () => void) => void): Looper {
+export function useLoop(fn: (stop: () => void) => void): Looper {
   // eslint-disable-next-line functional/no-let
   let idRq: number | null = null
 
@@ -21,6 +23,8 @@ export function loop(fn: (stop: () => void) => void): Looper {
     idRq = requestAnimationFrame(draw)
   }
   draw()
+
+  tryOnScopeDispose(stop)
 
   return stop
 }
