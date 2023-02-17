@@ -1,7 +1,5 @@
 import normalize from "path-normalize"
 
-import { CONFIGS } from "../configs"
-
 // cache
 const imageMap = new Map<string, HTMLImageElement>()
 function loadImage(url: string, get?: true): Promise<HTMLImageElement>
