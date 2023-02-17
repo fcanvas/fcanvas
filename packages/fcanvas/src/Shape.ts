@@ -382,7 +382,7 @@ export class Shape<
 
       return transformedRect(
         rect,
-        new CONFIGS.DOMMatrix()
+        new DOMMatrix()
           .scale(this.$.scale?.x, this.$.scale?.y)
           .translate(x, y)
           .rotate(convertToDegrees(this.$.rotation ?? 0))
@@ -456,7 +456,7 @@ export class Shape<
       const y = this[CONTEXT_CACHE_SIZE].value.height / 2
 
       context.setTransform(
-        new CONFIGS.DOMMatrix(backupTransform.toString())
+        new DOMMatrix(backupTransform.toString())
           .scale(this.$.scale?.x, this.$.scale?.y)
           .translate(x, y)
           .rotate(convertToDegrees(this.$.rotation ?? 0))

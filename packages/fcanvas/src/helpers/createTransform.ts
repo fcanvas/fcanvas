@@ -14,7 +14,7 @@ export function createTransform(
   options: OptionTransform,
   useTranslate = false
 ): DOMMatrix {
-  const transform = new CONFIGS.DOMMatrix()
+  const transform = new DOMMatrix()
 
   if (options.scale !== undefined)
     transform.scale(options.scale.x || 1, options.scale.y || 1)

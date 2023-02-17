@@ -1,5 +1,5 @@
 import {
-  CanvasRenderingContext2D as $CanvasRenderingContext2D,
+  CanvasRenderingContext2D,
   createCanvas,
   DOMMatrix,
   Image,
@@ -11,12 +11,13 @@ import { CONFIGS } from "fcanvas"
 import { polyfillPath2D } from "path2d-polyfill/path2d"
 
 polyfillPath2D(global)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-;(global as unknown as any).CanvasRenderingContext2D = $CanvasRenderingContext2D
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-;(global as unknown as any).requestAnimationFrame = setImmediate
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-;(global as unknown as any).cancelAnimationFrame = clearImmediate
+Object.assign(global, {
+  CanvasRenderingContext2D,
+  DOMMatrix,
+  Image,
+  requestAnimationFrame: setImmediate,
+  cancelAnimationFrame: clearImmediate
+})
 
 Object.assign(CONFIGS, {
   createCanvas,

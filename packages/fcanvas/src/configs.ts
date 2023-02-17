@@ -5,10 +5,6 @@ interface Configs {
     path: string,
     config: { family: string; weight?: string; style?: string }
   ) => void
-
-  DOMMatrix: typeof DOMMatrix
-  Path2D: typeof Path2D
-  Image: typeof Image
 }
 
 export const CONFIGS: Configs = {
@@ -18,8 +14,5 @@ export const CONFIGS: Configs = {
   createContext2D() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return CONFIGS.createCanvas().getContext("2d")!
-  },
-  DOMMatrix,
-  Path2D,
-  Image
+  }
 }
