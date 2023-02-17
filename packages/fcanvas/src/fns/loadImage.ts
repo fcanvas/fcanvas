@@ -20,7 +20,7 @@ function loadImage(
 
   if (inCache) return Promise.resolve(inCache)
 
-  const img = new CONFIGS.Image()
+  const img = new Image()
 
   return new Promise((resolve, reject) => {
     function done() {
