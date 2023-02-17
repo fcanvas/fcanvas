@@ -5,15 +5,16 @@ import type gsap from "gsap"
 
 import { APIEvent } from "./apis/APIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
+import { CONFIGS } from "./configs"
 import { _setCurrentShape } from "./currentShape"
 import { isDev } from "./env"
+import { getImage } from "./fns/loadImage"
 import { convertToDegrees } from "./helpers/convertToDegrees"
 import { createFilter } from "./helpers/createFilter"
 import { createTransform } from "./helpers/createTransform"
 import { existsTransform } from "./helpers/existsTransform"
 import { pointInBox } from "./helpers/pointInBox"
 import { transformedRect } from "./helpers/transformerRect"
-import { getImage } from "./fns/loadImage"
 import {
   BOUNCE_CLIENT_RECT,
   BOUNDING_CLIENT_RECT,
@@ -130,10 +131,7 @@ export class Shape<
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private readonly [CONTEXT_CACHE] = document
-    .createElement("canvas")
-    .getContext("2d")!
+  private readonly [CONTEXT_CACHE] = CONFIGS.createContext2D()
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
@@ -384,7 +382,7 @@ export class Shape<
 
       return transformedRect(
         rect,
-        new DOMMatrix()
+        new CONFIGS.DOMMatrix()
           .scale(this.$.scale?.x, this.$.scale?.y)
           .translate(x, y)
           .rotate(convertToDegrees(this.$.rotation ?? 0))
@@ -458,7 +456,7 @@ export class Shape<
       const y = this[CONTEXT_CACHE_SIZE].value.height / 2
 
       context.setTransform(
-        new DOMMatrix(backupTransform.toString())
+        new CONFIGS.DOMMatrix(backupTransform.toString())
           .scale(this.$.scale?.x, this.$.scale?.y)
           .translate(x, y)
           .rotate(convertToDegrees(this.$.rotation ?? 0))

@@ -1,6 +1,7 @@
 import { watchEffect } from "@vue-reactivity/watch"
 
 import { Shape } from "../Shape"
+import { CONFIGS } from "../configs"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
@@ -30,8 +31,7 @@ let dummyContext: CanvasRenderingContext2D
 export function getDummyContext() {
   if (dummyContext) return dummyContext
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  dummyContext = document.createElement("canvas").getContext("2d")!
+  dummyContext = CONFIGS.createContext2D()
   return dummyContext
 }
 

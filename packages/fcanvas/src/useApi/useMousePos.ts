@@ -2,10 +2,10 @@ import { reactive } from "@vue/reactivity"
 
 import type { Layer } from "../Layer"
 import { getCurrentShape } from "../currentShape"
+import { getMousePos } from "../fns/getMousePos"
 import type { ElAddEventListener } from "../helpers/addEvents"
 import { addEvents } from "../helpers/addEvents"
 import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
-import { getMousePos } from "../fns/getMousePos"
 import { CANVAS_ELEMENT } from "../symbols"
 
 const mousePosMap = new WeakMap<
