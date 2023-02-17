@@ -4,7 +4,7 @@
 
 import { effectScope, ref } from "@vue/reactivity"
 
-import { sleep } from "../methods/sleep"
+import { sleep } from "../fns/sleep"
 
 import type { Pausable } from "./useIntervalFn"
 import { useIntervalFn } from "./useIntervalFn"

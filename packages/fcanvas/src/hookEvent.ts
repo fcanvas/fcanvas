@@ -1,5 +1,5 @@
 import type { APIGroup } from "./apis/APIGroup"
-import { getMousePos } from "./methods/getMousePos"
+import { getMousePos } from "./fns/getMousePos"
 import { LOCALS } from "./symbols"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

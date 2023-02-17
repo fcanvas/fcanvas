@@ -4,7 +4,7 @@ import { computed, ref } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
 import { getImage } from "../auto-export"
-import { cropImage } from "../methods/cropImage"
+import { cropImage } from "../fns/cropImage"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"

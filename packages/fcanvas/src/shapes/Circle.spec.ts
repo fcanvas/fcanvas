@@ -4,7 +4,7 @@ import { createCanvas } from "canvas"
 import { describe, expect, test } from "vitest"
 
 import { Circle, Group, Layer, Stage } from ".."
-import { getBounceClientRect } from "../methods/getBounceClientRect"
+import { getBounceClientRect } from "../fns/getBounceClientRect"
 
 import { compareCanvas } from "./test/helpers/compareCanvas"
 import { compareLayerWithImage } from "./test/helpers/compareLayerWithImage"

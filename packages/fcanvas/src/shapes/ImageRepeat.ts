@@ -4,7 +4,7 @@ import { computed } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
 import { isDev } from "../env"
-import { getImage, loadImage } from "../methods/loadImage"
+import { getImage, loadImage } from "../fns/loadImage"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { Rect } from "../type/Rect"
