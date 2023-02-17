@@ -28,6 +28,7 @@ A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's
 | [fcanvas](./packages/fcanvas/) | The main package provides classes and methods for drawing canvas and manipulating events |
 | [@fcanvas/animate](./packages/animate/) | plugin that allows connecting `gsap` to `fcanvas` to create powerful animations |
 | [@fcanvas/tile](./packages/tile/) | plugin that allows creating tiles from file |
+| [@fcanvas/node](./packages/node/) | Plugin allow use fcanvas in NodeJS |
 
 ## Installation
 
