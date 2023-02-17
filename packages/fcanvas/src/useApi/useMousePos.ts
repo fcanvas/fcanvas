@@ -5,7 +5,7 @@ import { getCurrentShape } from "../currentShape"
 import type { ElAddEventListener } from "../helpers/addEvents"
 import { addEvents } from "../helpers/addEvents"
 import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
-import { getMousePos } from "../methods/getMousePos"
+import { getMousePos } from "../fns/getMousePos"
 import { CANVAS_ELEMENT } from "../symbols"
 
 const mousePosMap = new WeakMap<

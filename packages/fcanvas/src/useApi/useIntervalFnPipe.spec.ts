@@ -1,4 +1,4 @@
-import { sleep } from "../methods/sleep"
+import { sleep } from "../fns/sleep"
 
 import { useIntervalFnPipe } from "./useIntervalFnPipe"
 

@@ -4,7 +4,7 @@ import { computed, isRef, shallowReactive, shallowRef } from "@vue/reactivity"
 
 import type { Group } from "../Group"
 import type { Layer } from "../Layer"
-import { toReactive } from "../methods/toReactive"
+import { toReactive } from "../fns/toReactive"
 import type { Rect } from "../type/Rect"
 import type { MayBeShallowRef } from "../type/fn/MayBeShallowRef"
 

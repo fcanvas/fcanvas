@@ -13,7 +13,7 @@ import { createTransform } from "./helpers/createTransform"
 import { existsTransform } from "./helpers/existsTransform"
 import { pointInBox } from "./helpers/pointInBox"
 import { transformedRect } from "./helpers/transformerRect"
-import { getImage } from "./methods/loadImage"
+import { getImage } from "./fns/loadImage"
 import {
   BOUNCE_CLIENT_RECT,
   BOUNDING_CLIENT_RECT,

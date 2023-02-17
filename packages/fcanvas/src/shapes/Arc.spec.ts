@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest"
 
 import { Layer } from "../Layer"
 import { Stage } from "../Stage"
-import { getBounceClientRect } from "../methods/getBounceClientRect"
+import { getBounceClientRect } from "../fns/getBounceClientRect"
 
 import { Arc } from "./Arc"
 import { compareLayerWithImage } from "./test/helpers/compareLayerWithImage"
