@@ -22,7 +22,8 @@ Object.assign(CONFIGS, {
   createCanvas,
   registerFont,
   DOMMatrix,
-  Path2D,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Path2D: (global as unknown as any).Path2D,
   Image
 })
 
