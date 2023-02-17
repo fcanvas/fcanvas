@@ -1,5 +1,4 @@
 import { Shape } from "../Shape"
-import { CONFIGS } from "../configs"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"

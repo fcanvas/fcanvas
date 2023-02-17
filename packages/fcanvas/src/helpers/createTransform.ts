@@ -1,4 +1,3 @@
-import { CONFIGS } from "../configs"
 import type { Offset } from "../type/Offset"
 
 import { convertToDegrees } from "./convertToDegrees"
