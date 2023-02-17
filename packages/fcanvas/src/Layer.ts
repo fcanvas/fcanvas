@@ -10,6 +10,7 @@ import type { Group } from "./Group"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
+import { CONFIGS } from "./configs"
 import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
@@ -77,10 +78,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private readonly [CONTEXT_CACHE] = document
-    .createElement("canvas")
-    .getContext("2d")!
+  private readonly [CONTEXT_CACHE] = CONFIGS.createContext2D()
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
 

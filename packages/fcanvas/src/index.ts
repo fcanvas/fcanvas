@@ -26,3 +26,4 @@ export * from "./symbols"
 export * from "./auto-export"
 
 export * from "./apis/effectScopeFlat"
+export { CONFIGS } from "./configs"

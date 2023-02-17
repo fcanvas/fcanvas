@@ -3,6 +3,7 @@ import type { ComputedRef } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
+import { CONFIGS } from "../configs"
 import { isDev } from "../env"
 import { getImage, loadImage } from "../fns/loadImage"
 import { SCOPE } from "../symbols"
@@ -46,20 +47,20 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     image: CanvasImageSource,
     imageWidth: number,
     imageHeight: number,
-    scrollTop?: number,
-    scrollLeft?: number,
-    scrollWidth?: number,
-    scrollHeight?: number,
+    scrollTop: number | undefined,
+    scrollLeft: number | undefined,
+    scrollWidth: number,
+    scrollHeight: number,
     cache?: false
   ): HTMLCanvasElement
   private createImageRepeat(
     image: CanvasImageSource,
     imageWidth: number,
     imageHeight: number,
-    scrollTop?: number,
-    scrollLeft?: number,
-    scrollWidth?: number,
-    scrollHeight?: number,
+    scrollTop: number | undefined,
+    scrollLeft: number | undefined,
+    scrollWidth: number,
+    scrollHeight: number,
     cache?: true
   ): {
     r: HTMLCanvasElement
@@ -70,10 +71,10 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     image: CanvasImageSource,
     imageWidth: number,
     imageHeight: number,
-    scrollTop?: number,
-    scrollLeft?: number,
-    scrollWidth?: number,
-    scrollHeight?: number,
+    scrollTop: number | undefined,
+    scrollLeft: number | undefined,
+    scrollWidth: number,
+    scrollHeight: number,
     cache?: boolean
   ):
     | HTMLCanvasElement
@@ -98,8 +99,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const ctx = document.createElement("canvas").getContext("2d")!
+    const ctx = CONFIGS.createContext2D()
 
     if (cache) {
       if (scrollWidth) scrollWidth += imageWidth * 2
@@ -118,7 +118,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
       // eslint-disable-next-line functional/no-let
       let ctxScoop: CanvasRenderingContext2D
       if (scrollHeight) {
-        canvasRepeatX = document.createElement("canvas").getContext("2d")
+        canvasRepeatX = CONFIGS.createContext2D()
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         canvasRepeatX!.canvas.width = scrollWidth
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -263,7 +263,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
       // eslint-disable-next-line functional/no-let
       let image: CanvasImageSource
       if (crop) {
-        image = document.createElement("canvas")
+        image = CONFIGS.createCanvas()
         image.width = width ?? crop.width
         image.height = height ?? crop.height
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -281,7 +281,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
             height ?? crop.height
           )
       } else if (width !== undefined || height !== undefined) {
-        image = document.createElement("canvas")
+        image = CONFIGS.createCanvas()
 
         const { width: rW, height: rH } = getSizeImageApplyRatio(
           width,

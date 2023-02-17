@@ -1,21 +1,18 @@
 {
-  "name": "fcanvas",
+  "name": "@fcanvas/node",
   "version": "1.1.0-rc.14",
-  "description": "This is a simple canvas library for drawing on the fly.",
+  "description": "Plugin allow use fcanvas in NodeJS",
   "scripts": {
-    "build": "pnpm auto-export && tsup",
-    "auto-export": "tsx scripts/auto-export.ts",
+    "build": "tsup",
     "dev": "vite dev",
     "prepublishOnly": "pnpm test && pnpm build",
-    "test": "vitest run",
+    "test": "echo 'No test'",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "unpkg": "./dist/index.browser.mjs",
-  "jsdelivr": "dist/index.global.js",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -24,17 +21,10 @@
     }
   },
   "devDependencies": {
-    "@types/plist": "^3.0.2",
-    "canvas": "^2.11.0",
-    "dommatrix": "^1.0.3",
-    "fetch-polyfill": "^0.8.2",
-    "gsap": "^3.11.4",
-    "happy-dom": "^8.1.1",
+    "fcanvas": "workspace:*",
     "jsdom": "^20.0.3",
-    "ts-file-exports": "^0.0.4",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
-    "vite": "^4.0.3",
     "vitest": "^0.26.2"
   },
   "license": "MIT",
@@ -49,8 +39,10 @@
     "reactivity",
     "2d",
     "canvas",
-    "Tachibana Shin",
-    "tachibana-shin"
+    "tile",
+    "tiles",
+    "node",
+    "fcanvas-node"
   ],
   "files": [
     "dist"
@@ -64,16 +56,10 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@vue-reactivity/watch": "^0.2.0",
-    "@vue/reactivity": "^3.2.45",
-    "@vue/shared": "^3.2.45",
-    "path-normalize": "^6.0.9",
-    "tmx-tiledmap": "^1.2.1"
+    "canvas": "^2.11.0",
+    "path2d-polyfill": "^2.0.1"
   },
   "peerDependencies": {
-    "@vue-reactivity/watch": "^0.2.0",
-    "@vue/reactivity": "^3.2.37",
-    "@vue/shared": "^3.2.37",
-    "path-normalize": "^6.0.6"
+    "fcanvas": "workspace:*"
   }
 }

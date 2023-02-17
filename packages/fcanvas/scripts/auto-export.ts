@@ -32,6 +32,9 @@ function exportFile(path: string) {
         !line.includes("export interface")
     )
     .map((line) => {
+      line = line.replace(/\w+\s+as\s+/g, "")
+      line = line.slice(0, line.indexOf(" from "))
+
       const name = line.match(/export (?:\w+) (\w+)/)?.[1]
       if (name) return name
 
@@ -39,14 +42,17 @@ function exportFile(path: string) {
     })
     .filter((name) => !name.startsWith("_"))
 
-  return `export { ${[...new Set(exports)].join(", ")} } from "${path.replace(".ts", "")}"`
+  return `export { ${[...new Set(exports)].join(", ")} } from "${path.replace(
+    ".ts",
+    ""
+  )}"`
 }
 
 writeFileSync(
   join(SRC_PATH, "auto-export.ts"),
   [
     "// export methods",
-    exportAllFiles("methods"),
+    exportAllFiles("fns"),
     "// export on",
     exportAllFiles("on"),
     "// export shapes",

@@ -9,6 +9,7 @@ import { computed, reactive } from "@vue/reactivity"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
+import { CONFIGS } from "./configs"
 import { _setCurrentShape } from "./currentShape"
 import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -64,10 +65,7 @@ export class Group<
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  private readonly [CONTEXT_CACHE] = document
-    .createElement("canvas")
-    .getContext("2d")!
+  private readonly [CONTEXT_CACHE] = CONFIGS.createContext2D()
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>

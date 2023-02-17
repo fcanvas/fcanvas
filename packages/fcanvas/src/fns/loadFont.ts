@@ -1,3 +1,5 @@
+import { CONFIGS } from "../configs"
+
 const REG = /([^/\\.]+)(?:\.[^\\/]+)?$/
 
 function basename(url: string): string {
@@ -19,6 +21,19 @@ export function loadFont(
   onAllReady?: boolean
 ) {
   return new Promise<string>((resolve, reject) => {
+    if (CONFIGS.registerFont) {
+      try {
+        CONFIGS.registerFont(url, {
+          family: fontFamily
+        })
+        resolve(fontFamily)
+      } catch (err) {
+        reject(err)
+      }
+
+      return
+    }
+
     const request = new XMLHttpRequest()
 
     request.addEventListener("readystatechange", async () => {

@@ -1,3 +1,4 @@
+import { CONFIGS } from "../configs"
 import type { Offset } from "../type/Offset"
 
 import { convertToDegrees } from "./convertToDegrees"
@@ -13,7 +14,7 @@ export function createTransform(
   options: OptionTransform,
   useTranslate = false
 ): DOMMatrix {
-  const transform = new DOMMatrix()
+  const transform = new CONFIGS.DOMMatrix()
 
   if (options.scale !== undefined)
     transform.scale(options.scale.x || 1, options.scale.y || 1)
