@@ -1,20 +1,22 @@
-# @fcanvas/animate
+# @fcanvas/node
 
-Plugin that provides the ability to use animation for fcanvas
+Plugin allow use fcanvas in NodeJS
 
 View source code at: https://github.com/tachibana-shin/fcanvas-next
 
 ### Install
 ```bash
-pnpm add fcanvas @fcanvas/animate gsap
+pnpm add fcanvas @fcanvas/node
 ```
 
 ### Usage
 ```ts
-import { Stage } from "fcanvas"
-import { installAnimate } from "@fcanvas/animate"
+import { Layer, Circle } from "@fcanvas/node"
 
-installAnimate(Stage)
+const layer = new Layer()
+layer.add(new Circle({ x: 100, y: 100, radius: 50, stroke: '#000' }))
+
+layer.to
 ```
 
-and now the `Animate` class is ready to import and the `.to()` method is up and running
+except `Stage` you can use anything from `fcanvas` through `@fcanvas/node`
