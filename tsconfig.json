@@ -12,7 +12,10 @@
     "allowSyntheticDefaultImports": true,
     "types": ["vitest/globals"],
     "resolveJsonModule": true,
-    "preserveSymlinks": true
+    "preserveSymlinks": true,
+    "paths": {
+      "src/*": ["./packages/fcanvas/src/*"]
+    }
   },
   "include": [
     "packages/*/src/**/*.ts",
