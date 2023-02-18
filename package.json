@@ -16,7 +16,7 @@
     "ci": "pnpm format && pnpm lint --fix && pnpm typing"
   },
   "devDependencies": {
-    "@tachibana-shin/eslint-config": "^1.1.0",
+    "@tachibana-shin/eslint-config": "^1.0.7",
     "@types/node": "^18.14.0",
     "bumpp": "^8.2.1",
     "conventional-changelog-cli": "^2.2.2",

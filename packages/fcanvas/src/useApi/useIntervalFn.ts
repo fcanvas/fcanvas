@@ -2,10 +2,10 @@
  * Code from: https://raw.githubusercontent.com/vueuse/vueuse/main/packages/shared/useIntervalFn
  */
 
-import { watch } from "@vue-reactivity/watch"
 import type { Ref } from "@vue/reactivity"
 import { isRef, ref } from "@vue/reactivity"
 import { isFunction } from "@vue/shared"
+import { watch } from "@vue-reactivity/watch"
 
 import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 

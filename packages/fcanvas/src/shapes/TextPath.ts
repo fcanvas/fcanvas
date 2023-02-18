@@ -196,7 +196,7 @@ export class TextPath extends Shape<PersonalAttrs> {
     // eslint-disable-next-line functional/no-let
     let p1: Offset | void
     // eslint-disable-next-line functional/no-let
-    let pathCmd: typeof this.dataArray[0] | void
+    let pathCmd: (typeof this.dataArray)[0] | void
     // eslint-disable-next-line functional/no-let
     let pIndex = -1
     // eslint-disable-next-line functional/no-let
