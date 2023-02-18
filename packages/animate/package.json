@@ -23,7 +23,7 @@
     }
   },
   "devDependencies": {
-    "@vue/reactivity": "^3.2.45",
+    "@vue/reactivity": "^3.2.47",
     "gsap": "^3.11.4",
     "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
