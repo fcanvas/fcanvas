@@ -5,7 +5,7 @@
 import type { Ref } from "@vue/reactivity"
 import { isRef, ref } from "@vue/reactivity"
 import { isFunction } from "@vue/shared"
-import { watch } from "@vue-reactivity/watch"
+import { watch } from "src/fns/watch"
 
 import { tryOnScopeDispose } from "../logic/tryOnScopeDispose"
 

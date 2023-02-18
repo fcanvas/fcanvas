@@ -1,6 +1,6 @@
 import type { ComputedRef, Ref } from "@vue/reactivity"
 import { computed, ref } from "@vue/reactivity"
-import { watch } from "@vue-reactivity/watch"
+import { watch } from "src/fns/watch"
 
 import { Shape } from "../Shape"
 import { getImage } from "../auto-export"

@@ -29,7 +29,6 @@ const configBrowser: Options = {
   noExternal: [
     "@vue/reactivity",
     "@vue/shared",
-    "@vue-reactivity/watch",
     "path-normalize"
   ]
 }

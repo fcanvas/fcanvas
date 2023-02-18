@@ -1,4 +1,4 @@
-import { watchEffect } from "@vue-reactivity/watch"
+import { watchEffect } from "src/fns/watch"
 
 import { Shape } from "../Shape"
 import { CONFIGS } from "../configs"
