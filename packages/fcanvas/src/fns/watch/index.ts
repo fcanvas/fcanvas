@@ -30,7 +30,7 @@ import {
   warn
 } from "./errorHandling"
 import type { SchedulerJob } from "./scheduler"
-import { queueJob } from "./scheduler"
+import { queueJob, queuePostFlushCb } from "./scheduler"
 
 type OnCleanup = (cleanupFn: () => void) => void
 
@@ -282,6 +282,8 @@ function doWatch(
   let scheduler: EffectScheduler
   if (flush === "sync") {
     scheduler = job as any // the scheduler function gets called directly
+  } else if (flush === "post") {
+    scheduler = () => queuePostFlushCb(job)
   } else {
     // default: 'pre'
     job.pre = true
@@ -299,6 +301,8 @@ function doWatch(
   if (cb) {
     if (immediate) job()
     else oldValue = effect.run()
+  } else if (flush === "post") {
+    queuePostFlushCb(effect.run.bind(effect))
   } else {
     effect.run()
   }
