@@ -62,6 +62,7 @@ importers:
       happy-dom: ^8.4.4
       jsdom: ^20.0.3
       path-normalize: ^6.0.10
+      path2d-polyfill: ^2.0.1
       tmx-tiledmap: ^1.2.1
       ts-file-exports: ^0.0.4
       tsup: ^6.6.3
@@ -81,6 +82,7 @@ importers:
       gsap: 3.11.4
       happy-dom: 8.4.4
       jsdom: 20.0.3_canvas@2.11.0
+      path2d-polyfill: 2.0.1
       ts-file-exports: 0.0.4
       tsup: 6.6.3
       tsx: 3.12.3
@@ -4484,7 +4486,6 @@ packages:
   /path2d-polyfill/2.0.1:
     resolution: {integrity: sha512-ad/3bsalbbWhmBo0D6FZ4RNMwsLsPpL6gnvhuSaU5Vm7b06Kr5ubSltQQ0T7YKsiJQO+g22zJ4dJKNTXIyOXtA==}
     engines: {node: '>=8'}
-    dev: false
 
   /pathe/0.2.0:
     resolution: {integrity: sha512-sTitTPYnn23esFR3RlqYBWn4c45WGeLcsKzQiUpXJAyfcWkolvlYpV8FLo7JishK946oQwMFUCHXQ9AjGPKExw==}

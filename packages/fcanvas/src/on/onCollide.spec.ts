@@ -28,7 +28,7 @@ const circleRawInCircle = { ...pointInCircle, ...sizeCircle }
 const circleInCircle = new Circle(circleRawInCircle)
 
 describe("onCollide", () => {
-  test("realtime", () => {
+  test("realtime", async () => {
     const rect2 = new Rect({ x: 11, y: 11, ...sizeRect })
     const fn = vi.fn()
 
@@ -38,6 +38,8 @@ describe("onCollide", () => {
 
     rect2.$.x -= 1
     rect2.$.y -= 1
+
+    await Promise.resolve()
 
     expect(fn.mock.calls.length).toBe(1)
     expect(fn.mock.calls[0][0]).toBe(rect2)
