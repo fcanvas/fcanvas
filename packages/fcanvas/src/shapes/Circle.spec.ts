@@ -145,7 +145,7 @@ describe("Circle", () => {
     ).toEqual(true)
   })
 
-  test("set opacity after instantiation & reactive", async () => {
+  test("set opacity after instantiation & reactive with Group", async () => {
     const stage = new Stage({
       autoDraw: false
     })
@@ -160,6 +160,32 @@ describe("Circle", () => {
 
     group.add(circle)
     layer.add(group)
+    stage.add(layer)
+
+    circle.$.opacity = 0.5
+    layer.draw()
+
+    circle.$.opacity = 1
+    layer.draw()
+
+    expect(
+      await compareLayerWithImage(layer, "circle_70_fill:red.png")
+    ).toEqual(true)
+  })
+
+  test("set opacity after instantiation & reactive", async () => {
+    const stage = new Stage({
+      autoDraw: false
+    })
+    const layer = new Layer()
+    const circle = new Circle({
+      x: stage.size.width / 2,
+      y: stage.size.height / 2,
+      radius: 70,
+      fill: "red"
+    })
+
+    layer.add(circle)
     stage.add(layer)
 
     circle.$.opacity = 0.5

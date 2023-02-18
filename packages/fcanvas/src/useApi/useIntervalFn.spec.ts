@@ -4,6 +4,7 @@
 
 import { effectScope, ref } from "@vue/reactivity"
 
+import { nextTick } from ".."
 import { sleep } from "../fns/sleep"
 
 import type { Pausable } from "./useIntervalFn"
@@ -86,6 +87,8 @@ describe("useIntervalFn", () => {
 
     callback.mockClear()
     interval.value = 20
+
+    await nextTick()
 
     expect(callback).toHaveBeenCalledTimes(1)
   })

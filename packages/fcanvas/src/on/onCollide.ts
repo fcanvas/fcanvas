@@ -158,9 +158,7 @@ function onCollide<
           }
         }
 
-        const watcher = watchEffect(effect, {
-          flush: "post"
-        })
+        const watcher = watchEffect(effect)
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(target as unknown as any).on?.("destroy", () => {

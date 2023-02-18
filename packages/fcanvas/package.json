@@ -31,6 +31,7 @@
     "gsap": "^3.11.4",
     "happy-dom": "^8.4.4",
     "jsdom": "^20.0.3",
+    "path2d-polyfill": "^2.0.1",
     "ts-file-exports": "^0.0.4",
     "tsup": "^6.6.3",
     "tsx": "^3.12.3",

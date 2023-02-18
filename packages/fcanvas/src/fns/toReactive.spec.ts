@@ -1,8 +1,9 @@
 /* eslint-disable functional/no-let */
 import { isReactive, reactive, ref, toRefs } from "@vue/reactivity"
-import { watchEffect } from "src/fns/watch"
+import { watchSyncEffect } from "src/fns/watch"
 
 import { toReactive } from "./toReactive"
+import { nextTick } from "./watch/scheduler"
 
 // https://github.com/vueuse/vueuse/blob/main/packages/shared/toReactive/index.test.ts
 describe("toRefs", () => {
@@ -40,7 +41,7 @@ describe("toRefs", () => {
     expect(state.b).toBe(0)
     expect(isReactive(state)).toBe(true)
 
-    watchEffect(() => {
+    watchSyncEffect(() => {
       dummy = state.b
     })
 
@@ -48,9 +49,13 @@ describe("toRefs", () => {
 
     r.value.b += 1
 
+    await nextTick()
+
     expect(dummy).toBe(1)
 
     state.b += 1
+
+    await nextTick()
 
     expect(dummy).toBe(2)
     expect(r.value.b).toBe(2)
@@ -65,7 +70,7 @@ describe("toRefs", () => {
     expect(state.a).toBe("a")
     expect(state.b).toBe(0)
 
-    watchEffect(() => {
+    watchSyncEffect(() => {
       dummy = state.b
     })
 

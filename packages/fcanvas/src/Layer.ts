@@ -94,14 +94,19 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     this.$ = reactive(attrs)
 
     const { canvas } = this[CONTEXT_CACHE]
-    canvas.style.cssText = "position: absolute; margin: 0; padding: 0"
+    const isNode = !canvas.style
+    if (!isNode)
+      canvas.style.cssText = "position: absolute; margin: 0; padding: 0"
     watchEffect(() => {
+      if (isNode) return
       canvas.style.left = (this.$.x ?? 0) + "px"
       canvas.style.top = (this.$.y ?? 0) + "px"
     })
     // eslint-disable-next-line functional/no-let
     let displayBp = ""
     watchEffect(() => {
+      if (isNode) return
+
       displayBp = canvas.style.display
       const display = getComputedStyle(canvas).getPropertyValue("display")
 
@@ -140,30 +145,25 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     })
 
     // try watchEffect
-    watchEffect(
-      () => {
-        const { width, height } = this.$
-        const useConfig = width !== undefined && height !== undefined
+    watchEffect(() => {
+      const { width, height } = this.$
+      const useConfig = width !== undefined && height !== undefined
 
-        if (!useConfig) return
+      if (!useConfig) return
 
-        // reactive
-        const ctx = this[CONTEXT_CACHE]
-        ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
+      // reactive
+      const ctx = this[CONTEXT_CACHE]
+      ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
-        this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-        if (isDev) {
-          console.log(
-            "[cache::layer]: size changed %sx%s",
-            ctx.canvas.width,
-            ctx.canvas.height
-          )
-        }
-      },
-      {
-        flush: "post"
+      this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
+      if (isDev) {
+        console.log(
+          "[cache::layer]: size changed %sx%s",
+          ctx.canvas.width,
+          ctx.canvas.height
+        )
       }
-    )
+    })
 
     // event binding
     {

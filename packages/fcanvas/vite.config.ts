@@ -1,3 +1,5 @@
+import path from "path"
+
 import { defineConfig } from "vite"
 
 export default defineConfig({
@@ -7,6 +9,14 @@ export default defineConfig({
       host: process.env.GITPOD_WORKSPACE_URL?.replace("https://", "5173-"),
       protocol: "wss",
       clientPort: 443
+    }
+  },
+  define: {
+    __DEV__: true
+  },
+  resolve: {
+    alias: {
+      src: path.resolve(__dirname, "src")
     }
   }
 })

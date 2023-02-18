@@ -4,7 +4,7 @@ import type {
   UnwrapNestedRefs
 } from "@vue/reactivity"
 import { computed, reactive } from "@vue/reactivity"
-import { watchEffect } from "src/fns/watch"
+import { watch } from "src/fns/watch"
 
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
@@ -137,12 +137,12 @@ export class Group<
       }
     })
 
-    // try watchEffect
-    watchEffect(
-      () => {
+    watch(
+      this[CONTEXT_CACHE_SIZE],
+      ({ width, height }) => {
         // reactive
         const ctx = this[CONTEXT_CACHE]
-        const { width, height } = this[CONTEXT_CACHE_SIZE].value
+        if (ctx.canvas.width === width && ctx.canvas.height === height) return
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
         this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
@@ -155,7 +155,8 @@ export class Group<
         }
       },
       {
-        flush: "post"
+        immediate: true,
+        flush: "sync"
       }
     )
 

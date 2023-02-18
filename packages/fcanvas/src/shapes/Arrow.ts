@@ -21,6 +21,9 @@ export class Arrow extends Line<PersonalAttrs> {
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     super._sceneFunc(context)
+
+    context.setLineDash([])
+
     const PI2 = Math.PI * 2
     const points = this.$.points
 
