@@ -24,7 +24,7 @@ jobs:
 
       - name: Install depends and run `auto-export`
         run: |
-          pnpm i
+          pnpm i --no-frozen-lockfile
           cd packages/fcanvas
           pnpm auto-export
           pnpm build
