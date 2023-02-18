@@ -1,5 +1,5 @@
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
-import { computed, reactive } from "@vue/reactivity"
+import { computed, reactive, toRaw } from "@vue/reactivity"
 import type gsap from "gsap"
 import { watchEffect } from "src/fns/watch"
 
@@ -82,7 +82,7 @@ function setLineStyle(
   context.lineCap = attrs.lineCap ?? "butt"
 
   if (attrs.dashEnabled ?? true) {
-    if (attrs.dash) context.setLineDash(attrs.dash)
+    if (attrs.dash) context.setLineDash(toRaw(attrs.dash))
   } else if (context.getLineDash().length) {
     context.setLineDash([])
   }
