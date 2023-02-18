@@ -1,6 +1,6 @@
 import { ref } from "@vue/reactivity"
 import { watchEffect } from "src/fns/watch"
-global.__DEV__ = true
+Object.assign(global, { __DEV__: true })
 const count = ref(0)
 watchEffect(
   () => {
