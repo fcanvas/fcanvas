@@ -1,6 +1,6 @@
-import { watchEffect } from "@vue-reactivity/watch"
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, reactive } from "@vue/reactivity"
+import { watchEffect } from "@vue-reactivity/watch"
 import type gsap from "gsap"
 
 import { APIEvent } from "./apis/APIEvent"

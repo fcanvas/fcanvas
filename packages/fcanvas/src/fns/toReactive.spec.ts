@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-let */
-import { watchEffect } from "@vue-reactivity/watch"
 import { isReactive, reactive, ref, toRefs } from "@vue/reactivity"
+import { watchEffect } from "@vue-reactivity/watch"
 
 import { toReactive } from "./toReactive"
 

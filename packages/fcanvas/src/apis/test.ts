@@ -1,5 +1,5 @@
-import { watch } from "@vue-reactivity/watch"
 import { ref } from "@vue/reactivity"
+import { watch } from "@vue-reactivity/watch"
 
 import { effectScopeFlat } from "./effectScopeFlat"
 
