@@ -1,6 +1,6 @@
 import type { ShallowRef } from "@vue/reactivity"
 import { computed, isRef, shallowReactive, shallowRef } from "@vue/reactivity"
-import { watch } from "@vue-reactivity/watch"
+import { watch } from "src/fns/watch"
 
 import type { Group } from "../Group"
 import type { Layer } from "../Layer"

@@ -64,14 +64,12 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@vue-reactivity/watch": "^0.2.0",
     "@vue/reactivity": "^3.2.47",
     "@vue/shared": "^3.2.47",
     "path-normalize": "^6.0.10",
     "tmx-tiledmap": "^1.2.1"
   },
   "peerDependencies": {
-    "@vue-reactivity/watch": "^0.2.0",
     "@vue/reactivity": "^3.2.47",
     "@vue/shared": "^3.2.37",
     "path-normalize": "^6.0.6"

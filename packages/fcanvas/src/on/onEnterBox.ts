@@ -1,4 +1,4 @@
-import { watch } from "@vue-reactivity/watch"
+import { watch } from "src/fns/watch"
 
 import type { Group } from "../Group"
 import type { Shape } from "../Shape"

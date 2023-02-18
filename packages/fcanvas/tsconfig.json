@@ -2,8 +2,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "tests/*": ["./tests/*"]
+      "tests/*": [
+        "./tests/*"
+      ],
+      "src/*": [
+        "./src/*"
+      ],
     },
-    "types": ["vitest/globals"]
+    "types": [
+      "vitest/globals"
+    ]
   }
 }

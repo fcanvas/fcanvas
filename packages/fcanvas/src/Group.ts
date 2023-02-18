@@ -4,7 +4,7 @@ import type {
   UnwrapNestedRefs
 } from "@vue/reactivity"
 import { computed, reactive } from "@vue/reactivity"
-import { watchEffect } from "@vue-reactivity/watch"
+import { watchEffect } from "src/fns/watch"
 
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"

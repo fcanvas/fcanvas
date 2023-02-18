@@ -1,6 +1,6 @@
 import type { ComputedRef } from "@vue/reactivity"
 import { computed } from "@vue/reactivity"
-import { watchEffect } from "@vue-reactivity/watch"
+import { watchEffect } from "src/fns/watch"
 
 import type { CommonGroupAttrs } from "../Group"
 import { Group } from "../Group"
