@@ -479,7 +479,7 @@ export class Shape<
     context.beginPath()
 
     setLineStyle(context, this.$)
-    scene?.call(this, context)
+    scene.call(this, context)
     // this.fillStrokeScene(context);
 
     context.closePath()
