@@ -8,7 +8,7 @@ import {
 import { CONFIGS } from "fcanvas"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-import { polyfillPath2D } from "path2d-polyfill/path2d"
+import { polyfillPath2D } from "path2d-polyfill"
 
 polyfillPath2D(global)
 Object.assign(global, {
@@ -16,7 +16,8 @@ Object.assign(global, {
   DOMMatrix,
   Image,
   requestAnimationFrame: setImmediate,
-  cancelAnimationFrame: clearImmediate
+  cancelAnimationFrame: clearImmediate,
+  UIEvent: class {}
 })
 
 Object.assign(CONFIGS, {

@@ -10,7 +10,7 @@ import type { Group } from "./Group"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
-import { CONFIGS } from "./configs"
+import { CONFIGS, isDOM } from "./configs"
 import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
@@ -95,33 +95,30 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     this.$ = reactive(attrs)
 
     const { canvas } = this[CONTEXT_CACHE]
-    const isNode = !canvas.style
-    if (!isNode)
+    if (isDOM) {
       canvas.style.cssText = "position: absolute; margin: 0; padding: 0"
-    watchEffect(() => {
-      if (isNode) return
-      canvas.style.left = (this.$.x ?? 0) + "px"
-      canvas.style.top = (this.$.y ?? 0) + "px"
-    })
-    // eslint-disable-next-line functional/no-let
-    let displayBp = ""
-    watchEffect(() => {
-      if (isNode) return
+      watchEffect(() => {
+        canvas.style.left = (this.$.x ?? 0) + "px"
+        canvas.style.top = (this.$.y ?? 0) + "px"
+      })
+      // eslint-disable-next-line functional/no-let
+      let displayBp = ""
+      watchEffect(() => {
+        displayBp = canvas.style.display
+        const display = getComputedStyle(canvas).getPropertyValue("display")
 
-      displayBp = canvas.style.display
-      const display = getComputedStyle(canvas).getPropertyValue("display")
+        if (this.$.visible !== false) {
+          if (display === "none") canvas.style.display = "block"
+          else canvas.style.display = displayBp === "none" ? "" : displayBp
 
-      if (this.$.visible !== false) {
-        if (display === "none") canvas.style.display = "block"
-        else canvas.style.display = displayBp === "none" ? "" : displayBp
+          return
+        }
 
-        return
-      }
+        if (display === "none") return
 
-      if (display === "none") return
-
-      canvas.style.display = "none"
-    })
+        canvas.style.display = "none"
+      })
+    }
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {

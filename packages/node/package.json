@@ -6,7 +6,7 @@
     "build": "tsup",
     "dev": "vite dev",
     "prepublishOnly": "pnpm test && pnpm build",
-    "test": "echo 'No test'",
+    "test": "vitest --run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
