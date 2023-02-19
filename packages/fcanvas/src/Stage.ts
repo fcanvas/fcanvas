@@ -1,12 +1,12 @@
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, reactive } from "@vue/reactivity"
-import { watchEffect } from "src/fns/watch"
 
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { isDOM } from "./configs"
 import { isDev } from "./env"
+import { watchEffect } from "./fns/watch"
 import { globalConfigs } from "./globalConfigs"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
