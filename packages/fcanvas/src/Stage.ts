@@ -5,6 +5,7 @@ import { watchEffect } from "src/fns/watch"
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
+import { isDOM } from "./configs"
 import { isDev } from "./env"
 import { globalConfigs } from "./globalConfigs"
 import { createTransform } from "./helpers/createTransform"
@@ -42,7 +43,9 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
   public readonly size: UnwrapNestedRefs<Size>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [DIV_CONTAINER] = document.createElement("div")
+  private readonly [DIV_CONTAINER] = isDOM
+    ? document.createElement("div")
+    : undefined
 
   private readonly [SCOPE] = effectScopeFlat()
 
@@ -75,51 +78,54 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     })
 
     const container = this[DIV_CONTAINER]
-    container.style.cssText = "position: relative;"
-    watchEffect(() => {
-      container.style.transform = createTransform(this.$).toString()
-    })
-    watchEffect(() => {
-      const { width, height } = this.size
-      container.style.width = `${width}px`
-      container.style.height = `${height}px`
-    })
-    // eslint-disable-next-line functional/no-let
-    let displayBp = ""
-    watchEffect(() => {
-      displayBp = container.style.display
-      const display = getComputedStyle(container).getPropertyValue("display")
-
-      if (this.$.visible !== false) {
-        if (display === "none") container.style.display = "block"
-        else container.style.display = displayBp === "none" ? "" : displayBp
-
-        return
-      }
-
-      if (display === "none") return
-
-      container.style.display = "none"
-    })
-    watchEffect(() => {
-      container.style.opacity = (this.$.opacity ?? 1) + ""
-    })
-    // event binding
-    // eslint-disable-next-line func-call-spacing
-    const handlersMap = new Map<string, (event: Event) => void>()
-    watchEffect(() => {
-      this[LISTENERS].forEach((listeners, name) => {
-        // if exists on handlersMap => first removeEventListener
-        const oldHandler = handlersMap.get(name)
-        if (oldHandler) container.removeEventListener(name, oldHandler)
-
-        const handler = (event: Event) => {
-          listeners.forEach((listener) => listener(event))
-        }
-        handlersMap.set(name, handler)
-        container.addEventListener(name, handler)
+    if (container /** @equal isDOM */) {
+      container.style.cssText = "position: relative;"
+      watchEffect(() => {
+        container.style.transform = createTransform(this.$).toString()
       })
-    })
+      watchEffect(() => {
+        const { width, height } = this.size
+        container.style.width = `${width}px`
+        container.style.height = `${height}px`
+      })
+
+      // eslint-disable-next-line functional/no-let
+      let displayBp = ""
+      watchEffect(() => {
+        displayBp = container.style.display
+        const display = getComputedStyle(container).getPropertyValue("display")
+
+        if (this.$.visible !== false) {
+          if (display === "none") container.style.display = "block"
+          else container.style.display = displayBp === "none" ? "" : displayBp
+
+          return
+        }
+
+        if (display === "none") return
+
+        container.style.display = "none"
+      })
+      watchEffect(() => {
+        container.style.opacity = (this.$.opacity ?? 1) + ""
+      })
+      // event binding
+      // eslint-disable-next-line func-call-spacing
+      const handlersMap = new Map<string, (event: Event) => void>()
+      watchEffect(() => {
+        this[LISTENERS].forEach((listeners, name) => {
+          // if exists on handlersMap => first removeEventListener
+          const oldHandler = handlersMap.get(name)
+          if (oldHandler) container.removeEventListener(name, oldHandler)
+
+          const handler = (event: Event) => {
+            listeners.forEach((listener) => listener(event))
+          }
+          handlersMap.set(name, handler)
+          container.addEventListener(name, handler)
+        })
+      })
+    }
 
     // set max size for children
     watchEffect(() => {
@@ -135,6 +141,12 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     watchEffect(() => {
       const { container: id } = this.$
       if (id) {
+        if (!container) {
+          return console.warn(
+            "[fcanvas/Stage]: Can't handle options 'container' in a DOM-free environment"
+          )
+        }
+
         const el =
           typeof id === "string"
             ? document.getElementById(id) ?? document.querySelector(id)
@@ -150,8 +162,9 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     this[SCOPE].fOff()
   }
 
-  public mount(query: string | HTMLElement): void {
+  public mount(query: string | HTMLElement): this {
     this.$.container = query
+    return this
   }
 
   public getBoundingClientRect() {
@@ -162,7 +175,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     const results = super.add(node)
     const { width, height } = this.size
 
-    this[DIV_CONTAINER].appendChild(node[CANVAS_ELEMENT])
+    this[DIV_CONTAINER]?.appendChild(node[CANVAS_ELEMENT])
     // fix https://github.com/tachibana-shin/fcanvas-next/issues/5
     const { width: oWidth, height: oHeight } = node[CANVAS_ELEMENT]
 
@@ -178,6 +191,6 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
   public destroy(): void {
     super.destroy()
     this[SCOPE].stop()
-    this[DIV_CONTAINER].remove()
+    this[DIV_CONTAINER]?.remove()
   }
 }

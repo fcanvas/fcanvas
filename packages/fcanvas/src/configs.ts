@@ -16,3 +16,5 @@ export const CONFIGS: Configs = {
     return CONFIGS.createCanvas().getContext("2d")!
   }
 }
+
+export const isDOM = typeof document !== "undefined"
