@@ -35,6 +35,7 @@ import { extendTarget } from "./utils/extendTarget"
 type PersonalAttrs = Partial<Offset> &
   DrawLayerAttrs & {
     clearBeforeDraw?: boolean
+    autoDraw?: boolean
     width?: number
     height?: number
     visible?: boolean

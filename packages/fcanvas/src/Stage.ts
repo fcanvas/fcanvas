@@ -169,7 +169,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     if (oWidth !== width) node[CANVAS_ELEMENT].width = width
 
     if (oHeight !== height) node[CANVAS_ELEMENT].height = height
-    if (this.$.autoDraw !== false) node.batchDraw()
+    if ((this.$.autoDraw ?? isDOM) !== false && node.$.autoDraw !== false)
+      node.batchDraw()
 
     return results
   }
