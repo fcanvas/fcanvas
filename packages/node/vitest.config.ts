@@ -5,5 +5,8 @@ export default defineConfig({
     environment: "node", // or 'jsdom', 'node'
     threads: false,
     globals: true
+  },
+  define: {
+    __DEV__: true
   }
 })
