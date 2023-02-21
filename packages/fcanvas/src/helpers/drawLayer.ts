@@ -58,8 +58,8 @@ export function drawLayer(
   }
   if (useTransform) {
     backupTransform = context.getTransform()
-
-    context.setTransform(createTransform(attrs, !context))
+    const transform = createTransform(attrs, !context)
+    if (transform) context.setTransform(transform)
   }
   if (useFilter) {
     backupFilter = context.filter

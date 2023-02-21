@@ -30,6 +30,7 @@ type PersonalAttrs = DrawLayerAttrs & {
   visible?: boolean
   opacity?: number
   autoDraw?: boolean
+  offscreen?: boolean
 }
 
 export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
@@ -43,14 +44,17 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
   public readonly size: UnwrapNestedRefs<Size>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [DIV_CONTAINER] = isDOM
-    ? document.createElement("div")
-    : undefined
+  private readonly [DIV_CONTAINER]?: HTMLDivElement
 
   private readonly [SCOPE] = effectScopeFlat()
 
   constructor(attrs: ReactiveType<PersonalAttrs> = {}) {
     super()
+
+    this[DIV_CONTAINER] =
+      isDOM && attrs.offscreen !== true
+        ? document.createElement("div")
+        : undefined
 
     this[SCOPE].fOn()
 
@@ -81,7 +85,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     if (container /** @equal isDOM */) {
       container.style.cssText = "position: relative;"
       watchEffect(() => {
-        container.style.transform = createTransform(this.$).toString()
+        const transform = createTransform(this.$)
+        if (transform) container.style.transform = transform.toString()
       })
       watchEffect(() => {
         const { width, height } = this.size
@@ -139,7 +144,10 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     })
 
     watchEffect(() => {
-      const { container: id } = this.$
+      const { container: id, offscreen } = this.$
+      if (offscreen)
+        return console.warn("[fcanvas/Stage]: disabled by 'offscreen'")
+
       if (id) {
         if (!container) {
           return console.warn(

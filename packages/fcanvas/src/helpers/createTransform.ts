@@ -12,7 +12,16 @@ export type OptionTransform = Partial<Offset> & {
 export function createTransform(
   options: OptionTransform,
   useTranslate = false
-): DOMMatrix {
+): DOMMatrix | null {
+  if (
+    options.scale !== undefined &&
+    options.rotation !== undefined &&
+    options.offset !== undefined &&
+    useTranslate !== undefined &&
+    options.skewX !== undefined &&
+    options.skewY !== undefined
+  )
+    return null
   const transform = new DOMMatrix()
 
   if (options.scale !== undefined)

@@ -232,8 +232,10 @@ export class Shape<
             typeof image === "string" ? getImage(image) : image,
             this.$.fillPattern?.repeat ?? null
           )!
-          if (this.$.fillPattern && existsTransform(this.$.fillPattern, true))
-            style.setTransform(createTransform(this.$.fillPattern, true))
+          if (this.$.fillPattern && existsTransform(this.$.fillPattern, true)) {
+            const transform = createTransform(this.$.fillPattern, true)
+            if (transform) style.setTransform(transform)
+          }
         }
         break
       case "linear-gradient":
