@@ -10,48 +10,41 @@ export interface FakeShape {
   $: Partial<Offset>
   [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   // eslint-disable-next-line functional/no-method-signature
-  getClientRect(): Rect
+  getClientRect(config?: GetClientRectOptions): Rect
 }
 
 export function getClientRectGroup(
   children: Set<FakeShape>,
   config?: GetClientRectOptions
 ) {
-  // eslint-disable-next-line functional/no-let
-  let x = Infinity
-  // eslint-disable-next-line functional/no-let
-  let y = Infinity
-  /* width = 0,
-       height = 0, */
-  // eslint-disable-next-line functional/no-let
-  let fillWidth = 0
-  // eslint-disable-next-line functional/no-let
-  let fillHeight = 0
+  // eslint-disable-next-line one-var, functional/no-let
+  let rX = 0,
+    rY = 0,
+    rWidth = 0,
+    rHeight = 0
+
   children.forEach((node) => {
     const clientRect = config
-      ? node.getClientRect()
+      ? node.getClientRect(config)
       : node[BOUNCE_CLIENT_RECT].value
     const { x: attrX = 0, y: attrY = 0 } = node.$
 
-    x = Math.min(x, clientRect.x + attrX)
-    y = Math.min(y, clientRect.y + attrY)
+    const x = clientRect.x + attrX
+    const y = clientRect.y + attrY
+    const width = clientRect.width + attrX
+    const height = clientRect.height + attrY
 
-    const sumWidth = -clientRect.x + attrX + clientRect.width
-    const sumHeight = -clientRect.y + attrY + clientRect.height
+    if (x < rX) rX = x
+    if (y < rY) rY = y
 
-    // fillWidth = Math.max(fillWidth, sumWidth);
-    // fillHeight = Math.max(fillHeight, sumHeight);
-    if (fillWidth < sumWidth) fillWidth = sumWidth
-    // width = sumWidth//clientRect.width;
-
-    if (fillHeight < sumHeight) fillHeight = sumHeight
-    // height = sumHeight//clientRect.height;
+    if (width > rWidth) rWidth = width
+    if (height > rHeight) rHeight = height
   })
 
   return {
-    x,
-    y,
-    width: fillWidth,
-    height: fillHeight
+    x: rX,
+    y: rY,
+    width: rWidth,
+    height: rHeight
   }
 }
