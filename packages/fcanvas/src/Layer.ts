@@ -44,30 +44,6 @@ type PersonalAttrs = Partial<Offset> &
 const WAIT_DRAWING = Symbol("wait drawing")
 const ID_REQUEST_FRAME = Symbol("ID_REQUEST_FRAME")
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface LikeGroupAndPressPoint extends APIGroup<any, Record<string, string>> {
-  isPressedPoint?: (x: number, y: number) => boolean
-}
-function getListenersOnDeep(
-  layer: LikeGroupAndPressPoint,
-  allListeners = new Map<
-    string,
-    Map<LikeGroupAndPressPoint, Set<(event: Event) => void>>
-  >()
-) {
-  layer[LISTENERS]?.forEach((listeners, name) => {
-    if (!allListeners.has(name)) allListeners.set(name, new Map())
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    allListeners.get(name)!.set(layer, listeners)
-  })
-  layer[CHILD_NODE]?.forEach((shape) => {
-    getListenersOnDeep(shape, allListeners)
-  })
-
-  return allListeners
-}
-
 export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   static readonly type: string = "Layer"
 
@@ -162,86 +138,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
         )
       }
     })
-
-    // event binding
-    {
-      // sync event on layer
-      const handlersMap = new Map<
-        // eslint-disable-next-line func-call-spacing
-        keyof CommonShapeEvents,
-        (event: Event) => void
-      >()
-      watchEffect(() => {
-        handlersMap.forEach((handler, name) => {
-          if (!this[LISTENERS].has(name))
-            canvas.removeEventListener(name, handler)
-        })
-        this[LISTENERS].forEach((listeners, name) => {
-          // if exists on handlersMap => first removeEventListener
-          const oldHandler = handlersMap.get(name)
-          if (oldHandler) canvas.removeEventListener(name, oldHandler)
-
-          const handler = (event: Event) => {
-            listeners.forEach((listener) => listener(event))
-          }
-          handlersMap.set(name, handler)
-          canvas.addEventListener(name, handler)
-        })
-      })
-    }
-    // sync event on child node
-    {
-      const handlersChildrenMap = new Map<
-        keyof CommonShapeEvents,
-        {
-          name: string[]
-          // eslint-disable-next-line func-call-spacing
-          handle: (event: Event) => void
-        }
-      >()
-      // scan all events in children
-      const allListeners = computed(() => getListenersOnDeep(this))
-      watchEffect(() => {
-        if (isDev) console.log("[event::layer]: scan deep listeners")
-        // remove handler remove
-        handlersChildrenMap.forEach((customer, name) => {
-          if (!allListeners.value.has(name)) {
-            customer.name.forEach((name) =>
-              canvas.removeEventListener(name, customer.handle)
-            )
-          }
-        })
-
-        allListeners.value.forEach((listenersGroup, name) => {
-          const oldHandler = handlersChildrenMap.get(
-            name as keyof CommonShapeEvents
-          )
-
-          if (oldHandler) {
-            oldHandler.name.forEach((name) =>
-              canvas.removeEventListener(name, handle)
-            )
-          }
-
-          // custom
-          const customer = hookEvent.get(name) || {
-            name: [name],
-            handle: handleCustomEventDefault
-          }
-
-          const handle = (event: Event) => {
-            if (isDev) console.log("[event:layer] emit event %s", event.type)
-            customer.handle(listenersGroup, event, canvas)
-            // ================================================
-          }
-          handlersChildrenMap.set(name as keyof CommonShapeEvents, {
-            name: customer.name,
-            handle
-          })
-          customer.name.forEach((name) => canvas.addEventListener(name, handle))
-        })
-      })
-    }
 
     this[SCOPE].fOff()
   }
