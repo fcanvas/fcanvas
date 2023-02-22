@@ -21,7 +21,12 @@ Object.assign(global, {
 })
 
 Object.assign(CONFIGS, {
-  createCanvas,
+  createCanvas() {
+    return createCanvas(300, 150)
+  },
+  createOffscreenCanvas(width = 300, height = 150) {
+    return createCanvas(width, height)
+  },
   registerFont,
   DOMMatrix,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

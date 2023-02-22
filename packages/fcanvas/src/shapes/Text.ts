@@ -27,11 +27,13 @@ type PersonalAttrs = {
 }
 
 // eslint-disable-next-line functional/no-let
-let dummyContext: CanvasRenderingContext2D
+let dummyContext: OffscreenCanvasRenderingContext2D
 export function getDummyContext() {
   if (dummyContext) return dummyContext
 
-  dummyContext = CONFIGS.createContext2D()
+  dummyContext = CONFIGS.createOffscreenCanvas().getContext(
+    "2d"
+  ) as OffscreenCanvasRenderingContext2D
   return dummyContext
 }
 

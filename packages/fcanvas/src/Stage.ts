@@ -2,6 +2,7 @@ import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
 import { computed, reactive } from "@vue/reactivity"
 
 import type { Layer } from "./Layer"
+import type { APIGroup } from "./apis/APIGroup"
 import { APIChildNode } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { isDOM } from "./configs"
@@ -10,6 +11,8 @@ import { watchEffect } from "./fns/watch"
 import { globalConfigs } from "./globalConfigs"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
+import { handleCustomEventDefault, hookEvent } from "./hookEvent"
+import { isCanvasDOM } from "./logic/isCanvasDOM"
 import {
   BOUNDING_CLIENT_RECT,
   CANVAS_ELEMENT,
@@ -289,7 +292,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     const results = super.add(node)
     const { width, height } = this.size
 
-    this[DIV_CONTAINER]?.appendChild(node[CANVAS_ELEMENT])
+    if (isCanvasDOM(node[CANVAS_ELEMENT]))
+      this[DIV_CONTAINER]?.appendChild(node[CANVAS_ELEMENT])
     // fix https://github.com/tachibana-shin/fcanvas-next/issues/5
     const { width: oWidth, height: oHeight } = node[CANVAS_ELEMENT]
 
