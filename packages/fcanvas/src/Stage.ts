@@ -226,7 +226,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
         handlersChildrenMap.forEach((customer, name) => {
           if (!all.has(name)) {
             customer.name.forEach((name) =>
-              container.removeEventListener(name, customer.handle)
+              this._removeEvent(name, customer.handle)
             )
           }
         })
@@ -253,9 +253,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
             name: customer.name,
             handle
           })
-          customer.name.forEach((name) =>
-            container.addEventListener(name, handle)
-          )
+          customer.name.forEach((name) => this._addEvent(name, handle))
         })
       })
     }
@@ -266,6 +264,14 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
   public mount(query: string | HTMLElement): this {
     this.$.container = query
     return this
+  }
+
+  private _addEvent(name: string, cb: (event: Event) => void): void {
+    this[DIV_CONTAINER]?.addEventListener(name, cb)
+  }
+
+  private _removeEvent(name: string, cb: (event: Event) => void): void {
+    this[DIV_CONTAINER]?.removeEventListener(name, cb)
   }
 
   public getBoundingClientRect() {
