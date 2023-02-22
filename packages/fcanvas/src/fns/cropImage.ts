@@ -21,8 +21,10 @@ export function cropImage(
   width: number = image.width as number,
   height: number = image.height as number,
   rotate = 0
-): HTMLCanvasElement {
-  const virualContext = CONFIGS.createContext2D()
+): OffscreenCanvas {
+  const virualContext = CONFIGS.createOffscreenCanvas().getContext(
+    "2d"
+  ) as OffscreenCanvasRenderingContext2D
 
   /// ------------------ draw image canvas -----------------
   const rad: number = (rotate * Math.PI) / 180

@@ -1,6 +1,7 @@
 import {
   Circle,
   computed,
+  Group,
   Layer,
   Stage,
   useMouseIsPressed,
@@ -23,3 +24,5 @@ const circle = new Circle({
   fill: computed(() => (mouseIsPressed.value ? "red" : "transparent"))
 })
 layer.add(circle)
+
+Object.assign(window, { stage, layer, circle, group: new Group() })

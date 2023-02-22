@@ -16,13 +16,31 @@ export interface OptionsToCanvas extends Partial<Rect> {
  */
 export function toCanvas(
   fElement: Layer | Shape | Group | Stage,
-  config?: OptionsToCanvas
-): HTMLCanvasElement {
-  const canvasCache: HTMLCanvasElement | undefined = (fElement as Layer)[
-    CANVAS_ELEMENT
-  ]
+  config: OptionsToCanvas & {
+    offscreen: true
+  }
+): OffscreenCanvas
+// eslint-disable-next-line no-redeclare
+export function toCanvas(
+  fElement: Layer | Shape | Group | Stage,
+  config?: OptionsToCanvas & {
+    offscreen?: false
+  }
+): HTMLCanvasElement
 
-  const canvas = CONFIGS.createCanvas()
+// eslint-disable-next-line no-redeclare
+export function toCanvas(
+  fElement: Layer | Shape | Group | Stage,
+  config?: OptionsToCanvas & {
+    offscreen?: boolean
+  }
+) {
+  const canvasCache: HTMLCanvasElement | OffscreenCanvas | undefined = (
+    fElement as Layer
+  )[CANVAS_ELEMENT]
+
+  const ctx = CONFIGS.createContext2D(config?.offscreen as boolean)
+  const { canvas } = ctx
 
   if (config?.width !== undefined) {
     canvas.width = config.width
@@ -59,8 +77,6 @@ export function toCanvas(
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const ctx = canvas.getContext("2d")!
   if (config?.x || config?.y) ctx.translate(config?.x ?? 0, config?.y ?? 0)
 
   if (fElement instanceof Stage) {

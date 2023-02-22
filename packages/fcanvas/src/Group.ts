@@ -3,13 +3,16 @@ import type {
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
-import { computed, reactive } from "@vue/reactivity"
+import {
+  computed
+  , reactive, unref
+} from "@vue/reactivity"
 import { watch } from "src/fns/watch"
 
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
-import { CONFIGS } from "./configs"
+import { CONFIGS, isDOM } from "./configs"
 import { _setCurrentShape } from "./currentShape"
 import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -38,6 +41,7 @@ export type CommonGroupAttrs = Partial<Offset> &
     width?: number
     height?: number
     visible?: boolean
+    offscreen?: boolean
   }
 
 export class Group<
@@ -65,7 +69,7 @@ export class Group<
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [CONTEXT_CACHE] = CONFIGS.createContext2D()
+  private readonly [CONTEXT_CACHE]: ReturnType<typeof CONFIGS.createContext2D>
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
@@ -93,6 +97,10 @@ export class Group<
     } else {
       this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
     }
+
+    this[CONTEXT_CACHE] = CONFIGS.createContext2D(
+      (!isDOM || unref(this.$.offscreen) !== false) as boolean
+    )
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
@@ -163,7 +171,9 @@ export class Group<
     this[SCOPE].fOff()
   }
 
-  private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
+  private [DRAW_CONTEXT_ON_SANDBOX](
+    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  ) {
     if (isDev) console.log("[sandbox::group]: draw context on sandbox")
 
     const clientRect = this[BOUNCE_CLIENT_RECT].value
@@ -176,7 +186,9 @@ export class Group<
     if (useTranslate) context.translate(clientRect.x, clientRect.y)
   }
 
-  public draw(context: CanvasRenderingContext2D) {
+  public draw(
+    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  ) {
     if (this.$.visible === false) return
 
     const { x, y } = this[BOUNCE_CLIENT_RECT].value

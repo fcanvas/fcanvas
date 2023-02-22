@@ -14,11 +14,13 @@ export function getMousePos(
   },
   limit = 1
 ): MousePos[] {
-  element = element ?? (event.target as HTMLElement)
-
-  const rect = element.getBoundingClientRect()
-  const sx = (element.width && element.scrollWidth / element.width) || 1
-  const sy = (element.height && element.scrollHeight / element.height) || 1
+  const rect = element?.getBoundingClientRect() ?? { left: 0, top: 0 }
+  const sx = element
+    ? (element.width && element.scrollWidth / element.width) || 1
+    : 1
+  const sy = element
+    ? (element.height && element.scrollHeight / element.height) || 1
+    : 1
 
   const touches = (event as TouchEvent).touches ||
     (event as TouchEvent).changedTouches || [event]

@@ -1,11 +1,11 @@
 import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
-import { computed, reactive, toRaw } from "@vue/reactivity"
+import { computed, reactive, toRaw, unref } from "@vue/reactivity"
 import type gsap from "gsap"
 import { watchEffect } from "src/fns/watch"
 
 import { APIEvent } from "./apis/APIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
-import { CONFIGS } from "./configs"
+import { CONFIGS, isDOM } from "./configs"
 import { _setCurrentShape } from "./currentShape"
 import { isDev } from "./env"
 import { getImage } from "./fns/loadImage"
@@ -61,7 +61,7 @@ function getFillPriority(
 }
 
 function setLineStyle(
-  context: CanvasRenderingContext2D,
+  context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
   attrs: Partial<
     Pick<
       CommonShapeAttrs,
@@ -131,14 +131,16 @@ export class Shape<
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [CONTEXT_CACHE] = CONFIGS.createContext2D()
+  private readonly [CONTEXT_CACHE]: ReturnType<typeof CONFIGS.createContext2D>
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
 
   protected readonly [SCOPE] = effectScopeFlat()
 
-  protected _sceneFunc?(context: CanvasRenderingContext2D): void
+  protected _sceneFunc?(
+    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  ): void
 
   constructor(
     attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Shape>
@@ -158,6 +160,10 @@ export class Shape<
     } else {
       this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
     }
+
+    this[CONTEXT_CACHE] = CONFIGS.createContext2D(
+      (!isDOM || unref(this.$.offscreen) !== false) as boolean
+    )
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
@@ -422,7 +428,9 @@ export class Shape<
 
   // or context cache or context draw
 
-  private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
+  private [DRAW_CONTEXT_ON_SANDBOX](
+    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  ) {
     if (isDev) console.log("[sandbox::shape]: draw context on sandbox")
     const isCache = !!this[CONTEXT_CACHE]
     const scene = this.$.sceneFunc || this._sceneFunc
@@ -503,7 +511,9 @@ export class Shape<
     context.translate(transX, transY)
   }
 
-  public draw(context: CanvasRenderingContext2D) {
+  public draw(
+    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  ) {
     if (this.$.visible === false) return
 
     if (this.$.perfectDrawEnabled !== false) {
