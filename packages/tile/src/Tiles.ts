@@ -7,7 +7,7 @@ import type { Rect } from "../../fcanvas/src/type/Rect"
 import type { Size } from "../../fcanvas/src/type/Size"
 
 interface CanvasImageResource
-  extends HTMLCanvasElement,
+  extends OffscreenCanvas,
     Readonly<{
       sourceSize: Size
       sourceColorRect: Rect
