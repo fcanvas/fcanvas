@@ -45,9 +45,12 @@ type PersonalAttrs = Partial<Offset> &
 const WAIT_DRAWING = Symbol("wait drawing")
 const ID_REQUEST_FRAME = Symbol("ID_REQUEST_FRAME")
 
+// eslint-disable-next-line functional/no-let
+let countLayers = 0
 export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   static readonly type: string = "Layer"
 
+  public readonly uid = ++countLayers
   public readonly $: UnwrapNestedRefs<PersonalAttrs>
   public get attrs() {
     return this.$
