@@ -181,11 +181,11 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     watchEffect(() => {
       const { container: id, offscreen } = this.$
       if (offscreen)
-        return console.warn("[fcanvas/Stage]: disabled by 'offscreen'")
+        return __DEV__ && console.warn("[fcanvas/Stage]: disabled by 'offscreen'")
 
       if (id) {
         if (!container) {
-          return console.warn(
+          return __DEV__ && console.warn(
             "[fcanvas/Stage]: Can't handle options 'container' in a DOM-free environment"
           )
         }
@@ -195,7 +195,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
             ? document.getElementById(id) ?? document.querySelector(id)
             : id
         if (!el) {
-          if (isDev) console.warn(`#${id} not exists.`)
+          if (__DEV__) console.warn(`#${id} not exists.`)
         } else {
           el.appendChild(container)
         }

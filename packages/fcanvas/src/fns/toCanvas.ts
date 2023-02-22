@@ -68,9 +68,11 @@ export function toCanvas(
 
   if (config?.pixelRatio !== undefined) {
     if (!isDOM) {
-      console.warn(
-        "[fcanvas/toCanvas]: Can't handle options 'pixelRatio' in a DOM-free environment"
-      )
+      if (__DEV__) {
+        console.warn(
+          "[fcanvas/toCanvas]: Can't handle options 'pixelRatio' in a DOM-free environment"
+        )
+      }
     } else {
       pixelRatioBk = window.devicePixelRatio
       window.devicePixelRatio = config.pixelRatio
