@@ -14,11 +14,11 @@ export type DrawLayerAttrs = {
   }
 
 export function drawLayer(
-  context: CanvasRenderingContext2D,
+  context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
   attrs: DrawLayerAttrs,
   children: Set<{
     // eslint-disable-next-line functional/no-method-signature
-    draw(context: CanvasRenderingContext2D): void
+    draw(context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D): void
   }>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   argThis: any

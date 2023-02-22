@@ -3,7 +3,7 @@ import type {
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
-import { computed, reactive } from "@vue/reactivity"
+import { computed, reactive, unref } from "@vue/reactivity"
 import { watchEffect } from "src/fns/watch"
 
 import type { Group } from "./Group"
@@ -14,7 +14,8 @@ import { CONFIGS, isDOM } from "./configs"
 import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
-import { handleCustomEventDefault, hookEvent } from "./hookEvent"
+import { pointInBox } from "./helpers/pointInBox"
+import { isCanvasDOM } from "./logic/isCanvasDOM"
 import {
   BOUNCE_CLIENT_RECT,
   BOUNDING_CLIENT_RECT,
@@ -23,7 +24,6 @@ import {
   COMPUTED_CACHE,
   CONTEXT_CACHE,
   DRAW_CONTEXT_ON_SANDBOX,
-  LISTENERS,
   SCOPE
 } from "./symbols"
 import type { CommonShapeEvents } from "./type/CommonShapeEvents"
@@ -39,6 +39,7 @@ type PersonalAttrs = Partial<Offset> &
     width?: number
     height?: number
     visible?: boolean
+    offscreen?: boolean
   }
 
 const WAIT_DRAWING = Symbol("wait drawing")
@@ -55,7 +56,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [CONTEXT_CACHE] = CONFIGS.createContext2D()
+  private readonly [CONTEXT_CACHE]: ReturnType<typeof CONFIGS.createContext2D>
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
 
@@ -68,10 +69,13 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     super()
     this[SCOPE].fOn()
 
+    this[CONTEXT_CACHE] = CONFIGS.createContext2D(
+      (!isDOM || unref(attrs.offscreen)) as boolean
+    )
     this.$ = reactive(attrs)
 
     const { canvas } = this[CONTEXT_CACHE]
-    if (isDOM) {
+    if (isCanvasDOM(canvas)) {
       canvas.style.cssText = "position: absolute; margin: 0; padding: 0"
       watchEffect(() => {
         canvas.style.left = (this.$.x ?? 0) + "px"
@@ -146,7 +150,9 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     return this[CONTEXT_CACHE].canvas
   }
 
-  private [DRAW_CONTEXT_ON_SANDBOX](context: CanvasRenderingContext2D) {
+  private [DRAW_CONTEXT_ON_SANDBOX](
+    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  ) {
     drawLayer(context, this.$, this[CHILD_NODE], this)
   }
 
@@ -224,10 +230,18 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     return false
   }
 
+  public isPressedPoint(x: number, y: number): boolean {
+    const { x: xd = 0, y: yd = 0 } = this.$
+    const { width, height } = this[CANVAS_ELEMENT]
+
+    return pointInBox(x, y, xd, yd, width, height)
+  }
+
   public destroy(): void {
     super.destroy()
     this.stopDraw()
     this[SCOPE].stop()
-    this[CONTEXT_CACHE].canvas.remove()
+    const { canvas } = this[CONTEXT_CACHE]
+    if (isCanvasDOM(canvas)) canvas.remove()
   }
 }

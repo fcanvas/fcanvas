@@ -42,14 +42,14 @@ export class Sprite<
   static readonly type = "Sprite"
 
   private readonly _image: ComputedRef<CanvasImageSource>
-  private readonly cropImageCache: Map<string, HTMLCanvasElement> = new Map()
+  private readonly cropImageCache: Map<string, HTMLCanvasElement | OffscreenCanvas> = new Map()
   private readonly currentFrames: ComputedRef<
     Required<Exclude<AnimationFrames, string[]>>
   >
 
-  private readonly frames: ComputedRef<HTMLCanvasElement[]>
+  private readonly frames: ComputedRef<(HTMLCanvasElement | OffscreenCanvas)[]>
   private readonly currentFrameIndex: Ref<number>
-  private readonly currentFrame: ComputedRef<HTMLCanvasElement>
+  private readonly currentFrame: ComputedRef<HTMLCanvasElement | OffscreenCanvas>
   private readonly currentDelay: ComputedRef<number>
 
   private _running = false
@@ -96,7 +96,7 @@ export class Sprite<
         }
       }
     )
-    this.frames = computed<HTMLCanvasElement[]>(() => {
+    this.frames = computed<(HTMLCanvasElement | OffscreenCanvas)[]>(() => {
       const groups = []
       const { frames } = this.currentFrames.value
       // eslint-disable-next-line functional/no-let
@@ -115,7 +115,7 @@ export class Sprite<
         this.currentFrameIndex.value = value
       }
     )
-    this.currentFrame = computed<HTMLCanvasElement>(() => {
+    this.currentFrame = computed<HTMLCanvasElement | OffscreenCanvas>(() => {
       return (
         this.frames.value[this.currentFrameIndex.value] ??
         this.frames.value[
@@ -143,7 +143,7 @@ export class Sprite<
     y: number,
     width: number,
     height: number
-  ): HTMLCanvasElement {
+  ): HTMLCanvasElement | OffscreenCanvas {
     const key = `${x}.${y}.${width}.${height}`
 
     const cropImageInCache = this.cropImageCache.get(key)

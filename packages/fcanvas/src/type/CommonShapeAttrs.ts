@@ -59,7 +59,7 @@ export type CommonShapeAttrs<
   // strokeScaleEnabled?: boolean
   lineJoin?: "bevel" | "round" | "miter"
   lineCap?: "butt" | "round" | "square"
-  sceneFunc?: (context: CanvasRenderingContext2D) => void
+  sceneFunc?: (context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => void
 } & Partial<FillModeMixture> /* & FillModeMonopole */ & {
     shadowEnabled?: boolean
     shadow?: Partial<Offset> & {
@@ -72,6 +72,7 @@ export type CommonShapeAttrs<
     dashEnabled?: boolean
     visible?: boolean
     opacity?: number
+    offscreen?: boolean
   } & OptionTransform & {
     filter?: OptionFilter
   } & PersonalAttrs

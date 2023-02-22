@@ -52,7 +52,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     scrollWidth: number,
     scrollHeight: number,
     cache?: false
-  ): HTMLCanvasElement
+  ): HTMLCanvasElement | OffscreenCanvas
   private createImageRepeat(
     image: CanvasImageSource,
     imageWidth: number,
@@ -63,7 +63,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     scrollHeight: number,
     cache?: true
   ): {
-    r: HTMLCanvasElement
+    r: HTMLCanvasElement | OffscreenCanvas
     t: number
     l: number
   }
@@ -78,8 +78,9 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     cache?: boolean
   ):
     | HTMLCanvasElement
+    | OffscreenCanvas
     | {
-        r: HTMLCanvasElement
+        r: HTMLCanvasElement | OffscreenCanvas
         t: number
         l: number
       } {
@@ -99,7 +100,9 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
       }
     }
 
-    const ctx = CONFIGS.createContext2D()
+    const ctx = CONFIGS.createOffscreenCanvas().getContext(
+      "2d"
+    ) as OffscreenCanvasRenderingContext2D
 
     if (cache) {
       if (scrollWidth) scrollWidth += imageWidth * 2
@@ -110,15 +113,17 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
     ctx.canvas.height = scrollHeight ?? imageHeight
 
     // eslint-disable-next-line functional/no-let
-    let canvasRepeatX: CanvasRenderingContext2D | null = null
+    let canvasRepeatX: OffscreenCanvasRenderingContext2D | null = null
     if (scrollWidth) {
       scrollLeft ??= 0
       const axisY = scrollHeight ? 0 : -(scrollTop ?? 0)
 
       // eslint-disable-next-line functional/no-let
-      let ctxScoop: CanvasRenderingContext2D
+      let ctxScoop: OffscreenCanvasRenderingContext2D
       if (scrollHeight) {
-        canvasRepeatX = CONFIGS.createContext2D()
+        canvasRepeatX = CONFIGS.createOffscreenCanvas().getContext(
+          "2d"
+        ) as OffscreenCanvasRenderingContext2D
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         canvasRepeatX!.canvas.width = scrollWidth
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -263,35 +268,33 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
       // eslint-disable-next-line functional/no-let
       let image: CanvasImageSource
       if (crop) {
-        image = CONFIGS.createCanvas()
-        image.width = width ?? crop.width
-        image.height = height ?? crop.height
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        image
-          .getContext("2d")!
-          .drawImage(
-            _image,
-            crop.x,
-            crop.y,
-            crop.width,
-            crop.height,
-            0,
-            0,
-            width ?? crop.width,
-            height ?? crop.height
-          )
-      } else if (width !== undefined || height !== undefined) {
-        image = CONFIGS.createCanvas()
+        image = CONFIGS.createOffscreenCanvas(
+          width ?? crop.width,
+          height ?? crop.height
+        )
+        const ctx = image.getContext("2d") as OffscreenCanvasRenderingContext2D
 
+        ctx.drawImage(
+          _image,
+          crop.x,
+          crop.y,
+          crop.width,
+          crop.height,
+          0,
+          0,
+          width ?? crop.width,
+          height ?? crop.height
+        )
+      } else if (width !== undefined || height !== undefined) {
         const { width: rW, height: rH } = getSizeImageApplyRatio(
           width,
           height,
           _image
         )
+        image = CONFIGS.createOffscreenCanvas(rW, rH)
+        const ctx = image.getContext("2d") as OffscreenCanvasRenderingContext2D
 
-        ;[image.width, image.height] = [rW, rH]
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        image.getContext("2d")!.drawImage(this._image.value, 0, 0, rW, rH)
+        ctx.drawImage(this._image.value, 0, 0, rW, rH)
       } else {
         image = _image
         // image.drawImage(this._image.value, 0, 0);
