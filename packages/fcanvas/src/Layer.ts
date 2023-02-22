@@ -150,6 +150,10 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     return this[CONTEXT_CACHE].canvas
   }
 
+  public toCanvas() {
+    return this[CANVAS_ELEMENT]
+  }
+
   private [DRAW_CONTEXT_ON_SANDBOX](
     context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
   ) {
