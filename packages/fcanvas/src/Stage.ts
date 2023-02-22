@@ -165,22 +165,6 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
       watchEffect(() => {
         container.style.opacity = (this.$.opacity ?? 1) + ""
       })
-      // event binding
-      // eslint-disable-next-line func-call-spacing
-      const handlersMap = new Map<string, (event: Event) => void>()
-      watchEffect(() => {
-        this[LISTENERS].forEach((listeners, name) => {
-          // if exists on handlersMap => first removeEventListener
-          const oldHandler = handlersMap.get(name)
-          if (oldHandler) container.removeEventListener(name, oldHandler)
-
-          const handler = (event: Event) => {
-            listeners.forEach((listener) => listener(event))
-          }
-          handlersMap.set(name, handler)
-          container.addEventListener(name, handler)
-        })
-      })
     }
 
     // set max size for children
@@ -218,7 +202,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
       }
     })
 
-    if (container) {
+    {
       // sync event on child node
       const handlersChildrenMap = new Map<
         keyof CommonShapeEvents,
