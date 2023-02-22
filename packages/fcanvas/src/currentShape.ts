@@ -1,6 +1,5 @@
 import type { Group } from "./Group"
 import type { Shape } from "./Shape"
-import { isDev } from "./env"
 
 // eslint-disable-next-line functional/no-let, @typescript-eslint/no-explicit-any
 let currentShape: Shape | Group<any> | null
@@ -16,7 +15,7 @@ export function getCurrentShape(noWarn: true): Shape | Group<any> | null
 // eslint-disable-next-line no-redeclare
 export function getCurrentShape(noWarn?: boolean) {
   if (!currentShape && !noWarn) {
-    if (isDev) {
+    if (__DEV__) {
       console.warn(
         "[getCurrentShape]: call this function on stack setup Shape."
       )

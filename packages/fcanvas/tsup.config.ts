@@ -10,7 +10,10 @@ const configNormal: Options = {
   format: ["cjs", "esm", "iife"],
   target: "es2015",
   env: {
-    IS_BROWSER: "false"
+    IS_BROWSER: "false",
+  },
+  define: {
+    __DEV__: "true"
   }
 }
 const configBrowser: Options = {
@@ -26,11 +29,10 @@ const configBrowser: Options = {
     NODE_ENV: "production",
     IS_BROWSER: "true"
   },
-  noExternal: [
-    "@vue/reactivity",
-    "@vue/shared",
-    "path-normalize"
-  ]
+  noExternal: ["@vue/reactivity", "@vue/shared", "path-normalize"],
+  define: {
+    __DEV__: JSON.stringify(true)
+  }
 }
 const configBrowserMinify: Options = {
   ...configBrowser,
@@ -40,7 +42,11 @@ const configBrowserMinify: Options = {
   entry: {
     "index.browser.min": "src/index.ts"
   },
-  minify: true
+  minify: true,
+  treeshake: true,
+  define: {
+    __DEV__: JSON.stringify(false)
+  }
 }
 
 export default defineConfig([configNormal, configBrowser, configBrowserMinify])
