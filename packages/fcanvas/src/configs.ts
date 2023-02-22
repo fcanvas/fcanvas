@@ -18,6 +18,17 @@ interface Configs {
   ) => void
 }
 
+const Offscreen =
+  typeof OffscreenCanvas !== "undefined"
+    ? OffscreenCanvas
+    : class Offscreen {
+      constructor(width: number, height: number) {
+        const canvas = document.createElement("canvas")
+          ;[canvas.width, canvas.height] = [width, height]
+        return canvas
+      }
+    }
+
 export const CONFIGS = {
   createContext2D(offscreen?: boolean) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -29,7 +40,7 @@ export const CONFIGS = {
     return document.createElement("canvas")
   },
   createOffscreenCanvas(width = 300, height = 150) {
-    return new OffscreenCanvas(width, height)
+    return new Offscreen(width, height)
   }
 } as Configs
 
