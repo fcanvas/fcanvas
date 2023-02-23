@@ -191,8 +191,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
           return (
             __DEV__ &&
             console.warn(
-            "[fcanvas/Stage]: Can't handle options 'container' in a DOM-free environment"
-          )
+              "[fcanvas/Stage]: Can't handle options 'container' in a DOM-free environment"
+            )
           )
         }
 
@@ -273,13 +273,38 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     return this
   }
 
-  // private __storeEvents = new Map<string, ((event: Event) => void)[]>()
+  private __storeEvents = new Map<string, Array<(event: Event) => void>>()
+  // eslint-disable-next-line func-call-spacing
+  public __storeHandle = new Map<string, (event: Event) => void>()
   private _addEvent(name: string, cb: (event: Event) => void): void {
-    this[DIV_CONTAINER]?.addEventListener(name, cb)
+    // eslint-disable-next-line functional/no-let
+    let cbs = this.__storeEvents.get(name)
+    if (!cbs) {
+      this.__storeEvents.set(name, (cbs = []))
+
+      const handle = (event: Event) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        cbs!.forEach((cb) => cb(event))
+      }
+      this.__storeHandle.set(name, handle)
+      this[DIV_CONTAINER]?.addEventListener(name, handle)
+    }
+
+    cbs.push(cb)
   }
 
   private _removeEvent(name: string, cb: (event: Event) => void): void {
-    this[DIV_CONTAINER]?.removeEventListener(name, cb)
+    const cbs = this.__storeEvents.get(name)
+
+    if (!cbs) return
+
+    cbs.splice(cbs.indexOf(cb) >>> 0, 1)
+    if (cbs.length === 0) {
+      const cb = this.__storeHandle.get(name)
+      if (cb) this[DIV_CONTAINER]?.removeEventListener(name, cb)
+      this.__storeEvents.delete(name)
+      this.__storeHandle.delete(name)
+    }
   }
 
   public getBoundingClientRect() {
