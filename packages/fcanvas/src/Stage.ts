@@ -44,7 +44,7 @@ type AllListeners = Map<
     // eslint-disable-next-line no-use-before-define
     Layer | Stage,
     // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
-    Map<Stage | APIGroup<any, any>, Set<(event: Event) => void>>
+    Map<Stage | APIGroup<any, any>, Array<(event: Event) => void>>
   >
 >
 function getListenersOnDeep(
@@ -267,6 +267,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     return this
   }
 
+  // private __storeEvents = new Map<string, ((event: Event) => void)[]>()
   private _addEvent(name: string, cb: (event: Event) => void): void {
     this[DIV_CONTAINER]?.addEventListener(name, cb)
   }
