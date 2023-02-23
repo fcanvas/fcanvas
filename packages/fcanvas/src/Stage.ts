@@ -246,7 +246,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
 
           const handle = (event: Event) => {
             if (isDev) console.log("[event:layer] emit event %s", event.type)
-            customer.handle(listenersGroup, event)
+            customer.handle(listenersGroup, event, this)
             // ================================================
           }
           handlersChildrenMap.set(name as keyof CommonShapeEvents, {
