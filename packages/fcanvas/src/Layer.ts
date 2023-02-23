@@ -61,7 +61,8 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
+  // private readonly [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
+  public [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
 
