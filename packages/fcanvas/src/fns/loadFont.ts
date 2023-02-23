@@ -48,8 +48,8 @@ export function loadFont(
             const junction_font = new FontFace(fontFamily, request.response)
             // eslint-disable-next-line camelcase
             const loaded_face = await junction_font.load()
-
-            document.fonts.add(loaded_face)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ;(document.fonts as unknown as any).add(loaded_face)
 
             if (onAllReady) {
               await document.fonts.ready

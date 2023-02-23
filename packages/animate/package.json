@@ -24,12 +24,12 @@
   },
   "devDependencies": {
     "@vue/reactivity": "^3.2.47",
+    "fcanvas": "workspace:*",
     "gsap": "^3.11.4",
     "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
     "vite": "^4.0.3",
-    "fcanvas": "workspace:*",
     "vitest": "^0.26.2"
   },
   "license": "MIT",
@@ -60,7 +60,10 @@
     "node": ">=10"
   },
   "peerDependencies": {
-    "gsap": "^3.10.4",
-    "fcanvas": "workspace:*"
+    "fcanvas": "workspace:*",
+    "gsap": "^3.10.4"
+  },
+  "dependencies": {
+    "typescript": "^4.9.5"
   }
 }

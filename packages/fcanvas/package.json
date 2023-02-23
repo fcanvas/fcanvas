@@ -68,7 +68,8 @@
     "@vue/reactivity": "^3.2.47",
     "@vue/shared": "^3.2.47",
     "path-normalize": "^6.0.10",
-    "tmx-tiledmap": "^1.2.1"
+    "tmx-tiledmap": "^1.2.1",
+    "typescript": "^4.9.5"
   },
   "peerDependencies": {
     "@vue/reactivity": "^3.2.47",
