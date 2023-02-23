@@ -1,5 +1,11 @@
 name: Docs
-on: [push]
+
+on:
+  push:
+    branches: ["main"]
+  schedule:
+    - cron: "15 10 * * 5"
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
