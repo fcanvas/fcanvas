@@ -3,7 +3,7 @@ import type {
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
-import { computed, reactive, unref } from "@vue/reactivity"
+import { computed, reactive, ref, unref } from "@vue/reactivity"
 import { watchEffect } from "src/fns/watch"
 
 import type { Group } from "./Group"
@@ -56,10 +56,12 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     return this.$
   }
 
+  public readonly markChange: () => number
+
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [CONTEXT_CACHE]: ReturnType<typeof CONFIGS.createContext2D>
+  private readonly [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
 
@@ -72,12 +74,13 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     super()
     this[SCOPE].fOn()
 
-    this[CONTEXT_CACHE] = CONFIGS.createContext2D(
-      (!isDOM || unref(attrs.offscreen)) as boolean
-    )
+    this[CANVAS_ELEMENT] =
+      !isDOM || unref(attrs.offscreen)
+        ? CONFIGS.createOffscreenCanvas()
+        : CONFIGS.createCanvas()
     this.$ = reactive(attrs)
 
-    const { canvas } = this[CONTEXT_CACHE]
+    const canvas = this[CANVAS_ELEMENT]
     if (isCanvasDOM(canvas)) {
       canvas.style.cssText = "position: absolute; margin: 0; padding: 0"
       watchEffect(() => {
@@ -115,15 +118,18 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
         height
       }
     })
+    const _countMarkChange = ref(0)
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       const ctx = this[CONTEXT_CACHE]
-
+      // eslint-disable-next-line no-unused-expressions
+      _countMarkChange.value
       if (this.$.clearBeforeDraw !== false)
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       this[DRAW_CONTEXT_ON_SANDBOX](ctx)
 
       return false
     })
+    this.markChange = () => ++_countMarkChange.value
 
     // try watchEffect
     watchEffect(() => {
@@ -133,15 +139,15 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       if (!useConfig) return
 
       // reactive
-      const ctx = this[CONTEXT_CACHE]
-      ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
+      const canvas = this[CANVAS_ELEMENT]
+      ;[canvas.width, canvas.height] = [width, height]
 
-      this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
+      this.emit("resize", extendTarget(new UIEvent("resize"), canvas))
       if (isDev) {
         console.log(
           "[cache::layer]: size changed %sx%s",
-          ctx.canvas.width,
-          ctx.canvas.height
+          canvas.width,
+          canvas.height
         )
       }
     })
@@ -149,8 +155,15 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     this[SCOPE].fOff()
   }
 
-  public get [CANVAS_ELEMENT]() {
-    return this[CONTEXT_CACHE].canvas
+  private _context2d:
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null = null
+
+  public get [CONTEXT_CACHE]() {
+    return (this._context2d = this[CANVAS_ELEMENT].getContext("2d") as
+      | CanvasRenderingContext2D
+      | OffscreenCanvasRenderingContext2D)
   }
 
   public toCanvas() {
@@ -248,7 +261,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     super.destroy()
     this.stopDraw()
     this[SCOPE].stop()
-    const { canvas } = this[CONTEXT_CACHE]
+    const canvas = this[CANVAS_ELEMENT]
     if (isCanvasDOM(canvas)) canvas.remove()
   }
 }
