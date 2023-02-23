@@ -228,6 +228,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
             customer.name.forEach((name) =>
               this._removeEvent(name, customer.handle)
             )
+            handlersChildrenMap.delete(name)
           }
         })
 
