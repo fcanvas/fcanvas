@@ -16,25 +16,30 @@ export abstract class APIEvent<Events extends Record<string, unknown>> {
 
   public readonly [LISTENERS]: ShallowReactive<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Map<keyof Events, Set<(event: any) => void>>
+    Map<keyof Events, ((event: any) => void)[]>
   > = shallowReactive(new Map())
 
   public on<Event extends keyof ExtendEvents<Events>>(
     event: Event,
     listener: (event: ExtendEvents<Events>[Event]) => void
   ): void {
-    if (!this[LISTENERS].has(event)) this[LISTENERS].set(event, new Set())
+    if (!this[LISTENERS].has(event)) this[LISTENERS].set(event, [])
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this[LISTENERS].get(event)!.add(listener)
+    this[LISTENERS].get(event)!.push(listener)
   }
 
   public off<Event extends keyof ExtendEvents<Events>>(
     event: Event,
     listener?: (event: ExtendEvents<Events>[Event]) => void
   ): void {
-    if (listener) this[LISTENERS].get(event)?.delete(listener)
-    else this[LISTENERS].delete(event)
+    if (listener) {
+      const arr = this[LISTENERS].get(event)
+
+      arr?.splice(arr.indexOf(listener) >>> 0, 1)
+    } else {
+      this[LISTENERS].delete(event)
+    }
   }
 
   public emit<Key extends keyof ExtendEvents<Events>>(type: Key): void

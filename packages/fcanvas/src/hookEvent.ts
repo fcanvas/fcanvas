@@ -15,7 +15,7 @@ export function handleCustomEventDefault(
   listenersGroup: Map<
     Layer | Stage,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Map<Stage | APIGroup<any, any>, Set<(event: Event) => void>>
+    Map<Stage | APIGroup<any, any>, Array<(event: Event) => void>>
   >,
   event: Event,
   targetListen: Stage
