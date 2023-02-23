@@ -27,6 +27,13 @@ export function toCanvas(
     offscreen?: false
   }
 ): HTMLCanvasElement
+// eslint-disable-next-line no-redeclare
+export function toCanvas(
+  fElement: Layer | Shape | Group | Stage,
+  config?: OptionsToCanvas & {
+    offscreen?: boolean
+  }
+): HTMLCanvasElement | OffscreenCanvas
 
 // eslint-disable-next-line no-redeclare
 export function toCanvas(

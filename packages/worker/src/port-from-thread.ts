@@ -1,3 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../../node_modules/typescript/lib/lib.dom.d.ts" />
+/* eslint-env browser */
+
 import type { Stage } from "fcanvas"
 import { CANVAS_ELEMENT, Layer } from "fcanvas"
 
@@ -68,7 +72,7 @@ export async function portToWorker(worker: Worker, stage: Stage) {
         stage.add(layer)
 
         offs.push(
-          (offscreens[uid] = layer[CANVAS_ELEMENT].transferControlToOffscreen())
+          (offscreens[uid] = (layer[CANVAS_ELEMENT] as HTMLCanvasElement).transferControlToOffscreen())
         )
       })
       port2.postMessage(
