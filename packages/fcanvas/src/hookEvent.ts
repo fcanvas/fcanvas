@@ -17,9 +17,15 @@ export function handleCustomEventDefault(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Map<Stage | APIGroup<any, any>, Set<(event: Event) => void>>
   >,
-  event: Event
+  event: Event,
+  targetListen: Stage
 ) {
+  // eslint-disable-next-line functional/no-let
+  let everyEventOnChildren = true
   listenersGroup.forEach((listeners, node) => {
+    if (node === targetListen && everyEventOnChildren)
+      everyEventOnChildren = false
+
     const canvas = (node as Layer)[CANVAS_ELEMENT] as
       | HTMLCanvasElement
       | undefined
@@ -37,13 +43,19 @@ export function handleCustomEventDefault(
         listeners.forEach((cb) => cb(event))
     })
   })
+  if (everyEventOnChildren) event.preventDefault()
 }
 
 function createHandleMouseHover(
   isOver: boolean
 ): typeof handleCustomEventDefault {
-  return (listenersGroup, event) => {
+  return (listenersGroup, event, targetListen) => {
+    // eslint-disable-next-line functional/no-let
+    let everyEventOnChildren = true
     listenersGroup.forEach((listeners, node) => {
+      if (node === targetListen && everyEventOnChildren)
+        everyEventOnChildren = false
+
       const canvas = (node as Layer)[CANVAS_ELEMENT] as
         | HTMLCanvasElement
         | undefined
@@ -73,6 +85,7 @@ function createHandleMouseHover(
         }
       })
     })
+    if (everyEventOnChildren) event.preventDefault()
   }
 }
 hookEvent.set("mouseover", {
