@@ -1,0 +1,15 @@
+import { defineConfig } from "vite"
+
+export default defineConfig({
+  server: {
+    hmr: {
+      // removes the protocol and replaces it with the port we're connecting to
+      host: process.env.GITPOD_WORKSPACE_URL?.replace("https://", "5173-"),
+      protocol: "wss",
+      clientPort: 443
+    }
+  },
+  define: {
+    __DEV__: JSON.stringify(process.env.NODE_ENV !== "production")
+  }
+})
