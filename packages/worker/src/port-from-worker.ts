@@ -44,29 +44,29 @@ export async function portToSelf(stage: Stage) {
         }
       }
 
-      const value = Array.from(stage.children.values()).reduce(
-        (r, layer) => {
-          storeLayers.set(layer.uid + "", layer)
-          r[layer.uid] = {
-            $: toRaw(layer.$),
-            width: layer[CANVAS_ELEMENT].width,
-            height: layer[CANVAS_ELEMENT].height
-          }
-          return r
-        },
-        {} as Record<
-          number,
-          {
-            $: Layer["$"]
-            width: number
-            height: number
-          }
-        >
-      )
-      storeLayers.forEach((layer, uid) => {
-        if (!(uid in value)) storeLayers.delete(uid)
-      })
       watchEffect(() => {
+        const value = Array.from(stage.children.values()).reduce(
+          (r, layer) => {
+            storeLayers.set(layer.uid + "", layer)
+            r[layer.uid] = {
+              $: toRaw(layer.$),
+              width: layer[CANVAS_ELEMENT].width,
+              height: layer[CANVAS_ELEMENT].height
+            }
+            return r
+          },
+          {} as Record<
+            number,
+            {
+              $: Layer["$"]
+              width: number
+              height: number
+            }
+          >
+        )
+        storeLayers.forEach((layer, uid) => {
+          if (!(uid in value)) storeLayers.delete(uid)
+        })
         channel.port1.postMessage({
           type: "update_layer",
           value
