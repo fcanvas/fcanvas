@@ -25,6 +25,7 @@
     "nextlayerid",
     "nextobjectid",
     "objectgroup",
+    "offscreens",
     "prettierignore",
     "renderorder",
     "sandboxed",
