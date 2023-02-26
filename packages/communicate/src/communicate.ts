@@ -35,6 +35,7 @@ interface DataCallFn<Fn extends (...args: unknown[]) => unknown> {
   type: "call_fn"
   name: string
   args: Parameters<Fn>
+  ping?: true
 }
 type DataReturnFn<Fn extends (...args: unknown[]) => unknown> =
   | {
@@ -81,6 +82,8 @@ function listen<Fn extends (...args: any[]) => any>(
       let err: string | undefined
       try {
         const r = await listener(...data.args)
+
+        if (data.ping) return
 
         if ("return" in r) {
           result = r
@@ -211,4 +214,52 @@ function put<Fn extends (...args: any[]) => any>(
   })
 }
 
-export { listen, put }
+function pit<Fn extends (...args: any[]) => any>(
+  port: LikeMessagePort,
+  name: string,
+  ...args: Parameters<Fn>
+): void
+
+// eslint-disable-next-line no-redeclare
+function pit<Fn extends (...args: any[]) => any>(
+  port: LikeMessagePort,
+  options: {
+    name: string
+  } & WindowPostMessageOptions,
+  ...args: Parameters<Fn>
+): void
+
+// eslint-disable-next-line no-redeclare
+function pit<Fn extends (...args: any[]) => any>(
+  port: LikeMessagePort,
+  options: {
+    name: string
+  } & WindowPostMessageOptions,
+  ...args: Parameters<Fn>
+): void
+// eslint-disable-next-line no-redeclare
+function pit<Fn extends (...args: any[]) => any>(
+  port: LikeMessagePort,
+  options:
+    | string
+    | ({
+        name: string
+      } & WindowPostMessageOptions),
+  ...args: Parameters<Fn>
+): void {
+  // eslint-disable-next-line functional/no-let
+  let name: string
+  if (typeof options === "object") name = options.name
+  else name = options
+
+  const message: DataCallFn<Fn> = {
+    id: "0",
+    type: "call_fn",
+    name,
+    args,
+    ping: true
+  }
+  port.postMessage(message, typeof options === "object" ? options : undefined)
+}
+
+export { listen, put, pit as ping }
