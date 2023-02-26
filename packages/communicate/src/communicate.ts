@@ -262,4 +262,4 @@ function pit<Fn extends (...args: any[]) => any>(
   port.postMessage(message, typeof options === "object" ? options : undefined)
 }
 
-export { listen, put, pit as ping }
+export { listen, put, pit, pit as ping }
