@@ -1,0 +1,69 @@
+{
+  "name": "@fcanvas/communicate",
+  "version": "1.1.0-rc.19",
+  "description": "This package allows a simple connection between MessageChannel-based channels such as WebWorker",
+  "scripts": {
+    "build": "tsup",
+    "dev": "vite dev",
+    "prepublishOnly": "pnpm test && pnpm build",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.browser.mjs",
+  "jsdelivr": "dist/index.global.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "devDependencies": {
+    "@types/plist": "^3.0.2",
+    "@vue/reactivity": "^3.2.45",
+    "fcanvas": "workspace:*",
+    "jsdom": "^20.0.3",
+    "tsup": "^6.5.0",
+    "tsx": "^3.12.1",
+    "vite": "^4.0.3",
+    "vitest": "^0.29.1"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tachibana-shin/fcanvas-next.git"
+  },
+  "homepage": "https://fcanvas.js.org",
+  "keywords": [
+    "fcanvas",
+    "konva",
+    "reactivity",
+    "2d",
+    "canvas",
+    "tile",
+    "tiles"
+  ],
+  "files": [
+    "dist"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "pnpm format"
+    }
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "dependencies": {
+    "path-normalize": "^6.0.9",
+    "plist": "^3.0.6",
+    "typescript": "^4.9.5"
+  },
+  "peerDependencies": {
+    "fcanvas": "workspace:*"
+  }
+}
