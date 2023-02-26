@@ -85,7 +85,7 @@ function listen<Fn extends (...args: any[]) => any>(
 
         if (data.ping) return
 
-        if ("return" in r) {
+        if (r && typeof r === "object" && "return" in r) {
           result = r
         } else {
           result = {
