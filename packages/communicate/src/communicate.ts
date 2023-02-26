@@ -72,6 +72,10 @@ function listen<Fn extends (...args: any[]) => any>(
     if (typeof data !== "object") return
 
     if (data.type === "call_fn" && data.name === name) {
+      if (data.ping) {
+        listener(...data.args)
+        return
+      }
       // eslint-disable-next-line functional/no-let
       let result:
         | ({
@@ -82,8 +86,6 @@ function listen<Fn extends (...args: any[]) => any>(
       let err: string | undefined
       try {
         const r = await listener(...data.args)
-
-        if (data.ping) return
 
         if (r && typeof r === "object" && "return" in r) {
           result = r
