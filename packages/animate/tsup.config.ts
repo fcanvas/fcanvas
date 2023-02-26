@@ -11,7 +11,8 @@ const configNormal: Options = {
   target: "es2015",
   env: {
     IS_BROWSER: "false"
-  }
+  },
+  globalName: "fAnimate"
 }
 const configBrowser: Options = {
   entry: {

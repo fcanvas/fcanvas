@@ -9,10 +9,7 @@ const configNormal: Options = {
   dts: true,
   format: ["cjs", "esm", "iife"],
   target: "es2015",
-  env: {
-    IS_BROWSER: "false"
-  },
-  external: ["fcanvas"]
+  globalName: "fCom"
 }
 const configBrowser: Options = {
   entry: {
@@ -22,23 +19,14 @@ const configBrowser: Options = {
   splitting: true,
   treeshake: true,
   format: ["esm"],
-  target: "es2015",
-  env: {
-    NODE_ENV: "production",
-    IS_BROWSER: "true"
-  },
-  external: ["fcanvas"]
+  target: "es2015"
 }
 const configBrowserMinify: Options = {
   ...configBrowser,
-  env: {
-    IS_BROWSER: "false"
-  },
   entry: {
     "index.browser.min": "src/index.ts"
   },
-  minify: true,
-  external: ["fcanvas"]
+  minify: true
 }
 
 export default defineConfig([configNormal, configBrowser, configBrowserMinify])
