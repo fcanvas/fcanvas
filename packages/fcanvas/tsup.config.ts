@@ -14,7 +14,8 @@ const configNormal: Options = {
   },
   define: {
     __DEV__: "true"
-  }
+  },
+  globalName: "fCanvas"
 }
 const configBrowser: Options = {
   entry: {

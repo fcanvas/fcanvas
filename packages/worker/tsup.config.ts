@@ -12,7 +12,8 @@ const configNormal: Options = {
   env: {
     IS_BROWSER: "false"
   },
-  external: ["fcanvas"]
+  external: ["fcanvas"],
+  globalName: "fWorker"
 }
 const configBrowser: Options = {
   entry: {
