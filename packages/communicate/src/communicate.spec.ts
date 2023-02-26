@@ -69,7 +69,9 @@ describe("communicate", () => {
         listen(port1, "test", () => {
           fn()
 
-          return [20]
+          return {
+            return: 20
+          }
         })
 
         expect(await put(port2, "test")).toBe(20)
@@ -81,7 +83,10 @@ describe("communicate", () => {
         listen(port1, "test", () => {
           fn()
 
-          return [buffer, [buffer]]
+          return {
+            return: buffer,
+            transfer: [buffer]
+          }
         })
 
         expect(await put(port2, "test")).toEqual(buffer)
