@@ -285,6 +285,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     if (conf.cbs.length === 0) {
       this[DIV_CONTAINER]?.removeEventListener(name, conf.handle)
       this[STORE_EVENTS].delete(name)
+    } else {
+      conf.deps.delete(name)
     }
   }
 
