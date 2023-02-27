@@ -27,8 +27,7 @@ import {
   RAW_MAP_LISTENERS,
   REMOVE_EVENT,
   SCOPE,
-  STORE_EVENTS,
-  STORE_HANDLE
+  STORE_EVENTS
 } from "./symbols"
 import type { CommonShapeEvents } from "./type/CommonShapeEvents"
 import type { Rect } from "./type/Rect"
@@ -56,8 +55,16 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
   public readonly size: UnwrapNestedRefs<Size>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [RAW_MAP_LISTENERS]: MapListeners
-  public readonly [STORE_HANDLE]: ShallowReactive<
-    Map<string, (event: Event) => void>
+
+  public readonly [STORE_EVENTS]: ShallowReactive<
+    Map<
+      string,
+      {
+        deps: Set<string>
+        cbs: Array<(event: Event) => void>
+        handle: (event: Event) => void
+      }
+    >
   >
 
   private readonly [DIV_CONTAINER]?: HTMLDivElement
@@ -71,7 +78,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
       isDOM && attrs.offscreen !== true
         ? document.createElement("div")
         : undefined
-    this[STORE_HANDLE] = shallowReactive(new Map())
+    this[STORE_EVENTS] = shallowReactive(new Map())
 
     this[SCOPE].fOn()
 
@@ -240,14 +247,6 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     return this
   }
 
-  public readonly [STORE_EVENTS] = new Map<
-    string,
-    {
-      deps: Set<string>
-      cbs: Array<(event: Event) => void>
-    }
-  >()
-
   public [ADD_EVENT](name: string, cb: (event: Event) => void): void
   public [ADD_EVENT](
     name: string,
@@ -262,13 +261,14 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     // eslint-disable-next-line functional/no-let
     let conf = this[STORE_EVENTS].get(name)
     if (!conf) {
-      this[STORE_EVENTS].set(name, (conf = { deps: new Set(), cbs: [] }))
-
       const handle = (event: Event) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         conf!.cbs.forEach((cb) => cb(event))
       }
-      this[STORE_HANDLE].set(name, handle)
+      this[STORE_EVENTS].set(
+        name,
+        (conf = { deps: new Set(), cbs: [], handle })
+      )
       this[DIV_CONTAINER]?.addEventListener(name, handle)
     }
 
@@ -283,10 +283,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
 
     conf.cbs.splice(conf.cbs.indexOf(cb) >>> 0, 1)
     if (conf.cbs.length === 0) {
-      const cb = this[STORE_HANDLE].get(name)
-      if (cb) this[DIV_CONTAINER]?.removeEventListener(name, cb)
+      this[DIV_CONTAINER]?.removeEventListener(name, conf.handle)
       this[STORE_EVENTS].delete(name)
-      this[STORE_HANDLE].delete(name)
     }
   }
 
