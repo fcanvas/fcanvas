@@ -1,7 +1,7 @@
 import type { Layer } from "./Layer"
 import type { Stage } from "./Stage"
-import type { APIGroup } from "./apis/APIGroup"
 import { getMousePos } from "./fns/getMousePos"
+import type { MapListeners } from "./logic/getListenersAll"
 import { CANVAS_ELEMENT, LOCALS } from "./symbols"
 
 export const hookEvent = new Map<
@@ -12,17 +12,14 @@ export const hookEvent = new Map<
   }
 >()
 export function handleCustomEventDefault(
-  listenersGroup: Map<
-    Layer | Stage,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Map<Stage | APIGroup<any, any>, Array<(event: Event) => void>>
-  >,
+  all: MapListeners,
+  nameEvent: string,
   event: Event,
   targetListen: Stage
 ) {
   // eslint-disable-next-line functional/no-let
   let everyEventOnChildren = true
-  listenersGroup.forEach((listeners, node) => {
+  all.get(nameEvent)?.forEach((listeners, node) => {
     if (node === targetListen && everyEventOnChildren)
       everyEventOnChildren = false
 
@@ -49,10 +46,10 @@ export function handleCustomEventDefault(
 function createHandleMouseHover(
   isOver: boolean
 ): typeof handleCustomEventDefault {
-  return (listenersGroup, event, targetListen) => {
+  return (all, nameEvent, event, targetListen) => {
     // eslint-disable-next-line functional/no-let
     let everyEventOnChildren = true
-    listenersGroup.forEach((listeners, node) => {
+    all.get(nameEvent)?.forEach((listeners, node) => {
       if (node === targetListen && everyEventOnChildren)
         everyEventOnChildren = false
 
