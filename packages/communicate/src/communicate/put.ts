@@ -1,4 +1,3 @@
-/* eslint-disable no-void */
 import { uuid } from "../logic/uuid"
 import type { DataCallFn, DataReturnFn, FnAny, LikeMessagePort } from "../type"
 
@@ -11,7 +10,6 @@ const storePut = new WeakMap<
     cbs: Set<(event: MessageEvent<DataReturnFn<any>>) => void>
   }
 >()
-const resolved = Promise.resolve()
 
 function put<
   Options extends Record<string, FnAny>,
@@ -118,8 +116,7 @@ function put<Fn extends FnAny>(
         port,
         (conf = {
           handle(event) {
-            // eslint-disable-next-line promise/no-callback-in-promise
-            cbs.forEach((cb) => resolved.then(() => void cb(event)))
+            cbs.forEach((cb) => cb(event))
           },
           cbs
         })
