@@ -2,11 +2,12 @@
 /// <reference path="../../../node_modules/typescript/lib/lib.dom.d.ts" />
 /* eslint-env browser */
 
+import { listen, ping, put } from "@fcanvas/communicate"
 import type { Stage } from "fcanvas"
-import { CANVAS_ELEMENT, Layer } from "fcanvas"
+import { ADD_EVENT, CANVAS_ELEMENT, Layer, REMOVE_EVENT } from "fcanvas"
 
 import { Code } from "./constants"
-import { putMessage } from "./logic/com-main"
+import { createFakeEvent } from "./logic/porters/Event"
 
 const store = new WeakMap<Stage, boolean>()
 export async function portToWorker(worker: Worker, stage: Stage) {
@@ -16,20 +17,18 @@ export async function portToWorker(worker: Worker, stage: Stage) {
     return
   }
 
-  const port2 = await putMessage<
-    MessagePort,
-    {
-      type: Code
-    }
-  >(worker, {
-    type: Code.CREATE_CONNECT
-  })
+  const port2 = await put(worker, Code.CREATE_CONNECT)
+  port2.start()
+
   if (__DEV__) console.log("[fcanvas/worker]: Connected")
 
   const storeLayers = new Map<string, Layer>()
-  port2.onmessage = (
-    event: MessageEvent<{
-      type: "update_layer"
+  // eslint-disable-next-line func-call-spacing
+  const listenEvents = new Map<string, (event: Event) => void>()
+  listen(
+    port2,
+    "update_layer",
+    (
       value: Record<
         number,
         {
@@ -38,11 +37,9 @@ export async function portToWorker(worker: Worker, stage: Stage) {
           height: number
         }
       >
-    }>
-  ) => {
-    if (event.data.type === "update_layer") {
+    ) => {
       storeLayers.forEach((layer, uid) => {
-        if (!(uid in event.data.value)) {
+        if (!(uid in value)) {
           storeLayers.delete(uid)
           stage.delete(layer)
         }
@@ -50,7 +47,7 @@ export async function portToWorker(worker: Worker, stage: Stage) {
       // layer info
       const offscreens: Record<string, OffscreenCanvas> = {}
       const offs: OffscreenCanvas[] = []
-      Object.entries(event.data.value).forEach(([uid, item]) => {
+      Object.entries(value).forEach(([uid, item]) => {
         const layerExists = storeLayers.get(uid)
         if (layerExists) {
           Object.assign(layerExists.$, {
@@ -68,23 +65,84 @@ export async function portToWorker(worker: Worker, stage: Stage) {
           width: item.width,
           height: item.height
         })
+        // force update uid
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(layer as unknown as any).uid = uid
         storeLayers.set(uid, layer)
         stage.add(layer)
 
         offs.push(
-          (offscreens[uid] = (layer[CANVAS_ELEMENT] as HTMLCanvasElement).transferControlToOffscreen())
+          (offscreens[uid] = (
+            layer[CANVAS_ELEMENT] as HTMLCanvasElement
+          ).transferControlToOffscreen())
         )
       })
-      port2.postMessage(
-        {
-          type: "layer_offscreen",
-          value: offscreens
-        },
-        offs
-      )
-      console.log("layers: ", storeLayers)
-    }
-  }
 
-  await putMessage(worker, { type: Code.SETUP_DONE })
+      console.log("layers: ", storeLayers)
+      return {
+        return: offscreens,
+        transfer: offs
+      }
+    }
+  )
+  listen(
+    port2,
+    "listen_events",
+    (
+      value: {
+        name: string
+        offs: string[]
+      }[]
+    ) => {
+      listenEvents.forEach((cb, name) => {
+        if (value.some((item) => item.name === name)) {
+          listenEvents.delete(name)
+          stage[REMOVE_EVENT](name, cb)
+        }
+      })
+      value.forEach(({ name, offs }) => {
+        if (listenEvents.has(name)) return
+        listenEvents.set(name, handle)
+        stage[ADD_EVENT](name, handle)
+
+        function handle(event: Event) {
+          console.log("offs: ", offs)
+          ping(port2, "emit_event", {
+            name: event.type,
+            event: createFakeEvent(port2, event),
+            info: offs.reduce(
+              (r, uid) => {
+                const layer = storeLayers.get(uid)
+                if (!layer) {
+                  console.warn("[@fcanvas/worker]: Layer '%s' not found.", uid)
+                  return r
+                }
+
+                const el = layer[CANVAS_ELEMENT] as HTMLCanvasElement
+                const { left, top } = el.getBoundingClientRect()
+                const { width, height, scrollWidth, scrollHeight } = el
+
+                r[uid] = { left, top, width, height, scrollWidth, scrollHeight }
+
+                return r
+              },
+              {} as Record<
+                string,
+                {
+                  left: number
+                  top: number
+                  width: number
+                  height: number
+                  scrollWidth: number
+                  scrollHeight: number
+                }
+              >
+            )
+          })
+        }
+      })
+    }
+  )
+
+  await put(worker, Code.SETUP_DONE)
 }
