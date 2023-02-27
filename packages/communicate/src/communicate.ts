@@ -66,6 +66,7 @@ function listen<Fn extends FnAny>(
   >,
   options?: {
     once?: boolean
+    debug?: boolean
   }
 ): () => void
 // eslint-disable-next-line no-redeclare
@@ -83,6 +84,7 @@ function listen<
   >,
   options?: {
     once?: boolean
+    debug?: boolean
   }
 ): () => void
 
