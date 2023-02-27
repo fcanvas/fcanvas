@@ -13,6 +13,8 @@ import { uuid } from "./logic/uuid"
 //   timeout: 0
 // })//: Promise<1343254>
 
+type FnAny = (...args: any[]) => any
+type MayBePromise<T> = T | Promise<T>
 interface WindowPostMessageOptions {
   targetOrigin?: string
   transfer?: Transferable[]
@@ -53,8 +55,39 @@ type DataReturnFn<Fn extends (...args: unknown[]) => unknown> =
       retu: string
     }
 
-type MayBePromise<T> = T | Promise<T>
-function listen<Fn extends (...args: any[]) => any>(
+function listen<Fn extends FnAny>(
+  port: LikeMessagePort,
+  name: string,
+  listener: (...args: Parameters<Fn>) => MayBePromise<
+    | ({
+        return: ReturnType<Fn>
+      } & WindowPostMessageOptions)
+    | ReturnType<Fn>
+  >,
+  options?: {
+    once?: boolean
+  }
+): () => void
+// eslint-disable-next-line no-redeclare
+function listen<
+  Options extends Record<string, FnAny>,
+  Name extends keyof Options = keyof Options
+>(
+  port: LikeMessagePort,
+  name: Name,
+  listener: (...args: Parameters<Options[Name]>) => MayBePromise<
+    | ({
+        return: ReturnType<Options[Name]>
+      } & WindowPostMessageOptions)
+    | ReturnType<Options[Name]>
+  >,
+  options?: {
+    once?: boolean
+  }
+): () => void
+
+// eslint-disable-next-line no-redeclare
+function listen<Fn extends FnAny>(
   port: LikeMessagePort,
   name: string,
   listener: (...args: Parameters<Fn>) => MayBePromise<
@@ -127,13 +160,36 @@ function listen<Fn extends (...args: any[]) => any>(
   return stop
 }
 
-function put<Fn extends (...args: any[]) => any>(
+function put<
+  Options extends Record<string, FnAny>,
+  Name extends keyof Options = keyof Options
+>(
+  port: LikeMessagePort,
+  name: Name,
+  ...args: Parameters<Options[Name]>
+): Promise<ReturnType<Options[Name]>>
+// eslint-disable-next-line no-redeclare
+function put<Fn extends FnAny>(
   port: LikeMessagePort,
   name: string,
   ...args: Parameters<Fn>
 ): Promise<ReturnType<Fn>>
+
 // eslint-disable-next-line no-redeclare
-function put<Fn extends (...args: any[]) => any>(
+function put<
+  Options extends Record<string, FnAny>,
+  Name extends keyof Options = keyof Options
+>(
+  port: LikeMessagePort,
+  options: {
+    name: Name
+    timeout?: number
+    signal?: AbortSignal
+  } & WindowPostMessageOptions,
+  ...args: Parameters<Options[Name]>
+): Promise<ReturnType<Options[Name]>>
+// eslint-disable-next-line no-redeclare
+function put<Fn extends FnAny>(
   port: LikeMessagePort,
   options: {
     name: string
@@ -142,8 +198,9 @@ function put<Fn extends (...args: any[]) => any>(
   } & WindowPostMessageOptions,
   ...args: Parameters<Fn>
 ): Promise<ReturnType<Fn>>
+
 // eslint-disable-next-line no-redeclare
-function put<Fn extends (...args: any[]) => any>(
+function put<Fn extends FnAny>(
   port: LikeMessagePort,
   options:
     | string
@@ -216,14 +273,31 @@ function put<Fn extends (...args: any[]) => any>(
   })
 }
 
-function pit<Fn extends (...args: any[]) => any>(
+function pit<
+  Options extends Record<string, FnAny>,
+  Name extends keyof Options = keyof Options
+>(port: LikeMessagePort, name: Name, ...args: Parameters<Options[Name]>): void
+// eslint-disable-next-line no-redeclare
+function pit<Fn extends FnAny>(
   port: LikeMessagePort,
   name: string,
   ...args: Parameters<Fn>
 ): void
 
 // eslint-disable-next-line no-redeclare
-function pit<Fn extends (...args: any[]) => any>(
+function pit<
+  Options extends Record<string, FnAny>,
+  Name extends keyof Options = keyof Options
+>(
+  port: LikeMessagePort,
+  options:
+    | {
+        name: Name
+      } & WindowPostMessageOptions,
+  ...args: Parameters<Options[Name]>
+): void
+// eslint-disable-next-line no-redeclare
+function pit<Fn extends FnAny>(
   port: LikeMessagePort,
   options: {
     name: string
@@ -232,7 +306,7 @@ function pit<Fn extends (...args: any[]) => any>(
 ): void
 
 // eslint-disable-next-line no-redeclare
-function pit<Fn extends (...args: any[]) => any>(
+function pit<Fn extends FnAny>(
   port: LikeMessagePort,
   options: {
     name: string
@@ -240,7 +314,7 @@ function pit<Fn extends (...args: any[]) => any>(
   ...args: Parameters<Fn>
 ): void
 // eslint-disable-next-line no-redeclare
-function pit<Fn extends (...args: any[]) => any>(
+function pit<Fn extends FnAny>(
   port: LikeMessagePort,
   options:
     | string
