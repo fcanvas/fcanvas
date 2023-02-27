@@ -1,5 +1,6 @@
 import { reactive } from "@vue/reactivity"
 
+import type { Layer } from "../Layer"
 import { getCurrentShape } from "../currentShape"
 import { getMousePos } from "../fns/getMousePos"
 import type { ElAddEventListener } from "../helpers/addEvents"
@@ -39,6 +40,7 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
       const { x, y, winX, winY } = getMousePos(
         event as TouchEvent | MouseEvent,
         undefined,
+        (instance as Layer).uid,
         1
       )[0]
 

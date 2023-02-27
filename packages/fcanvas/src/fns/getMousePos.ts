@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable indent */
 interface MousePos {
   x: number
   y: number
@@ -6,21 +8,38 @@ interface MousePos {
   id: number
 }
 
+function isHTMLElement(el: any): el is HTMLElement {
+  return typeof el?.getBoundingClientRect === "function"
+}
+
+function getSx(info: { width?: number; scrollWidth: number }): number {
+  return (info.width && info.scrollWidth / info.width) || 1
+}
+function getSy(info: { height?: number; scrollHeight: number }): number {
+  return (info.height && info.scrollHeight / info.height) || 1
+}
+
 export function getMousePos(
   event: TouchEvent | MouseEvent,
-  element?: HTMLElement & {
-    width?: number
-    height?: number
-  },
+  element?: OffscreenCanvas | HTMLCanvasElement,
+  uid?: string,
   limit = 1
 ): MousePos[] {
-  const rect = (element)?.getBoundingClientRect() ?? { left: 0, top: 0 }
-  const sx = element
-    ? (element.width && element.scrollWidth / element.width) || 1
-    : 1
-  const sy = element
-    ? (element.height && element.scrollHeight / element.height) || 1
-    : 1
+  const isElement = isHTMLElement(element)
+  const info = isElement
+    ? undefined
+    : uid
+    ? (event as unknown as any).info[uid]
+    : undefined
+
+  const rect = isElement
+    ? element.getBoundingClientRect()
+    : info ?? {
+        left: 0,
+        top: 0
+      }
+  const sx = isElement ? getSx(element) : info ? getSx(info) : 1
+  const sy = isElement ? getSy(element) : info ? getSy(info) : 1
 
   const touches = (event as TouchEvent).touches ||
     (event as TouchEvent).changedTouches || [event]

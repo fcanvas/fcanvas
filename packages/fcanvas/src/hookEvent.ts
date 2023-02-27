@@ -26,7 +26,7 @@ export function handleCustomEventDefault(
     const canvas = (node as Layer)[CANVAS_ELEMENT] as
       | HTMLCanvasElement
       | undefined
-    const mousePos = getMousePos(event as MouseEvent | TouchEvent, canvas)
+    const mousePos = getMousePos(event as MouseEvent | TouchEvent, canvas, (node as Layer).uid)
 
     listeners.forEach((listeners, node) => {
       if (
@@ -56,7 +56,7 @@ function createHandleMouseHover(
       const canvas = (node as Layer)[CANVAS_ELEMENT] as
         | HTMLCanvasElement
         | undefined
-      const mousePos = getMousePos(event as MouseEvent | TouchEvent, canvas)
+      const mousePos = getMousePos(event as MouseEvent | TouchEvent, canvas, (node as Layer).uid)
 
       listeners.forEach((listeners, node) => {
         if (
