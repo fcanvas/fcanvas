@@ -1,3 +1,4 @@
+import { CANVAS_ELEMENT } from "./../symbols"
 import { reactive } from "@vue/reactivity"
 
 import type { Layer } from "../Layer"
@@ -39,7 +40,8 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
       // get offset
       const { x, y, winX, winY } = getMousePos(
         event as TouchEvent | MouseEvent,
-        undefined,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (instance as unknown as any)?.[CANVAS_ELEMENT],
         (instance as Layer).uid,
         1
       )[0]
