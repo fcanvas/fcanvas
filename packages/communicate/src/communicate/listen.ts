@@ -15,7 +15,6 @@ const storeListen = new WeakMap<
     cbs: Set<(event: MessageEvent<DataCallFn<any>>) => Promise<void>>
   }
 >()
-const resolved = Promise.resolve()
 
 function listen<Fn extends FnAny>(
   port: LikeMessagePort,
@@ -129,8 +128,7 @@ function listen<Fn extends FnAny>(
       port,
       (conf = {
         handle(event) {
-          // eslint-disable-next-line no-void, promise/no-callback-in-promise
-          cbs.forEach((cb) => resolved.then(() => void cb(event)))
+          cbs.forEach((cb) => cb(event))
         },
         cbs
       })
