@@ -98,6 +98,7 @@ function listen<Fn extends FnAny>(
   >,
   options?: {
     once?: boolean
+    debug?: boolean
   }
 ) {
   async function handler(event: MessageEvent<DataCallFn<Fn>>) {
@@ -128,6 +129,7 @@ function listen<Fn extends FnAny>(
           }
         }
       } catch (error) {
+        if (options?.debug) console.warn(error)
         err = error + ""
       }
 
