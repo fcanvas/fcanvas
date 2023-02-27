@@ -51,7 +51,7 @@ let countLayers = 0
 export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   static readonly type: string = "Layer"
 
-  public readonly uid = ++countLayers
+  public readonly uid = ++countLayers + ""
   public readonly $: UnwrapNestedRefs<PersonalAttrs>
   public get attrs() {
     return this.$
