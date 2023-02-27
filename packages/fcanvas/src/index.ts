@@ -8,6 +8,7 @@ import { globalConfigs } from "./globalConfigs"
 import { hookEvent } from "./hookEvent"
 
 export * from "@vue/reactivity"
+export { NOOP } from "@vue/shared"
 export * from "./fns/watch/index"
 export * from "./fns/watch/scheduler"
 
