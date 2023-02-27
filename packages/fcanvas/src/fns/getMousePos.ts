@@ -8,13 +8,13 @@ interface MousePos {
 
 export function getMousePos(
   event: TouchEvent | MouseEvent,
-  element?: HTMLElement & {
+  element?: OffscreenCanvas | HTMLElement & {
     width?: number
     height?: number
   },
   limit = 1
 ): MousePos[] {
-  const rect = element?.getBoundingClientRect() ?? { left: 0, top: 0 }
+  const rect = (element)?.getBoundingClientRect() ?? { left: 0, top: 0 }
   const sx = element
     ? (element.width && element.scrollWidth / element.width) || 1
     : 1

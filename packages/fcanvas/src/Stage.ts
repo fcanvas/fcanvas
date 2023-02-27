@@ -3,10 +3,7 @@ import type {
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
-import {
-  computed
-  , reactive, shallowReactive
-} from "@vue/reactivity"
+import { computed, reactive, shallowReactive } from "@vue/reactivity"
 
 import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
@@ -18,6 +15,7 @@ import { globalConfigs } from "./globalConfigs"
 import { createTransform } from "./helpers/createTransform"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { handleCustomEventDefault, hookEvent } from "./hookEvent"
+import type { MapListeners } from "./logic/getListenersAll"
 import { getListenersAll } from "./logic/getListenersAll"
 import { isCanvasDOM } from "./logic/isCanvasDOM"
 import {
@@ -26,6 +24,7 @@ import {
   CANVAS_ELEMENT,
   CHILD_NODE,
   DIV_CONTAINER,
+  RAW_MAP_LISTENERS,
   REMOVE_EVENT,
   SCOPE,
   STORE_EVENTS,
@@ -56,6 +55,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
 
   public readonly size: UnwrapNestedRefs<Size>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
+  public readonly [RAW_MAP_LISTENERS]: MapListeners
   public readonly [STORE_HANDLE]: ShallowReactive<
     Map<string, (event: Event) => void>
   >
@@ -186,6 +186,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
       >()
       // scan all events in children
       const all = new Map()
+      this[RAW_MAP_LISTENERS] = all
       const allListeners = computed(() => {
         all.clear()
         return getListenersAll(this, all, true)
@@ -193,7 +194,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
       watchEffect(() => {
         if (isDev) console.log("[event::layer]: scan deep listeners")
 
-        const all = allListeners.value
+        const all = allListeners.value // is equal const all = new Map()
         // remove handler remove
         handlersChildrenMap.forEach((customer, name) => {
           if (!all.has(name)) {
@@ -204,7 +205,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
           }
         })
 
-        all.forEach((listenersGroup, name) => {
+        all.forEach((_, name) => {
           const oldHandler = handlersChildrenMap.get(
             name as keyof CommonShapeEvents
           )
@@ -219,14 +220,14 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
 
           const handle = (event: Event) => {
             if (isDev) console.log("[event:layer] emit event %s", event.type)
-            customer.handle(listenersGroup, event, this)
+            customer.handle(all, name, event, this)
             // ================================================
           }
           handlersChildrenMap.set(name as keyof CommonShapeEvents, {
             name: customer.name,
             handle
           })
-          customer.name.forEach((name) => this[ADD_EVENT](name, handle))
+          customer.name.forEach((name) => this[ADD_EVENT](name, handle, name))
         })
       })
     }
@@ -239,31 +240,49 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     return this
   }
 
-  private readonly [STORE_EVENTS] = new Map<string, Array<(event: Event) => void>>()
-  public [ADD_EVENT](name: string, cb: (event: Event) => void): void {
+  private readonly [STORE_EVENTS] = new Map<
+    string,
+    {
+      deps: Set<string>
+      cbs: Array<(event: Event) => void>
+    }
+  >()
+
+  public [ADD_EVENT](name: string, cb: (event: Event) => void): void
+  public [ADD_EVENT](
+    name: string,
+    cb: (event: Event) => void,
+    nameEvent: string
+  ): void
+  public [ADD_EVENT](
+    name: string,
+    cb: (event: Event) => void,
+    nameEvent?: string
+  ): void {
     // eslint-disable-next-line functional/no-let
-    let cbs = this[STORE_EVENTS].get(name)
-    if (!cbs) {
-      this[STORE_EVENTS].set(name, (cbs = []))
+    let conf = this[STORE_EVENTS].get(name)
+    if (!conf) {
+      this[STORE_EVENTS].set(name, (conf = { deps: new Set(), cbs: [] }))
 
       const handle = (event: Event) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        cbs!.forEach((cb) => cb(event))
+        conf!.cbs.forEach((cb) => cb(event))
       }
       this[STORE_HANDLE].set(name, handle)
       this[DIV_CONTAINER]?.addEventListener(name, handle)
     }
 
-    cbs.push(cb)
+    conf.cbs.push(cb)
+    if (nameEvent) conf.deps.add(nameEvent)
   }
 
   public [REMOVE_EVENT](name: string, cb: (event: Event) => void): void {
-    const cbs = this[STORE_EVENTS].get(name)
+    const conf = this[STORE_EVENTS].get(name)
 
-    if (!cbs) return
+    if (!conf) return
 
-    cbs.splice(cbs.indexOf(cb) >>> 0, 1)
-    if (cbs.length === 0) {
+    conf.cbs.splice(conf.cbs.indexOf(cb) >>> 0, 1)
+    if (conf.cbs.length === 0) {
       const cb = this[STORE_HANDLE].get(name)
       if (cb) this[DIV_CONTAINER]?.removeEventListener(name, cb)
       this[STORE_EVENTS].delete(name)
