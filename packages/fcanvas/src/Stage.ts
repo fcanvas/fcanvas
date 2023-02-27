@@ -240,7 +240,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
     return this
   }
 
-  private readonly [STORE_EVENTS] = new Map<
+  public readonly [STORE_EVENTS] = new Map<
     string,
     {
       deps: Set<string>
