@@ -4,7 +4,6 @@ import type {
   UnwrapNestedRefs
 } from "@vue/reactivity"
 import { computed, reactive, ref, unref } from "@vue/reactivity"
-import { watchEffect } from "src/fns/watch"
 
 import type { Group } from "./Group"
 import type { Shape } from "./Shape"
@@ -12,6 +11,8 @@ import { APIGroup } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { CONFIGS, isDOM } from "./configs"
 import { isDev } from "./env"
+import type { WatchStopHandle } from "./fns/watch"
+import { watch, watchEffect } from "./fns/watch"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
 import { pointInBox } from "./helpers/pointInBox"
@@ -64,7 +65,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   // private readonly [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
   public [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
 
-  private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
+  private readonly [COMPUTED_CACHE]: ComputedRef<number>
 
   private readonly [SCOPE] = effectScopeFlat()
 
@@ -120,7 +121,9 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       }
     })
     const _countMarkChange = ref(0)
-    this[COMPUTED_CACHE] = computed<boolean>(() => {
+    // eslint-disable-next-line functional/no-let
+    let countDraw = 0
+    this[COMPUTED_CACHE] = computed<number>(() => {
       const ctx = this[CONTEXT_CACHE]
       // eslint-disable-next-line no-unused-expressions
       _countMarkChange.value
@@ -128,7 +131,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       this[DRAW_CONTEXT_ON_SANDBOX](ctx)
 
-      return false
+      return ++countDraw
     })
     this.markChange = () => ++_countMarkChange.value
 
@@ -181,11 +184,15 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     return this[BOUNDING_CLIENT_RECT].value
   }
 
+  private lastIdDraw = 0
   public draw() {
     if (this.$.visible === false) return
 
-    // eslint-disable-next-line no-unused-expressions
-    this[COMPUTED_CACHE].value
+    const currentId = this[COMPUTED_CACHE].value
+    const changed = currentId !== this.lastIdDraw
+    this.lastIdDraw = currentId
+
+    return changed
   }
 
   private _resolveTick: (() => void) | void | undefined
@@ -202,21 +209,35 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     }))
   }
 
+  private stopWaitDraw?: WatchStopHandle
   public batchDraw() {
     if (!this[WAIT_DRAWING]) {
       this[WAIT_DRAWING] = true
       this[ID_REQUEST_FRAME] = requestAnimationFrame(() => {
         if (!this[WAIT_DRAWING]) return
 
-        this.draw()
+        const changed = this.draw()
         this[WAIT_DRAWING] = false
         this._resolveTick?.()
+
+        if (!changed) {
+          this.stopWaitDraw = watch(
+            () => this[COMPUTED_CACHE].value,
+            () => this.batchDraw()
+          )
+          return
+        }
+
         this.batchDraw()
       })
     }
   }
 
   public stopDraw() {
+    if (this.stopWaitDraw) {
+      this.stopWaitDraw?.()
+      this.stopWaitDraw = undefined
+    }
     if (!this[ID_REQUEST_FRAME]) return
 
     const success = !this[WAIT_DRAWING]
