@@ -8,7 +8,7 @@ interface MousePos {
 
 export function getMousePos(
   event: TouchEvent | MouseEvent,
-  element?: OffscreenCanvas | HTMLElement & {
+  element?: HTMLElement & {
     width?: number
     height?: number
   },
