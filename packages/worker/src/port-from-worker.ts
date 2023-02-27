@@ -1,8 +1,16 @@
+import { listen, ping, put } from "@fcanvas/communicate"
+import {
+  CANVAS_ELEMENT,
+  RAW_MAP_LISTENERS,
+  STORE_EVENTS,
+  toRaw,
+  watchEffect
+} from "fcanvas"
 import type { Layer, Stage } from "fcanvas"
-import { CANVAS_ELEMENT, toRaw, watchEffect } from "fcanvas"
 
 import { Code } from "./constants"
-import { getMessage } from "./logic/com-worker"
+import type { createFakeEvent } from "./logic/porters/Event"
+import { resolveFakeEvent } from "./logic/porters/Event"
 
 const store = new WeakMap<Stage, MessageChannel>()
 export async function portToSelf(stage: Stage) {
@@ -14,64 +22,119 @@ export async function portToSelf(stage: Stage) {
 
   // eslint-disable-next-line functional/no-let
   let channel: MessageChannel
-  getMessage((data: { type: Code }) => {
-    if (data.type === Code.CREATE_CONNECT) {
-      channel = new MessageChannel()
-      store.set(stage, channel)
+  listen(self, Code.CREATE_CONNECT, () => {
+    channel = new MessageChannel()
 
-      return {
-        re: channel.port2,
-        transfer: [channel.port2]
-      }
+    store.set(stage, channel)
+
+    return {
+      return: channel.port2,
+      transfer: [channel.port2]
     }
-    if (data.type === Code.SETUP_DONE) {
-      const storeLayers = new Map<string, Layer>()
-      channel.port1.onmessage = (
-        event: MessageEvent<{
-          type: "layer_offscreen"
-          value: Record<string, OffscreenCanvas>
-        }>
-      ) => {
-        if (event.data.type === "layer_offscreen") {
-          Object.entries(event.data.value).forEach(([uid, off]) => {
+  })
+  listen(self, Code.SETUP_DONE, () => {
+    const storeLayers = new Map<string, Layer>()
+    channel.port1.start()
+
+    watchEffect(() => {
+      const value = Array.from(stage.children.values()).reduce(
+        (r, layer) => {
+          storeLayers.set(layer.uid, layer)
+          r[layer.uid] = {
+            $: toRaw(layer.$),
+            width: layer[CANVAS_ELEMENT].width,
+            height: layer[CANVAS_ELEMENT].height
+          }
+          return r
+        },
+        {} as Record<
+          string,
+          {
+            $: Layer["$"]
+            width: number
+            height: number
+          }
+        >
+      )
+      storeLayers.forEach((layer, uid) => {
+        if (!(uid in value)) storeLayers.delete(uid)
+      })
+      // eslint-disable-next-line promise/catch-or-return
+      put(channel.port1, "update_layer", value).then(
+        (value: Record<string, OffscreenCanvas>) => {
+          Object.entries(value).forEach(([uid, off]) => {
             const layer = storeLayers.get(uid)
             if (!layer) return
 
             layer[CANVAS_ELEMENT] = off
             layer.markChange()
           })
-          console.log("layers in worker: ", storeLayers, event.data.value)
+          console.log("layers in worker: ", storeLayers, value)
+          // eslint-disable-next-line no-useless-return
+          return
         }
-      }
+      )
+    })
 
-      watchEffect(() => {
-        const value = Array.from(stage.children.values()).reduce(
-          (r, layer) => {
-            storeLayers.set(layer.uid + "", layer)
-            r[layer.uid] = {
-              $: toRaw(layer.$),
-              width: layer[CANVAS_ELEMENT].width,
-              height: layer[CANVAS_ELEMENT].height
-            }
-            return r
-          },
-          {} as Record<
-            number,
-            {
-              $: Layer["$"]
-              width: number
-              height: number
-            }
-          >
+    listen(
+      channel.port1,
+      "emit_event",
+      (value: {
+        name: string
+        event: ReturnType<typeof createFakeEvent>
+        info: Record<
+          string,
+          {
+            left: number
+            top: number
+            width: number
+            height: number
+            scrollWidth: number
+            scrollHeight: number
+          }
+        >
+      }) => {
+        const { name, event, info } = value
+
+        const ev = resolveFakeEvent(channel.port1, event)
+        Object.assign(ev, { info })
+
+        stage[STORE_EVENTS].get(name)?.handle(ev as unknown as Event)
+        console.log(
+          "emit event '%s': ",
+          name,
+          resolveFakeEvent(channel.port1, event)
         )
-        storeLayers.forEach((layer, uid) => {
-          if (!(uid in value)) storeLayers.delete(uid)
-        })
-        channel.port1.postMessage({
-          type: "update_layer",
-          value
+      }
+    )
+
+    watchEffect(() => {
+      const value: { name: string; offs: string[] }[] = []
+
+      stage[STORE_EVENTS].forEach((_, eventName) => {
+        const offs: string[] = []
+        for (const dep of _.deps.values()) {
+          const els = stage[RAW_MAP_LISTENERS].get(dep)?.keys()
+
+          if (!els) continue
+
+          for (const el of els) {
+            if (el === stage) continue
+
+            offs.push((el as Layer).uid)
+          }
+        }
+
+        value.push({
+          name: eventName,
+          offs
         })
       })
-    }
+      // Array.from(stage[STORE_HANDLE].keys())
+
+      console.log({ value })
+
+      ping(channel.port1, "listen_events", value)
+    })
   })
 }
