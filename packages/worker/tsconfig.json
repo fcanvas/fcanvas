@@ -3,7 +3,8 @@
   "compilerOptions": {
     "types": ["vitest/globals"],
     "lib": [
-      "WebWorker"
+      "WebWorker",
+      "ESNext"
     ]
   }
 }

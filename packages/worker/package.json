@@ -6,7 +6,7 @@
     "build": "tsup",
     "dev": "vite dev",
     "prepublishOnly": "pnpm test && pnpm build",
-    "test": "echo 'No test'",
+    "test": "vitest --run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "fcanvas": "workspace:*",
+    "@fcanvas/communicate": "workspace:*",
     "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
@@ -59,7 +60,8 @@
     "node": ">=10"
   },
   "peerDependencies": {
-    "fcanvas": "workspace:*"
+    "fcanvas": "workspace:*",
+    "@fcanvas/communicate": "workspace:*"
   },
   "dependencies": {
     "typescript": "^4.9.5"
