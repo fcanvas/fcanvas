@@ -26,7 +26,11 @@ export function handleCustomEventDefault(
     const canvas = (node as Layer)[CANVAS_ELEMENT] as
       | HTMLCanvasElement
       | undefined
-    const mousePos = getMousePos(event as MouseEvent | TouchEvent, canvas, (node as Layer).uid)
+    const mousePos = getMousePos(
+      event as MouseEvent | TouchEvent,
+      canvas,
+      (node as Layer).uid
+    )
 
     listeners.forEach((listeners, node) => {
       if (
@@ -35,7 +39,20 @@ export function handleCustomEventDefault(
         mousePos.some((client) =>
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (node as unknown as any).isPressedPoint(client.x, client.y)
-        )
+        ) ||
+        (event.type === "touchend" &&
+          ((event as TouchEvent).touches.length === 0 ||
+            getMousePos(
+              event as MouseEvent | TouchEvent,
+              canvas,
+              (node as Layer).uid,
+              Infinity,
+              true
+            ).every(
+              (client) =>
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                !(node as unknown as any).isPressedPoint(client.x, client.y)
+            )))
       )
         listeners.forEach((cb) => cb(event))
     })
@@ -56,7 +73,11 @@ function createHandleMouseHover(
       const canvas = (node as Layer)[CANVAS_ELEMENT] as
         | HTMLCanvasElement
         | undefined
-      const mousePos = getMousePos(event as MouseEvent | TouchEvent, canvas, (node as Layer).uid)
+      const mousePos = getMousePos(
+        event as MouseEvent | TouchEvent,
+        canvas,
+        (node as Layer).uid
+      )
 
       listeners.forEach((listeners, node) => {
         if (
