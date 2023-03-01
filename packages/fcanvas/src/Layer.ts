@@ -236,7 +236,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
   public stopDraw() {
     if (this.stopWaitDraw) {
-      this.stopWaitDraw?.()
+      this.stopWaitDraw()
       this.stopWaitDraw = undefined
     }
     if (!this[ID_REQUEST_FRAME]) return

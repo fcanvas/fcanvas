@@ -30,7 +30,7 @@ export function getMousePos(
   const info = isElement
     ? undefined
     : uid
-    ? (event as unknown as any)?.info[uid]
+    ? (event as unknown as any).info[uid]
     : undefined
 
   const rect = isElement

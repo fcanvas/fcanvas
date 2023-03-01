@@ -7,7 +7,7 @@ export function getPropsNameEvent<T extends Event>(
   let prototype = event
 
   while (
-    prototype?.constructor?.name !== "Event" &&
+    prototype.constructor?.name !== "Event" &&
     (prototype = Object.getPrototypeOf(prototype))
   )
     props.push(...Object.keys(prototype))
