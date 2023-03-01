@@ -29,3 +29,7 @@ layer.add(circle)
 
 portToSelf(stage)
 Object.assign(self, { circle })
+
+stage.on("touchend", event => {
+  console.warn("touchend: ", event)
+})
