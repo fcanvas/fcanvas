@@ -32,9 +32,13 @@ describe("communicate", () => {
       test("should use", async () => {
         const fn = vi.fn()
 
-        listen<(msg1: string, msg2: string) => void>(port1, "test", (msg1, msg2) => {
+        listen<(msg1: string, msg2: string) => void>(
+          port1,
+        "test",
+        (msg1, msg2) => {
           fn([msg1, msg2].join(" "))
-        })
+        }
+        )
 
         await put(port2, "test", "hello", "world")
 
@@ -50,7 +54,7 @@ describe("communicate", () => {
           fn()
         })
 
-        expect(await put(port2, "test") === undefined).toBe(true)
+        expect((await put(port2, "test")) === undefined).toBe(true)
       })
       test("return raw value", async () => {
         const fn = vi.fn()

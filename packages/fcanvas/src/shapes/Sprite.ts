@@ -42,14 +42,21 @@ export class Sprite<
   static readonly type = "Sprite"
 
   private readonly _image: ComputedRef<CanvasImageSource>
-  private readonly cropImageCache: Map<string, HTMLCanvasElement | OffscreenCanvas> = new Map()
+  private readonly cropImageCache: Map<
+    string,
+    HTMLCanvasElement | OffscreenCanvas
+  > = new Map()
+
   private readonly currentFrames: ComputedRef<
     Required<Exclude<AnimationFrames, string[]>>
   >
 
   private readonly frames: ComputedRef<(HTMLCanvasElement | OffscreenCanvas)[]>
   private readonly currentFrameIndex: Ref<number>
-  private readonly currentFrame: ComputedRef<HTMLCanvasElement | OffscreenCanvas>
+  private readonly currentFrame: ComputedRef<
+    HTMLCanvasElement | OffscreenCanvas
+  >
+
   private readonly currentDelay: ComputedRef<number>
 
   private _running = false

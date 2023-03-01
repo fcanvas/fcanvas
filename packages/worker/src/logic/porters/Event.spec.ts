@@ -98,7 +98,7 @@ describe("transport-event", () => {
       screenY: 0
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect([...result.touches as unknown as any]).toEqual([
+    expect([...(result.touches as unknown as any)]).toEqual([
       {
         identifier: 0,
         target: null,
