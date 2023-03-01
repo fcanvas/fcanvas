@@ -13,7 +13,7 @@ import type { createFakeEvent } from "./logic/porters/Event"
 import { resolveFakeEvent } from "./logic/porters/Event"
 
 const store = new WeakMap<Stage, MessageChannel>()
-export async function portToSelf(stage: Stage) {
+export async function portToThread(stage: Stage) {
   if (store.has(stage)) {
     if (__DEV__)
       console.warn("[fcanvas/worker]: This 'Stage' is already connected.")
