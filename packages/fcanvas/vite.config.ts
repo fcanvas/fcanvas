@@ -2,18 +2,10 @@ import path from "path"
 
 import { defineConfig } from "vite"
 
+import { sharedConfig } from "../../vite.config.shared"
+
 export default defineConfig({
-  server: {
-    hmr: {
-      // removes the protocol and replaces it with the port we're connecting to
-      host: process.env.GITPOD_WORKSPACE_URL?.replace("https://", "5173-"),
-      protocol: "wss",
-      clientPort: 443
-    }
-  },
-  define: {
-    __DEV__: true
-  },
+  ...sharedConfig,
   resolve: {
     alias: {
       src: path.resolve(__dirname, "src")
