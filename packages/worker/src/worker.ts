@@ -7,7 +7,7 @@ import {
   useMousePos
 } from "fcanvas"
 
-import { portToSelf } from "./port-from-worker"
+import { portToThread } from "./port-from-worker"
 
 Object.assign(self, { UIEvent: class {} })
 const stage = new Stage()
@@ -27,9 +27,9 @@ const circle = new Circle({
 })
 layer.add(circle)
 
-portToSelf(stage)
+portToThread(stage)
 Object.assign(self, { circle })
 
-stage.on("touchend", event => {
+stage.on("touchend", (event) => {
   console.warn("touchend: ", event)
 })
