@@ -100,19 +100,22 @@ export async function portToSelf(stage: Stage) {
         Object.assign(ev, { info })
 
         stage[STORE_EVENTS].get(name)?.handle(ev as unknown as Event)
-        console.log(
-          "emit event '%s': ",
-          name,
-          resolveFakeEvent(channel.port1, event)
-        )
+
+        console.log("emit event '%s': ", name, ev, stage)
       }
     )
 
     watchEffect(() => {
-      const value: { name: string; offs: string[] }[] = []
+      const value: {
+        name: string
+        offs: string[]
+        prevent: boolean
+      }[] = []
 
       stage[STORE_EVENTS].forEach((_, eventName) => {
         const offs: string[] = []
+        // eslint-disable-next-line functional/no-let
+        let prevent = false
         for (const dep of _.deps.values()) {
           const els = stage[RAW_MAP_LISTENERS].get(dep)?.keys()
 
@@ -121,13 +124,15 @@ export async function portToSelf(stage: Stage) {
           for (const el of els) {
             if (el === stage) continue
 
+            if (!prevent) prevent = true
             offs.push((el as Layer).uid)
           }
         }
 
         value.push({
           name: eventName,
-          offs
+          offs,
+          prevent
         })
       })
       // Array.from(stage[STORE_HANDLE].keys())
