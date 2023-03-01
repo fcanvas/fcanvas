@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/ban-types */
-
 import { listen, put, uuid } from "@fcanvas/communicate"
 
-export function createPortFn(port2: MessagePort, fn: Function) {
+export function createPortFn(
+  port2: MessagePort,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fn: (...a: any[]) => any
+) {
   const id = uuid()
 
-  // eslint-disable-next-line functional/functional-parameters
-  const stop = listen(port2, id, (...args) => fn(...args))
+  const stop = listen(port2, id, fn)
   setTimeout(stop, 1000)
 
   return {

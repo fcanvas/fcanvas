@@ -92,6 +92,7 @@ export async function portToWorker(worker: Worker, stage: Stage) {
       value: {
         name: string
         offs: string[]
+        prevent: boolean
       }[]
     ) => {
       listenEvents.forEach((cb, name) => {
@@ -100,13 +101,15 @@ export async function portToWorker(worker: Worker, stage: Stage) {
           stage[REMOVE_EVENT](name, cb)
         }
       })
-      value.forEach(({ name, offs }) => {
+      value.forEach(({ name, offs, prevent }) => {
         if (listenEvents.has(name)) return
         listenEvents.set(name, handle)
         stage[ADD_EVENT](name, handle)
 
         function handle(event: Event) {
           console.log("offs: ", offs)
+          if (prevent) event.preventDefault()
+
           ping(port2, "emit_event", {
             name: event.type,
             event: createFakeEvent(port2, event),

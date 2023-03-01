@@ -11,6 +11,28 @@ import {
 } from "./TouchList"
 import { createPortFn, resolvePortFn } from "./fn"
 
+const rInitXEvent = /^init\w*Event$/
+function isPropDeprecated(prop: string) {
+  if (
+    prop === "cancelBubble" ||
+    prop === "returnValue" ||
+    prop === "srcElement"
+  )
+    return true
+
+  if (rInitXEvent.test(prop)) return true
+
+  return false
+}
+const propsBypass: Array<keyof Event> = [
+  "preventDefault",
+  "stopPropagation",
+  "stopImmediatePropagation"
+]
+function isPropBypass(prop: string) {
+  return propsBypass.includes(prop as keyof Event)
+}
+
 function type(value: any) {
   return (value + "").slice(8, -1)
 }
@@ -26,11 +48,20 @@ function createFakeEvent<T extends Event>(
     ? ReturnType<typeof createPortTouchList>
     : T[K]
 } {
-  const props = getPropsNameEvent(event) as Array<keyof T>
+  const props = getPropsNameEvent(event) as Array<keyof T & string>
 
   const fake: any = {}
 
   props.forEach((prop) => {
+    if (isPropDeprecated(prop)) return
+    if (isPropBypass(prop)) {
+      fake[prop] = {
+        __v_noop: true
+      }
+
+      return
+    }
+
     const value = event[prop]
     if (value instanceof Node) {
       fake[prop] = null
@@ -70,6 +101,9 @@ function resolveFakeEvent<T extends Event>(
       (fake as unknown as any)[prop] = resolvePortFn(port1, value)
     if (value?.__v_type === "TouchList") {
       ;(fake as unknown as any)[prop] = resolvePortTouchList(value)
+    }
+    if (value?.__v_noop) {
+      ;(fake as unknown as any)[prop] = NOOP
     }
   })
 
