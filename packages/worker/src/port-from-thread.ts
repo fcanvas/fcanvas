@@ -78,7 +78,7 @@ export async function portToWorker(worker: Worker, stage: Stage) {
         )
       })
 
-      console.log("layers: ", storeLayers)
+      if (__DEV__) console.log("layers: ", storeLayers)
       return {
         return: offscreens,
         transfer: offs
@@ -107,7 +107,6 @@ export async function portToWorker(worker: Worker, stage: Stage) {
         stage[ADD_EVENT](name, handle)
 
         function handle(event: Event) {
-          console.log("offs: ", offs)
           if (prevent) event.preventDefault()
 
           ping(port2, "emit_event", {
@@ -117,7 +116,12 @@ export async function portToWorker(worker: Worker, stage: Stage) {
               (r, uid) => {
                 const layer = storeLayers.get(uid)
                 if (!layer) {
-                  console.warn("[@fcanvas/worker]: Layer '%s' not found.", uid)
+                  if (__DEV__) {
+                    console.warn(
+                      "[@fcanvas/worker]: Layer '%s' not found.",
+                      uid
+                    )
+                  }
                   return r
                 }
 

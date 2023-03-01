@@ -3,8 +3,12 @@ import { CANVAS_ELEMENT } from "../../../symbols"
 
 export function compareCanvas(layer: Layer, cv2: HTMLCanvasElement): boolean {
   const cv1 = layer[CANVAS_ELEMENT]
-  const ctx1 = cv1.getContext("2d") as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
-  const ctx2 = cv2.getContext("2d") as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  const ctx1 = cv1.getContext("2d") as
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+  const ctx2 = cv2.getContext("2d") as
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
   if (!ctx1 || !ctx2) return false
 
   const imageData1 = ctx1.getImageData(0, 0, cv1.width, cv1.height)
