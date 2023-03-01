@@ -4,6 +4,7 @@ import type gsap from "gsap"
 import { watchEffect } from "src/fns/watch"
 
 import { APIEvent } from "./apis/APIEvent"
+import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { CONFIGS, isDOM } from "./configs"
 import { _setCurrentShape } from "./currentShape"
