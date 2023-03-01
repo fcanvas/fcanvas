@@ -69,7 +69,6 @@ export async function portToThread(stage: Stage) {
             layer[CANVAS_ELEMENT] = off
             layer.markChange()
           })
-          console.log("layers in worker: ", storeLayers, value)
           // eslint-disable-next-line no-useless-return
           return
         }
@@ -101,7 +100,7 @@ export async function portToThread(stage: Stage) {
 
         stage[STORE_EVENTS].get(name)?.handle(ev as unknown as Event)
 
-        console.log("emit event '%s': ", name, ev, stage)
+        if (__DEV__) console.log("emit event '%s': ", name, ev, stage)
       }
     )
 
@@ -136,8 +135,6 @@ export async function portToThread(stage: Stage) {
         })
       })
       // Array.from(stage[STORE_HANDLE].keys())
-
-      console.log({ value })
 
       ping(channel.port1, "listen_events", value)
     })

@@ -10,7 +10,7 @@ const configNormal: Options = {
   format: ["cjs", "esm", "iife"],
   target: "es2015",
   env: {
-    IS_BROWSER: "false",
+    IS_BROWSER: "false"
   },
   define: {
     __DEV__: "true"
