@@ -12,7 +12,6 @@ import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { CONFIGS, isDOM } from "./configs"
 import { _setCurrentShape } from "./currentShape"
-import { isDev } from "./env"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
 import {
@@ -152,7 +151,7 @@ export class Group<
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
         this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-        if (isDev) {
+        if (__DEV__) {
           console.log(
             "[cache::group]: size changed %sx%s",
             ctx.canvas.width,
@@ -172,7 +171,7 @@ export class Group<
   private [DRAW_CONTEXT_ON_SANDBOX](
     context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
   ) {
-    if (isDev) console.log("[sandbox::group]: draw context on sandbox")
+    if (__DEV__) console.log("[sandbox::group]: draw context on sandbox")
 
     const clientRect = this[BOUNCE_CLIENT_RECT].value
     const useTranslate = clientRect.x !== 0 || clientRect.y !== 0

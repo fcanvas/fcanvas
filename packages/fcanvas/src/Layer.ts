@@ -11,7 +11,6 @@ import { APIGroup } from "./apis/APIGroup"
 import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { CONFIGS, isDOM } from "./configs"
-import { isDev } from "./env"
 import type { WatchStopHandle } from "./fns/watch"
 import { watch, watchEffect } from "./fns/watch"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
@@ -148,7 +147,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       ;[canvas.width, canvas.height] = [width, height]
 
       this.emit("resize", extendTarget(new UIEvent("resize"), canvas))
-      if (isDev) {
+      if (__DEV__) {
         console.log(
           "[cache::layer]: size changed %sx%s",
           canvas.width,
