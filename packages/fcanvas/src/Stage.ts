@@ -9,7 +9,6 @@ import type { Layer } from "./Layer"
 import { APIChildNode } from "./apis/APIGroup"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { isDOM } from "./configs"
-import { isDev } from "./env"
 import { watchEffect } from "./fns/watch"
 import { globalConfigs } from "./globalConfigs"
 import { createTransform } from "./helpers/createTransform"
@@ -199,7 +198,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
         return getListenersAll(this, all, true)
       })
       watchEffect(() => {
-        if (isDev) console.log("[event::layer]: scan deep listeners")
+        if (__DEV__) console.log("[event::layer]: scan deep listeners")
 
         const all = allListeners.value // is equal const all = new Map()
         // remove handler remove
@@ -226,7 +225,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
           }
 
           const handle = (event: Event) => {
-            if (isDev) console.log("[event:layer] emit event %s", event.type)
+            if (__DEV__) console.log("[event:layer] emit event %s", event.type)
             customer.handle(all, name, event, this)
             // ================================================
           }
