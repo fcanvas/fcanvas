@@ -7,6 +7,7 @@ export default defineConfig({
     globals: true
   },
   define: {
-    __DEV__: true
+    __DEV__: true,
+    __DEV_LIB__: true
   }
 })

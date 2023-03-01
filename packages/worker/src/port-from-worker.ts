@@ -100,7 +100,7 @@ export async function portToThread(stage: Stage) {
 
         stage[STORE_EVENTS].get(name)?.handle(ev as unknown as Event)
 
-        if (__DEV__) console.log("emit event '%s': ", name, ev, stage)
+        if (__DEV_LIB__) console.log("emit event '%s': ", name, ev, stage)
       }
     )
 

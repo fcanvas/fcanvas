@@ -9,6 +9,7 @@ importers:
       bumpp: ^8.2.1
       conventional-changelog-cli: ^2.2.2
       cspell: ^6.26.3
+      esbuild-plugin-replace: ^1.3.0
       eslint: ^8.34.0
       husky: ^8.0.3
       prettier: ^2.8.4
@@ -22,6 +23,7 @@ importers:
       bumpp: 8.2.1
       conventional-changelog-cli: 2.2.2
       cspell: 6.26.3
+      esbuild-plugin-replace: 1.3.0
       eslint: 8.34.0
       husky: 8.0.3
       prettier: 2.8.4
@@ -2664,6 +2666,12 @@ packages:
     dev: true
     optional: true
 
+  /esbuild-plugin-replace/1.3.0:
+    resolution: {integrity: sha512-i9v5FDfKUaxzpCLn+avq3I6lxJDL5616/tzP93/GFAI7REFwkMTy/pilEIvqlH8RTVpjlwJDOqUOYvJOf5jnXg==}
+    dependencies:
+      magic-string: 0.25.9
+    dev: true
+
   /esbuild-sunos-64/0.15.18:
     resolution: {integrity: sha512-On22LLFlBeLNj/YF3FT+cXcyKPEI263nflYlAhz5crxtp3yRG1Ugfr7ITyxmCmjm4vbN/dGrb/B7w7U8yJR9yw==}
     engines: {node: '>=12'}
@@ -4113,6 +4121,12 @@ packages:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
     dev: true
 
+  /magic-string/0.25.9:
+    resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
+    dependencies:
+      sourcemap-codec: 1.4.8
+    dev: true
+
   /make-dir/3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
@@ -5014,6 +5028,11 @@ packages:
     engines: {node: '>= 8'}
     dependencies:
       whatwg-url: 7.1.0
+    dev: true
+
+  /sourcemap-codec/1.4.8:
+    resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
     dev: true
 
   /spdx-correct/3.1.1:

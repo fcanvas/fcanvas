@@ -198,7 +198,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
         return getListenersAll(this, all, true)
       })
       watchEffect(() => {
-        if (__DEV__) console.log("[event::layer]: scan deep listeners")
+        if (__DEV_LIB__) console.log("[event::layer]: scan deep listeners")
 
         const all = allListeners.value // is equal const all = new Map()
         // remove handler remove
@@ -225,7 +225,8 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
           }
 
           const handle = (event: Event) => {
-            if (__DEV__) console.log("[event:layer] emit event %s", event.type)
+            if (__DEV_LIB__)
+              console.log("[event:layer] emit event %s", event.type)
             customer.handle(all, name, event, this)
             // ================================================
           }

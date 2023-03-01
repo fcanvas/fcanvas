@@ -9,9 +9,6 @@ const configNormal: Options = {
   dts: true,
   format: ["cjs", "esm"],
   target: "es2015",
-  env: {
-    IS_BROWSER: "false"
-  },
   external: ["fcanvas"]
 }
 
