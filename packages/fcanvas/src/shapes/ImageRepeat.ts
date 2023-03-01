@@ -4,7 +4,6 @@ import { watch } from "src/fns/watch"
 
 import { Shape } from "../Shape"
 import { CONFIGS } from "../configs"
-import { isDev } from "../env"
 import { getImage, loadImage } from "../fns/loadImage"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
@@ -91,7 +90,7 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
       const inCache = this._cacheImageRepeat.get(id)
 
       if (inCache) {
-        if (isDev) console.log("[cache]: cache by createImageRepeat used!")
+        if (__DEV__) console.log("[cache]: cache by createImageRepeat used!")
         return {
           r: inCache.r,
           t: scrollTop ? -scrollTop + inCache.t : 0,

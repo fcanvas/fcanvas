@@ -8,7 +8,6 @@ import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { CONFIGS, isDOM } from "./configs"
 import { _setCurrentShape } from "./currentShape"
-import { isDev } from "./env"
 import { getImage } from "./fns/loadImage"
 import { convertToDegrees } from "./helpers/convertToDegrees"
 import { createFilter } from "./helpers/createFilter"
@@ -208,7 +207,7 @@ export class Shape<
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
         this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-        if (isDev) {
+        if (__DEV__) {
           console.log(
             "[cache::shape]: size changed %sx%s",
             ctx.canvas.width,
@@ -432,7 +431,7 @@ export class Shape<
   private [DRAW_CONTEXT_ON_SANDBOX](
     context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
   ) {
-    if (isDev) console.log("[sandbox::shape]: draw context on sandbox")
+    if (__DEV__) console.log("[sandbox::shape]: draw context on sandbox")
     const isCache = !!this[CONTEXT_CACHE]
     const scene = this.$.sceneFunc || this._sceneFunc
 
