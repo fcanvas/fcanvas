@@ -28,8 +28,8 @@ describe("transport-event", () => {
     expect(result.isTrusted).toBeTypeOf("boolean")
     expect(result.type).toBe("touchmove")
     expect(result.target).toBe(null)
-    expect(result.preventDefault.__v_port).toBe(true)
-    expect(result.preventDefault.id).toBeTypeOf("string")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((result.preventDefault as unknown as any).__v_noop).toBe(true)
     expect(result.touches.__v_type).toBe("TouchList")
     expect(result.touches.value).toEqual([
       {
