@@ -3,14 +3,12 @@ import type {
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
-import {
-  computed
-  , reactive, unref
-} from "@vue/reactivity"
+import { computed, reactive, unref } from "@vue/reactivity"
 import { watch } from "src/fns/watch"
 
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
+import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
 import { CONFIGS, isDOM } from "./configs"
 import { _setCurrentShape } from "./currentShape"
