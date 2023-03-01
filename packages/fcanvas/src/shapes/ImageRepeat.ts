@@ -90,7 +90,6 @@ export class ImageRepeat extends Shape<PersonalAttrs> {
       const inCache = this._cacheImageRepeat.get(id)
 
       if (inCache) {
-        if (__DEV__) console.log("[cache]: cache by createImageRepeat used!")
         return {
           r: inCache.r,
           t: scrollTop ? -scrollTop + inCache.t : 0,

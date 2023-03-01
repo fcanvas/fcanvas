@@ -1,12 +1,1 @@
-import { defineConfig } from "vite"
-
-export default defineConfig({
-  server: {
-    hmr: {
-      // removes the protocol and replaces it with the port we're connecting to
-      host: process.env.GITPOD_WORKSPACE_URL?.replace("https://", "5173-"),
-      protocol: "wss",
-      clientPort: 443
-    }
-  }
-})
+export { sharedConfig as default } from "../../vite.config.shared"

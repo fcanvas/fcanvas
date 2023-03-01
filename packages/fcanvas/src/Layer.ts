@@ -147,7 +147,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       ;[canvas.width, canvas.height] = [width, height]
 
       this.emit("resize", extendTarget(new UIEvent("resize"), canvas))
-      if (__DEV__) {
+      if (__DEV_LIB__) {
         console.log(
           "[cache::layer]: size changed %sx%s",
           canvas.width,

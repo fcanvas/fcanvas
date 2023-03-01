@@ -20,7 +20,7 @@ export async function portToWorker(worker: Worker, stage: Stage) {
   const port2 = await put(worker, Code.CREATE_CONNECT)
   port2.start()
 
-  if (__DEV__) console.log("[fcanvas/worker]: Connected")
+  if (__DEV_LIB__) console.log("[fcanvas/worker]: Connected")
 
   const storeLayers = new Map<string, Layer>()
   // eslint-disable-next-line func-call-spacing

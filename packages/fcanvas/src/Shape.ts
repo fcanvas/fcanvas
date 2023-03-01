@@ -207,7 +207,7 @@ export class Shape<
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
         this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-        if (__DEV__) {
+        if (__DEV_LIB__) {
           console.log(
             "[cache::shape]: size changed %sx%s",
             ctx.canvas.width,
@@ -431,7 +431,7 @@ export class Shape<
   private [DRAW_CONTEXT_ON_SANDBOX](
     context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
   ) {
-    if (__DEV__) console.log("[sandbox::shape]: draw context on sandbox")
+    if (__DEV_LIB__) console.log("[sandbox::shape]: draw context on sandbox")
     const isCache = !!this[CONTEXT_CACHE]
     const scene = this.$.sceneFunc || this._sceneFunc
 
