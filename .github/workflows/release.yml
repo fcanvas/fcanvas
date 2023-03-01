@@ -68,10 +68,10 @@ jobs:
           pnpm i --no-frozen-lockfile
           cd packages/fcanvas
           pnpm auto-export
-          pnpm build
+          pnpm -w build
 
       - name: Test & Build
-        run: pnpm test && pnpm build
+        run: pnpm test
 
       - name: Publish to NPM
         run: pnpm -r publish --access public --no-git-checks
