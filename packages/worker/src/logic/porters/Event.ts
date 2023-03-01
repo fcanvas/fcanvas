@@ -99,12 +99,9 @@ function resolveFakeEvent<T extends Event>(
   Object.entries(fake).forEach(([prop, value]) => {
     if (value?.__v_port)
       (fake as unknown as any)[prop] = resolvePortFn(port1, value)
-    if (value?.__v_type === "TouchList") {
-      ;(fake as unknown as any)[prop] = resolvePortTouchList(value)
-    }
-    if (value?.__v_noop) {
-      ;(fake as unknown as any)[prop] = NOOP
-    }
+    if (value?.__v_type === "TouchList")
+      (fake as unknown as any)[prop] = resolvePortTouchList(value)
+    if (value?.__v_noop) (fake as unknown as any)[prop] = NOOP
   })
 
   return fake as unknown as any
