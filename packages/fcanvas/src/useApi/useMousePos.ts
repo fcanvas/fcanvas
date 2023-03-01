@@ -42,7 +42,7 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
       const { x, y, winX, winY } = getMousePos(
         event as TouchEvent | MouseEvent,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (instance as unknown as any)?.[CANVAS_ELEMENT],
+        (instance as unknown as any)[CANVAS_ELEMENT],
         (instance as Layer).uid,
         1
       )[0]
