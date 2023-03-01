@@ -23,7 +23,8 @@ export function getMousePos(
   event: TouchEvent | MouseEvent,
   element?: OffscreenCanvas | HTMLCanvasElement,
   uid?: string,
-  limit = 1
+  limit = 1,
+  useTouches = false
 ): MousePos[] {
   const isElement = isHTMLElement(element)
   const info = isElement
@@ -41,8 +42,9 @@ export function getMousePos(
   const sx = isElement ? getSx(element) : info ? getSx(info) : 1
   const sy = isElement ? getSy(element) : info ? getSy(info) : 1
 
-  const touches = (event as TouchEvent).touches ||
-    (event as TouchEvent).changedTouches || [event]
+  const touches = (event as TouchEvent)[
+    event.type === "touchend" && !useTouches ? "changedTouches" : "touches"
+  ] || [event]
   const _touches = []
   const length = touches.length
   // eslint-disable-next-line functional/no-let
