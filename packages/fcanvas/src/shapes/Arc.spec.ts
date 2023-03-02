@@ -30,7 +30,7 @@ describe("Arc", () => {
     layer.draw()
 
     expect(
-      await compareLayerWithImage(layer, "arc_50-80_fill:green.png")
+      await compareLayerWithImage(layer, "arc_50-80_fill_green.png")
     ).toEqual(true)
   })
 
