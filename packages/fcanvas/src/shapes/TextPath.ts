@@ -22,17 +22,10 @@ type PersonalAttrs = {
   fontFamily?: string
   fontSize?: number
   fontStyle?: string
-  letterSpacing?: number
-  textDecoration?: "line-through" | "underline" | ""
   fontVariant?: "normal" | "small-caps"
+  textDecoration?: "line-through" | "underline" | "none"
   align?: "left" | "center" | "right" | "justify"
-  verticalAlign?: "top" | "middle" | "bottom"
-  padding?: number
-  lineHeight?: number
-  wrap?: "word" | "char" | "none"
-  ellipsis?: boolean
-  width?: number | "auto"
-  height?: number | "auto"
+  letterSpacing?: number
 
   textBaseline?: CanvasTextBaseline
 }

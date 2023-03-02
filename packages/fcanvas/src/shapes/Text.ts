@@ -13,7 +13,7 @@ type PersonalAttrs = {
   fontSize?: number
   fontStyle?: "normal" | "bold" | "italic" | "italic bold"
   fontVariant?: "normal" | "small-caps"
-  textDecoration?: "line-through" | "underline" | ""
+  textDecoration?: "line-through" | "underline" | "none"
   text: string
   align?: "left" | "center" | "right" | "justify"
   verticalAlign?: "top" | "middle" | "bottom"
@@ -22,6 +22,7 @@ type PersonalAttrs = {
   wrap?: "word" | "char" | "none"
   ellipsis?: boolean
   letterSpacing?: number
+  textBaseline?: CanvasTextBaseline
   width?: number | "auto"
   height?: number | "auto"
 }
@@ -107,7 +108,7 @@ export class Text extends Shape<PersonalAttrs> {
 
     context.font = this.getContextFont()
 
-    context.textBaseline = "middle"
+    context.textBaseline = this.$.textBaseline ?? "middle"
 
     context.textAlign = "left"
 

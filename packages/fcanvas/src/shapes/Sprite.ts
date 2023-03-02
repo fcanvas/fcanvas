@@ -52,8 +52,8 @@ export class Sprite<
   >
 
   private readonly frames: ComputedRef<(HTMLCanvasElement | OffscreenCanvas)[]>
-  private readonly currentFrameIndex: Ref<number>
-  private readonly currentFrame: ComputedRef<
+  public readonly currentFrameIndex: Ref<number>
+  public readonly currentFrame: ComputedRef<
     HTMLCanvasElement | OffscreenCanvas
   >
 
