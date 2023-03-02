@@ -13,10 +13,9 @@ import type { ReactiveType } from "../type/fn/ReactiveType"
 type PersonalAttrs = {
   image: CanvasImageSource | string
   crop?: Rect
-} & Partial<{
-  width: number
-  height: number
-}>
+  width?: number
+  height?: number
+}
 
 export function getValFromSource(val: SVGAnimatedLength | number) {
   if (typeof val === "number") return val
