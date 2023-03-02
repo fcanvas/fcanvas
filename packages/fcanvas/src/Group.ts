@@ -10,7 +10,7 @@ import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
-import { CONFIGS, isDOM } from "./configs"
+import { createContext2D, isDOM } from "./configs"
 import { _setCurrentShape } from "./currentShape"
 import type { DrawLayerAttrs } from "./helpers/drawLayer"
 import { drawLayer } from "./helpers/drawLayer"
@@ -66,7 +66,7 @@ export class Group<
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [CONTEXT_CACHE]: ReturnType<typeof CONFIGS.createContext2D>
+  private readonly [CONTEXT_CACHE]: ReturnType<typeof createContext2D>
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
@@ -95,7 +95,7 @@ export class Group<
       this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
     }
 
-    this[CONTEXT_CACHE] = CONFIGS.createContext2D(
+    this[CONTEXT_CACHE] = createContext2D(
       (!isDOM || unref(this.$.offscreen) !== false) as boolean
     )
 

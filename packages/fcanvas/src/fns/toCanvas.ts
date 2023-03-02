@@ -3,7 +3,7 @@ import type { Group } from "src/Group"
 import type { Layer } from "../Layer"
 import type { Shape } from "../Shape"
 import { Stage } from "../Stage"
-import { CONFIGS, isDOM } from "../configs"
+import { createContext2D, isDOM } from "../configs"
 import { BOUNDING_CLIENT_RECT, CANVAS_ELEMENT } from "../symbols"
 import type { Rect } from "../type/Rect"
 
@@ -46,7 +46,7 @@ export function toCanvas(
     fElement as Layer
   )[CANVAS_ELEMENT]
 
-  const ctx = CONFIGS.createContext2D(config?.offscreen as boolean)
+  const ctx = createContext2D(config?.offscreen as boolean)
   const { canvas } = ctx
 
   if (config?.width !== undefined) {
@@ -100,5 +100,6 @@ export function toCanvas(
 
   if (pixelRatioBk !== undefined) window.devicePixelRatio = pixelRatioBk
 
-  return canvas
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return canvas as unknown as any
 }

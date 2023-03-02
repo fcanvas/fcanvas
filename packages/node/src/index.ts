@@ -10,28 +10,26 @@ import { CONFIGS } from "fcanvas"
 // @ts-expect-error
 import { polyfillPath2D } from "path2d-polyfill"
 
-polyfillPath2D(global)
 Object.assign(global, {
   CanvasRenderingContext2D,
   DOMMatrix,
   Image,
   requestAnimationFrame: setImmediate,
-  cancelAnimationFrame: clearImmediate,
-  UIEvent: class {}
+  cancelAnimationFrame: clearImmediate
 })
+polyfillPath2D(global)
 
-Object.assign(CONFIGS, {
+const conf: typeof CONFIGS = {
   createCanvas() {
-    return createCanvas(300, 150)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return createCanvas(300, 150) as unknown as any
   },
   createOffscreenCanvas(width = 300, height = 150) {
-    return createCanvas(width, height)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return createCanvas(width, height) as unknown as any
   },
-  registerFont,
-  DOMMatrix,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Path2D: (global as unknown as any).Path2D,
-  Image
-})
+  registerFont
+}
+Object.assign(CONFIGS, conf)
 
 export * from "fcanvas"
