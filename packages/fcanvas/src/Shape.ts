@@ -6,7 +6,7 @@ import { watchEffect } from "src/fns/watch"
 import { APIEvent } from "./apis/APIEvent"
 import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
-import { CONFIGS, isDOM } from "./configs"
+import { createContext2D, isDOM } from "./configs"
 import { _setCurrentShape } from "./currentShape"
 import { getImage } from "./fns/loadImage"
 import { convertToDegrees } from "./helpers/convertToDegrees"
@@ -131,7 +131,7 @@ export class Shape<
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
-  private readonly [CONTEXT_CACHE]: ReturnType<typeof CONFIGS.createContext2D>
+  private readonly [CONTEXT_CACHE]: ReturnType<typeof createContext2D>
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
@@ -161,7 +161,7 @@ export class Shape<
       this.$ = reactive(attrs as CommonShapeAttrs<PersonalAttrs>)
     }
 
-    this[CONTEXT_CACHE] = CONFIGS.createContext2D(
+    this[CONTEXT_CACHE] = createContext2D(
       (!isDOM || unref(this.$.offscreen) !== false) as boolean
     )
 
