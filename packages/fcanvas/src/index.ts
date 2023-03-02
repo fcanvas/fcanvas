@@ -11,7 +11,6 @@ export * from "@vue/reactivity"
 export { NOOP } from "@vue/shared"
 export * from "./fns/watch/index"
 export * from "./fns/watch/scheduler"
-export { tryOnScopeDispose } from "./logic/tryOnScopeDispose"
 
 // global
 export {

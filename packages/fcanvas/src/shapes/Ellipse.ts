@@ -1,9 +1,9 @@
 import { Shape } from "../Shape"
+import { convertToRadial } from "../helpers/convertToRadial"
 import { pointInEllipse } from "../helpers/pointInEllipse"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
-import { convertToRadial } from "../helpers/convertToRadial"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PersonalAttrs = {

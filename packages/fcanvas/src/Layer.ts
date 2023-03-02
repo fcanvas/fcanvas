@@ -251,8 +251,8 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   }
 
   public add(node: Shape | Group) {
-    // eslint-disable-next-line functional/no-let
-    let results: ShallowReactive<Set<Shape | Group<Shape>>>
+    // eslint-disable-next-line functional/no-let, @typescript-eslint/no-explicit-any
+    let results: ShallowReactive<Set<Shape | Group<any, any>>>
     if (this[CHILD_NODE].size < (results = super.add(node)).size) {
       // success
       node._parents++

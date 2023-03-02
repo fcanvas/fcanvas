@@ -1,6 +1,6 @@
 import { Layer, RegularPolygon, Stage } from "."
 
-const stage = new Stage({ height: 300}).mount("#app")
+const stage = new Stage({ height: 300 }).mount("#app")
 
 const layer = new Layer()
 stage.add(layer)
