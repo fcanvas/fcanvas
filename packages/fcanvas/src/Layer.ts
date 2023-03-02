@@ -7,6 +7,7 @@ import { computed, reactive, ref, unref } from "@vue/reactivity"
 
 import type { Group } from "./Group"
 import type { Shape } from "./Shape"
+import type { Stage } from "./Stage"
 import { APIGroup } from "./apis/APIGroup"
 import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
@@ -277,6 +278,10 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     const { width, height } = this[CANVAS_ELEMENT]
 
     return pointInBox(x, y, xd, yd, width, height)
+  }
+
+  public addTo(stage: Stage) {
+    stage.add(this)
   }
 
   public destroy(): void {

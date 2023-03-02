@@ -6,6 +6,7 @@ import type {
 import { computed, reactive, unref } from "@vue/reactivity"
 import { watch } from "src/fns/watch"
 
+import type { Layer } from "./Layer"
 import type { Shape } from "./Shape"
 import { APIGroup } from "./apis/APIGroup"
 import { UIEvent } from "./apis/UIEvent"
@@ -210,7 +211,7 @@ export class Group<
     return false
   }
 
-  public add(node: ChildNode) {
+  public add(node: ChildNode | Group) {
     // eslint-disable-next-line functional/no-let
     let results: ShallowReactive<Set<ChildNode>>
     if (this[CHILD_NODE].size < (results = super.add(node)).size) {
@@ -221,7 +222,7 @@ export class Group<
     return results
   }
 
-  public delete(node: ChildNode) {
+  public delete(node: ChildNode | Group) {
     if (super.delete(node)) {
       // success
       node._parents--
@@ -231,6 +232,10 @@ export class Group<
     }
 
     return false
+  }
+
+  public addTo(parent: Layer | Group) {
+    parent.add(this)
   }
 
   public destroy() {
