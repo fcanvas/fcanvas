@@ -3,6 +3,8 @@ import { computed, reactive, toRaw, unref } from "@vue/reactivity"
 import type gsap from "gsap"
 import { watchEffect } from "src/fns/watch"
 
+import type { Layer } from "./Layer"
+import type { Group } from "./Group"
 import { APIEvent } from "./apis/APIEvent"
 import { UIEvent } from "./apis/UIEvent"
 import { effectScopeFlat } from "./apis/effectScopeFlat"
@@ -548,6 +550,10 @@ export class Shape<
     const { x: xd, y: yd, width, height } = this.getBoundingClientRect()
 
     return pointInBox(x, y, xd, yd, width, height)
+  }
+
+  public addTo(parent: Layer | Group) {
+    parent.add(this)
   }
 
   public destroy() {
