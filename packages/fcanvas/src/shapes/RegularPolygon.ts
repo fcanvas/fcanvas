@@ -20,6 +20,7 @@ export class RegularPolygon extends Shape<PersonalAttrs> {
     // eslint-disable-next-line functional/no-let
     for (let n = 1; n < points.length; n++)
       context.lineTo(points[n].x, points[n].y)
+    context.lineTo(points[0].x, points[0].y)
 
     this.fillStrokeScene(context)
   }
