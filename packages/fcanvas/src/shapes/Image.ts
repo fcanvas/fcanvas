@@ -10,6 +10,7 @@ import type { Rect } from "../type/Rect"
 import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PersonalAttrs = {
   image: CanvasImageSource | string
   crop?: Rect

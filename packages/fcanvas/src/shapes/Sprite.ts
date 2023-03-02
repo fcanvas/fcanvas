@@ -53,9 +53,7 @@ export class Sprite<
 
   private readonly frames: ComputedRef<(HTMLCanvasElement | OffscreenCanvas)[]>
   public readonly currentFrameIndex: Ref<number>
-  public readonly currentFrame: ComputedRef<
-    HTMLCanvasElement | OffscreenCanvas
-  >
+  public readonly currentFrame: ComputedRef<HTMLCanvasElement | OffscreenCanvas>
 
   private readonly currentDelay: ComputedRef<number>
 

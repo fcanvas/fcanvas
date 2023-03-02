@@ -43,7 +43,8 @@ export type CommonGroupAttrs = Partial<Offset> &
   }
 
 export class Group<
-  ChildNode extends Shape = Shape,
+  // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
+  ChildNode extends Shape | Group = Shape | Group<any, any>,
   PersonalAttrs extends CommonGroupAttrs = CommonGroupAttrs
 > extends APIGroup<
   ChildNode,
@@ -211,7 +212,7 @@ export class Group<
     return false
   }
 
-  public add(node: ChildNode | Group) {
+  public add(node: ChildNode) {
     // eslint-disable-next-line functional/no-let
     let results: ShallowReactive<Set<ChildNode>>
     if (this[CHILD_NODE].size < (results = super.add(node)).size) {
@@ -222,7 +223,7 @@ export class Group<
     return results
   }
 
-  public delete(node: ChildNode | Group) {
+  public delete(node: ChildNode) {
     if (super.delete(node)) {
       // success
       node._parents--
@@ -235,7 +236,8 @@ export class Group<
   }
 
   public addTo(parent: Layer | Group) {
-    parent.add(this)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    parent.add(this as unknown as any)
   }
 
   public destroy() {
