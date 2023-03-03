@@ -166,6 +166,8 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     | null = null
 
   public get [CONTEXT_CACHE]() {
+    if (this._context2d?.canvas === this[CANVAS_ELEMENT]) return this._context2d
+
     return (this._context2d = this[CANVAS_ELEMENT].getContext("2d") as
       | CanvasRenderingContext2D
       | OffscreenCanvasRenderingContext2D)
