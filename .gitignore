@@ -8,3 +8,4 @@ coverage
 .husky
 /packages/**/dist
 /docs
+.vitepress/cache/
