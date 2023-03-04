@@ -46,16 +46,21 @@ export default defineConfig({
 
 function nav() {
   return [
-    { text: "Guide", link: "/guide/introduction", activeMatch: "/guide/" },
+    // { text: "Guide", link: "/guide/introduction", activeMatch: "/guide/" },
     {
       text: "Shapes",
-      link: "/guide/shapes/",
-      activeMatch: "/guide/shapes/"
+      activeMatch: "/guide/shapes/",
+      items: shapeItems()
     },
     {
-      text: "Runtime API",
-      link: "/api/",
-      activeMatch: "/api/"
+      text: "Functions",
+      activeMatch: "/guide/functions/",
+      items: functionItems()
+    },
+    {
+      text: "Plugins",
+      activeMatch: "/guide/plugins",
+      items: pluginItems()
     },
     {
       text: version,
@@ -70,6 +75,51 @@ function nav() {
         }
       ]
     }
+  ]
+}
+
+function shapeItems() {
+  return [
+    { text: "Arc", link: "/guide/shapes/Arc" },
+    { text: "Arrow", link: "/guide/shapes/Arrow" },
+    { text: "Circle", link: "/guide/shapes/Circle" },
+    { text: "Custom", link: "/guide/shapes/Custom" },
+    { text: "Ellipse", link: "/guide/shapes/Ellipse" },
+    { text: "Image", link: "/guide/shapes/Image" },
+    { text: "ImageRepeat", link: "/guide/shapes/ImageRepeat" },
+    { text: "Label", link: "/guide/shapes/Label" },
+    { text: "Line-Blob", link: "/guide/shapes/Line-Blob" },
+    { text: "Line-Polygon", link: "/guide/shapes/Line-Polygon" },
+    { text: "Line-Spline", link: "/guide/shapes/Line-Spline" },
+    { text: "Line", link: "/guide/shapes/Line" },
+    { text: "Path", link: "/guide/shapes/Path" },
+    { text: "Rect", link: "/guide/shapes/Rect" },
+    { text: "RegularPolygon", link: "/guide/shapes/RegularPolygon" },
+    { text: "Ring", link: "/guide/shapes/Ring" },
+    { text: "Sprite", link: "/guide/shapes/Sprite" },
+    { text: "Star", link: "/guide/shapes/Star" },
+    { text: "Tag", link: "/guide/shapes/Tag" },
+    { text: "Text", link: "/guide/shapes/Text" },
+    { text: "TextPath", link: "/guide/shapes/TextPath" },
+    { text: "Wedge", link: "/guide/shapes/Wedge" }
+  ]
+}
+function pluginItems() {
+  return [
+    { text: "@fcanvas/animate", link: "/guide/plugins/animate" },
+    { text: "@fcanvas/communicate", link: "/guide/plugins/communicate" },
+    { text: "@fcanvas/node", link: "/guide/plugins/node" },
+    { text: "@fcanvas/tile", link: "/guide/plugins/tile" },
+    { text: "@fcanvas/worker", link: "/guide/plugins/worker" }
+  ]
+}
+function functionItems() {
+  return [
+    {
+      text: "Reactivity Watch API",
+      link: "/guide/functions/reactivity-watch-api"
+    },
+    { text: "Other Utils", link: "/guide/functions/other-utils" }
   ]
 }
 
@@ -93,6 +143,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         },
         { text: "Computed", link: "/guide/essentials/computed" },
         { text: "Watchers", link: "/guide/essentials/watchers" },
+        { text: "Events", link: "/guide/essentials/events" },
         { text: "Stage", link: "/guide/essentials/Stage" },
         { text: "Layer", link: "/guide/essentials/Layer" },
         { text: "Group", link: "/guide/essentials/Group" },
@@ -102,30 +153,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
     {
       text: "Shapes",
       collapsed: false,
-      items: [
-        { text: "Arc", link: "/guide/shapes/Arc" },
-        { text: "Arrow", link: "/guide/shapes/Arrow" },
-        { text: "Circle", link: "/guide/shapes/Circle" },
-        { text: "Custom", link: "/guide/shapes/Custom" },
-        { text: "Ellipse", link: "/guide/shapes/Ellipse" },
-        { text: "Image", link: "/guide/shapes/Image" },
-        { text: "ImageRepeat", link: "/guide/shapes/ImageRepeat" },
-        { text: "Label", link: "/guide/shapes/Label" },
-        { text: "Line-Blob", link: "/guide/shapes/Line-Blob" },
-        { text: "Line-Polygon", link: "/guide/shapes/Line-Polygon" },
-        { text: "Line-Spline", link: "/guide/shapes/Line-Spline" },
-        { text: "Line", link: "/guide/shapes/Line" },
-        { text: "Path", link: "/guide/shapes/Path" },
-        { text: "Rect", link: "/guide/shapes/Rect" },
-        { text: "RegularPolygon", link: "/guide/shapes/RegularPolygon" },
-        { text: "Ring", link: "/guide/shapes/Ring" },
-        { text: "Sprite", link: "/guide/shapes/Sprite" },
-        { text: "Star", link: "/guide/shapes/Star" },
-        { text: "Tag", link: "/guide/shapes/Tag" },
-        { text: "Text", link: "/guide/shapes/Text" },
-        { text: "TextPath", link: "/guide/shapes/TextPath" },
-        { text: "Wedge", link: "/guide/shapes/Wedge" }
-      ]
+      items: shapeItems()
     },
     {
       text: "Styling",
@@ -145,13 +173,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
     {
       text: "Functions",
       collapsed: false,
-      items: [
-        {
-          text: "Reactivity Watch API",
-          link: "/guide/functions/reactivity-watch-api"
-        },
-        { text: "Other Utils", link: "/guide/functions/other-utils" }
-      ]
+      items: functionItems()
     },
     {
       text: "Reusability",
@@ -161,13 +183,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
     {
       text: "Plugins",
       collapsed: false,
-      items: [
-        { text: "@fcanvas/animate", link: "/guide/plugins/animate" },
-        { text: "@fcanvas/communicate", link: "/guide/plugins/communicate" },
-        { text: "@fcanvas/node", link: "/guide/plugins/node" },
-        { text: "@fcanvas/tile", link: "/guide/plugins/tile" },
-        { text: "@fcanvas/worker", link: "/guide/plugins/worker" }
-      ]
+      items: pluginItems()
     },
     {
       text: "Extra Topics",
