@@ -38,10 +38,8 @@ jobs:
           pnpm build
 
       - name: Build docs🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
-        run: pnpm run docs
+        run: pnpm docs:build
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
-        with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: docs # The folder the action should deploy.
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v1
