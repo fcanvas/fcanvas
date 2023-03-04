@@ -1,6 +1,6 @@
 {
   "name": "@fcanvas/tile",
-  "version": "1.1.0-rc.25",
+  "version": "1.1.0-rc.26",
   "description": "Plugin that load tile for fcanvas",
   "scripts": {
     "build": "tsup",
