@@ -45,7 +45,7 @@ function exportFile(path: string) {
   return `export { ${[...new Set(exports)].join(", ")} } from "${path.replace(
     ".ts",
     ""
-  )}"`
+  ).replace(/\\/g, '/')}"`
 }
 
 writeFileSync(
