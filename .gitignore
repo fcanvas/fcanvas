@@ -7,5 +7,6 @@ coverage
 *.log
 .husky
 /packages/**/dist
-/docs
-.vitepress/cache/
+.vitepress/cache
+docs/.vitepress/cache
+docs/.vitepress/dist
