@@ -2,9 +2,9 @@ import normalize from "path-normalize"
 
 // cache
 const imageMap = new Map<string, HTMLImageElement>()
-function loadImage(url: string, get?: true): Promise<HTMLImageElement>
+function loadImage(url: string, get?: false): Promise<HTMLImageElement>
 // eslint-disable-next-line no-redeclare
-function loadImage(url: string, get: false): HTMLImageElement
+function loadImage(url: string, get: true): HTMLImageElement
 
 // eslint-disable-next-line no-redeclare
 function loadImage(
