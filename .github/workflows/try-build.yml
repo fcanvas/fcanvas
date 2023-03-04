@@ -41,3 +41,6 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Docs
+        run: pnpm docs:build
