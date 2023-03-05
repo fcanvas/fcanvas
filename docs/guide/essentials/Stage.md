@@ -55,7 +55,7 @@ interface Filter {
 
 A Proxy that contains all the settings allowing to get/set the value of props and react automatically
 
-```tsx
+```ts
 stage.$.container = "#app"
 
 console.log(stage.$.container) // "#app"
@@ -67,7 +67,7 @@ console.log(stage.$.container) // "#app"
 
 This `computed` returns the manifest size of `Stage`
 
-```tsx
+```ts
 const { width, height } = stage.size
 ```
 
@@ -77,13 +77,13 @@ const { width, height } = stage.size
 
 This function is a shortcut to set `container`
 
-```tsx
+```ts
 mount(query: string | HTMLElement): this;
 ```
 
 it is equivalent to:
 
-```tsx
+```ts
 stage.$.container = query
 ```
 
@@ -91,7 +91,7 @@ stage.$.container = query
 
 This function returns the size and position of the expression of `Stage` it's the same as [Element.getBoundingClientRect](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)
 
-```tsx
+```ts
 getBoundingClientRect(): {
   width: number
   height: number
@@ -104,7 +104,7 @@ getBoundingClientRect(): {
 
 Add [Layer](./Layer) to `Stage`
 
-```tsx
+```ts
 add(node: Layer): ChildNodes
 ```
 
@@ -112,6 +112,6 @@ add(node: Layer): ChildNodes
 
 Destroy `Stage`
 
-```tsx
+```ts
 destroy(): void
 ```

@@ -26,6 +26,7 @@ In addition, this shape also provides a few other parameters:
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Circle } from "fcanvas"
 
@@ -41,5 +42,4 @@ const circle = new Circle({
   strokeWidth: 4
 }).addTo(layer)
 ```
-
-<Preview />
+:::

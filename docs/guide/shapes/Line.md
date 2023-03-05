@@ -40,6 +40,7 @@ In addition, this shape also provides a few other parameters:
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Line } from "fcanvas"
 
@@ -80,5 +81,4 @@ const blueLine = new Line({
   dash: [29, 20, 0.001, 20]
 }).addTo(layer)
 ```
-
-<Preview />
+:::

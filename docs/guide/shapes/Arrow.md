@@ -45,6 +45,7 @@ In addition, this shape also provides a few other parameters:
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Arrow } from "fcanvas"
 
@@ -63,5 +64,4 @@ const arrow = new Arrow({
 })
 .addTo(layer)
 ```
-
-<Preview />
+:::

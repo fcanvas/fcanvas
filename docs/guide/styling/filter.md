@@ -43,7 +43,7 @@ Adjusts the contrast of the input image. A value of `0%` makes the image grey, `
 
 ### dropShadow
 
-```tsx
+```ts
 interface DropShadow {
   x?: number
   y?: number

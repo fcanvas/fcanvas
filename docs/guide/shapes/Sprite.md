@@ -44,6 +44,7 @@ interface AnimationFrames {
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Sprite, watch } from "fcanvas"
 
@@ -89,5 +90,4 @@ window.addEventListener("click", () => {
   })
 })
 ```
-
-<Preview />
+:::

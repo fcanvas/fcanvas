@@ -1,0 +1,21 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vitepress": "1.0.0-alpha.49",
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@types/markdown-it-container": "^2.0.5",
+    "markdown-it-container": "^3.0.0"
+  }
+}

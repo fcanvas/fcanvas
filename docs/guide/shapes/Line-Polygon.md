@@ -10,6 +10,7 @@ Flat array of numbers should work faster and use less memory than array of objec
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Line } from "fcanvas"
 
@@ -24,5 +25,4 @@ const poly = new Line({
   closed: true
 }).addTo(layer)
 ```
-
-<Preview />
+:::

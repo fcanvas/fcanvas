@@ -1,5 +1,6 @@
 import { DefaultTheme, defineConfig } from "vitepress"
 import { version } from "../../package.json"
+import mdItContainer from "markdown-it-container"
 
 export default defineConfig({
   lang: "en-US",
@@ -15,6 +16,25 @@ export default defineConfig({
   markdown: {
     headers: {
       level: [0, 0]
+    },
+    config(md) {
+      md.use(mdItContainer, "preview", {
+        validate(params) {
+          return params.trim().match(/^preview$/)
+        },
+
+        render(tokens, idx) {
+          var m = tokens[idx].info.trim().match(/^preview$/)
+
+          if (tokens[idx].nesting === 1) {
+            // opening tag
+            return `<Preview>`
+          } else {
+            // closing tag
+            return "</Preview>"
+          }
+        }
+      })
     }
   },
 

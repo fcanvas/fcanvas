@@ -40,6 +40,7 @@ In addition, this shape also provides a few other parameters:
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Text, TextPath } from "fcanvas"
 
@@ -56,5 +57,4 @@ const textpath = new TextPath({
   data: "M10,10 C0,0 10,150 100,100 S300,150 5.0.300"
 }).addTo(layer)
 ```
-
-<Preview />
+:::

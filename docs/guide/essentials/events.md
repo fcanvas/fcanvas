@@ -23,6 +23,8 @@ off(name: string, cb?: (event: Event) => void): void
 ```
 
 Demo:
+
+:::preview
 ```ts
 import { Stage, Layer, Circle } from "fcanvas"
 
@@ -39,4 +41,5 @@ circle.on("click", () => {
   circle.$.fill = "blue"
 })
 ```
-<Preview />
+:::
+

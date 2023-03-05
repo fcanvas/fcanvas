@@ -27,6 +27,7 @@ In addition, this shape also provides a few other parameters:
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, RegularPolygon } from "fcanvas"
 
@@ -43,5 +44,4 @@ const hexagon = new RegularPolygon({
   strokeWidth: 4
 }).addTo(layer)
 ```
-
-<Preview />
+:::
