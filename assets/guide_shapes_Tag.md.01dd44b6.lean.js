@@ -1,0 +1,1 @@
+import{_ as t,o as e,c as a,a as d}from"./app.1366efc1.js";const g=JSON.parse('{"title":"Tag Shape","description":"","frontmatter":{},"headers":[],"relativePath":"guide/shapes/Tag.md","lastUpdated":1678014340000}'),o={name:"guide/shapes/Tag.md"},r=d("",8),s=[r];function i(n,c,h,p,l,u){return e(),a("div",null,s)}const m=t(o,[["render",i]]);export{g as __pageData,m as default};
