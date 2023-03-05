@@ -554,6 +554,7 @@ export class Shape<
 
   public addTo(parent: Layer | Group) {
     parent.add(this)
+    return this
   }
 
   public destroy() {

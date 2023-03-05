@@ -238,6 +238,7 @@ export class Group<
   public addTo(parent: Layer | Group) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parent.add(this as unknown as any)
+    return this
   }
 
   public destroy() {
