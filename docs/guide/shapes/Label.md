@@ -16,6 +16,7 @@ To create a text label with `fcanvas`, which can be used for creating text with 
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Ellipse, Label, Tag, Text } from "fcanvas"
 
@@ -93,5 +94,4 @@ layer.add(tooltip)
 layer.add(labelLeft)
 layer.add(simpleLabel)
 ```
-
-<Preview />
+:::

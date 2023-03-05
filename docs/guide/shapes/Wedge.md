@@ -33,6 +33,7 @@ In addition, this shape also provides a few other parameters:
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Wedge } from "fcanvas"
 
@@ -50,5 +51,4 @@ const wedge = (wedge = new Wedge({
   rotation: -120
 }).addTo(layer))
 ```
-
-<Preview />
+:::

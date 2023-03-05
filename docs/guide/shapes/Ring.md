@@ -29,6 +29,7 @@ All properties are inherited from [Arc](/guide/shapes/Arc)
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Ring } from "fcanvas"
 
@@ -45,5 +46,4 @@ const ring = new Ring({
   strokeWidth: 4
 }).addTo(layer)
 ```
-
-<Preview />
+:::

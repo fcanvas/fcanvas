@@ -54,7 +54,7 @@ This option allows to fill with complex things like images, canvas.
 
 See more at: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createPattern
 
-```tsx
+```ts
 interface FillPattern extends TransformOptions {
   image: CanvasImageSource | string
   repeat?: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
@@ -76,7 +76,7 @@ This option of the Canvas 2D API creates a gradient along the line connecting tw
 
 See more at: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient
 
-```tsx
+```ts
 interface FillModelLinearGradient {
   start: { x: number; y: number }
   end: { x: number; y: number }
@@ -96,7 +96,7 @@ This option of the Canvas 2D API creates a radial gradient using the size and co
 
 See more at: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient
 
-```tsx
+```ts
 interface FillModelRadialGradient {
   start: { x: number; y: number }
   startRadius: number
@@ -118,7 +118,7 @@ interface FillModelRadialGradient {
 
 This option allows shading an image
 
-```tsx
+```ts
 interface Shadow {
   x?: number
   y?: number
@@ -140,53 +140,65 @@ interface Shadow {
 
 A Proxy that contains all the settings allowing to get/set the value of props and react automatically
 
-```tsx
+```ts
 shape.$.x = 100
 
 console.log(shape.$.x) // 100
 ```
 
 ## Protected Methods
+
 These functions are only available when you customize or inherit `Shape`
+
 ### getFill(ctx)
+
 This function will return a `FillStyle` that can be filled based on the option set to `Shape`
-```tsx
+
+```ts
 getFill(ctx: Canvas2D): FillStyle | void
 ```
 
 ### fillScene(ctx: Canvas2D, path?: Path2D)
+
 Fill `Shape` optionally and if `path` exists it will fill as specified by `path`
 
 See more: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fill#specifying_a_path_and_a_fillrule
 
-```tsx
+```ts
 fillScene(ctx: Canvas2D, path?: Path2D): void
 ```
 
 ### getStroke(ctx: Canvas2D)
+
 Returns the possible value of `stroke` based on the option of `Shape`
 
 ### strokeScene(ctx: Canvas2D)
+
 Draw border
-```tsx
+
+```ts
 strokeScene(ctx: Canvas2D): void
 ```
 
 ### fillStrokeScene(ctx: Canvas2D): void
+
 Do `fillScene`, `strokeScene` and optionally shader. It depends on setting `shadowForStrokeEnabled`, `fillAfterStrokeEnabled` to decide the order in which to do these 3 things
-```tsx
+
+```ts
 fillStrokeScene(ctx: Canvas2D): void
 ```
 
 ### getSize()
+
 Returns the size of the shape
 
-## Methtods 
+## Methtods
 
 ### getBoundingClientRect()
+
 This function returns the size and position of the expression of `Stage` it's the same as [Element.getBoundingClientRect](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)
 
-```tsx
+```ts
 getBoundingClientRect(): {
   width: number
   height: number
@@ -196,27 +208,35 @@ getBoundingClientRect(): {
 ```
 
 ### draw()
+
 Make `Shape` draw once
 
 ### isPressedPoint(x, y)
+
 Check if the point with coordinates `{x,y}` is in `Shape` or not
-```tsx
+
+```ts
 isPressedPoint(x: number, y: number): boolean
 ```
 
 ### addTo(layer)
+
 Where to add `Layer`
-```tsx
+
+```ts
 addTo(stage: Layer): void
 ```
 
 it is equivalent to
-```tsx
+
+```ts
 layer.add(layer)
 ```
 
 ### destroy()
+
 Destroy `Shape`
-```tsx
+
+```ts
 destroy(): void
 ```

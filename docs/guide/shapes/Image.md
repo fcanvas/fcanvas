@@ -51,6 +51,7 @@ The `crop` feature provided by this component is very simple. If you need more p
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Image, loadImage } from "fcanvas"
 
@@ -63,5 +64,4 @@ const image = new Image({
   image: await loadImage("https://shin.is-a.dev/favicon.ico")
 }).addTo(layer)
 ```
-
-<Preview />
+:::

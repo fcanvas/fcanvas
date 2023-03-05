@@ -8,6 +8,7 @@ Flat array of numbers should work faster and use less memory than array of objec
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, Line } from "fcanvas"
 
@@ -52,5 +53,4 @@ const blueLine = new Line({
   tension: 0.7
 }).addTo(layer)
 ```
-
-<Preview />
+:::

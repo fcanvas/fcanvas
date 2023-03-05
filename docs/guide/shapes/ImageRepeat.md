@@ -53,6 +53,7 @@ The `crop` feature provided by this component is very simple. If you need more p
 
 ## Demo
 
+:::preview
 ```ts
 import { Stage, Layer, ImageRepeat, loadImage } from "fcanvas"
 
@@ -68,5 +69,4 @@ const image = new ImageRepeat({
   scrollTop: 20
 }).addTo(layer)
 ```
-
-<Preview />
+:::
