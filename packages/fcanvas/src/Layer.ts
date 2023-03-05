@@ -284,6 +284,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
   public addTo(stage: Stage) {
     stage.add(this)
+    return this
   }
 
   public destroy(): void {
