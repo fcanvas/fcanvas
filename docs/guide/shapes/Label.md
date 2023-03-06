@@ -23,27 +23,32 @@ import { Stage, Layer, Ellipse, Label, Tag, Text } from "fcanvas"
 const stage = new Stage().mount("#app")
 const layer = new Layer().addTo(stage)
 
+
 const tooltip = new Label({
   x: 170,
-  y: 75,
+  y: 75
   opacity: 0.75
-})
+}).addTo(layer)
 
 new Tag({
+  x: 0,
+  y: 0,
   fill: "black",
   pointerDirection: "down",
   pointerWidth: 10,
   pointerHeight: 10,
   lineJoin: "round",
-  shadowColor: "black",
-  shadowBlur: 10,
-  shadowOffsetX: 10,
-  shadowOffsetY: 10,
-  shadowOpacity: 0.5
+  shadow: {
+    x: 10,
+    y: 10,
+    blur: 10,
+    color: "red"
+  }
 }).addTo(tooltip)
 new Text({
+  x: 0,
+  y: 0,
   text: "Tooltip pointing down",
-  fontFamily: "Calibri",
   fontSize: 18,
   padding: 5,
   fill: "white"
@@ -57,6 +62,8 @@ const labelLeft = new Label({
 })
 
 new Tag({
+  x: 0,
+  y: 0,
   fill: "green",
   pointerDirection: "left",
   pointerWidth: 20,
@@ -64,6 +71,8 @@ new Tag({
   lineJoin: "round"
 }).addTo(labelLeft)
 new Text({
+  x: 0,
+  y: 0,
   text: "Label pointing left",
   fontFamily: "Calibri",
   fontSize: 18,
@@ -79,9 +88,13 @@ const simpleLabel = new Label({
 })
 
 new Tag({
+  x: 0,
+  y: 0,
   fill: "yellow"
 }).addTo(simpleLabel)
 new Text({
+  x: 0,
+  y: 0,
   text: "Simple label",
   fontFamily: "Calibri",
   fontSize: 18,
