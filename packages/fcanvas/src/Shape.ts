@@ -552,7 +552,8 @@ export class Shape<
     return pointInBox(x, y, xd, yd, width, height)
   }
 
-  public addTo(parent: Layer | Group) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public addTo(parent: Layer | Group<any, any>) {
     parent.add(this)
     return this
   }
