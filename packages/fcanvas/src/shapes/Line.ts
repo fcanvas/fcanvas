@@ -1,3 +1,5 @@
+import type { Offset } from "src/type/Offset"
+
 import { Shape } from "../Shape"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
@@ -66,7 +68,11 @@ function expandPoints(p: number[], tension: number) {
   return allPoints
 }
 
-export class Line<P extends PersonalAttrs = PersonalAttrs> extends Shape<P> {
+export class Line<
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  L extends Record<string, unknown> = {},
+  P extends PersonalAttrs & L = PersonalAttrs & L
+> extends Shape<P> {
   static readonly type: string = "Line"
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
@@ -131,8 +137,9 @@ export class Line<P extends PersonalAttrs = PersonalAttrs> extends Shape<P> {
     }
 
     // closed e.g. polygons and blobs
-    if (closed) this.strokeScene(context)
-    else this.fillStrokeScene(context)
+    // if (!closed) this.strokeScene(context)
+    // else this.fillStrokeScene(context)
+    this.fillStrokeScene(context)
   }
 
   constructor(
