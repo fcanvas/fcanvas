@@ -214,26 +214,28 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
   private stopWaitDraw?: WatchStopHandle
   public batchDraw() {
-    if (!this[WAIT_DRAWING]) {
-      this[WAIT_DRAWING] = true
-      this[ID_REQUEST_FRAME] = requestAnimationFrame(() => {
-        if (!this[WAIT_DRAWING]) return
+    if (this[WAIT_DRAWING] || this.stopWaitDraw) return
 
-        const changed = this.draw()
-        this[WAIT_DRAWING] = false
-        this._resolveTick?.()
+    this[WAIT_DRAWING] = true
+    this[ID_REQUEST_FRAME] = requestAnimationFrame(() => {
+      if (!this[WAIT_DRAWING]) return
 
-        if (!changed) {
+      const changed = this.draw()
+      this[WAIT_DRAWING] = false
+      this._resolveTick?.()
+
+      if (!changed) {
+        if (!this.stopWaitDraw) {
           this.stopWaitDraw = watch(
             () => this[COMPUTED_CACHE].value,
             () => this.batchDraw()
           )
-          return
         }
+        return
+      }
 
-        this.batchDraw()
-      })
-    }
+      this.batchDraw()
+    })
   }
 
   public stopDraw() {
