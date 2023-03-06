@@ -13,9 +13,10 @@ In addition, this shape also provides a few other parameters:
 
 ## Require Options
 
-| Name   | Type                                 | Description            |
-| ------ | ------------------------------------ | ---------------------- |
-| radius | `MayBeRef<{ x: number, y: number }>` | defines x and y radius |
+| Name    | Type               | Description      |
+| ------- | ------------------ | ---------------- |
+| radiusX | `MayBeRef<number>` | defines x radius |
+| radiusY | `MayBeRef<number>` | defines y radius |
 
 ### Inherit [Shape](/guide/essentials/Shape)
 
@@ -36,6 +37,8 @@ The `rotate` mentioned above is different from the `rotation` property that inhe
 
 ## Demo
 
+:::preview
+
 ```ts
 import { Stage, Layer, Ellipse } from "fcanvas"
 
@@ -53,4 +56,4 @@ const ellipse = new Ellipse({
 }).addTo(layer)
 ```
 
-<Preview />
+:::

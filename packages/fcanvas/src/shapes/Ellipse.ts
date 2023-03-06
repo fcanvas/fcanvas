@@ -7,10 +7,8 @@ import type { ReactiveType } from "../type/fn/ReactiveType"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PersonalAttrs = {
-  radius: {
-    x: number
-    y: number
-  }
+  radiusX: number
+  radiusY: number
   rotate?: number
 }
 
@@ -22,8 +20,8 @@ export class Ellipse extends Shape<PersonalAttrs> {
     context.ellipse(
       0,
       0,
-      this.$.radius.x,
-      this.$.radius.y,
+      this.$.radiusX,
+      this.$.radiusY,
       convertToRadial(this.$.rotate ?? 0),
       0,
       Math.PI * 2
@@ -40,8 +38,8 @@ export class Ellipse extends Shape<PersonalAttrs> {
 
   protected getSize() {
     return {
-      width: this.$.radius.x * 2,
-      height: this.$.radius.y * 2
+      width: this.$.radiusX * 2,
+      height: this.$.radiusY * 2
     }
   }
 
@@ -51,8 +49,8 @@ export class Ellipse extends Shape<PersonalAttrs> {
       y,
       this.$.x,
       this.$.y,
-      this.$.radius.x + this.getHitStroke(),
-      this.$.radius.y + this.getHitStroke()
+      this.$.radiusX + this.getHitStroke(),
+      this.$.radiusY + this.getHitStroke()
     )
   }
 }
