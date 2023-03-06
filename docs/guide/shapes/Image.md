@@ -59,8 +59,10 @@ const stage = new Stage().mount("#app")
 const layer = new Layer().addTo(stage)
 
 const image = new Image({
-  x: stage.size.width / 2,
-  y: stage.size.height / 2,
+  x: 0,
+  y: 0,
+  width: 150,
+  height: 150,
   image: await loadImage("https://shin.is-a.dev/favicon.ico")
 }).addTo(layer)
 ```
