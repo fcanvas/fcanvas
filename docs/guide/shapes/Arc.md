@@ -18,7 +18,7 @@ In addition, this shape also provides a few other parameters:
 | innerRadius | `MayBeRef<number>` | inner ring radius length   |
 | outerRadius | `MayBeRef<number>` | outer circumference length |
 
-### ### Inherit [Shape](/guide/essentials/Shape)
+### Inherit [Shape](/guide/essentials/Shape)
 
 | Name | Type               | Description |
 | ---- | ------------------ | ----------- |
@@ -32,7 +32,6 @@ In addition, this shape also provides a few other parameters:
 | angle     | `MayBeRef<number>`  | 360 degress | How many degrees is the angle from the x-axis?            |
 | clockwise | `MayBeRef<boolean>` | false       | The drawing angle should be clockwise or counterclockwise |
 
-## Demo
 :::preview
 ```ts
 import { Stage, Layer, Arc } from "fcanvas"
@@ -47,7 +46,7 @@ const arc = new Arc({
   outerRadius: 70,
   angle: 60,
   fill: "yellow",
-  stroke: "black",
+  stroke: "dark",
   strokeWidth: 4
 }).addTo(layer)
 ```
