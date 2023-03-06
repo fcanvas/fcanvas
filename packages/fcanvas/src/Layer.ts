@@ -254,7 +254,8 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     else this._rejectTick?.()
   }
 
-  public add(node: Shape | Group) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public add(node: Shape | Group<any, any>) {
     // eslint-disable-next-line functional/no-let, @typescript-eslint/no-explicit-any
     let results: ShallowReactive<Set<Shape | Group<any, any>>>
     if (this[CHILD_NODE].size < (results = super.add(node)).size) {
@@ -265,7 +266,8 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     return results
   }
 
-  public delete(node: Shape | Group) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public delete(node: Shape | Group<any, any>) {
     if (super.delete(node)) {
       // success
       node._parents--
