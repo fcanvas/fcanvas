@@ -91,12 +91,12 @@ canvas.style.width = `${rect.width}px`
 canvas.style.height = `${rect.height}px`
 ```
 
-### Using Group
+### [Using Group](#using_group)
 If you have a lot of elements that don't change often you can use [Group](/guide/essentials/Group) to group them together
 
 Reference: [Usage Group](/guide/essentials/Group)
 
-### Using WebWorker
+### [Using WebWorker](#using_webworker)
 
 It's a bit odd that WebWorker is here because in general using WebWorker doesn't bring any performance improvement it just keeps your application from getting blocked by heavy tasks.
 

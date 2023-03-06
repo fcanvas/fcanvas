@@ -8,16 +8,20 @@ The plugin provides support for using `fCanvas` in `WebWorker`
 
 View source code at: https://github.com/tachibana-shin/fcanvas-next
 
-### Install
-```bash
+## Install
+
+```bash:no-line-numbers
 pnpm add fcanvas @fcanvas/worker
 ```
 
-### Usage
+## Usage
+
 To use the power of `WebWorker` with fCanvas you first need to create a `Stage` on the main thread to `receive` signals from `Worker`:
 
-main.ts
-```ts
+then you just create another `Stage` in `Worker` and send it to `thread` and use `fCanvas` as usual:
+::: code-group
+
+```ts [main.ts]
 import Worker from "./worker?worker"
 
 import { portToWorker } from "@fcanvas/worker"
@@ -28,10 +32,7 @@ const stage = new Stage().mount("#container")
 portToWorker(worker, stage)
 ```
 
-then you just create another `Stage` in `Worker` and send it to `thread` and use `fCanvas` as usual:
-
-worker.ts
-```ts
+```ts [worker.ts]
 import {
   Circle,
   computed,
@@ -62,3 +63,5 @@ layer.add(circle)
 
 portToThread(stage)
 ```
+
+:::

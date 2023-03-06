@@ -4,12 +4,14 @@ Plugin that provides the ability to use animation for fcanvas
 
 View source code at: https://github.com/tachibana-shin/fcanvas-next
 
-### Install
-```bash
+## Install
+
+```bash:no-line-numbers
 pnpm add fcanvas @fcanvas/animate gsap
 ```
 
-### Usage
+## Usage
+
 ```ts
 import { Stage } from "fcanvas"
 import { installAnimate } from "@fcanvas/animate"
