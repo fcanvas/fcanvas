@@ -30,29 +30,31 @@ export class Tag extends Shape<PersonalAttrs> {
     let bottomRight = 0
     // eslint-disable-next-line functional/no-let
     let bottomLeft = 0
-    const ws2 = (this.$.width ?? 0) / 2
-    const hs2 = (this.$.height ?? 0) / 2
-    if (typeof cornerRadius === "number") {
-      topLeft = Math.min(cornerRadius, ws2, hs2)
-      topRight = topLeft
-      bottomRight = topLeft
-      bottomLeft = topLeft
-    } else if ((cornerRadius as number[]).length === 2) {
-      topLeft = Math.min((cornerRadius as number[])[0], ws2, hs2)
-      bottomRight = topLeft
+    if (cornerRadius) {
+      const ws2 = (this.$.width ?? 0) / 2
+      const hs2 = (this.$.height ?? 0) / 2
+      if (typeof cornerRadius === "number") {
+        topLeft = Math.min(cornerRadius, ws2, hs2)
+        topRight = topLeft
+        bottomRight = topLeft
+        bottomLeft = topLeft
+      } else if (cornerRadius.length === 2) {
+        topLeft = Math.min(cornerRadius[0], ws2, hs2)
+        bottomRight = topLeft
 
-      topRight = Math.min((cornerRadius as number[])[1], ws2, hs2)
-      bottomLeft = topRight
-    } else {
-      ;[topLeft, topRight, bottomRight, bottomLeft] = [
-        Math.min((cornerRadius as number[])[0], ws2, hs2),
+        topRight = Math.min(cornerRadius[1], ws2, hs2)
+        bottomLeft = topRight
+      } else {
+        ;[topLeft, topRight, bottomRight, bottomLeft] = [
+          Math.min(cornerRadius[0], ws2, hs2),
 
-        Math.min((cornerRadius as number[])[1], ws2, hs2),
+          Math.min(cornerRadius[1], ws2, hs2),
 
-        Math.min((cornerRadius as number[])[2], ws2, hs2),
+          Math.min(cornerRadius[2], ws2, hs2),
 
-        Math.min((cornerRadius as number[])[3], ws2, hs2)
-      ]
+          Math.min(cornerRadius[3], ws2, hs2)
+        ]
+      }
     }
 
     context.moveTo(topLeft, 0)
