@@ -41,6 +41,12 @@ export default defineConfig({
   },
 
   themeConfig: {
+    algolia: {
+      appId: "M60UI411I9",
+      apiKey: "71036bc063478de41dbb27d0ef29744c",
+      indexName: "fcanvas-js",
+    },
+
     logo: "/logo.svg",
     nav: nav(),
 
@@ -89,8 +95,8 @@ function nav() {
       text: version,
       items: [
         {
-          text: "Changelog",
-          link: "https://github.com/tachibana-shin/fcanvas-next/blob/main/CHANGELOG.md"
+          text: "Release Notes",
+          link: "https://github.com/tachibana-shin/fcanvas-next/releases/"
         },
         {
           text: "Contributing",
