@@ -25,8 +25,6 @@ export default defineConfig({
         },
 
         render(tokens, idx) {
-          var m = tokens[idx].info.trim().match(/^preview$/)
-
           if (tokens[idx].nesting === 1) {
             // opening tag
             return `<Preview>`
