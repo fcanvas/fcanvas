@@ -152,10 +152,10 @@ export class Tag extends Shape<PersonalAttrs> {
       case "left":
         // ARGH!!! I have no idea why should I used magic 1.5!!!!!!!!!
         x -= pointerWidth * 1.5
-        width += pointerWidth
+        width += pointerWidth /* 1 */ * 2
         break
       case "right":
-        width += pointerWidth * 1.5
+        width += pointerWidth * /* 1.5 */ 2.5
         break
     }
     return {

@@ -32,16 +32,6 @@ export class Label extends Group<Tag | Text> {
       for (const node of this[CHILD_NODE]) if (node instanceof Tag) return node
     })
     watchEffect(this.sync.bind(this))
-    watchEffect(() => {
-      const tag = this.tag.value
-
-      if (!tag) return
-
-      const { width, height } = tag[BOUNCE_CLIENT_RECT].value
-
-      this.$.width = width
-      this.$.height = height
-    })
 
     this[SCOPE].fOff()
   }
@@ -80,13 +70,8 @@ export class Label extends Group<Tag | Text> {
 
       tag.$.x = -x
       tag.$.y = -y
-      tag.$.width =
-        width +
-        (pointerDirection === "left" || pointerDirection === "right"
-          ? pointerWidth
-          : 0)
-      tag.$.height =
-        height
+      tag.$.width = width
+      tag.$.height = height
 
       text.$.x = -x
       text.$.y = -y

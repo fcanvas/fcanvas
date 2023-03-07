@@ -31,8 +31,8 @@ export function getClientRectGroup(
 
     const x = clientRect.x + attrX
     const y = clientRect.y + attrY
-    const width = clientRect.width + attrX
-    const height = clientRect.height + attrY
+    const width = clientRect.width + Math.abs(attrX)
+    const height = clientRect.height + Math.abs(attrY)
 
     if (x < rX) rX = x
     if (y < rY) rY = y
