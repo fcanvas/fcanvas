@@ -1,5 +1,6 @@
+import { convertToRadial } from "src/helpers/convertToRadial"
+
 import { Shape } from "../Shape"
-import { convertToDegrees } from "../helpers/convertToDegrees"
 import { pointInCircle } from "../helpers/pointInCircle"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
@@ -13,14 +14,16 @@ type PersonalAttrs = {
 }
 export class Wedge extends Shape<PersonalAttrs> {
   static readonly type = "Wedge"
+  static readonly _centroid = true
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
+    context.moveTo(0, 0)
     context.arc(
       0,
       0,
       this.$.radius,
       0,
-      convertToDegrees(this.$.angle),
+      convertToRadial(this.$.angle),
       this.$.clockwise
     )
     context.lineTo(0, 0)
