@@ -46,7 +46,7 @@ function getListenersAll(
     set.set(stage, listeners)
   })
   stage[CHILD_NODE]?.forEach((layer) => {
-    getListenersAll(layer, allListeners, false, isStage ? layer : undefined)
+    getListenersAll(layer, allListeners, false, isStage ? layer : stage)
   })
 
   return allListeners
