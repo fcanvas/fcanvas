@@ -8,7 +8,7 @@ import { withChild } from "./withChild"
 
 describe("withChildren", () => {
   test("should working with `Group`", async () => {
-    const group = new Group({ x: 100, y: 100 })
+    const group = new Group({ sync: true, x: 100, y: 100 })
     group.add(new Rect({ x: 0, y: 0, width: 1, height: 1 }))
     group.add(new Rect({ x: 1, y: 1, width: 1, height: 1 }))
     group.add(new Rect({ x: 2, y: 2, width: 1, height: 1 }))
@@ -33,7 +33,7 @@ describe("withChildren", () => {
     ])
   })
   test("should working with `ShallowRef<Group>`", async () => {
-    const group = new Group({ x: 100, y: 100 })
+    const group = new Group({ sync: true, x: 100, y: 100 })
     group.add(new Rect({ x: 0, y: 0, width: 1, height: 1 }))
     group.add(new Rect({ x: 1, y: 1, width: 1, height: 1 }))
     group.add(new Rect({ x: 2, y: 2, width: 1, height: 1 }))

@@ -39,7 +39,7 @@ describe("toCanvas", () => {
   })
 
   test("should work on Group", () => {
-    const group = new Group()
+    const group = new Group({ sync: true })
     group.add(
       new Rect({
         x: 0,
