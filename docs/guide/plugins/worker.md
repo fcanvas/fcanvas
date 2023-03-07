@@ -28,7 +28,7 @@ import { portToWorker } from "@fcanvas/worker"
 
 const worker = new Worker()
 
-const stage = new Stage().mount("#container")
+const stage = new Stage().mount("#app")
 portToWorker(worker, stage)
 ```
 

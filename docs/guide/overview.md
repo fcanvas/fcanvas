@@ -54,7 +54,7 @@ import { Stage, Layer, Circle } from "fcanvas"
 const stage = new Stage({
   width: 500,
   height: 500
-}).mount("#container") // selector of container <div>
+}).mount("#app") // selector of app <div>
 
 // then create layer
 const layer = new Layer()
@@ -183,7 +183,7 @@ import { Stage, Layer, Circle, Shape } from "fcanvas"
 import { installAnimate } from "@fcanvas/animate"
 installAnimate(Shape)
 
-const stage = new Stage().mount("#container")
+const stage = new Stage().mount("#app")
 const layer = new Layer()
 stage.add(layer)
 
