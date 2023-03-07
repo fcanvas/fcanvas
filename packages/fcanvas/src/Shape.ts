@@ -387,23 +387,35 @@ export class Shape<
       !config.skipTransform && existsTransform(this.$, false)
     if (applyTransform) {
       const isCache = !!this[CONTEXT_CACHE]
-      const x = width / 2
-      const y = height / 2
 
-      return transformedRect(
-        rect,
-        new DOMMatrix()
-          .scale(this.$.scale?.x, this.$.scale?.y)
-          .translate(x, y)
-          .rotate(convertToDegrees(this.$.rotation ?? 0))
-          .translate(-x, -y)
-          .translate(
-            (this.$.offset?.x ?? 0) + (isCache ? 0 : this.$.x),
-            (this.$.offset?.y ?? 0) + (isCache ? 0 : this.$.y)
-          )
-          .skewX(this.$.skewX)
-          .skewY(this.$.skewY)
-      )
+      const matrix = new DOMMatrix()
+      if (this.$.scale) matrix.scaleSelf(this.$.scale.x, this.$.scale.y)
+      if (this.$.rotation) {
+        const centroid = isCentroid(this)
+
+        // eslint-disable-next-line functional/no-let
+        let x: number, y: number
+        if (!centroid) {
+          x = width / 2
+          y = height / 2
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        if (!centroid) matrix.translateSelf(x!, y!)
+        matrix.rotateSelf(convertToDegrees(this.$.rotation))
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        if (!centroid) matrix.translateSelf(-x!, -y!)
+      }
+      if (this.$.offset) {
+        matrix.translateSelf(
+          (this.$.offset.x ?? 0) + (isCache ? 0 : this.$.x),
+          (this.$.offset.y ?? 0) + (isCache ? 0 : this.$.y)
+        )
+      }
+      if (this.$.skewX !== undefined) matrix.skewXSelf(this.$.skewX)
+      if (this.$.skewY !== undefined) matrix.skewYSelf(this.$.skewY)
+
+      return transformedRect(rect, matrix)
     }
 
     return rect
@@ -465,22 +477,37 @@ export class Shape<
     if (needUseTransform) {
       backupTransform = context.getTransform()
       const { width, height } = this.getRect()
-      const x = width / 2
-      const y = height / 2
 
-      context.setTransform(
-        new DOMMatrix(backupTransform.toString())
-          .scale(this.$.scale?.x, this.$.scale?.y)
-          .translate(x, y)
-          .rotate(convertToDegrees(this.$.rotation ?? 0))
-          .translate(-x, -y)
-          .translate(
-            (this.$.offset?.x ?? 0) + (isCache ? 0 : this.$.x),
-            (this.$.offset?.y ?? 0) + (isCache ? 0 : this.$.y)
-          )
-          .skewX(this.$.skewX)
-          .skewY(this.$.skewY)
-      )
+      const matrix = new DOMMatrix(backupTransform.toString())
+      if (this.$.scale) matrix.scaleSelf(this.$.scale.x, this.$.scale.y)
+
+      if (this.$.rotation) {
+        const centroid = isCentroid(this)
+
+        // eslint-disable-next-line functional/no-let
+        let x: number, y: number
+        if (!centroid) {
+          x = width / 2
+          y = height / 2
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        if (!centroid) matrix.translateSelf(x!, y!)
+        matrix.rotateSelf(convertToDegrees(this.$.rotation))
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        if (!centroid) matrix.translateSelf(-x!, -y!)
+      }
+      if (this.$.offset) {
+        matrix.translateSelf(
+          (this.$.offset.x ?? 0) + (isCache ? 0 : this.$.x),
+          (this.$.offset.y ?? 0) + (isCache ? 0 : this.$.y)
+        )
+      }
+      if (this.$.skewX !== undefined) matrix.skewXSelf(this.$.skewX)
+
+      if (this.$.skewY !== undefined) matrix.skewYSelf(this.$.skewY)
+
+      context.setTransform(matrix)
     }
     if (useFilter) {
       backupFilter = context.filter
