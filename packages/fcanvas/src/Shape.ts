@@ -464,8 +464,9 @@ export class Shape<
     }
     if (needUseTransform) {
       backupTransform = context.getTransform()
-      const x = this[CONTEXT_CACHE_SIZE].value.width / 2
-      const y = this[CONTEXT_CACHE_SIZE].value.height / 2
+      const { width, height } = this.getRect()
+      const x = width / 2
+      const y = height / 2
 
       context.setTransform(
         new DOMMatrix(backupTransform.toString())
