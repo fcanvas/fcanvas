@@ -204,7 +204,7 @@ describe("onCollide", () => {
     })
   })
   test("use withChildren", async () => {
-    const group = new Group({ x: 11, y: 11 })
+    const group = new Group({ sync: true, x: 11, y: 11 })
     group.add(new Rect({ x: 0, y: 0, width: 1, height: 1 }))
     group.add(new Rect({ x: 1, y: 1, width: 1, height: 1 }))
     group.add(new Rect({ x: 2, y: 2, width: 1, height: 1 }))

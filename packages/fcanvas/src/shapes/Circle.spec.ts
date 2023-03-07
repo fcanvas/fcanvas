@@ -150,7 +150,7 @@ describe("Circle", () => {
       autoDraw: false
     })
     const layer = new Layer()
-    const group = new Group()
+    const group = new Group({ sync: true })
     const circle = new Circle({
       x: stage.size.width / 2,
       y: stage.size.height / 2,

@@ -40,6 +40,7 @@ export type CommonGroupAttrs = Partial<Offset> &
     height?: number
     visible?: boolean
     offscreen?: boolean
+    sync?: boolean
   }
 
 export class Group<
@@ -163,7 +164,7 @@ export class Group<
       },
       {
         immediate: true,
-        flush: "sync"
+        flush: this.$.sync ? "sync" : undefined
       }
     )
 
