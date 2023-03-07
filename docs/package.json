@@ -1,7 +1,7 @@
 {
   "name": "@fcanvas/docs",
   "private": true,
-  "version": "1.1.0-rc.30",
+  "version": "1.1.0-rc.31",
   "description": "",
   "main": "index.js",
   "scripts": {

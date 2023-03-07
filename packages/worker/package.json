@@ -1,6 +1,6 @@
 {
   "name": "@fcanvas/worker",
-  "version": "1.1.0-rc.30",
+  "version": "1.1.0-rc.31",
   "description": "The plugin provides support for using fCanvas in WebWorker",
   "scripts": {
     "build": "tsup",
