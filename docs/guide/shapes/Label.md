@@ -26,7 +26,7 @@ const layer = new Layer().addTo(stage)
 
 const tooltip = new Label({
   x: 170,
-  y: 75
+  y: 75,
   opacity: 0.75
 }).addTo(layer)
 

@@ -22,7 +22,7 @@ const stage = new Stage().mount("#app")
 const layer = new Layer().addTo(stage)
 
 const group = new Group().addTo(layer)
-const circle = new Circle({ x: 10, y: 10, radius: 20, fill: "red" }).addTo(
+const circle = new Circle({ x: 20, y: 20, radius: 20, fill: "red" }).addTo(
   group
 )
 ```

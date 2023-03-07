@@ -34,6 +34,7 @@ const layer = new Layer().addTo(stage)
 const circle = new Circle({
   x: stage.size.width / 2,
   y: stage.size.height / 2,
+  radius: 30,
   fill: "red"
 }).addTo(layer)
 
