@@ -35,8 +35,8 @@ const stage = new Stage().mount("#app")
 const layer = new Layer().addTo(stage)
 
 const hexagon = new RegularPolygon({
-  x: 100,
-  y: 150,
+  x: stage.size.width / 2,
+  y: stage.size.height / 2,
   sides: 6,
   radius: 70,
   fill: "red",

@@ -34,13 +34,14 @@ In addition, this shape also provides a few other parameters:
 ## Demo
 
 :::preview
+
 ```ts
 import { Stage, Layer, Wedge } from "fcanvas"
 
 const stage = new Stage().mount("#app")
 const layer = new Layer().addTo(stage)
 
-const wedge = (wedge = new Wedge({
+const wedge = new Wedge({
   x: stage.size.width / 2,
   y: stage.size.height / 2,
   radius: 70,
@@ -49,6 +50,7 @@ const wedge = (wedge = new Wedge({
   stroke: "black",
   strokeWidth: 4,
   rotation: -120
-}).addTo(layer))
+}).addTo(layer)
 ```
+
 :::
