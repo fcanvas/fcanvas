@@ -106,7 +106,7 @@
   --vp-c-brand-highlight: var(--vp-c-brand-light);
 }
 
-.VPNavBar {
+.VPNavBar, .VPNavBarTitle > .title {
   border-bottom: 1px solid var(--vp-c-divider-dark-1) !important;
   transition: border-color 0.5s, background-color 0.5s !important;
 }
@@ -115,7 +115,7 @@
 }
 
 .dark {
-  .VPNavBar {
+  .VPNavBar, .VPNavBarTitle > .title {
     border-bottom-color: var(--vp-c-divider-light) !important;
   }
   .VPFooter {
@@ -129,4 +129,8 @@
 
 .VPNavBar.has-sidebar {
   border-bottom-color: transparent !important;
+}
+
+.VPImage.logo {
+  height: 42px !important;
 }

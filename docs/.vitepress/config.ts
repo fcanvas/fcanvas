@@ -11,7 +11,10 @@ export default defineConfig({
   lastUpdated: true,
   cleanUrls: true,
 
-  head: [["meta", { name: "theme-color", content: "#3c8772" }]],
+  head: [
+    ["meta", { name: "theme-color", content: "#3c8772" }],
+    ["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }]
+  ],
 
   markdown: {
     lineNumbers: true,
@@ -38,6 +41,7 @@ export default defineConfig({
   },
 
   themeConfig: {
+    logo: "/logo.svg",
     nav: nav(),
 
     sidebar: {

@@ -4,9 +4,8 @@
   "editor.formatOnSave": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": [
-    "firstgid"
-  ],
+  "cSpell.words": ["firstgid"],
   "docwriter.style": "JSDoc",
-  "docwriter.progress.trackFunctions": false
+  "docwriter.progress.trackFunctions": false,
+  "svg.preview.background": "editor"
 }

@@ -52,7 +52,7 @@
   </section>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 section {
   padding: 42px 32px;
 }
@@ -100,6 +100,12 @@ html:not(.dark) .accent,
 
 .actions .get-started {
   margin-right: 18px;
+  background-color: var(--vp-c-green);
+  color: var(--vp-c-indigo);
+
+  &:hover {
+    background-color: var(--vp-c-green-light);
+  }
 }
 
 .actions .icon {
@@ -119,18 +125,15 @@ html:not(.dark) .accent,
   transform: translateX(2px);
 }
 
-.actions .get-started,
 .actions .setup {
   color: var(--vp-c-text-code);
 }
 
-.actions .get-started:hover,
 .actions .setup:hover {
   background-color: var(--vp-c-gray-light-4);
   transition-duration: 0.2s;
 }
 
-.dark .actions .get-started:hover,
 .dark .actions .setup:hover {
   background-color: var(--vp-c-gray-dark-3);
 }
