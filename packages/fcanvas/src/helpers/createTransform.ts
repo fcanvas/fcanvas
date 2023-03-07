@@ -24,21 +24,16 @@ export function createTransform(
     return null
   const transform = new DOMMatrix()
 
-  if (options.scale !== undefined)
-    transform.scale(options.scale.x || 1, options.scale.y || 1)
-
-  if (options.rotation !== undefined)
-    transform.rotate(convertToDegrees(options.rotation))
-
+  if (options.scale) transform.scaleSelf(options.scale.x, options.scale.y)
+  if (options.rotation) transform.rotateSelf(convertToDegrees(options.rotation))
   if (options.offset !== undefined || useTranslate) {
-    transform.translate(
-      options.offset?.x || 0 + (options.x ?? 0),
-      options.offset?.y || 0 + (options.y ?? 0)
+    transform.translateSelf(
+      (options.offset?.x ?? 0) + (options.x ?? 0),
+      (options.offset?.y ?? 0) + (options.y ?? 0)
     )
   }
-  if (options.skewX !== undefined) transform.skewX(options.skewX)
-
-  if (options.skewY !== undefined) transform.skewY(options.skewY)
+  if (options.skewX !== undefined) transform.skewXSelf(options.skewX)
+  if (options.skewY !== undefined) transform.skewYSelf(options.skewY)
 
   return transform
 }
