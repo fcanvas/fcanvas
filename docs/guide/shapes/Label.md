@@ -20,7 +20,7 @@ To create a text label with `fcanvas`, which can be used for creating text with 
 ```ts
 import { Stage, Layer, Ellipse, Label, Tag, Text } from "fcanvas"
 
-const stage = new Stage().mount("#app")
+const stage = new Stage({ height: 300 }).mount("#app")
 const layer = new Layer().addTo(stage)
 
 
