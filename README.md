@@ -63,7 +63,7 @@ const stage = new Stage({
 const layer = new Layer()
 stage.add(layer)
 
-const cỉrcle = new Circle({
+const circle = new Circle({
   x: 0,
   y: 0,
   radius: 20,
