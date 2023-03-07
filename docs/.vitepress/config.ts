@@ -140,6 +140,7 @@ function functionItems() {
       text: "Reactivity Watch API",
       link: "/guide/functions/reactivity-watch-api"
     },
+    { text: "nextTick", link: "/guide/functions/nextTick" },
     { text: "Other Utils", link: "/guide/functions/other-utils" }
   ]
 }
