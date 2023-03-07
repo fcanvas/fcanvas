@@ -1,3 +1,5 @@
+import type { Offset } from "src/type/Offset"
+
 import { Shape } from "../Shape"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
@@ -140,9 +142,16 @@ export class Line<
     this.fillStrokeScene(context)
   }
 
-  constructor(attrs: TorFnT<ReactiveType<CommonShapeAttrs<P>>, Line>) {
+  constructor(
+    attrs: TorFnT<
+      ReactiveType<Omit<CommonShapeAttrs<P>, "x" | "y"> & Partial<Offset>>,
+      Line
+    >
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
+    this.$.x ??= 0
+    this.$.y ??= 0
   }
 
   protected getTensionPoints() {
