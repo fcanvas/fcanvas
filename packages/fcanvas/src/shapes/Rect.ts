@@ -44,7 +44,7 @@ export class Rect extends Shape<PersonalAttrs> {
         ]
       }
 
-      context.moveTo(0, 0)
+      context.moveTo(r1, 0)
       context.arcTo(this.$.width, 0, this.$.width, this.$.height - r2, r2)
       context.arcTo(
         this.$.width,
@@ -55,6 +55,7 @@ export class Rect extends Shape<PersonalAttrs> {
       )
       context.arcTo(0, this.$.height, 0, this.$.height - r4, r4)
       context.arcTo(0, 0, this.$.width - r1, 0, r1)
+      context.closePath()
 
       this.fillStrokeScene(context)
     } else {
