@@ -12,7 +12,7 @@ Flat array of numbers should work faster and use less memory than array of objec
 ```ts
 import { Stage, Layer, Line } from "fcanvas"
 
-const stage = new Stage().mount("#app")
+const stage = new Stage({ height: 200 }).mount("#app")
 const layer = new Layer().addTo(stage)
 
 const blob = new Line({

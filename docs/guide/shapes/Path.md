@@ -36,7 +36,7 @@ You can generate data svg with this tool GUI: https://boxy-svg.com/app
 ```ts
 import { Stage, Layer, Path } from "fcanvas"
 
-const stage = new Stage().mount("#app")
+const stage = new Stage({ height: 300 }).mount("#app")
 const layer = new Layer().addTo(stage)
 
 const path = new Path({

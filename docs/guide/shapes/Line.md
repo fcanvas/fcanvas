@@ -44,7 +44,7 @@ In addition, this shape also provides a few other parameters:
 ```ts
 import { Stage, Layer, Line } from "fcanvas"
 
-const stage = new Stage().mount("#app")
+const stage = new Stage({ width: 320 }).mount("#app")
 const layer = new Layer().addTo(stage)
 
 const redLine = new Line({

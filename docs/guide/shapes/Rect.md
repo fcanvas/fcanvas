@@ -39,7 +39,7 @@ In addition, this shape also provides a few other parameters:
 ```ts
 import { Stage, Layer, Rect } from "fcanvas"
 
-const stage = new Stage().mount("#app")
+const stage = new Stage({ height: 200 }).mount("#app")
 const layer = new Layer().addTo(stage)
 
 const rect1 = new Rect({
