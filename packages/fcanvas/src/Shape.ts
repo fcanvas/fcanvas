@@ -146,7 +146,7 @@ export class Shape<
 
   constructor(
     attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Shape>,
-    flush?: "pre" | "post" | "sync"// = "post"
+    flush: "pre" | "post" | "sync" = "post"
   ) {
     super()
 
