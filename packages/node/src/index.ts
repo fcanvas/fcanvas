@@ -12,7 +12,7 @@ import { CONFIGS } from "fcanvas"
 import { polyfillPath2D } from "path2d-polyfill"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-(Image.prototype as unknown as any)[Symbol.toStringTag] = "Image"
+;(Image.prototype as unknown as any)[Symbol.toStringTag] = "Image"
 
 Object.assign(global, {
   CanvasRenderingContext2D,
