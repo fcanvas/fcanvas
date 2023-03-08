@@ -3,12 +3,16 @@ import {
   createCanvas,
   DOMMatrix,
   Image,
+  loadImage,
   registerFont
 } from "canvas"
 import { CONFIGS } from "fcanvas"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import { polyfillPath2D } from "path2d-polyfill"
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(Image.prototype as unknown as any)[Symbol.toStringTag] = "Image"
 
 Object.assign(global, {
   CanvasRenderingContext2D,
@@ -28,7 +32,8 @@ const conf: typeof CONFIGS = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return createCanvas(width, height) as unknown as any
   },
-  registerFont
+  registerFont,
+  loadImage
 }
 Object.assign(CONFIGS, conf)
 
