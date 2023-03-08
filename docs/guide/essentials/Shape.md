@@ -48,7 +48,7 @@ Any method or something that exists in `Shape` also exists in its children
 
 ## Complex options
 
-### fillPattern
+### fillPattern {#fillPattern}
 
 This option allows to fill with complex things like images, canvas.
 
@@ -64,13 +64,13 @@ interface FillPattern extends TransformOptions {
 | Name   | Type                                    | Description                                                                               |
 | ------ | --------------------------------------- | ----------------------------------------------------------------------------------------- | ---------- | ------------- | --------------------------------- |
 | image  | `MayBeRef<CanvasImageSource \| string>` | this option takes the same parameter as `image` mentioned in [Image](/guide/shapes/Image) |
-| repeat | `MayBeRef<"repeat"                      | "repeat-x"                                                                                | "repeat-y" | "no-repeat">` | how to repeat the pattern's image |
+| repeat | `MayBeRef<"repeat" \| "repeat-x" \| "repeat-y" \| "no-repeat">` | how to repeat the pattern's image |
 
 :::tip
 `fillPattern` accepts any parameters that [Transform](/guide/styling/transform) owns
 :::
 
-### fillLinearGradient
+### fillLinearGradient {#fillLinearGradient}
 
 This option of the Canvas 2D API creates a gradient along the line connecting two given coordinates.
 
@@ -90,7 +90,7 @@ interface FillModelLinearGradient {
 | end        | `MayBeRef<Offset>`             | The `{x; y}` coordinate of the end point.                                                                                                                                                               |
 | colorStops | `MayBeRef<[number, string][]>` | method adds a new color stop, defined by an offset and a color, to a given canvas gradient. `[offset, color][]`. See more: https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient/addColorStop |
 
-### fillRadialGradient
+### fillRadialGradient {#fillRadialGradient}
 
 This option of the Canvas 2D API creates a radial gradient using the size and coordinates of two circles.
 
@@ -114,7 +114,7 @@ interface FillModelRadialGradient {
 | endRadius   | `MayBeRef<number>`             | The radius of the end circle. Must be non-negative and finite.                                                                                                                                          |
 | colorStops  | `MayBeRef<[number, string][]>` | method adds a new color stop, defined by an offset and a color, to a given canvas gradient. `[offset, color][]`. See more: https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient/addColorStop |
 
-### shadow
+### shadow {#shadow}
 
 This option allows shading an image
 
