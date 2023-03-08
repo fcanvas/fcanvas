@@ -26,8 +26,7 @@ export class Star extends Shape<PersonalAttrs> {
       const y = -1 * radius * Math.cos((n * Math.PI) / numPoints)
       context.lineTo(x, y)
     }
-
-    context.lineTo(0, 0 - outerRadius)
+    context.closePath()
 
     this.fillStrokeScene(context)
   }

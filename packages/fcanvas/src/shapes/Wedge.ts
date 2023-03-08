@@ -26,7 +26,7 @@ export class Wedge extends Shape<PersonalAttrs> {
       convertToRadial(this.$.angle),
       this.$.clockwise
     )
-    context.lineTo(0, 0)
+    context.closePath()
     this.fillStrokeScene(context)
   }
 

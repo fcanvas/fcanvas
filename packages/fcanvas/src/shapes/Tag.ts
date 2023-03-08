@@ -115,6 +115,7 @@ export class Tag extends Shape<PersonalAttrs> {
 
     context.lineTo(0, topLeft)
     context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false)
+    context.closePath()
 
     this.fillStrokeScene(context)
   }
