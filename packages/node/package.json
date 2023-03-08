@@ -56,6 +56,7 @@
     "node": ">=10"
   },
   "dependencies": {
+    "@thednp/dommatrix": "^2.0.2",
     "canvas": "^2.11.0",
     "path2d-polyfill": "^2.0.1",
     "typescript": "^4.9.5"
