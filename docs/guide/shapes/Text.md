@@ -50,11 +50,11 @@ In addition, this shape also provides a few other parameters:
 ```ts
 import { Stage, Layer, Text, Rect } from "fcanvas"
 
-const stage = new Stage().mount("#app")
+const stage = new Stage({ height: 300, width: 350 }).mount("#app")
 const layer = new Layer().addTo(stage)
 
 const simpleText = new Text({
-  x: stage.width() / 2,
+  x: stage.size.width / 2,
   y: 15,
   text: "Simple Text",
   align: "center",
@@ -62,6 +62,8 @@ const simpleText = new Text({
   fontFamily: "Calibri",
   fill: "green"
 })
+simpleText.$.x -= simpleText.clientRect.width / 2
+
 const complexText = new Text({
   x: 20,
   y: 60,
@@ -80,12 +82,13 @@ const rect = new Rect({
   strokeWidth: 5,
   fill: "#ddd",
   width: 300,
-  height: complexText.height(),
-  shadowColor: "black",
-  shadowBlur: 10,
-  shadowOffsetX: 10,
-  shadowOffsetY: 10,
-  shadowOpacity: 0.2,
+  height: complexText.getBoundingClientRect().height,
+  shadow: {
+    x: 10,
+    y: 10,
+    blur: 10,
+    color: "rgba(0, 0, 0, 0.5)"
+  },
   cornerRadius: 10
 })
 // add the shapes to the layer
