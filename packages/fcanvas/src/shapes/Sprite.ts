@@ -258,17 +258,19 @@ export class Sprite<
         // default
         const frames = anim
         const { frameIndex = 0 } = this.$
+        const i = frameIndex * 4
 
         return {
-          width: frames[frameIndex * 4 + 2],
-          height: frames[frameIndex * 4 + 3]
+          width: frames[i + 2],
+          height: frames[i + 3]
         }
       } else {
         const { frames, frameIndex = this.$.frameIndex ?? 0 } = anim
+        const i = frameIndex * 4
 
         return {
-          width: frames[frameIndex * 4 + 2],
-          height: frames[frameIndex * 4 + 3]
+          width: frames[i + 2],
+          height: frames[i + 3]
         }
       }
     }
