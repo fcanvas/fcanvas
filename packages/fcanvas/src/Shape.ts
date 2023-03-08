@@ -244,7 +244,7 @@ export class Shape<
             typeof image === "string" ? getImage(image) : image,
             this.$.fillPattern?.repeat ?? null
           )!
-          if (this.$.fillPattern && existsTransform(this.$.fillPattern, true)) {
+          if (existsTransform(this.$.fillPattern, true)) {
             const transform = createTransform(this.$.fillPattern, true)
             if (transform) style.setTransform(transform)
           }
