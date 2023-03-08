@@ -12,6 +12,7 @@ type PersonalAttrs = {
 
 export class Star extends Shape<PersonalAttrs> {
   static readonly type = "Star"
+  static readonly _centroid = true
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     const { innerRadius, outerRadius, numPoints } = this.$
@@ -26,6 +27,8 @@ export class Star extends Shape<PersonalAttrs> {
       context.lineTo(x, y)
     }
 
+    context.lineTo(0, 0 - outerRadius)
+
     this.fillStrokeScene(context)
   }
 
@@ -37,9 +40,10 @@ export class Star extends Shape<PersonalAttrs> {
   }
 
   protected getSize() {
+    const size = this.$.outerRadius * 2
     return {
-      width: this.$.outerRadius * 2,
-      height: this.$.outerRadius * 2
+      width: size,
+      height: size
     }
   }
 }
