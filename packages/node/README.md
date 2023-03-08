@@ -2,7 +2,7 @@
 
 Plugin allow use fcanvas in NodeJS
 
-View source code at: https://github.com/tachibana-shin/fcanvas-next
+View source code at: https://github.com/fcanvas/fcanvas
 
 ### Install
 ```bash

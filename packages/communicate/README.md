@@ -2,7 +2,7 @@
 
 This package allows a simple connection between MessageChannel-based channels such as `WebWorker`, `IFrame`...
 
-View source code at: https://github.com/tachibana-shin/fcanvas-next
+View source code at: https://github.com/fcanvas/fcanvas
 
 ### Install
 ```bash

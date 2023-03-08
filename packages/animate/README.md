@@ -2,7 +2,7 @@
 
 Plugin that provides the ability to use animation for fcanvas
 
-View source code at: https://github.com/tachibana-shin/fcanvas-next
+View source code at: https://github.com/fcanvas/fcanvas
 
 ### Install
 ```bash

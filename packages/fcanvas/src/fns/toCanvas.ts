@@ -12,7 +12,7 @@ export interface OptionsToCanvas extends Partial<Rect> {
 }
 
 /**
- * @source - re-used from https://github.com/tachibana-shin/fcanvas-next/blob/v0.2.14/packages/fcanvas/src/Container.ts
+ * @source - re-used from https://github.com/fcanvas/fcanvas/blob/v0.2.14/packages/fcanvas/src/Container.ts
  */
 export function toCanvas(
   fElement: Layer | Shape | Group | Stage,

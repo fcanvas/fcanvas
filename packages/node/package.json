@@ -30,7 +30,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/tachibana-shin/fcanvas-next.git"
+    "url": "git://github.com/fcanvas/fcanvas.git"
   },
   "homepage": "https://fcanvas.js.org",
   "keywords": [

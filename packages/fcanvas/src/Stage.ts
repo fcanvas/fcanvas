@@ -300,7 +300,7 @@ export class Stage extends APIChildNode<Layer, CommonShapeEvents> {
 
     if (isCanvasDOM(node[CANVAS_ELEMENT]))
       this[DIV_CONTAINER]?.appendChild(node[CANVAS_ELEMENT])
-    // fix https://github.com/tachibana-shin/fcanvas-next/issues/5
+    // fix https://github.com/fcanvas/fcanvas/issues/5
     const { width: oWidth, height: oHeight } = node[CANVAS_ELEMENT]
 
     if (oWidth !== width) node[CANVAS_ELEMENT].width = width
