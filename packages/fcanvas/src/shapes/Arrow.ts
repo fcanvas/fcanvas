@@ -113,7 +113,7 @@ export class Arrow extends Line<PersonalAttrs> {
     attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Arrow>
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    super(attrs as unknown as any)
+    super(attrs as unknown as any, true)
   }
 
   public getRect() {
