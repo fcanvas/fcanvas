@@ -37,6 +37,22 @@ export function getDummyContext() {
   ) as OffscreenCanvasRenderingContext2D
   return dummyContext
 }
+export function getContextFont($: {
+  fontStyle?: string
+  fontVariant?: string
+  fontSize?: number
+  fontFamily?: string
+}) {
+  return (
+    ($.fontStyle ?? "normal") +
+    " " +
+    ($.fontVariant ?? "normal") +
+    " " +
+    (($.fontSize ?? 12) + "px ") +
+    // wrap font family into " so font families with spaces works ok
+    normalizeFontFamily($.fontFamily ?? "Arial")
+  )
+}
 
 function normalizeFontFamily(fontFamily: string) {
   return fontFamily
@@ -106,7 +122,7 @@ export class Text extends Shape<PersonalAttrs> {
     // eslint-disable-next-line functional/no-let
     let alignY = 0
 
-    context.font = this.getContextFont()
+    context.font = getContextFont(this.$)
 
     context.textBaseline = this.$.textBaseline ?? "middle"
 
@@ -260,7 +276,7 @@ export class Text extends Shape<PersonalAttrs> {
 
     _context.save()
 
-    _context.font = this.getContextFont()
+    _context.font = getContextFont(this.$)
 
     const metrics = _context.measureText(text)
     _context.restore()
@@ -268,18 +284,6 @@ export class Text extends Shape<PersonalAttrs> {
       width: metrics.width,
       height: fontSize
     }
-  }
-
-  public getContextFont() {
-    return (
-      (this.$.fontStyle ?? "normal") +
-      " " +
-      (this.$.fontVariant ?? "normal") +
-      " " +
-      ((this.$.fontSize ?? 12) + "px ") +
-      // wrap font family into " so font families with spaces works ok
-      normalizeFontFamily(this.$.fontFamily ?? "Arial")
-    )
   }
 
   private addTextLine(line: string) {
@@ -326,7 +330,7 @@ export class Text extends Shape<PersonalAttrs> {
     this.textArr = []
     this.textWidth = 0
 
-    getDummyContext().font = this.getContextFont()
+    getDummyContext().font = getContextFont(this.$)
     const additionalWidth = shouldAddEllipsis ? this.getTextWidth("…") : 0
     // eslint-disable-next-line functional/no-let
     for (let i = 0, max = lines.length; i < max; ++i) {
