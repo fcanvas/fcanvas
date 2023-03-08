@@ -1,6 +1,6 @@
 # fcanvas
 
-A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's Proxy response system and minimizes redrawing.
+A powerful 2d canvas library that allows minimal rendering and provides diverse shapes
 [https://fcanvas.js.org](https://fcanvas.js.org)
 
 > Close the path when you're done drawing, not fill
