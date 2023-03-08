@@ -3,7 +3,7 @@
 A next version library fcanvas, Its syntax looks like Konva.js but it uses ES6's Proxy response system and minimizes redrawing.
 [https://fcanvas.js.org](https://fcanvas.js.org)
 
-> `.to()` has been migrated to the plugin [@fcanvas/animate](./packages/animate) to optimize the treeshake
+> Close the path when you're done drawing, not fill
 
 [![GitHub license](https://img.shields.io/github/license/tachibana-shin/fcanvas-next)](https://github.com/tachibana-shin/fcanvas-next/blob/main/LICENSE) <img alt="GitHub Issues" src="https://img.shields.io/github/issues/tachibana-shin/fcanvas-next" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/score/svg" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/status/svg" />
 
