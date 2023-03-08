@@ -7,11 +7,11 @@ import { nextTick } from "./watch/scheduler"
 
 // https://github.com/vueuse/vueuse/blob/main/packages/shared/toReactive/index.test.ts
 describe("toRefs", () => {
-  it("should be defined", () => {
+  test("should be defined", () => {
     expect(toReactive).toBeDefined()
   })
 
-  it("should work", () => {
+  test("should work", () => {
     const r = ref({ a: "a", b: 0 })
     const state = toReactive(r)
     expect(state.a).toBe("a")
@@ -23,7 +23,7 @@ describe("toRefs", () => {
     expect(state.b).toBe(1)
   })
 
-  it("should be enumerable", () => {
+  test("should be enumerable", () => {
     const obj = { a: "a", b: 0 }
     const r = ref(obj)
     const state = toReactive(r)
@@ -32,7 +32,7 @@ describe("toRefs", () => {
     expect(state).toEqual(obj)
   })
 
-  it("should be reactive", async () => {
+  test("should be reactive", async () => {
     const r = ref({ a: "a", b: 0 })
     const state = toReactive(r)
     let dummy = 0
@@ -61,7 +61,7 @@ describe("toRefs", () => {
     expect(r.value.b).toBe(2)
   })
 
-  it("should be replaceable", async () => {
+  test("should be replaceable", async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const r = ref<any>({ a: "a", b: 0 })
     const state = toReactive(r)
@@ -90,7 +90,7 @@ describe("toRefs", () => {
     expect(state).toEqual({ a: "c" })
   })
 
-  it("toReactive(toRefs())", () => {
+  test("toReactive(toRefs())", () => {
     const a = reactive({ a: "a", b: 0 })
     const b = toRefs(a)
     const c = toReactive(b)

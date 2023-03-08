@@ -59,7 +59,7 @@ describe("useIntervalFn", () => {
     expect(callback).toHaveBeenCalledTimes(4)
   }
 
-  it("basic pause/resume", async () => {
+  test("basic pause/resume", async () => {
     await exec(useIntervalFn(callback, 50))
 
     callback = vi.fn()
@@ -73,7 +73,7 @@ describe("useIntervalFn", () => {
     expect(callback).toHaveBeenCalledTimes(1)
   })
 
-  it("pause/resume with immediateCallback", async () => {
+  test("pause/resume with immediateCallback", async () => {
     await execImmediateCallback(
       useIntervalFn(callback, 50, { immediateCallback: true })
     )
@@ -93,7 +93,7 @@ describe("useIntervalFn", () => {
     expect(callback).toHaveBeenCalledTimes(1)
   })
 
-  it("pause/resume in scope", async () => {
+  test("pause/resume in scope", async () => {
     const scope = effectScope()
     await scope.run(async () => {
       await exec(useIntervalFn(callback, 50))
@@ -105,7 +105,7 @@ describe("useIntervalFn", () => {
     expect(callback).toHaveBeenCalledTimes(0)
   })
 
-  it("cant work when interval is negative", async () => {
+  test("cant work when interval is negative", async () => {
     const { isActive } = useIntervalFn(callback, -1)
 
     expect(isActive.value).toBeFalsy()

@@ -1,4 +1,3 @@
-// eslint-disable-next-line functional/no-mixed-type
 interface Configs {
   // eslint-disable-next-line functional/no-method-signature
   createOffscreenCanvas(width?: number, height?: number): OffscreenCanvas
@@ -8,6 +7,8 @@ interface Configs {
     path: string,
     config: { family: string; weight?: string; style?: string }
   ) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  loadImage?: (url: string) => any
 }
 
 const Offscreen =
