@@ -1,6 +1,8 @@
-import { effect } from "@vue/reactivity"
+import type { ComputedRef } from "@vue/reactivity"
+import { computed } from "@vue/reactivity"
 
 import { Shape } from "../Shape"
+import { watchEffect } from "../fns/watch"
 import { getLineLength } from "../helpers/Path/getLineLength"
 import { getPointOnCubicBezier } from "../helpers/Path/getPointOnCubicBezier"
 import { getPointOnEllipticalArc } from "../helpers/Path/getPointOnEllipticalArc"
@@ -13,7 +15,7 @@ import type { Offset } from "../type/Offset"
 import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
 
-import { getDummyContext, Text } from "./Text"
+import { getContextFont, getDummyContext } from "./Text"
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PersonalAttrs = {
@@ -35,9 +37,9 @@ const EmptyObject = Object.freeze(Object.create(null))
 export class TextPath extends Shape<PersonalAttrs> {
   static readonly type = "TextPath"
 
-  private dataArray: ReturnType<typeof parsePathData> = []
+  private readonly dataArray: ComputedRef<ReturnType<typeof parsePathData>>
 
-  private glyphInfo: {
+  private readonly glyphInfo: {
     transposeX: number
     transposeY: number
     text: string
@@ -54,17 +56,11 @@ export class TextPath extends Shape<PersonalAttrs> {
     attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, TextPath>
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    super(attrs as unknown as any)
+    super(attrs as unknown as any, "post")
 
     this[SCOPE].fOn()
-    this.dataArray = parsePathData(this.$.data)
-
-    effect(() => {
-      this.dataArray = parsePathData(this.$.data)
-    })
-    effect(() => {
-      this.setTextData()
-    })
+    this.dataArray = computed(() => parsePathData(this.$.data))
+    watchEffect(() => this.setTextData())
     this[SCOPE].fOff()
   }
 
@@ -79,7 +75,7 @@ export class TextPath extends Shape<PersonalAttrs> {
   }
 
   protected _sceneFunc(context: CanvasRenderingContext2D) {
-    context.font = this.getContextFont()
+    context.font = getContextFont(this.$)
     if (this.$.textBaseline) context.textBaseline = this.$.textBaseline
 
     context.textAlign = "left"
@@ -129,17 +125,12 @@ export class TextPath extends Shape<PersonalAttrs> {
     context.restore()
   }
 
-  private getContextFont() {
-    return Text.prototype.getContextFont.call(this)
-  }
-
   private getTextSize(text: string) {
     const _context = getDummyContext()
 
     _context.save()
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    _context.font = this.getContextFont()!
+    _context.font = getContextFont(this.$)
     const metrics = _context.measureText(text)
 
     _context.restore()
@@ -164,14 +155,14 @@ export class TextPath extends Shape<PersonalAttrs> {
       0
     )
 
-    this.glyphInfo = []
+    this.glyphInfo.splice(0)
 
     // eslint-disable-next-line functional/no-let
     let fullPathWidth = 0
     // eslint-disable-next-line functional/no-let
-    for (let l = 0; l < this.dataArray.length; l++) {
-      if (this.dataArray[l].pathLength > 0)
-        fullPathWidth += this.dataArray[l].pathLength
+    for (let l = 0; l < this.dataArray.value.length; l++) {
+      if (this.dataArray.value[l].pathLength > 0)
+        fullPathWidth += this.dataArray.value[l].pathLength
     }
 
     // eslint-disable-next-line functional/no-let
@@ -189,7 +180,7 @@ export class TextPath extends Shape<PersonalAttrs> {
     // eslint-disable-next-line functional/no-let
     let p1: Offset | void
     // eslint-disable-next-line functional/no-let
-    let pathCmd: (typeof this.dataArray)[0] | void
+    let pathCmd: (typeof this.dataArray.value)[0] | void
     // eslint-disable-next-line functional/no-let
     let pIndex = -1
     // eslint-disable-next-line functional/no-let
@@ -205,7 +196,7 @@ export class TextPath extends Shape<PersonalAttrs> {
 
     const getNextPathSegment = () => {
       currentT = 0
-      const pathData = this.dataArray
+      const pathData = this.dataArray.value
 
       // eslint-disable-next-line functional/no-let
       for (let j = pIndex + 1; j < pathData.length; j++) {
@@ -448,21 +439,15 @@ export class TextPath extends Shape<PersonalAttrs> {
       return {
         x: 0,
         y: 0,
-        width: 0,
-        height: 0
+        width: 300,
+        height: 300
       }
     }
 
     const points: number[] = []
 
     this.glyphInfo.forEach((info) => {
-      points.push(info.p0.x)
-
-      points.push(info.p0.y)
-
-      points.push(info.p1.x)
-
-      points.push(info.p1.y)
+      points.push(info.p0.x, info.p0.y, info.p1.x, info.p1.y)
     })
     // eslint-disable-next-line functional/no-let
     let minX = points[0] || 0

@@ -145,7 +145,8 @@ export class Shape<
   ): void
 
   constructor(
-    attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Shape>
+    attrs: TorFnT<ReactiveType<CommonShapeAttrs<PersonalAttrs>>, Shape>,
+    flush?: "pre" | "post" | "sync"// = "post"
   ) {
     super()
 
@@ -201,23 +202,26 @@ export class Shape<
     })
 
     // try watchEffect
-    watchEffect(() => {
-      // reactive
-      if (this.$.perfectDrawEnabled !== false) {
-        const ctx = this[CONTEXT_CACHE]
-        const { width, height } = this[CONTEXT_CACHE_SIZE].value
-        ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
+    watchEffect(
+      () => {
+        // reactive
+        if (this.$.perfectDrawEnabled !== false) {
+          const ctx = this[CONTEXT_CACHE]
+          const { width, height } = this[CONTEXT_CACHE_SIZE].value
+          ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
 
-        this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
-        if (__DEV_LIB__) {
-          console.log(
-            "[cache::shape]: size changed %sx%s",
-            ctx.canvas.width,
-            ctx.canvas.height
-          )
+          this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
+          if (__DEV_LIB__) {
+            console.log(
+              "[cache::shape]: size changed %sx%s",
+              ctx.canvas.width,
+              ctx.canvas.height
+            )
+          }
         }
-      }
-    })
+      },
+      { flush }
+    )
 
     this[SCOPE].fOff()
   }
