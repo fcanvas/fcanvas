@@ -24,9 +24,9 @@
     }
   },
   "devDependencies": {
+    "@thednp/dommatrix": "^2.0.2",
     "@types/plist": "^3.0.2",
     "canvas": "^2.11.0",
-    "dommatrix": "^1.0.3",
     "fetch-polyfill": "^0.8.2",
     "gsap": "^3.11.4",
     "happy-dom": "^8.4.4",

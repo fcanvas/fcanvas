@@ -92,11 +92,11 @@ importers:
 
   packages/fcanvas:
     specifiers:
+      '@thednp/dommatrix': ^2.0.2
       '@types/plist': ^3.0.2
       '@vue/reactivity': ^3.2.47
       '@vue/shared': ^3.2.47
       canvas: ^2.11.0
-      dommatrix: ^1.0.3
       fetch-polyfill: ^0.8.2
       gsap: ^3.11.4
       happy-dom: ^8.4.4
@@ -117,9 +117,9 @@ importers:
       tmx-tiledmap: 1.2.1
       typescript: 4.9.5
     devDependencies:
+      '@thednp/dommatrix': 2.0.2
       '@types/plist': 3.0.2
       canvas: 2.11.0
-      dommatrix: 1.0.3
       fetch-polyfill: 0.8.2
       gsap: 3.11.4
       happy-dom: 8.4.4
@@ -133,6 +133,7 @@ importers:
 
   packages/node:
     specifiers:
+      '@thednp/dommatrix': ^2.0.2
       canvas: ^2.11.0
       fcanvas: workspace:*
       jsdom: ^20.0.3
@@ -142,6 +143,7 @@ importers:
       typescript: ^4.9.5
       vitest: ^0.26.2
     dependencies:
+      '@thednp/dommatrix': 2.0.2
       canvas: 2.11.0
       path2d-polyfill: 2.0.1
       typescript: 4.9.5
@@ -1422,6 +1424,9 @@ packages:
       - supports-color
       - tsutils
     dev: true
+
+  /@thednp/dommatrix/2.0.2:
+    resolution: {integrity: sha512-mQvr694XOROmqQ6+RJszhv5U2YLasoSxxBNf6YymRFqJt7Xzx2uqTbT4H+utBdHs03YfKV3zyAHnzR6Ta/oy8A==}
 
   /@tootallnate/once/2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
@@ -2767,10 +2772,6 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       webidl-conversions: 7.0.0
-    dev: true
-
-  /dommatrix/1.0.3:
-    resolution: {integrity: sha512-l32Xp/TLgWb8ReqbVJAFIvXmY7go4nTxxlWiAFyhoQw9RKEOHBZNnyGvJWqDVSPmq3Y9HlM4npqF/T6VMOXhww==}
     dev: true
 
   /dot-prop/5.3.0:
@@ -6370,7 +6371,7 @@ packages:
       acorn-walk: 8.2.0
       chai: 4.3.7
       debug: 4.3.4
-      jsdom: 20.0.3
+      jsdom: 20.0.3_canvas@2.11.0
       local-pkg: 0.4.2
       source-map: 0.6.1
       strip-literal: 1.0.0
