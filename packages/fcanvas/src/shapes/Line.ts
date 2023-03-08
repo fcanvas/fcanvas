@@ -135,7 +135,7 @@ export class Line<
 
       for (n = 2; n < length; n += 2) context.lineTo(points[n], points[n + 1])
     }
-    context.closePath()
+    if (!this.noClose) context.closePath()
 
     // closed e.g. polygons and blobs
     if (!closed) this.strokeScene(context)
@@ -147,7 +147,8 @@ export class Line<
     attrs: TorFnT<
       ReactiveType<Omit<CommonShapeAttrs<P>, "x" | "y"> & Partial<Offset>>,
       Line
-    >
+    >,
+    private readonly noClose?: boolean
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
