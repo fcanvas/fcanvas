@@ -134,12 +134,13 @@ export class Line<
       // no tension
 
       for (n = 2; n < length; n += 2) context.lineTo(points[n], points[n + 1])
+      context.lineTo(points[0], points[1])
     }
 
     // closed e.g. polygons and blobs
-    // if (!closed) this.strokeScene(context)
-    // else this.fillStrokeScene(context)
-    this.fillStrokeScene(context)
+    if (!closed) this.strokeScene(context)
+    else this.fillStrokeScene(context)
+    // this.fillStrokeScene(context)
   }
 
   constructor(
