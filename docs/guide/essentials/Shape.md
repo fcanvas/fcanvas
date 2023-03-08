@@ -61,10 +61,10 @@ interface FillPattern extends TransformOptions {
 }
 ```
 
-| Name   | Type                                    | Description                                                                               |
-| ------ | --------------------------------------- | ----------------------------------------------------------------------------------------- | ---------- | ------------- | --------------------------------- |
-| image  | `MayBeRef<CanvasImageSource \| string>` | this option takes the same parameter as `image` mentioned in [Image](/guide/shapes/Image) |
-| repeat | `MayBeRef<"repeat" \| "repeat-x" \| "repeat-y" \| "no-repeat">` | how to repeat the pattern's image |
+| Name   | Type                                                            | Description                                                                               |
+| ------ | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| image  | `MayBeRef<CanvasImageSource \| string>`                         | this option takes the same parameter as `image` mentioned in [Image](/guide/shapes/Image) |
+| repeat | `MayBeRef<"repeat" \| "repeat-x" \| "repeat-y" \| "no-repeat">` | how to repeat the pattern's image                                                         |
 
 :::tip
 `fillPattern` accepts any parameters that [Transform](/guide/styling/transform) owns
@@ -144,6 +144,22 @@ A Proxy that contains all the settings allowing to get/set the value of props an
 shape.$.x = 100
 
 console.log(shape.$.x) // 100
+```
+
+### clientRect
+
+Returns a `Rect` object describing the internal size and location
+
+```ts
+shape.clientRect // { x: 0, y: 0, width: 100, height: 100 }
+```
+
+### bounding (as getBoundingClientRect())
+
+Returns a `Rect` object describing the internal size and generate
+
+```ts
+shape.bounding // { x: 10, y: 10, width: 100, height: 100 }
 ```
 
 ## Protected Methods

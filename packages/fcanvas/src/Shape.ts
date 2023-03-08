@@ -421,6 +421,14 @@ export class Shape<
     return rect
   }
 
+  public get clientRect() {
+    return this[BOUNCE_CLIENT_RECT].value
+  }
+
+  public get bounding() {
+    return this[BOUNDING_CLIENT_RECT].value
+  }
+
   public getBoundingClientRect() {
     return this[BOUNDING_CLIENT_RECT].value
   }
