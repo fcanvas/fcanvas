@@ -1,10 +1,12 @@
 import type { ComputedRef, Ref } from "@vue/reactivity"
 import { computed, ref } from "@vue/reactivity"
-import { watch } from "src/fns/watch"
+import type { Size } from "src/type/Size"
 
 import { Shape } from "../Shape"
 import { getImage } from "../auto-export"
 import { cropImage } from "../fns/cropImage"
+import { watch } from "../fns/watch"
+import { pointInBox } from "../helpers/pointInBox"
 import { SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
@@ -23,16 +25,17 @@ interface AnimationFrames {
 
   frameRate?: number
 }
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+
 type PersonalAttrs<
   Animations extends Record<string, AnimationFrames | number[]>
-> = {
+> = Partial<Size> & {
   image: CanvasImageSource | string
   animations: Animations
   animation: string
   frameIndex?: number // 0
   frameRate?: number // 17
   infinite?: boolean // true
+  fixedSize?: boolean // true
 }
 
 export class Sprite<
@@ -42,18 +45,15 @@ export class Sprite<
   static readonly type = "Sprite"
 
   private readonly _image: ComputedRef<CanvasImageSource>
-  private readonly cropImageCache: Map<
-    string,
-    HTMLCanvasElement | OffscreenCanvas
-  > = new Map()
+  private readonly cropImageCache: Map<string, OffscreenCanvas> = new Map()
 
   private readonly currentFrames: ComputedRef<
     Required<Exclude<AnimationFrames, string[]>>
   >
 
-  private readonly frames: ComputedRef<(HTMLCanvasElement | OffscreenCanvas)[]>
+  private readonly frames: ComputedRef<OffscreenCanvas[]>
   public readonly currentFrameIndex: Ref<number>
-  public readonly currentFrame: ComputedRef<HTMLCanvasElement | OffscreenCanvas>
+  public readonly currentFrame: ComputedRef<OffscreenCanvas>
 
   private readonly currentDelay: ComputedRef<number>
 
@@ -101,7 +101,7 @@ export class Sprite<
         }
       }
     )
-    this.frames = computed<(HTMLCanvasElement | OffscreenCanvas)[]>(() => {
+    this.frames = computed<OffscreenCanvas[]>(() => {
       const groups = []
       const { frames } = this.currentFrames.value
       // eslint-disable-next-line functional/no-let
@@ -120,7 +120,7 @@ export class Sprite<
         this.currentFrameIndex.value = value
       }
     )
-    this.currentFrame = computed<HTMLCanvasElement | OffscreenCanvas>(() => {
+    this.currentFrame = computed<OffscreenCanvas>(() => {
       return (
         this.frames.value[this.currentFrameIndex.value] ??
         this.frames.value[
@@ -148,7 +148,7 @@ export class Sprite<
     y: number,
     width: number,
     height: number
-  ): HTMLCanvasElement | OffscreenCanvas {
+  ): OffscreenCanvas {
     const key = `${x}.${y}.${width}.${height}`
 
     const cropImageInCache = this.cropImageCache.get(key)
@@ -171,7 +171,17 @@ export class Sprite<
       this.fillStrokeScene(context)
     }
 
-    context.drawImage(this.currentFrame.value, 0, 0)
+    if (this.$.width !== undefined && this.$.height !== undefined) {
+      context.drawImage(
+        this.currentFrame.value,
+        0,
+        0,
+        this.$.width,
+        this.$.height
+      )
+    } else {
+      context.drawImage(this.currentFrame.value, 0, 0)
+    }
   }
 
   public start(anim?: keyof LocalPersonalAttrs["animations"]): void {
@@ -213,7 +223,34 @@ export class Sprite<
     this._running = false
   }
 
-  protected getSize() {
+  protected getSize(noFix = false) {
+    if (this.$.width !== undefined && this.$.height !== undefined) {
+      const { width, height } = this.$
+
+      return { width, height }
+    }
+
+    if (!noFix && this.$.fixedSize !== false) {
+      const anim = this.$.animations[this.$.animation]
+
+      const frames = Array.isArray(anim) ? anim : anim.frames
+
+      // eslint-disable-next-line functional/no-let
+      let maxWidth = 0
+      // eslint-disable-next-line functional/no-let
+      let maxHeight = 0
+      // 0 1 2 3 4 5 6 7
+      // eslint-disable-next-line functional/no-let
+      for (let i = 2; i < frames.length; i += 4) {
+        const width = frames[i]
+        const height = frames[i + 1]
+        if (width > maxWidth) maxWidth = width
+        if (height > maxHeight) maxHeight = height
+      }
+
+      return { width: maxWidth, height: maxHeight }
+    }
+
     if (!this.currentFrame) {
       const anim = this.$.animations[this.$.animation]
 
@@ -224,23 +261,26 @@ export class Sprite<
 
         return {
           width: frames[frameIndex * 4 + 2],
-          height: frames[frameIndex * 4 + 2]
+          height: frames[frameIndex * 4 + 3]
         }
       } else {
         const { frames, frameIndex = this.$.frameIndex ?? 0 } = anim
 
         return {
           width: frames[frameIndex * 4 + 2],
-          height: frames[frameIndex * 4 + 2]
+          height: frames[frameIndex * 4 + 3]
         }
       }
     }
 
     const { width, height } = this.currentFrame.value
+    return { width, height }
+  }
 
-    return {
-      width,
-      height
-    }
+  public isPressedPoint(x: number, y: number): boolean {
+    const { x: xd, y: yd } = this.getBoundingClientRect()
+    const { width, height } = this.getSize(true)
+
+    return pointInBox(x, y, xd, yd, width, height)
   }
 }

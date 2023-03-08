@@ -36,25 +36,29 @@ interface AnimationFrames {
 
 ## Optional Options
 
-| Name       | Type                | Default | Description                               |
-| ---------- | ------------------- | ------- | ----------------------------------------- |
-| frameIndex | `MayBeRef<number>`  | 0       | Animation frame index                     |
-| frameRate  | `MayBeRef<boolean>` | 17      | Animation frame rate                      |
-| infinite   | `MayBeRef<boolean>` | true    | Animation will repeat right after the end |
+| Name       | Type                | Default                                                                              | Description                                                                                                                                   |
+| ---------- | ------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| width      | `MayBeRef<number>`  | auto                                                                                 | width that the image displays. this will be disabled if `height` does not exist                                                               |
+| height     | `MayBeRef<number>`  | auto height that the image displays. this will be disabled if `width` does not exist |
+| frameIndex | `MayBeRef<number>`  | 0                                                                                    | Animation frame index                                                                                                                         |
+| frameRate  | `MayBeRef<boolean>` | 17                                                                                   | Animation frame rate                                                                                                                          |
+| infinite   | `MayBeRef<boolean>` | true                                                                                 | Animation will repeat right after the end                                                                                                     |
+| fixedSize  | `MayBeRef<boolean>` | true                                                                                 | set a fixed size for this element. if `=false` it will continuously resize to fit the frame. this reduces the performance of removable memory |
 
 ## Demo
 
 :::preview
+
 ```ts
 import { Stage, Layer, Sprite, watch } from "fcanvas"
 
-const stage = new Stage().mount("#app")
+const stage = new Stage({ height: 300 }).mount("#app")
 const layer = new Layer().addTo(stage)
 
 const animations = {
   idle: [
     // x, y, width, height (4 frames)
-    2, 2, 70, 119, 71, 2, 74, 119, 146, 2, 81, 119, 2262, 76, 119
+    2, 2, 70, 119, 71, 2, 74, 119, 146, 2, 81, 119, 226, 2, 76, 119
   ],
   punch: [
     // x, y, width, height (4 frames)
@@ -63,9 +67,9 @@ const animations = {
 }
 
 const blob = new Sprite({
-  x: 50,
-  y: 50,
-  image: imageObj,
+  x: 0,
+  y: 0,
+  image: await loadImage("https://konvajs.org/assets/blob-sprite.png"),
   animation: "idle",
   animations,
   frameRate: 7,
@@ -79,7 +83,7 @@ stage.add(layer)
 blob.start()
 
 window.addEventListener("click", () => {
-  blob.$.animation = "punch"
+  blob.animation = "punch"
   const watcher = watch(blob.currentFrameIndex, (index) => {
     if (index === 2) {
       setTimeout(() => {
