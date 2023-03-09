@@ -19,7 +19,7 @@ export function useMouseIsPressed(
   const cancelDown = addEvents(instance, ["mousedown", "touchstart"], () => {
     mouseIsPressed.value = true
   })
-  const cancelUp = addEvents(instance, ["mouseup", "touchend"], () => {
+  const cancelUp = addEvents(instance, ["mouseup", "mouseleave", "touchend", "touchcancel"], () => {
     mouseIsPressed.value = false
   })
 

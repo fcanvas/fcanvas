@@ -17,6 +17,7 @@ const mousePosMap = new WeakMap<
     winMouseX: number
     winMouseY: number
     isTouch: boolean
+    id: number
   }
 >()
 export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
@@ -28,7 +29,8 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
     mouseY: 0,
     winMouseX: 0,
     winMouseY: 0,
-    isTouch: false
+    isTouch: false,
+    id: -1
   })
   // warning
   const stop = addEvents(
@@ -39,7 +41,7 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
 
       mousePos.isTouch = event.type.startsWith("touch")
       // get offset
-      const { x, y, winX, winY } = getMousePos(
+      const { x, y, winX, winY, id } = getMousePos(
         event as TouchEvent | MouseEvent,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (instance as unknown as any)[CANVAS_ELEMENT],
@@ -48,12 +50,10 @@ export function useMousePos(instance: ElAddEventListener = getCurrentShape()) {
       )[0]
 
       mousePos.mouseX = x
-
       mousePos.mouseY = y
-
       mousePos.winMouseX = winX
-
       mousePos.winMouseY = winY
+      mousePos.id = id
     }
   )
 
