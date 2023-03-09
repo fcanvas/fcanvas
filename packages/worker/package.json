@@ -36,7 +36,7 @@
     "type": "git",
     "url": "git://github.com/fcanvas/fcanvas.git"
   },
-  "homepage": "https://fcanvas.js.org",
+  "homepage": "https://fcanvas.js.org/guide/plugins/worker",
   "keywords": [
     "fcanvas",
     "konva",

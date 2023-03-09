@@ -4,6 +4,11 @@ This package allows a simple connection between MessageChannel-based channels su
 
 View source code at: https://github.com/fcanvas/fcanvas
 
+
+[![NPM](https://badge.fury.io/js/@fcanvas%2Fcommunicate.svg)](http://badge.fury.io/js/@fcanvas%2Fcommunicate)
+[![Size](https://img.shields.io/bundlephobia/minzip/@fcanvas/communicate/latest)](https://npmjs.org/package/@fcanvas/communicate)
+[![Download](https://img.shields.io/npm/dm/@fcanvas/communicate)](https://npmjs.org/package/@fcanvas/communicate)
+
 ### Install
 ```bash
 pnpm add @fcanvas/communicate

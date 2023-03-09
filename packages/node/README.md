@@ -4,6 +4,10 @@ Plugin allow use fcanvas in NodeJS
 
 View source code at: https://github.com/fcanvas/fcanvas
 
+[![NPM](https://badge.fury.io/js/@fcanvas%2Fnode.svg)](http://badge.fury.io/js/@fcanvas%2Fnode)
+[![Size](https://img.shields.io/bundlephobia/minzip/@fcanvas/node/latest)](https://npmjs.org/package/@fcanvas/node)
+[![Download](https://img.shields.io/npm/dm/@fcanvas/node)](https://npmjs.org/package/@fcanvas/node)
+
 ### Install
 ```bash
 pnpm add fcanvas @fcanvas/node

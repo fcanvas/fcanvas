@@ -8,15 +8,22 @@ The plugin provides support for using `fCanvas` in `WebWorker`
 
 View source code at: https://github.com/fcanvas/fcanvas
 
+[![NPM](https://badge.fury.io/js/@fcanvas%2Fworker.svg)](http://badge.fury.io/js/@fcanvas%2Fworker)
+[![Size](https://img.shields.io/bundlephobia/minzip/@fcanvas/worker/latest)](https://npmjs.org/package/@fcanvas/worker)
+[![Download](https://img.shields.io/npm/dm/@fcanvas/worker)](https://npmjs.org/package/@fcanvas/worker)
+
 ### Install
+
 ```bash
 pnpm add fcanvas @fcanvas/worker
 ```
 
 ### Usage
+
 To use the power of `WebWorker` with fCanvas you first need to create a `Stage` on the main thread to `receive` signals from `Worker`:
 
 main.ts
+
 ```ts
 import Worker from "./worker?worker"
 
@@ -31,6 +38,7 @@ portToWorker(worker, stage)
 then you just create another `Stage` in `Worker` and send it to `thread` and use `fCanvas` as usual:
 
 worker.ts
+
 ```ts
 import {
   Circle,

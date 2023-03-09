@@ -18,9 +18,9 @@ A powerful 2d canvas library that allows minimal rendering and provides diverse 
 [![NPM](https://badge.fury.io/js/fcanvas.svg)](http://badge.fury.io/js/fcanvas)
 [![Size](https://img.shields.io/bundlephobia/minzip/fcanvas/latest)](https://npmjs.org/package/fcanvas)
 [![Languages](https://img.shields.io/github/languages/top/fcanvas/fcanvas)](https://npmjs.org/package/fcanvas)
-[![License](https://img.shields.io/npm/l/fcanvas)](https://npmjs.org/package/fcanvas-next)
+[![License](https://img.shields.io/npm/l/fcanvas)](https://npmjs.org/package/fcanvas)
 [![Star](https://img.shields.io/github/stars/fcanvas/fcanvas)](https://github.com/fcanvas/fcanvas/stargazers)
-[![Download](https://img.shields.io/npm/dm/fcanvas)](https://npmjs.org/package/fcanvas-next)
+[![Download](https://img.shields.io/npm/dm/fcanvas)](https://npmjs.org/package/fcanvas)
 
 ## Packages
 | Name | Description |
