@@ -1,6 +1,6 @@
 {
   "name": "@fcanvas/core",
-  "version": "1.1.0-rc.36",
+  "version": "1.1.0-rc.37",
   "private": true,
   "scripts": {
     "pretit": "prettier packages/*/src",
