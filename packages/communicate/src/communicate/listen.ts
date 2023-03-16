@@ -4,7 +4,8 @@ import type {
   DataReturnFn,
   FnAny,
   LikeMessagePort,
-  MayBePromise
+  MayBePromise,
+  WindowPostMessageOptions
 } from "../type"
 
 const storeListen = new WeakMap<
