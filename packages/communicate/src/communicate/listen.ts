@@ -22,9 +22,9 @@ function listen<Fn extends FnAny>(
   name: string,
   listener: (...args: Parameters<Fn>) => MayBePromise<
     | ({
-        return: ReturnType<Fn>
+        return: Awaited<ReturnType<Fn>>
       } & WindowPostMessageOptions)
-    | ReturnType<Fn>
+    | Awaited<ReturnType<Fn>>
   >,
   options?: {
     once?: boolean
@@ -40,9 +40,9 @@ function listen<
   name: Name,
   listener: (...args: Parameters<Options[Name]>) => MayBePromise<
     | ({
-        return: ReturnType<Options[Name]>
+        return: Awaited<ReturnType<Options[Name]>>
       } & WindowPostMessageOptions)
-    | ReturnType<Options[Name]>
+    | Awaited<ReturnType<Options[Name]>>
   >,
   options?: {
     once?: boolean

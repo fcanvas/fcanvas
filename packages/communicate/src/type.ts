@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type FnAny = (...args: any[]) => any
-export type MayBePromise<T> = T | Promise<T>
+export type MayBePromise<T> = Awaited<T> | Promise<Awaited<T>>
 export interface WindowPostMessageOptions {
   targetOrigin?: string
   transfer?: Transferable[]
