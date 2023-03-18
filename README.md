@@ -5,7 +5,10 @@ A powerful 2d canvas library that allows minimal rendering and provides diverse 
 
 > Close the path when you're done drawing, not fill
 
-[![GitHub license](https://img.shields.io/github/license/fcanvas/fcanvas)](https://github.com/fcanvas/fcanvas/blob/main/LICENSE) <img alt="GitHub Issues" src="https://img.shields.io/github/issues/fcanvas/fcanvas" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/score/svg" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/status/svg" />
+[![GitHub license](https://img.shields.io/github/license/fcanvas/fcanvas)](https://github.com/fcanvas/fcanvas/blob/main/LICENSE) <img alt="GitHub Issues" src="https://img.shields.io/github/issues/fcanvas/fcanvas" />
+![](https://api.codiga.io/project/36063/score/svg)
+![](https://api.codiga.io/project/36063/status/svg)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6ebf64a01f6c4d5fa89b3fb17b1a3f9f)](https://app.codacy.com/gh/fcanvas/fcanvas/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 [![Test](https://github.com/fcanvas/fcanvas/actions/workflows/test.yml/badge.svg)](https://github.com/fcanvas/fcanvas/actions/workflows/test.yml)
 [![CodeQL](https://github.com/fcanvas/fcanvas/actions/workflows/codeql.yml/badge.svg)](https://github.com/fcanvas/fcanvas/actions/workflows/codeql.yml)
