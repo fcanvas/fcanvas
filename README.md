@@ -5,6 +5,7 @@ A powerful 2d canvas library that allows minimal rendering and provides diverse 
 
 > Close the path when you're done drawing, not fill
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/41759ee192f8452db91f2ef346faaac5)](https://app.codacy.com/gh/fcanvas/fcanvas?utm_source=github.com&utm_medium=referral&utm_content=fcanvas/fcanvas&utm_campaign=Badge_Grade)
 [![GitHub license](https://img.shields.io/github/license/fcanvas/fcanvas)](https://github.com/fcanvas/fcanvas/blob/main/LICENSE) <img alt="GitHub Issues" src="https://img.shields.io/github/issues/fcanvas/fcanvas" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/score/svg" /> <img alt="Code Score" src="https://api.codiga.io/project/35319/status/svg" />
 
 [![Test](https://github.com/fcanvas/fcanvas/actions/workflows/test.yml/badge.svg)](https://github.com/fcanvas/fcanvas/actions/workflows/test.yml)
