@@ -18,13 +18,13 @@ function put<
   port: LikeMessagePort,
   name: Name,
   ...args: Parameters<Options[Name]>
-): Promise<ReturnType<Options[Name]>>
+): Promise<Awaited<ReturnType<Options[Name]>>>
 // eslint-disable-next-line no-redeclare
 function put<Fn extends FnAny>(
   port: LikeMessagePort,
   name: string,
   ...args: Parameters<Fn>
-): Promise<ReturnType<Fn>>
+): Promise<Awaited<ReturnType<Fn>>>
 
 // eslint-disable-next-line no-redeclare
 function put<
@@ -38,7 +38,7 @@ function put<
     signal?: AbortSignal
   } & WindowPostMessageOptions,
   ...args: Parameters<Options[Name]>
-): Promise<ReturnType<Options[Name]>>
+): Promise<Awaited<ReturnType<Options[Name]>>>
 // eslint-disable-next-line no-redeclare
 function put<Fn extends FnAny>(
   port: LikeMessagePort,
@@ -48,7 +48,7 @@ function put<Fn extends FnAny>(
     signal?: AbortSignal
   } & WindowPostMessageOptions,
   ...args: Parameters<Fn>
-): Promise<ReturnType<Fn>>
+): Promise<Awaited<ReturnType<Fn>>>
 
 // eslint-disable-next-line no-redeclare
 function put<Fn extends FnAny>(
@@ -62,8 +62,8 @@ function put<Fn extends FnAny>(
       } & WindowPostMessageOptions),
   // eslint-disable-next-line functional/functional-parameters
   ...args: Parameters<Fn>
-): Promise<ReturnType<Fn>> {
-  return new Promise<ReturnType<Fn>>((resolve, reject) => {
+): Promise<Awaited<ReturnType<Fn>>> {
+  return new Promise<Awaited<ReturnType<Fn>>>((resolve, reject) => {
     const id = uuid()
 
     // eslint-disable-next-line functional/no-let
