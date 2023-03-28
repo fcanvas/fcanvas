@@ -25,6 +25,7 @@
     "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
+    "typescript": "^4.9.5",
     "vitest": "^0.26.2"
   },
   "license": "MIT",
@@ -58,8 +59,7 @@
   "dependencies": {
     "@thednp/dommatrix": "^2.0.2",
     "canvas": "^2.11.0",
-    "path2d-polyfill": "^2.0.1",
-    "typescript": "^4.9.5"
+    "path2d-polyfill": "^2.0.1"
   },
   "peerDependencies": {
     "fcanvas": "workspace:*"

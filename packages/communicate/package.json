@@ -23,12 +23,8 @@
     }
   },
   "devDependencies": {
-    "@types/plist": "^3.0.2",
-    "@vue/reactivity": "^3.2.45",
-    "fcanvas": "workspace:*",
-    "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
-    "tsx": "^3.12.1",
+    "typescript": "^4.9.5",
     "vite": "^4.0.3",
     "vitest": "^0.29.1"
   },
@@ -45,7 +41,11 @@
     "2d",
     "canvas",
     "tile",
-    "tiles"
+    "tiles",
+    "communicate",
+    "iframe",
+    "WebWorker",
+    "MessageChannel"
   ],
   "files": [
     "dist"
@@ -57,13 +57,5 @@
   },
   "engines": {
     "node": ">=10"
-  },
-  "dependencies": {
-    "path-normalize": "^6.0.9",
-    "plist": "^3.0.6",
-    "typescript": "^4.9.5"
-  },
-  "peerDependencies": {
-    "fcanvas": "workspace:*"
   }
 }

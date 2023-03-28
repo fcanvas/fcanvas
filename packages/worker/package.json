@@ -23,11 +23,12 @@
     }
   },
   "devDependencies": {
-    "fcanvas": "workspace:*",
     "@fcanvas/communicate": "workspace:*",
+    "fcanvas": "workspace:*",
     "jsdom": "^20.0.3",
     "tsup": "^6.5.0",
     "tsx": "^3.12.1",
+    "typescript": "^4.9.5",
     "vite": "^4.0.3",
     "vitest": "^0.26.2"
   },
@@ -60,10 +61,7 @@
     "node": ">=10"
   },
   "peerDependencies": {
-    "fcanvas": "workspace:*",
-    "@fcanvas/communicate": "workspace:*"
-  },
-  "dependencies": {
-    "typescript": "^4.9.5"
+    "@fcanvas/communicate": "workspace:*",
+    "fcanvas": "workspace:*"
   }
 }
