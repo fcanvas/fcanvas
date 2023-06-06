@@ -7,7 +7,9 @@ import type { Rect } from "../type/Rect"
 
 // eslint-disable-next-line functional/no-mixed-type
 export interface FakeShape {
-  $: Partial<Offset>
+  $: Partial<Offset> & {
+    zIndex?: number
+  }
   [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   // eslint-disable-next-line functional/no-method-signature
   getClientRect(config?: GetClientRectOptions): Rect

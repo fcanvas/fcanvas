@@ -9,6 +9,7 @@ export const BOUNDING_CLIENT_RECT = Symbol(
 )
 export const CONTEXT_CACHE_SIZE = Symbol(__DEV__ ? "context size" : "")
 export const CHILD_NODE = Symbol(__DEV__ ? "child node" : "")
+export const CHILD_SORTED = Symbol(__DEV__ ? "children sorted" : "")
 export const CANVAS_ELEMENT = Symbol(__DEV__ ? "canvas element" : "")
 export const SCOPE = Symbol(__DEV__ ? "scope" : "")
 export const DIV_CONTAINER = Symbol(__DEV__ ? "div container" : "")
