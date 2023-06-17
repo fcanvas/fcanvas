@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "1.1.0-rc.40",
+  "version": "1.1.0",
   "description": "A powerful 2d canvas library that allows minimal rendering and provides diverse shapes.",
   "scripts": {
     "build": "pnpm auto-export && tsup",
