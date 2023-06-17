@@ -70,6 +70,8 @@ function listen<Fn extends FnAny>(
     if (typeof data !== "object") return
 
     if (data.type === "call_fn" && data.name === name) {
+      if (options?.once) stop()
+
       if (data.ping) {
         listener(...data.args)
         return
@@ -114,8 +116,6 @@ function listen<Fn extends FnAny>(
       }
 
       port.postMessage(message, result)
-
-      if (options?.once) stop()
     }
   }
 
