@@ -62,7 +62,7 @@ export type CommonShapeAttrs<
   sceneFunc?: (
     context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
   ) => void
-  zIndex?: number
+  // zIndex?: number
 } & Partial<FillModeMixture> /* & FillModeMonopole */ & {
     shadowEnabled?: boolean
     shadow?: Partial<Offset> & {

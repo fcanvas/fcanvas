@@ -41,7 +41,7 @@ export type CommonGroupAttrs = Partial<Offset> &
     visible?: boolean
     offscreen?: boolean
     sync?: boolean
-    zIndex?: number
+    // zIndex?: number
   }
 
 export class Group<

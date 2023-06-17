@@ -1,45 +1,45 @@
-import type { ComputedRef, ShallowReactive } from "@vue/reactivity"
-import { computed, shallowReactive } from "@vue/reactivity"
+import type { ShallowReactive } from "@vue/reactivity"
+import { shallowReactive } from "@vue/reactivity"
 
-import { CHILD_NODE, CHILD_SORTED } from "../symbols"
+import { CHILD_NODE } from "../symbols"
 import type { GetClientRectOptions } from "../type/GetClientRectOptions"
 import type { FakeShape } from "../utils/getClientRectOfGroup"
 import { getClientRectGroup } from "../utils/getClientRectOfGroup"
 
 import { APIEvent } from "./APIEvent"
 
-function partition(children: FakeShape[], left: number, right: number) {
-  const pivotIndex = right
-  const pivotValue = children[pivotIndex].$.zIndex ?? 0.5
-  right--
-  while (true) {
-    while (left <= right && (children[left].$.zIndex ?? 0.5) < pivotValue)
-      left++
+// function partition(children: FakeShape[], left: number, right: number) {
+//   const pivotIndex = right
+//   const pivotValue = children[pivotIndex].$.zIndex ?? 0.5
+//   right--
+//   while (true) {
+//     while (left <= right && (children[left].$.zIndex ?? 0.5) < pivotValue)
+//       left++
 
-    while (left <= right && (children[right].$.zIndex ?? 0.5) > pivotValue)
-      right--
+//     while (left <= right && (children[right].$.zIndex ?? 0.5) > pivotValue)
+//       right--
 
-    if (left >= right) break
-    ;[children[left], children[right]] = [children[right], children[left]]
-    left++
-    right--
-  }
-  ;[children[left], children[pivotIndex]] = [
-    children[pivotIndex],
-    children[left]
-  ]
-  return left
-}
-function quickSortShapes(
-  children: FakeShape[],
-  left = 0,
-  right: number = children.length - 1
-) {
-  if (left >= right) return
-  const pivotIndex = partition(children, left, right)
-  quickSortShapes(children, left, pivotIndex - 1)
-  quickSortShapes(children, pivotIndex + 1, right)
-}
+//     if (left >= right) break
+//     ;[children[left], children[right]] = [children[right], children[left]]
+//     left++
+//     right--
+//   }
+//   ;[children[left], children[pivotIndex]] = [
+//     children[pivotIndex],
+//     children[left]
+//   ]
+//   return left
+// }
+// function quickSortShapes(
+//   children: FakeShape[],
+//   left = 0,
+//   right: number = children.length - 1
+// ) {
+//   if (left >= right) return
+//   const pivotIndex = partition(children, left, right)
+//   quickSortShapes(children, left, pivotIndex - 1)
+//   quickSortShapes(children, pivotIndex + 1, right)
+// }
 
 export abstract class APIChildNode<
   ChildNode extends FakeShape,
@@ -52,18 +52,18 @@ export abstract class APIChildNode<
     return this[CHILD_NODE]
   }
 
-  public readonly [CHILD_SORTED]: ComputedRef<ChildNode[]>
+  // public readonly [CHILD_SORTED]: ComputedRef<ChildNode[]>
 
-  constructor() {
-    super()
-    this[CHILD_SORTED] = computed(() => {
-      const arr = Array.from(this.children.values())
+  // constructor() {
+  //   super()
+  //   this[CHILD_SORTED] = computed(() => {
+  //     const arr = Array.from(this.children.values())
 
-      quickSortShapes(arr)
+  //     quickSortShapes(arr)
 
-      return arr
-    })
-  }
+  //     return arr
+  //   })
+  // }
 
   public add(node: ChildNode) {
     return this[CHILD_NODE].add(node)
