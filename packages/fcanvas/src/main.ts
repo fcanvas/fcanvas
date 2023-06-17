@@ -3,7 +3,6 @@ import {
   computed,
   Group,
   Layer,
-  Rect,
   Stage,
   useMouseIsPressed,
   useMousePos
@@ -22,13 +21,8 @@ const circle = new Circle({
   y: computed(() => pos.mouseY),
   radius: 50,
   stroke: "#fff",
-  fill: computed(() => (mouseIsPressed.value ? "red" : "transparent")),
-  zIndex: 10
+  fill: computed(() => (mouseIsPressed.value ? "red" : "transparent"))
 })
 layer.add(circle)
-new Rect({
-  x: 0,y: 0,width: 50, height: 50, fill: 'red',
-  zIndex: 0
-}).addTo(layer)
 
 Object.assign(window, { stage, layer, circle, group: new Group() })
