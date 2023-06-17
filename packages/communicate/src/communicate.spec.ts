@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { listen, put } from "./communicate"
+import { sleep } from "../../node/src"
+
+import { listen, ping, put } from "./communicate"
 
 describe("communicate", () => {
   // eslint-disable-next-line functional/no-let
@@ -125,6 +127,53 @@ describe("communicate", () => {
       )
 
       expect(await put(port2, "test")).toBe(0)
+      expect(fn.mock.calls.length).toBe(1)
+      await expect(
+        put(port2, { name: "test", timeout: 1_000 })
+      ).rejects.toThrow("timeout")
+      expect(fn.mock.calls.length).toBe(1)
+    })
+    test("use option once: true with ping", async () => {
+      const fn = vi.fn()
+
+      listen(
+        port1,
+        "test",
+        async () => {
+          fn()
+          return 0
+        },
+        {
+          once: true
+        }
+      )
+
+      await ping(port2, "test")
+      await sleep(400)
+      expect(fn.mock.calls.length).toBe(1)
+      await expect(
+        put(port2, { name: "test", timeout: 1_000 })
+      ).rejects.toThrow("timeout")
+      expect(fn.mock.calls.length).toBe(1)
+    })
+    test("use option once: true & unique: true with ping", async () => {
+      const fn = vi.fn()
+
+      listen(
+        port1,
+        "test",
+        async () => {
+          fn()
+          return 0
+        },
+        {
+          once: true,
+          unique: true
+        }
+      )
+
+      await ping(port2, "test")
+      await sleep(400)
       expect(fn.mock.calls.length).toBe(1)
       await expect(
         put(port2, { name: "test", timeout: 1_000 })

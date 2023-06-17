@@ -28,6 +28,7 @@ function listen<Fn extends FnAny>(
   >,
   options?: {
     once?: boolean
+    unique?: boolean
     debug?: boolean
   }
 ): () => void
@@ -46,6 +47,7 @@ function listen<
   >,
   options?: {
     once?: boolean
+    unique?: boolean
     debug?: boolean
   }
 ): () => void
@@ -62,6 +64,7 @@ function listen<Fn extends FnAny>(
   >,
   options?: {
     once?: boolean
+    unique?: boolean
     debug?: boolean
   }
 ) {
@@ -122,24 +125,31 @@ function listen<Fn extends FnAny>(
   // eslint-disable-next-line functional/no-let
   let conf = storeListen.get(port)
   if (!conf) {
-    const cbs: NonNullable<ReturnType<typeof storeListen.get>>["cbs"] =
-      new Set()
-    cbs.add(handler)
-    storeListen.set(
-      port,
-      (conf = {
-        handle(event) {
-          cbs.forEach((cb) => cb(event))
-        },
-        cbs
-      })
-    )
-    port.addEventListener("message", conf.handle)
+    if (options?.unique) {
+      port.addEventListener("message", handler)
+    } else {
+      const cbs: NonNullable<ReturnType<typeof storeListen.get>>["cbs"] = new Set()
+      cbs.add(handler)
+      storeListen.set(
+        port,
+        (conf = {
+          handle(event) {
+            cbs.forEach((cb) => cb(event))
+          },
+          cbs
+        })
+      )
+      port.addEventListener("message", conf.handle)
+    }
   } else {
     conf.cbs.add(handler)
   }
 
   function stop() {
+    if (options?.unique) {
+      port.removeEventListener("message", handler)
+      return
+    }
     const conf = storeListen.get(port)
     if (!conf) return
 
