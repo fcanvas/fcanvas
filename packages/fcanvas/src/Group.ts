@@ -18,6 +18,7 @@ import { drawLayer } from "./helpers/drawLayer"
 import {
   BOUNCE_CLIENT_RECT,
   BOUNDING_CLIENT_RECT,
+  CANVAS_ELEMENT,
   CHILD_NODE,
   COMPUTED_CACHE,
   CONTEXT_CACHE,
@@ -69,6 +70,7 @@ export class Group<
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
+  public readonly [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
 
   private readonly [CONTEXT_CACHE]: ReturnType<typeof createContext2D>
 
@@ -102,6 +104,7 @@ export class Group<
     this[CONTEXT_CACHE] = createContext2D(
       (!isDOM || unref(this.$.offscreen) !== false) as boolean
     )
+    this[CANVAS_ELEMENT] = this[CONTEXT_CACHE].canvas
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {
