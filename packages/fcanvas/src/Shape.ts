@@ -20,7 +20,6 @@ import { transformedRect } from "./helpers/transformerRect"
 import {
   BOUNCE_CLIENT_RECT,
   BOUNDING_CLIENT_RECT,
-  CANVAS_ELEMENT,
   COMPUTED_CACHE,
   CONTEXT_CACHE,
   CONTEXT_CACHE_SIZE,
@@ -133,9 +132,8 @@ export class Shape<
 
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
-  public readonly [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
 
-  private readonly [CONTEXT_CACHE]: ReturnType<typeof createContext2D>
+  public readonly [CONTEXT_CACHE]: ReturnType<typeof createContext2D>
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
@@ -169,7 +167,6 @@ export class Shape<
     this[CONTEXT_CACHE] = createContext2D(
       (!isDOM || unref(this.$.offscreen) !== false) as boolean
     )
-    this[CANVAS_ELEMENT] = this[CONTEXT_CACHE].canvas
 
     this[BOUNCE_CLIENT_RECT] = computed<Rect>(() => this.getClientRect())
     this[BOUNDING_CLIENT_RECT] = computed<Rect>(() => {

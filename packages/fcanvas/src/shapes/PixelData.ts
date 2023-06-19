@@ -6,7 +6,7 @@ import type { Group } from "../Group"
 import type { Layer } from "../Layer"
 import { Shape } from "../Shape"
 import { drawLayer } from "../helpers/drawLayer"
-import { CANVAS_ELEMENT, CHILD_NODE } from "../symbols"
+import { CANVAS_ELEMENT, CHILD_NODE, CONTEXT_CACHE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
@@ -49,14 +49,16 @@ export class PixelData extends Shape<PersonalAttrs> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
 
-    const _canvas = computed(() => this.$.src[CANVAS_ELEMENT])
+    const _canvas = computed(() => {
+      return (this.$.src as Layer)[CANVAS_ELEMENT] ?? (this.$.src as Shape)[CONTEXT_CACHE].canvas
+    })
     this._canvas = _canvas
 
     this._imageData = computed(() => {
       const ctx = createContext2D()
       ;[ctx.canvas.width, ctx.canvas.height] = [
-        this.$.src[CANVAS_ELEMENT].width,
-        this.$.src[CANVAS_ELEMENT].height
+        _canvas.value.width,
+        _canvas.value.height
       ]
 
       const source = this.$.src
