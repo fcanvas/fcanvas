@@ -128,7 +128,8 @@ function listen<Fn extends FnAny>(
     if (options?.unique) {
       port.addEventListener("message", handler)
     } else {
-      const cbs: NonNullable<ReturnType<typeof storeListen.get>>["cbs"] = new Set()
+      const cbs: NonNullable<ReturnType<typeof storeListen.get>>["cbs"] =
+        new Set()
       cbs.add(handler)
       storeListen.set(
         port,

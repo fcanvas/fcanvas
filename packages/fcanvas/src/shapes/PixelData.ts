@@ -54,7 +54,10 @@ export class PixelData extends Shape<PersonalAttrs> {
 
     this._imageData = computed(() => {
       const ctx = createContext2D()
-      ;[ctx.canvas.width, ctx.canvas.height] = [this.$.src[CANVAS_ELEMENT].width, this.$.src[CANVAS_ELEMENT].height]
+      ;[ctx.canvas.width, ctx.canvas.height] = [
+        this.$.src[CANVAS_ELEMENT].width,
+        this.$.src[CANVAS_ELEMENT].height
+      ]
 
       const source = this.$.src
       if (isLayerOrGroup(source)) {
@@ -64,7 +67,12 @@ export class PixelData extends Shape<PersonalAttrs> {
       } else {
         source.draw(ctx)
       }
-      return ctx.getImageData(this.$.sx ?? 0, this.$.sy ?? 0, this.$.sw ?? ctx.canvas.width, this.$.sy ?? ctx.canvas.height)
+      return ctx.getImageData(
+        this.$.sx ?? 0,
+        this.$.sy ?? 0,
+        this.$.sw ?? ctx.canvas.width,
+        this.$.sy ?? ctx.canvas.height
+      )
     })
     this._size = computed(() => (this._imageData.value?.data.length ?? 0) / 4)
     this._deps = ref(0)
@@ -75,8 +83,8 @@ export class PixelData extends Shape<PersonalAttrs> {
       if (marked) return
       marked = true
       this._deps.value++
-      // eslint-disable-next-line promise/catch-or-return, no-return-assign
-      resolved.then(() => marked = false)
+      // eslint-disable-next-line promise/catch-or-return
+      resolved.then(() => (marked = false))
     }
   }
 
@@ -119,8 +127,8 @@ export class PixelData extends Shape<PersonalAttrs> {
     return {
       x: 0,
       y: 0,
-      width: this.$.width ?? (this.$.sw ?? this._canvas.value.width),
-      height: this.$.height ?? (this.$.sh ?? this._canvas.value.height)
+      width: this.$.width ?? this.$.sw ?? this._canvas.value.width,
+      height: this.$.height ?? this.$.sh ?? this._canvas.value.height
     }
   }
 }
