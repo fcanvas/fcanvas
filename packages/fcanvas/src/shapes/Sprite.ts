@@ -66,6 +66,7 @@ export class Sprite<
 
   private _running = false
   private _timeout?: ReturnType<typeof setInterval>
+  private _stopWaitStart?: () => void
 
   constructor(
     attrs: TorFnT<
@@ -81,6 +82,8 @@ export class Sprite<
     super(attrs as unknown as any)
 
     this[SCOPE].fOn()
+
+    this._size = computed(() => this.getSize())
 
     this._image = computed<CanvasImageSource>(() => {
       const { image } = this.$
@@ -211,6 +214,10 @@ export class Sprite<
 
     this._running = true
     clearTimeout(this._timeout)
+    if (this._stopWaitStart) {
+      this._stopWaitStart()
+      this._stopWaitStart = undefined
+    }
 
     const looper = () => {
       const frameEnd =
@@ -221,6 +228,14 @@ export class Sprite<
           this.currentFrameIndex.value = 0
         } else {
           this.stop()
+          this._stopWaitStart = watch(() => [
+            this.currentFrameIndex.value >= this.frames.value.length - 1,
+            this.currentFrames.value.infinite
+          ], () => {
+            this.start()
+            this._stopWaitStart?.()
+            this._stopWaitStart = undefined
+          })
           return
         }
       } else {
@@ -238,6 +253,10 @@ export class Sprite<
     if (this._timeout) {
       clearTimeout(this._timeout)
       this._timeout = undefined
+    }
+    if (this._stopWaitStart) {
+      this._stopWaitStart()
+      this._stopWaitStart = undefined
     }
 
     this._running = false
