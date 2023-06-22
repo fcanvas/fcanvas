@@ -6,7 +6,7 @@ import type { Group } from "../Group"
 import type { Layer } from "../Layer"
 import { Shape } from "../Shape"
 import { drawLayer } from "../helpers/drawLayer"
-import { CANVAS_ELEMENT, CHILD_NODE, CONTEXT_CACHE } from "../symbols"
+import { CANVAS_ELEMENT, CHILD_NODE, CONTEXT_CACHE, SCOPE } from "../symbols"
 import type { CommonShapeAttrs } from "../type/CommonShapeAttrs"
 import type { TorFnT } from "../type/TorFnT"
 import type { ReactiveType } from "../type/fn/ReactiveType"
@@ -49,6 +49,8 @@ export class PixelData extends Shape<PersonalAttrs> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)
 
+    this[SCOPE].fOn()
+
     const _canvas = computed(() => {
       return (this.$.src as Layer)[CANVAS_ELEMENT] ?? (this.$.src as Shape)[CONTEXT_CACHE].canvas
     })
@@ -88,6 +90,7 @@ export class PixelData extends Shape<PersonalAttrs> {
       // eslint-disable-next-line promise/catch-or-return
       resolved.then(() => (marked = false))
     }
+    this[SCOPE].fOff()
   }
 
   public get size(): number {
