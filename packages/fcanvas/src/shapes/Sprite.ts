@@ -24,6 +24,9 @@ interface AnimationFrames {
    * */
 
   frameRate?: number
+
+  /** @default: $.infinite */
+  infinite?: boolean
 }
 
 type PersonalAttrs<
@@ -90,13 +93,15 @@ export class Sprite<
           return {
             frames,
             frameIndex: this.$.frameIndex ?? 0,
-            frameRate: this.$.frameRate ?? 17
+            frameRate: this.$.frameRate ?? 17,
+            infinite: this.$.infinite ?? true
           }
         }
 
         return {
           frameIndex: this.$.frameIndex ?? 0,
           frameRate: this.$.frameRate ?? 17,
+          infinite: this.$.infinite ?? true,
           ...frames
         }
       }
@@ -124,7 +129,7 @@ export class Sprite<
       return (
         this.frames.value[this.currentFrameIndex.value] ??
         this.frames.value[
-          this.$.infinite !== true ? 0 : this.frames.value.length - 1
+          this.currentFrames.value.infinite ? 0 : this.frames.value.length - 1
         ]
       )
     })
@@ -197,7 +202,7 @@ export class Sprite<
         this.currentFrameIndex.value >= this.frames.value.length - 1
 
       if (frameEnd) {
-        if (this.$.infinite !== false) {
+        if (this.currentFrames.value.infinite && this.currentFrameIndex.value !== 0) {
           this.currentFrameIndex.value = 0
         } else {
           this.stop()
