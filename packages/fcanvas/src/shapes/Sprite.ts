@@ -50,8 +50,12 @@ export class Sprite<
   private readonly _image: ComputedRef<CanvasImageSource>
   private readonly cropImageCache: Map<string, OffscreenCanvas> = new Map()
 
+  private readonly _size: ComputedRef<{ width: number; height: number }>
+
   private readonly currentFrames: ComputedRef<
-    Required<Exclude<AnimationFrames, string[]>>
+    Required<Exclude<AnimationFrames, string[]>> & {
+      _: AnimationFrames | number[]
+    }
   >
 
   private readonly frames: ComputedRef<OffscreenCanvas[]>
@@ -85,12 +89,16 @@ export class Sprite<
 
       return image
     })
-    this.currentFrames = computed<Required<Exclude<AnimationFrames, string[]>>>(
+    interface CurrentFrames extends Required<Exclude<AnimationFrames, string[]>> {
+      _: AnimationFrames | number[]
+    }
+    this.currentFrames = computed<CurrentFrames>(
       () => {
         const frames = this.$.animations[this.$.animation]
 
         if (Array.isArray(frames)) {
           return {
+            _: frames,
             frames,
             frameIndex: this.$.frameIndex ?? 0,
             frameRate: this.$.frameRate ?? 17,
@@ -99,6 +107,7 @@ export class Sprite<
         }
 
         return {
+          _: frames,
           frameIndex: this.$.frameIndex ?? 0,
           frameRate: this.$.frameRate ?? 17,
           infinite: this.$.infinite ?? true,
@@ -106,9 +115,15 @@ export class Sprite<
         }
       }
     )
+    const framesStore = new WeakMap<AnimationFrames | number[], OffscreenCanvas[]>()
     this.frames = computed<OffscreenCanvas[]>(() => {
-      const groups = []
-      const { frames } = this.currentFrames.value
+      const { frames, _ } = this.currentFrames.value
+      const cache = framesStore.get(_)
+
+      if (cache) return cache
+
+      const groups: OffscreenCanvas[] = []
+      framesStore.set(_, groups)
       // eslint-disable-next-line functional/no-let
       for (let i = 0; i < frames.length; i += 4) {
         groups.push(
@@ -170,7 +185,7 @@ export class Sprite<
   protected _sceneFunc(context: CanvasRenderingContext2D) {
     if (this.$.fillEnabled !== false || this.$.strokeEnabled !== false) {
       context.beginPath()
-      const { width, height } = this.getSize()
+      const { width, height } = this._size.value
       context.rect(0, 0, width, height)
       context.closePath()
       this.fillStrokeScene(context)
