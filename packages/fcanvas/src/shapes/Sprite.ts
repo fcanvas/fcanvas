@@ -76,7 +76,8 @@ export class Sprite<
         }
       >,
       Sprite<Animations, LocalPersonalAttrs>
-    >
+    >,
+    private dev = false
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     super(attrs as unknown as any)

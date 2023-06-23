@@ -1,5 +1,5 @@
-import type { ComputedRef, UnwrapNestedRefs } from "@vue/reactivity"
-import { computed, reactive, toRaw, unref } from "@vue/reactivity"
+import type { ComputedRef, Ref, UnwrapNestedRefs } from "@vue/reactivity"
+import { computed, reactive, ref, toRaw, unref } from "@vue/reactivity"
 import type gsap from "gsap"
 import { watchEffect } from "src/fns/watch"
 
@@ -24,6 +24,7 @@ import {
   CONTEXT_CACHE,
   CONTEXT_CACHE_SIZE,
   DRAW_CONTEXT_ON_SANDBOX,
+  REF_MARK_CHANGE,
   SCOPE
 } from "./symbols"
 import type {
@@ -137,6 +138,7 @@ export class Shape<
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
+  private readonly [REF_MARK_CHANGE]: Ref<number>
 
   protected readonly [SCOPE] = effectScopeFlat()
 
@@ -180,8 +182,11 @@ export class Shape<
         height
       }
     })
+    this[REF_MARK_CHANGE] = ref(0)
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
+      // eslint-disable-next-line no-unused-expressions
+      this[REF_MARK_CHANGE].value
       if (this.$.perfectDrawEnabled !== false) {
         const ctx = this[CONTEXT_CACHE]
 
@@ -209,6 +214,7 @@ export class Shape<
           const ctx = this[CONTEXT_CACHE]
           const { width, height } = this[CONTEXT_CACHE_SIZE].value
           ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
+          this.markChange()
 
           this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
           if (__DEV_LIB__) {
@@ -333,6 +339,10 @@ export class Shape<
       width: this.$.width as number,
       height: this.$.height as number
     }
+  }
+
+  public markChange() {
+    this[REF_MARK_CHANGE].value++
   }
 
   public getRect() {

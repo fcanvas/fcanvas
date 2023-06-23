@@ -1,5 +1,6 @@
 import type {
   ComputedRef,
+  Ref,
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
@@ -26,6 +27,7 @@ import {
   COMPUTED_CACHE,
   CONTEXT_CACHE,
   DRAW_CONTEXT_ON_SANDBOX,
+  REF_MARK_CHANGE,
   SCOPE
 } from "./symbols"
 import type { CommonShapeEvents } from "./type/CommonShapeEvents"
@@ -58,8 +60,6 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
     return this.$
   }
 
-  public readonly markChange: () => number
-
   public readonly [BOUNCE_CLIENT_RECT]: ComputedRef<Rect>
   public readonly [BOUNDING_CLIENT_RECT]: ComputedRef<Rect>
 
@@ -67,6 +67,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
   public [CANVAS_ELEMENT]: HTMLCanvasElement | OffscreenCanvas
 
   private readonly [COMPUTED_CACHE]: ComputedRef<number>
+  private readonly [REF_MARK_CHANGE]: Ref<number>
 
   private readonly [SCOPE] = effectScopeFlat()
 
@@ -121,20 +122,19 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
         height
       }
     })
-    const _countMarkChange = ref(0)
+    this[REF_MARK_CHANGE] = ref(0)
     // eslint-disable-next-line functional/no-let
     let countDraw = 0
     this[COMPUTED_CACHE] = computed<number>(() => {
       const ctx = this[CONTEXT_CACHE]
       // eslint-disable-next-line no-unused-expressions
-      _countMarkChange.value
+      this[REF_MARK_CHANGE].value
       if (this.$.clearBeforeDraw !== false)
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       this[DRAW_CONTEXT_ON_SANDBOX](ctx)
 
       return ++countDraw
     })
-    this.markChange = () => ++_countMarkChange.value
 
     // try watchEffect
     watchEffect(() => {
@@ -146,6 +146,7 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
       // reactive
       const canvas = this[CANVAS_ELEMENT]
       ;[canvas.width, canvas.height] = [width, height]
+      this.markChange()
 
       this.emit("resize", extendTarget(new UIEvent("resize"), canvas))
       if (__DEV_LIB__) {
@@ -175,6 +176,10 @@ export class Layer extends APIGroup<Shape | Group, CommonShapeEvents> {
 
   public toCanvas() {
     return this[CANVAS_ELEMENT]
+  }
+
+  public markChange() {
+    this[REF_MARK_CHANGE].value++
   }
 
   private [DRAW_CONTEXT_ON_SANDBOX](

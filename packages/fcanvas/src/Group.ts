@@ -1,9 +1,10 @@
 import type {
   ComputedRef,
+  Ref,
   ShallowReactive,
   UnwrapNestedRefs
 } from "@vue/reactivity"
-import { computed, reactive, unref } from "@vue/reactivity"
+import { computed, reactive, ref, unref } from "@vue/reactivity"
 import { watch } from "src/fns/watch"
 
 import type { Layer } from "./Layer"
@@ -23,6 +24,7 @@ import {
   CONTEXT_CACHE,
   CONTEXT_CACHE_SIZE,
   DRAW_CONTEXT_ON_SANDBOX,
+  REF_MARK_CHANGE,
   SCOPE
 } from "./symbols"
 import type { CommonShapeAttrs } from "./type/CommonShapeAttrs"
@@ -74,6 +76,7 @@ export class Group<
 
   private readonly [COMPUTED_CACHE]: ComputedRef<boolean>
   private readonly [CONTEXT_CACHE_SIZE]: ComputedRef<Size>
+  private readonly [REF_MARK_CHANGE]: Ref<number>
 
   private readonly [SCOPE] = effectScopeFlat()
 
@@ -115,8 +118,11 @@ export class Group<
         height
       }
     })
+    this[REF_MARK_CHANGE] = ref(0)
     this[COMPUTED_CACHE] = computed<boolean>(() => {
       // ...
+      // eslint-disable-next-line no-unused-expressions
+      this[REF_MARK_CHANGE].value
       const ctx = this[CONTEXT_CACHE]
 
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -153,6 +159,7 @@ export class Group<
         const ctx = this[CONTEXT_CACHE]
         if (ctx.canvas.width === width && ctx.canvas.height === height) return
         ;[ctx.canvas.width, ctx.canvas.height] = [width, height]
+        this.markChange()
 
         this.emit("resize", extendTarget(new UIEvent("resize"), ctx.canvas))
         if (__DEV_LIB__) {
@@ -185,6 +192,10 @@ export class Group<
     drawLayer(context, this.$, this[CHILD_NODE], this)
 
     if (useTranslate) context.translate(clientRect.x, clientRect.y)
+  }
+
+  public markChange() {
+    this[REF_MARK_CHANGE].value++
   }
 
   public draw(
