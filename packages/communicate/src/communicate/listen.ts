@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { isError } from "../logic/is-error"
 import type {
   DataCallFn,
   DataReturnFn,
@@ -7,6 +8,14 @@ import type {
   MayBePromise,
   WindowPostMessageOptions
 } from "../type"
+
+const stringifyOrRaw = (data: any) => {
+  try {
+    return JSON.stringify(data)
+  } catch {
+    return JSON.stringify(data + "")
+  }
+}
 
 const storeListen = new WeakMap<
   LikeMessagePort,
@@ -86,7 +95,7 @@ function listen<Fn extends FnAny>(
           } & WindowPostMessageOptions)
         | undefined
       // eslint-disable-next-line functional/no-let
-      let err: string | undefined
+      let err: unknown | undefined
       try {
         const r = await listener(...data.args)
 
@@ -99,7 +108,7 @@ function listen<Fn extends FnAny>(
         }
       } catch (error) {
         if (options?.debug) console.warn(error)
-        err = error + ""
+        err = error
       }
 
       const message: DataReturnFn<Fn> = {
@@ -112,8 +121,15 @@ function listen<Fn extends FnAny>(
               isOk: true
             }
           : {
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              retu: err!,
+              retu: isError(err)
+                ? {
+                    isError: true,
+                    data: err.message
+                  }
+                : {
+                    isError: false,
+                    data: stringifyOrRaw(err)
+                  },
               isOk: false
             })
       }

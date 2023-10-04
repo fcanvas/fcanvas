@@ -91,8 +91,12 @@ function put<Fn extends FnAny>(
       if (typeof data !== "object") return
 
       if (data.type === "return_fn" && data.id === id && data.name === name) {
-        if (data.isOk) resolve(data.retu)
-        else reject(new Error(data.retu))
+        if (data.isOk) {
+          resolve(data.retu)
+        } else {
+          if (data.retu.isError) reject(new Error(data.retu.data))
+          else reject(JSON.parse(data.retu.data))
+        }
 
         stop()
       }

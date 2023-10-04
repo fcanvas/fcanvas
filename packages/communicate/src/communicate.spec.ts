@@ -180,6 +180,27 @@ describe("communicate", () => {
       ).rejects.toThrow("timeout")
       expect(fn.mock.calls.length).toBe(1)
     })
+
+    test("should listen emit Error (instanceof Error)", async () => {
+      listen(port1, "test", () => {
+        // eslint-disable-next-line functional/no-throw-statement
+        throw new Error("me is error")
+      })
+
+      expect(put(port2, "test")).rejects.toThrowError("me is error")
+    })
+    test("should listen emit Error (instanceof Object)", async () => {
+      listen(port1, "test", () => {
+        // eslint-disable-next-line no-throw-literal, functional/no-throw-statement
+        throw {
+          me_is: "error"
+        }
+      })
+
+      expect(put(port2, "test")).rejects.toEqual({
+        me_is: "error"
+      })
+    })
   })
   describe("put", () => {
     test("options: timeout", async () => {

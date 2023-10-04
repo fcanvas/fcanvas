@@ -41,5 +41,8 @@ export type DataReturnFn<Fn extends (...args: unknown[]) => unknown> =
       type: "return_fn"
       name: string
       isOk: false
-      retu: string
+      retu: {
+        isError: boolean
+        data: string
+      }
     }
