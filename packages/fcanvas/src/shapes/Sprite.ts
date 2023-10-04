@@ -93,33 +93,35 @@ export class Sprite<
 
       return image
     })
-    interface CurrentFrames extends Required<Exclude<AnimationFrames, string[]>> {
+    interface CurrentFrames
+      extends Required<Exclude<AnimationFrames, string[]>> {
       _: AnimationFrames | number[]
     }
-    this.currentFrames = computed<CurrentFrames>(
-      () => {
-        const frames = this.$.animations[this.$.animation]
+    this.currentFrames = computed<CurrentFrames>(() => {
+      const frames = this.$.animations[this.$.animation]
 
-        if (Array.isArray(frames)) {
-          return {
-            _: frames,
-            frames,
-            frameIndex: this.$.frameIndex ?? 0,
-            frameRate: this.$.frameRate ?? 17,
-            infinite: this.$.infinite ?? true
-          }
-        }
-
+      if (Array.isArray(frames)) {
         return {
           _: frames,
+          frames,
           frameIndex: this.$.frameIndex ?? 0,
           frameRate: this.$.frameRate ?? 17,
-          infinite: this.$.infinite ?? true,
-          ...frames
+          infinite: this.$.infinite ?? true
         }
       }
-    )
-    const framesStore = new WeakMap<AnimationFrames | number[], OffscreenCanvas[]>()
+
+      return {
+        _: frames,
+        frameIndex: this.$.frameIndex ?? 0,
+        frameRate: this.$.frameRate ?? 17,
+        infinite: this.$.infinite ?? true,
+        ...frames
+      }
+    })
+    const framesStore = new WeakMap<
+      AnimationFrames | number[],
+      OffscreenCanvas[]
+    >()
     this.frames = computed<OffscreenCanvas[]>(() => {
       const { frames, _ } = this.currentFrames.value
       const cache = framesStore.get(_)
@@ -225,18 +227,24 @@ export class Sprite<
         this.currentFrameIndex.value >= this.frames.value.length - 1
 
       if (frameEnd) {
-        if (this.currentFrames.value.infinite && this.currentFrameIndex.value !== 0) {
+        if (
+          this.currentFrames.value.infinite &&
+          this.currentFrameIndex.value !== 0
+        ) {
           this.currentFrameIndex.value = 0
         } else {
           this.stop()
-          this._stopWaitStart = watch(() => [
-            this.currentFrameIndex.value >= this.frames.value.length - 1,
-            this.currentFrames.value.infinite
-          ], () => {
-            this.start()
-            this._stopWaitStart?.()
-            this._stopWaitStart = undefined
-          })
+          this._stopWaitStart = watch(
+            () => [
+              this.currentFrameIndex.value >= this.frames.value.length - 1,
+              this.currentFrames.value.infinite
+            ],
+            () => {
+              this.start()
+              this._stopWaitStart?.()
+              this._stopWaitStart = undefined
+            }
+          )
           return
         }
       } else {

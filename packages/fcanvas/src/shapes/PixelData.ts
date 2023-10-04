@@ -52,7 +52,10 @@ export class PixelData extends Shape<PersonalAttrs> {
     this[SCOPE].fOn()
 
     const _canvas = computed(() => {
-      return (this.$.src as Layer)[CANVAS_ELEMENT] ?? (this.$.src as Shape)[CONTEXT_CACHE].canvas
+      return (
+        (this.$.src as Layer)[CANVAS_ELEMENT] ??
+        (this.$.src as Shape)[CONTEXT_CACHE].canvas
+      )
     })
     this._canvas = _canvas
 
