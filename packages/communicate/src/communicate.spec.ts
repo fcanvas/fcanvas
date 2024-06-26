@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { sleep } from "../../node/src"
 
-import { listen, ping, put } from "./communicate"
+import { listen, ping, put, wait } from "./communicate"
 
 describe("communicate", () => {
   // eslint-disable-next-line functional/no-let
@@ -36,10 +36,10 @@ describe("communicate", () => {
 
         listen<(msg1: string, msg2: string) => void>(
           port1,
-        "test",
-        (msg1, msg2) => {
-          fn([msg1, msg2].join(" "))
-        }
+          "test",
+          (msg1, msg2) => {
+            fn([msg1, msg2].join(" "))
+          }
         )
 
         await put(port2, "test", "hello", "world")
@@ -231,6 +231,19 @@ describe("communicate", () => {
       ).rejects.toThrow("aborted")
 
       abort.abort()
+    })
+  })
+  describe("wait", () => {
+    test("work", async () => {
+      const promis = wait(port2, "test")
+      await put(port1, "test")
+
+      expect(promis).resolves.toEqual([])
+    })
+    test("options: timeout", async () => {
+      // listen(port1, "test", () => {})
+
+      expect(wait(port2, "test", 50)).rejects.toThrow("timeout")
     })
   })
 })

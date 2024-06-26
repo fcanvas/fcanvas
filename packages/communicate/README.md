@@ -173,6 +173,17 @@ This is a shortened function of `put` that takes no response. it also doesn't ca
 
 The options of this function are identical to `put` except that it does not accept `options.timeout`, `option.signal` and returns nothing.
 
+### `wait`
+This function waits for a call from `ping` or `put`
+```typescript
+await wait(port1, "ready", 60_000)
+
+console.log("Done")
+//
+
+await put(port2, "ready") // after promise resolve console.log("Done") start run
+```
+
 ### TypeScript
 This plugin also supports TypeScript strong and weak type inference
 
