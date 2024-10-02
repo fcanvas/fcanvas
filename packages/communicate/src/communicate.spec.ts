@@ -2,6 +2,8 @@
 import { sleep } from "../../node/src"
 
 import { listen, ping, put, wait } from "./communicate"
+import { defineMessging } from "./communicate/messging"
+import { FnAny, LikeMessagePort } from "./type"
 
 describe("communicate", () => {
   // eslint-disable-next-line functional/no-let
@@ -244,6 +246,19 @@ describe("communicate", () => {
       // listen(port1, "test", () => {})
 
       expect(wait(port2, "test", 50)).rejects.toThrow("timeout")
+    })
+  })
+
+  describe("typed messaging", () => {
+    test("should correctly infer return type for put function", async () => {
+      const { sendMessage, onMessage } = defineMessging<{
+        add: (a: number, b: number) => number
+        toString: (a: number) => string
+      }>()
+      onMessage(port1, "add", (a, b) => a + b)
+      onMessage(port1, "toString", (a) => a.toString())
+      expect<number>(await sendMessage(port2, "add", 1, 2)).toEqual(3)
+      expect<string>(await sendMessage(port2, "toString", 1)).toEqual("1")
     })
   })
 })
