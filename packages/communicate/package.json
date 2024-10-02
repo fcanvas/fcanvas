@@ -1,6 +1,6 @@
 {
   "name": "@fcanvas/communicate",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "This package allows a simple connection between MessageChannel-based channels such as WebWorker",
   "scripts": {
     "build": "tsup",
