@@ -56,10 +56,10 @@ function put<Fn extends FnAny>(
   options:
     | string
     | ({
-        name: string
-        timeout?: number
-        signal?: AbortSignal
-      } & WindowPostMessageOptions),
+      name: string
+      timeout?: number
+      signal?: AbortSignal
+    } & WindowPostMessageOptions),
   // eslint-disable-next-line functional/functional-parameters
   ...args: Parameters<Fn>
 ): Promise<Awaited<ReturnType<Fn>>> {
@@ -102,13 +102,10 @@ function put<Fn extends FnAny>(
       }
     }
 
-    const timeoutId =
-      timeout > 0
-        ? setTimeout(() => {
-            stop()
-            reject(new Error("timeout"))
-          }, timeout)
-        : null
+    const timeoutId = timeout > 0 ? setTimeout(() => {
+      stop()
+      reject(new Error("timeout"))
+    }, timeout) : null
     function onAbort() {
       stop()
       reject(new Error("aborted"))
