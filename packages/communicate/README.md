@@ -216,6 +216,41 @@ put<Connect>(self, "hello") // ❗ error
 put<Connect>(self, "hellx", "Shin") // ❗ error
 ```
 
+Since some limited features of typescript cause mixed types to be incorrect, I have added a new syntax i.e. `put`, `ping` and `listen` functions will return a function call after calling the function that will be the real result
+```typescript
+await put<{
+  getValue(): string
+  getNumber(): number
+  setValue(val: string): void
+  setNumber(val: number): void
+}>(self)("getValue") // string
+
+await put<{
+  getValue(): string
+  getNumber(): number
+  setValue(val: string): void
+  setNumber(val: number): void
+}>(self)("setValue", "Hello world") // only accept string
+```
+```typescript
+listen<{
+  getValue(): string
+  getNumber(): number
+  setValue(val: string): void
+  setNumber(val: number): void
+}>(self)("getValue", () => {
+  return "hello" // accept string
+})
+
+listen<{
+  getValue(): string
+  getNumber(): number
+  setValue(val: string): void
+  setNumber(val: number): void
+}>(self)("setValue", value => {
+  // value is string
+})
+```
 
 ### Copyright
 MIT - (c) 2022-now Tachibana Shin (橘しん)

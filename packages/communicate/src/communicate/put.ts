@@ -12,7 +12,7 @@ const storePut = new WeakMap<
 >()
 
 function put<
-  Options extends Record<string, FnAny>,
+  Options extends Record<any, FnAny>,
   Name extends keyof Options = keyof Options
 >(
   port: LikeMessagePort,
@@ -28,7 +28,7 @@ function put<Fn extends FnAny>(
 
 // eslint-disable-next-line no-redeclare
 function put<
-  Options extends Record<string, FnAny>,
+  Options extends Record<any, FnAny>,
   Name extends keyof Options = keyof Options
 >(
   port: LikeMessagePort,
@@ -51,18 +51,44 @@ function put<Fn extends FnAny>(
 ): Promise<Awaited<ReturnType<Fn>>>
 
 // eslint-disable-next-line no-redeclare
+function put<Options extends Record<any, FnAny>>(
+  port: LikeMessagePort
+): <Name extends keyof Options>(
+  name: Name,
+  ...args: Parameters<Options[Name]>
+) => Promise<Awaited<ReturnType<Options[Name]>>>
+// eslint-disable-next-line no-redeclare
+function put<Options extends Record<any, FnAny>>(
+  port: LikeMessagePort
+): <Name extends keyof Options>(
+  options: {
+    name: Name
+    timeout?: number
+    signal?: AbortSignal
+  } & WindowPostMessageOptions,
+  ...args: Parameters<Options[Name]>
+) => Promise<Awaited<ReturnType<Options[Name]>>>
+
+// eslint-disable-next-line no-redeclare
 function put<Fn extends FnAny>(
   port: LikeMessagePort,
-  options:
+  options?:
     | string
     | ({
-      name: string
-      timeout?: number
-      signal?: AbortSignal
-    } & WindowPostMessageOptions),
+        name: string
+        timeout?: number
+        signal?: AbortSignal
+      } & WindowPostMessageOptions),
   // eslint-disable-next-line functional/functional-parameters
   ...args: Parameters<Fn>
-): Promise<Awaited<ReturnType<Fn>>> {
+): Promise<Awaited<ReturnType<Fn>>> | Function {
+  if (!options)
+    // syntax put(self)("run")
+    return (
+      name: Exclude<typeof options, undefined>,
+      ...args: Parameters<Fn>
+    ) => put(port, name, ...args)
+
   return new Promise<Awaited<ReturnType<Fn>>>((resolve, reject) => {
     const id = uuid()
 
@@ -102,10 +128,13 @@ function put<Fn extends FnAny>(
       }
     }
 
-    const timeoutId = timeout > 0 ? setTimeout(() => {
-      stop()
-      reject(new Error("timeout"))
-    }, timeout) : null
+    const timeoutId =
+      timeout > 0
+        ? setTimeout(() => {
+            stop()
+            reject(new Error("timeout"))
+          }, timeout)
+        : null
     function onAbort() {
       stop()
       reject(new Error("aborted"))

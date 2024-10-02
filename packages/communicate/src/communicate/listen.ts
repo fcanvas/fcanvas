@@ -43,7 +43,7 @@ function listen<Fn extends FnAny>(
 ): () => void
 // eslint-disable-next-line no-redeclare
 function listen<
-  Options extends Record<string, FnAny>,
+  Options extends Record<any, FnAny>,
   Name extends keyof Options = keyof Options
 >(
   port: LikeMessagePort,
@@ -62,10 +62,28 @@ function listen<
 ): () => void
 
 // eslint-disable-next-line no-redeclare
+function listen<Options extends Record<any, FnAny>>(
+  port: LikeMessagePort
+): <Name extends keyof Options>(
+  name: Name,
+  listener: (...args: Parameters<Options[Name]>) => MayBePromise<
+    | ({
+        return: Awaited<ReturnType<Options[Name]>>
+      } & WindowPostMessageOptions)
+    | Awaited<ReturnType<Options[Name]>>
+  >,
+  options?: {
+    once?: boolean
+    unique?: boolean
+    debug?: boolean
+  }
+) => () => void
+
+// eslint-disable-next-line no-redeclare
 function listen<Fn extends FnAny>(
   port: LikeMessagePort,
-  name: string,
-  listener: (...args: Parameters<Fn>) => MayBePromise<
+  name?: string,
+  listener?: (...args: Parameters<Fn>) => MayBePromise<
     | ({
         return: Awaited<ReturnType<Fn>>
       } & WindowPostMessageOptions)
@@ -77,6 +95,13 @@ function listen<Fn extends FnAny>(
     debug?: boolean
   }
 ) {
+  if (!name)
+    return (
+      name: string,
+      listener$: Exclude<typeof listener, undefined>,
+      options$: typeof options
+    ) => listen(port, name, listener$, options$)
+
   async function handler(event: MessageEvent<DataCallFn<Fn>>) {
     const { data } = event
     if (typeof data !== "object") return
@@ -85,7 +110,7 @@ function listen<Fn extends FnAny>(
       if (options?.once) stop()
 
       if (data.ping) {
-        listener(...data.args)
+        listener!(...data.args)
         return
       }
       // eslint-disable-next-line functional/no-let
@@ -97,7 +122,7 @@ function listen<Fn extends FnAny>(
       // eslint-disable-next-line functional/no-let
       let err: unknown | undefined
       try {
-        const r = await listener(...data.args)
+        const r = await listener!(...data.args)
 
         if (r && typeof r === "object" && "return" in r) {
           result = r
